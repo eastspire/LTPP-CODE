@@ -1,0 +1,509 @@
+import Vue from 'vue'
+import './plugins/axios' //axios
+import App from './App.vue'
+import router from './router'
+import './plugins/element.js' //UI
+import '../updateCompoents/animate.css' //动画
+import store from './plugins/vuex.js'
+import SqsGlobal from './plugins/SqsGlobal.js'
+/* md */
+import mavonEditor from '../updateCompoents/mavon-editor';
+import '../updateCompoents/mavon-editor/dist/css/index.css';
+import '../updateCompoents/highlight.js/styles/googlecode.css';
+import "../updateCompoents/mavon-editor/dist/markdown/github-markdown.min.css";
+/* m3u8视频流 */
+import "../updateCompoents/video.js/dist/video-js.css"
+import VueWorker from 'vue-worker';
+
+Vue.config.errorHandler = () => { }
+// use
+const EventBus = new Vue();
+Vue.use(mavonEditor);
+Vue.use(VueWorker);
+
+window.Hls = require('../updateCompoents/hls.js')
+
+//每次请求头都加上authorization
+axios.interceptors.request.use(config => {
+    /* jsonp为music区别其他的请求，防止一些请求头造成的跨域 */
+    if (config.dataType == 'jsonp') {
+        return config;
+    }
+    config.headers.authorization = "Bearer " + window.localStorage.getItem('authorization');
+    config.headers.key = window.localStorage.getItem('key');
+    return config;
+});
+
+Vue.config.productionTip = false;
+
+Vue.prototype.$ajax = axios;
+Vue.prototype.$SqsGlobal = SqsGlobal;
+Vue.prototype.$EventBus = EventBus;
+
+// 拖拽
+Vue.directive('domDrag', {
+    bind(el) {
+        //el即为当前元素，添加可拖拽标识
+        el.style.cursor = 'move'
+        // 获取原有属性 ie dom.currentStyle 火狐谷歌 window.getComputedStyle(dom, null);
+        const sty = el.currentStyle || window.getComputedStyle(el, null)
+        el.onmousedown = (e) => {
+            //获取鼠标按下位置
+            const disX = e.clientX
+            const disY = e.clientY
+            // 获取当前元素的定位信息
+            // 获取到的值带px 正则匹配替换
+            let styL, styT
+            // 注意在ie中 第一次获取到的值为组件自带50% 移动之后赋值为px
+            // +的作用是将字符串转为数字
+            if (sty.left.includes('%')) {
+                styL = +document.body.clientWidth * (+sty.left.replace(/\%/g, '') / 100)
+                styT = +document.body.clientHeight * (+sty.top.replace(/\%/g, '') / 100)
+            } else {
+                styL = +sty.left.replace(/\px/g, '')
+                styT = +sty.top.replace(/\px/g, '')
+            }
+            document.onmousemove = function (e) {
+                // 通过事件委托，计算移动的距离
+                const l = e.clientX - disX
+                const t = e.clientY - disY
+                // 移动当前元素
+                el.style.left = `${l + styL}px`
+                el.style.top = `${t + styT}px`
+            }
+            //鼠标弹起，移除相应事件
+            document.onmouseup = function (e) {
+                document.onmousemove = null
+                document.onmouseup = null
+            }
+        }
+    }
+});
+
+// 随机字符串
+Vue.prototype.randomString = function (length = 32) {
+    let f_timestamp = new Date().getTime();
+    let random_number = '';
+    let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let characters_length = characters.length;
+    for (let i = 0; i < length; i++) {
+        random_number += characters.charAt(Math.floor(Math.random() * characters_length));
+    }
+    let s_timestamp = new Date().getTime();
+    return f_timestamp + random_number + s_timestamp;
+}
+
+// 全屏
+Vue.prototype.fullscreen = function (id, fn = () => { }) {
+    let element_dom = document.getElementById(id);
+    if (!element_dom) {
+        return;
+    }
+    if (!document.fullscreenElement && !document.mozFullScreenElement &&
+        !document.webkitFullscreenElement && !document.msFullscreenElement) {
+        if (element_dom.requestFullscreen) {
+            document.addEventListener('fullscreenchange', fn.call(this));
+            element_dom.requestFullscreen();
+        } else if (element_dom.mozRequestFullScreen) {
+            document.addEventListener('mozfullscreenchange', fn.call(this));
+            element_dom.mozRequestFullScreen();
+        } else if (element_dom.webkitRequestFullscreen) {
+            document.addEventListener('webkitfullscreenchange', fn.call(this));
+            element_dom.webkitRequestFullscreen();
+        } else if (element_dom.msRequestFullscreen) {
+            document.addEventListener('msfullscreenchange', fn.call(this));
+            element_dom.msRequestFullscreen();
+        }
+    } else {
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        } else if (document.mozCancelFullScreen) {
+            document.mozCancelFullScreen();
+        } else if (document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
+        } else if (document.msExitFullscreen) {
+            document.msExitFullscreen();
+        }
+    }
+}
+
+// 复制
+Vue.prototype.copy = async function (text) {
+    try {
+        if (navigator.clipboard) {
+            navigator.clipboard.writeText(text).then(() => {
+                this.$msg({
+                    type: "success",
+                    message: "已复制到剪贴板",
+                    duration: 3600,
+                    offset: 80,
+                });
+            }).catch(err => {
+                this.$msg({
+                    type: "error",
+                    message: "复制失败",
+                    duration: 1800,
+                    offset: 80,
+                });
+            });
+        } else {
+            let target = document.createElement("textarea");
+            target.setAttribute("id", "LTPPSQScopyTextID");
+            target.value = text;
+            document.body.appendChild(target);
+            target.select();
+            document.execCommand("Copy");
+            this.$msg({
+                type: "success",
+                message: "已复制到剪贴板",
+                duration: 3600,
+                offset: 80,
+            });
+            let deldom = document.getElementById("LTPPSQScopyTextID");
+            deldom.parentNode.removeChild(deldom);
+        }
+    } catch (err) {
+        this.$msg({
+            type: "error",
+            message: "复制失败",
+            duration: 1800,
+            offset: 80,
+        });
+    }
+}
+
+Vue.prototype.getFronturl = async function () {
+    let cache = window.sessionStorage.getItem('FrontUrl');
+    if (cache && cache != undefined && cache != null) {
+        return cache;
+    }
+    const { data: res } = await this.$ajax({
+        method: "post",
+        url: "/Url/getFrontUrl",
+        portType: {
+            process: "8797",
+        },
+    }).catch((t) => {
+        this.$msg({
+            type: "error",
+            message: t,
+            duration: 1600,
+            offset: 80,
+        });
+    });
+    if (res.code == 1) {
+        window.sessionStorage.setItem("FrontUrl", res.data);
+        return res.data;
+    }
+    return '';
+}
+
+Vue.prototype.getBackurl = async function () {
+    let cache = window.sessionStorage.getItem('BackUrl');
+    if (cache && cache != undefined && cache != null) {
+        return cache;
+    }
+    const { data: res } = await this.$ajax({
+        method: "post",
+        url: "/Url/getBackUrl",
+        portType: {
+            process: "8797",
+        },
+    }).catch((t) => {
+        this.$msg({
+            type: "error",
+            message: t,
+            duration: 1600,
+            offset: 80,
+        });
+    });
+    if (res.code == 1) {
+        window.sessionStorage.setItem("BackUrl", res.data);
+        return res.data;
+    }
+    return '';
+}
+
+// 返回顶部
+Vue.prototype.totop = function () {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+};
+
+// 解析token
+Vue.prototype.getMyId = function () {
+    let token = localStorage.getItem("authorization");
+    if (!token) {
+        return null;
+    }
+    let strings = token.split(".");
+    let userinfo = JSON.parse(
+        decodeURIComponent(escape(window.atob(strings[1].replace(/-/g, "+").replace(/_/g, "/"))))
+    );
+    if (userinfo && userinfo.extend && userinfo.extend.id) {
+        return userinfo.extend.id;
+    }
+    return null;
+};
+
+Vue.prototype.uidToString = function (msg_uid) {
+    return msg_uid + msg_uid;
+};
+
+// 编码
+Vue.prototype.Base64Encode = function (str, char_set) {
+    let len = str.length;
+    let bin = '';
+    for (let i = 0; i < len; ++i) {
+        bin += str[i].charCodeAt().toString(2).padStart(24, '0');
+    }
+    len = bin.length;
+    for (i = 0; i < len; i += 6) {
+        let tem_bin = '';
+        for (let j = i; j - i < 6 && j < len; ++j) {
+            tem_bin += bin[j];
+        }
+        base64_encode += char_set[parseInt(tem_bin, 2)];
+    }
+    return base64_encode;
+};
+
+// 解码
+Vue.prototype.Base64Decode = function (str, char_set) {
+    let bin = '';
+    let len = str.length;
+    for (let i = 0; i < len; ++i) {
+        let tem_num = 0;
+        for (let j = 0; j < char_set.length; ++j) {
+            if (str[i] == char_set[j]) {
+                tem_num = j;
+                break;
+            }
+        }
+        bin += tem_num.toString(2).padStart(6, '0');
+    }
+    let base64_decode = '';
+    len = bin.length;
+    for (let i = 0; i < len; i += 24) {
+        let tem_bin = '';
+        for (let j = i; j - i < 24 && j < len; ++j) {
+            tem_bin += bin[j];
+        }
+        base64_decode += String.fromCharCode(parseInt(tem_bin, 2));
+
+    }
+    return base64_decode;
+};
+
+router.beforeEach((to, from, next) => {
+    /* 路由发生变化修改页面title */
+    if (to.meta.title) {
+        document.title = to.meta.title;
+    }
+    next();
+});
+
+Vue.prototype.sleep = function (delay) {
+    let start = (new Date()).getTime();
+    while ((new Date()).getTime() - start < delay) {
+        continue;
+    }
+};
+
+Vue.prototype.initDevice = function () {
+    store.commit("updateObj", { now_width: window.screen.width });
+    store.commit("updateObj", {
+        max_width: Math.min(1266, (window.screen.width / 100) * 80),
+    });
+}
+
+Vue.prototype.logoutRemove = function (is_force = false) {
+    try {
+        store.commit("reset");
+        window.localStorage.removeItem('key');
+        window.localStorage.removeItem('authorization');
+        let storage = window.localStorage;
+        for (let i = 0, len = storage.length; i < len; i++) {
+            let key = storage.key(i);
+            if (key && (key.indexOf('Chat') != -1 || key.indexOf('idecode') != -1) || (is_force === true && key == 'time')) {
+                window.localStorage.removeItem(key);
+            }
+        }
+        window.sessionStorage.clear();
+        EventBus.$emit('closeWs');
+        if (router?.history?.current?.fullPath != '/login') {
+            router.replace({
+                path: "/login",
+                replace: true,
+            });
+        }
+    } catch (err) {
+    }
+};
+
+Vue.prototype.downloadNoUrlContent = async function (type = 'text/html', data, download_name = '') {
+    this.$msg({
+        type: "success",
+        message: '开始下载！请耐心等待！',
+        duration: 1600,
+        offset: 80,
+    });
+    let blob = new Blob([data], { type: type });
+    const { data: res } = await this.$ajax({
+        method: "post",
+        url: URL.createObjectURL(blob),
+        responseType: "blob",
+        headers: {
+            "Content-Type": "application/json; application/octet-stream;",
+        },
+        portType: {
+            process: "8795",
+        },
+        data: data
+    }).catch((t) => {
+        this.$msg({
+            type: "error",
+            message: t,
+            duration: 1600,
+            offset: 80,
+        });
+    });
+    if (res.code && res.code == -1) {
+        this.$msg({
+            type: "error",
+            message: res.msg,
+            duration: 1600,
+            offset: 80,
+        });
+        return res;
+    }
+    if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+        const blob = new Blob([res], {
+            type: "application/octet-stream;application/zip",
+        });
+        window.navigator.msSaveOrOpenBlob(blob, download_name);
+    } else {
+        /* 火狐谷歌的文件下载方式 */
+        const blob = new Blob([res], {
+            type: "application/octet-stream;application/zip",
+        });
+        let url = window.URL.createObjectURL(blob);
+        const link = document.createElement("a"); // 创建a标签
+        link.href = url;
+        link.download = download_name; // 重命名文件
+        link.click();
+        URL.revokeObjectURL(url); // 释放内存
+    }
+    this.$msg({
+        type: "success",
+        message: '下载完成！',
+        duration: 1600,
+        offset: 80,
+    });
+    return res;
+}
+
+Vue.prototype.downloadFile = function (url, filename) {
+    this.$msg({
+        type: "success",
+        message: '开始下载！请等待！',
+        duration: 1600,
+        offset: 80,
+    });
+    return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', url);
+        xhr.responseType = 'blob';
+        xhr.onload = () => {
+            if (xhr.status === 200) {
+                const blob = xhr.response;
+                const a = document.createElement('a');
+                const url = URL.createObjectURL(blob);
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                resolve();
+            } else {
+                reject(new Error(`下载失败！HTTP 状态码：${xhr.status}！`));
+            }
+        };
+        xhr.onerror = () => {
+            reject(new Error('下载失败！网络异常！'));
+        };
+        xhr.send();
+    });
+}
+
+Vue.prototype.downloadUrlContent = async function (url, data, download_name) {
+    this.$msg({
+        type: "success",
+        message: '开始下载！请耐心等待！',
+        duration: 1600,
+        offset: 80,
+    });
+    const { data: res } = await this.$ajax({
+        method: "post",
+        url: url,
+        responseType: "blob",
+        headers: {
+            "Content-Type": "application/json; application/octet-stream;",
+        },
+        portType: {
+            process: "8795",
+        },
+        data: data
+    }).catch((t) => {
+        this.$msg({
+            type: "error",
+            message: t,
+            duration: 1600,
+            offset: 80,
+        });
+    });
+    if (res.code && res.code == -1) {
+        this.$msg({
+            type: "error",
+            message: res.msg,
+            duration: 1600,
+            offset: 80,
+        });
+        return res;
+    }
+    if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+        const blob = new Blob([res], {
+            type: "application/octet-stream;application/zip",
+        });
+        window.navigator.msSaveOrOpenBlob(blob, download_name);
+    } else {
+        /* 火狐谷歌的文件下载方式 */
+        const blob = new Blob([res], {
+            type: "application/octet-stream;application/zip",
+        });
+        let url = window.URL.createObjectURL(blob);
+        const link = document.createElement("a"); // 创建a标签
+        link.href = url;
+        link.download = download_name; // 重命名文件
+        link.click();
+        URL.revokeObjectURL(url); // 释放内存
+    }
+    this.$msg({
+        type: "success",
+        message: '下载完成！',
+        duration: 1600,
+        offset: 80,
+    });
+    return res;
+}
+
+new Vue({
+    router,
+    store,
+    render: h => h(App),
+}).$mount('#app');
+
+export default router;

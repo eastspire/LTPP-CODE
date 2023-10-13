@@ -1,0 +1,79 @@
+/*
+ * @Author: 18855190718 1491579574@qq.com
+ * @Date: 2023-08-07 18:43:57
+ * @LastEditors: 18855190718 1491579574@qq.com
+ * @LastEditTime: 2023-09-11 09:47:31
+ * @FilePath: \LTPP-CODE\Frontend\src\plugins\vuex.js
+ * @Description: Email:1491579574@qq.com
+ * QQ:1491579574
+ * Copyright (c) 2023 by SQS, All Rights Reserved. 
+ */
+import Vue from 'vue';
+import Vuex from 'vuex';
+Vue.use(Vuex);
+
+const state = {
+    is_public_network: true,
+    backurl: '',
+    login: false,
+    root: false,
+    admin: false,
+    article_reg: /<[^>]+>|#|```/g,//文章卡片预览文字替换规则
+    menu_width: 64,//首页菜单宽度，单位px
+    default_margin_top_bottom: 1.6,//所有页面距离顶部和底部的距离，单位rem
+    default_home_to_left_right: 56,//单位px
+    headimage: '',//头像
+    bkimage: '',//图片背景
+    bkvideo: '',//视频背景
+    aid: 0,//用户id
+    uid: '',//用户加密id
+    my_uid: '',//我的加密id
+    my_id: '',//我的id
+    now_width: 0,//宽度
+    no_scroll_height: 92,//无滚动高度，单位vw
+    max_width: 0,//最大宽度
+};
+
+const root_state = {
+    is_public_network: true,
+    backurl: '',
+    login: false,
+    root: false,
+    admin: false,
+    article_reg: /<[^>]+>|#|```/g,//文章卡片预览文字替换规则
+    menu_width: 64,//首页菜单宽度，单位px
+    default_margin_top_bottom: 1.6,//所有页面距离顶部和底部的距离，单位rem
+    default_home_to_left_right: 56,//单位px
+    headimage: '',//头像
+    bkimage: '',//图片背景
+    bkvideo: '',//视频背景
+    aid: 0,//用户id
+    uid: '',//用户加密id
+    my_uid: '',//我的加密id
+    my_id: '',//我的id
+    now_width: 0,//宽度
+    no_scroll_height: 92,//无滚动高度，单位vw
+    max_width: 0,//最大宽度
+};
+
+const mutations = {
+    updateObj(state, obj) {
+        let key = Object.keys(obj)[0];
+        let value = Object.values(obj)[0];
+        state[key] = value;
+    },
+    reset(state) {
+        for (const key in state) {
+            if (Object.hasOwnProperty.call(state, key)) {
+                state[key] = root_state[key];
+            }
+        }
+    }
+};
+
+const store = new Vuex.Store({
+    state,
+    mutations
+});
+
+export default store;

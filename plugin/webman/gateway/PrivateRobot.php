@@ -1,0 +1,1109 @@
+<?php
+/*
+ * @Author: 18855190718 1491579574@qq.com
+ * @Date: 2023-01-14 18:26:54
+ * @LastEditors: 18855190718 1491579574@qq.com
+ * @LastEditTime: 2023-10-07 21:38:48
+ * @FilePath: \LTPP-CODE\plugin\webman\gateway\PrivateRobot.php
+ * @Description: Email:1491579574@qq.com
+ * QQ:1491579574
+ * Copyright (c) 2023 by 18855190718 1491579574@qq.com, All Rights Reserved. 
+ */
+
+namespace plugin\webman\gateway;
+
+use app\controller\Ssh;
+use GatewayWorker\Lib\Gateway;
+use support\Db;
+use app\controller\Base;
+use support\Redis;
+use Webman\RedisQueue\Redis as RedisQueue;
+
+class PrivateRobot
+{
+    /**
+     * GPT 异常消息
+     */
+    static $gpt_err_msg = '机器人头疼！需要休息！';
+
+    /**
+     * GPT 每个消息价格
+     */
+    static $one_msg_cost = 0.19;
+
+    /**
+     * GPT 接口
+     */
+    static $chatgpt_url = 'http://127.0.0.1:28787';
+
+    /**
+     * GPT上下文环境
+     */
+    static $gpt_chat_history_limit = 6;
+
+    static $robot_root_default =
+        '您可以输入以下单个序号来进行操作：' . "\n" .
+        '1.获取用户总数' . "\n" .
+        '2.获取文章总数' . "\n" .
+        '3.获取题库总数' . "\n" .
+        '4.获取竞赛总数' . "\n" .
+        '5.获取代码运行记录总数' . "\n" .
+        '6.获取public文件夹大小' . "\n" .
+        '7.获取私聊+群聊的消息总数' . "\n" .
+        '8.获取当前服务器负载和进程运行情况' . "\n" .
+        '9.获取管理员用户名单' . "\n" .
+        '10.开启全站用户音乐功能' . "\n" .
+        '11.清空服务器日志' . "\n" .
+        '12.清空tmp目录' . "\n" .
+        '13.通过机器人群发消息，此消息将保存到数据库（例如：13 你好）（序号后第一个空格后为发送的内容）' . "\n" .
+        '14.重置全站用户头像为邮箱头像' . "\n" .
+        '15.关闭全站用户音乐功能' . "\n" .
+        '16.设置全站用户图片背景（例如：16 http://xxx.com/x.png）（序号后第一个空格后为图片URL）' . "\n" .
+        '17.设置全站用户视频背景（例如：17 http://xxx.com/x.mp4）（序号后第一个空格后为视频URL）' . "\n" .
+        '18.重判题目在竞赛中的代码（例如：18 A+B）（序号后第一个空格后为重判的题目完整标题）' . "\n" .
+        '19.购买私人轻量云服务器（序号后第一个空格后为SSH登录密码，若不设置系统会自动生成随机密码，若已购买可查看登录命令和密码）';
+
+    static $robot_admin_default =
+        '您可以输入以下单个序号来进行操作：' . "\n" .
+        '1.重判题目在竞赛中的代码（例如：1 A+B）（序号后第一个空格后为重判的题目完整标题）' . "\n" .
+        '2.购买私人轻量云服务器（序号后第一个空格后为SSH登录密码，若不设置系统会自动生成随机密码，若已购买可查看登录命令和密码）';
+
+    static $robot_user_default =
+        '您可以输入以下单个序号来进行操作：' . "\n" .
+        '1.购买私人轻量云服务器（序号后第一个空格后为SSH登录密码，若不设置系统会自动生成随机密码，若已购买可查看登录命令和密码）';
+
+    /**
+     * 判断用户是否发给机器人消息
+     * @param string $user_id 接收消息的用户的id
+     * @param object $db_my 用户的数据库个人数据
+     * @param string $client_id 客户端id
+     * @param string $msg 用户发给机器人的消息
+     */
+    static protected function isSendToRobot(&$user_id, &$db_my, &$client_id, &$msg)
+    {
+        $robot_id = Base::getRobotId();
+        if (!$robot_id) {
+            // 机器人账号不存在，立即发送root邮件通知
+            $root_id = Base::getRootId();
+            $user_db = Base::getUserData($root_id);
+            $now = date('Y-m-d H:i:s', time());
+            $email = '1491579574@qq.com';
+            $data = [
+                'name' => '机器人',
+                'password' => Base::passwordEncryption(rand(1, 100000)),
+                'sex' => '男',
+                'registertime' => $now,
+                'headimage' => 'https://q1.qlogo.cn/headimg_dl?dst_uin=' . $email . '&spec=640',
+                'fans' => 0,
+                'follow' => 0,
+                'online' => 0,
+                'grade' => 1,
+                'email' => $email,
+                'lastlogin' => $now
+            ];
+            $id = Base::insertToDb('user', $data);
+            if (!$user_db) {
+                return;
+            }
+            $title = '紧急通知';
+            $content = '系统机器人的账号不存在，系统已自动重新生成！机器人账号最新id:' . $id;
+            RedisQueue::send(Base::$redis_queue_send_mail_name, [
+                'to' => $user_db->email,
+                'title' => $title,
+                'content' => $content
+            ]);
+            return;
+        }
+        if ($user_id != $robot_id) {
+            return;
+        }
+        $robot_db = Base::getUserData($robot_id);
+        $isroot = Base::judgeIsRoot($db_my->id);
+        $isadmin = Base::judgeIsAdmin($db_my->id);
+        if ($isroot) {
+            PrivateRobot::rootSendToRobot($robot_db, $db_my, $client_id, $msg);
+        } else if ($isadmin) {
+            PrivateRobot::adminSendToRobot($robot_db, $db_my, $client_id, $msg);
+        } else {
+            PrivateRobot::userSendToRobot($robot_db, $db_my, $client_id, $msg);
+        }
+        return;
+    }
+
+    /**
+     * 清空服务器日志
+     * @param string $reply 消息
+     */
+    static private function deleteLogMore(&$reply)
+    {
+        Base::deleteAllFile(Base::$LTPP_logs_path);
+        Base::judgeCreatPath(Base::$LTPP_logs_path);
+        $reply = '清空服务器日志成功';
+    }
+
+    /**
+     * 加载服务器配置
+     * @param string $reply 消息
+     */
+    static private function loadLinuxMore(&$reply)
+    {
+        $res = [];
+        $out = [];
+        $name = '服务器信息：';
+        $res[] = array($name);
+        exec('lsb_release -a 2>&1', $out);
+        $res[] = $out;
+        $out = [];
+        exec('uname -a 2>&1', $out);
+        $res[] = $out;
+        $out = [];
+        $name = 'CPU型号：';
+        $res[] = array($name);
+        exec("grep 'model name' /proc/cpuinfo |uniq", $out);
+        $res[] = $out;
+        $out = [];
+        $name = 'CPU物理个数 ：';
+        $res[] = array($name);
+        exec("grep 'physical id' /proc/cpuinfo |sort |uniq |wc -l", $out);
+        $res[] = $out;
+        $out = [];
+        $name = 'CPU核心数 ：';
+        $res[] = array($name);
+        exec("grep 'cpu cores' /proc/cpuinfo |uniq", $out);
+        $res[] = $out;
+        $name = 'CPU使用情况：';
+        $res[] = array($name);
+        exec("mpstat", $out);
+        $res[] = $out;
+        $name = '内存信息：';
+        $res[] = array($name);
+        $out = [];
+        exec('free -h 2>&1', $out);
+        $res[] = $out;
+        $out = [];
+        exec('free -m 2>&1', $out);
+        $res[] = $out;
+        $out = [];
+        exec('vmstat 2>&1', $out);
+        $res[] = $out;
+        $out = [];
+        exec('cat /proc/meminfo 2>&1', $out);
+        $res[] = $out;
+        $out = [];
+        $name = '磁盘信息：';
+        $res[] = array($name);
+        $out = [];
+        exec('df -h 2>&1', $out);
+        $res[] = $out;
+        $out = [];
+        $name = '当前进程：';
+        $res[] = array($name);
+        $out = [];
+        exec('ps -ef 2>&1', $out);
+        $res[] = $out;
+        $out = [];
+        foreach ($res as &$t) {
+            foreach ($t as &$tt) {
+                $reply .= $tt . "\n";
+            }
+        }
+    }
+
+    /**
+     * 竞赛赛题重判
+     * @param string $client_id
+     * @param string $my_aid
+     * @param string $problem_id
+     * @param object $robot_db
+     */
+    static private function rejudgeOneProblem($client_id, $my_aid, $problem_name, $robot_db)
+    {
+        $is_admin = Base::judgeIsAdmin($my_aid);
+        if (!$is_admin) {
+            return '权限不足！';
+        }
+        $problem_db = Db::table('oj')
+            ->where('problemName', $problem_name)
+            ->where('isdel', 0)
+            ->select('id', 'problemName', 'Time', 'Memory', 'ACNum', 'ALLSubmitNum')
+            ->first();
+        if (!$problem_db) {
+            return '题目【' . $problem_name . '】不存在！';
+        }
+        $problem_id = $problem_db->id;
+        if (!$problem_id) {
+            return '题目【' . $problem_name . '】不存在！';
+        }
+        $redis4 = Redis::connection('db4');
+        $contest_list = Db::table('contestrank')
+            ->where('problemid', $problem_id)
+            ->where('isdel', 0)
+            ->select('contestid')
+            ->orderBy('contestid', 'desc')
+            ->distinct()
+            ->pluck('contestid')
+            ->toArray();
+        $limittime = (int) $problem_db->Time;
+        $limitmemory = ((int) $problem_db->Memory) << 20;
+        $md5_problem_id = Base::doubleMd5($problem_id);
+        $alltestpath = '/home/LTPP/testdata/' . $md5_problem_id . '/';
+
+        //获取所有输入输出样例文件名称
+        $testfilein = glob($alltestpath . '*.in');
+        $testfileout = glob($alltestpath . '*.out');
+        if (sizeof($testfileout) == 0) {
+            // 兼容ICPC测试样例
+            $testfileout = glob($alltestpath . '*.ans');
+        }
+        if (sizeof($testfilein) <= 0 || sizeof($testfileout) <= 0) {
+            return '题目【' . $problem_name . '】无测试样例！';
+        }
+        foreach ($contest_list as &$contest_id) {
+            $contest_db = Db::table('contest')
+                ->where('id', $contest_id)
+                ->where('isdel', 0)
+                ->select('id', 'name')
+                ->first();
+            if (!$contest_db) {
+                continue;
+            }
+            $list = Db::table('contestrank')
+                ->where('contestid', $contest_id)
+                ->where('problemid', $problem_id)
+                ->where('isdel', 0)
+                ->select('id', 'userid', 'language', 'code')
+                ->get();
+
+            foreach ($list as &$tem) {
+                $userlanguage = $tem->language;
+                $code = $tem->code;
+                $user_id = $tem->userid;
+                if ($code == '') {
+                    continue;
+                }
+                //代码检测
+                $check_safe_json = Base::judgeCodeSafe($code, $userlanguage);
+                if (!isset($check_safe_json['code']) || $check_safe_json['code'] != 1) {
+                    continue;
+                }
+
+                $md5aid = md5($my_aid);
+                $mainfile = '';
+                //用户文件夹
+                $filepath = '';
+                //代码存放路径
+                do {
+                    $mainfile = uniqid() . mt_rand(1, 100000) . time() . $problem_id;
+                    $filepath = Base::$sandbox_path . $md5aid . '/' . $mainfile . '/';
+                } while (file_exists($filepath));
+
+                if (!file_exists($filepath)) {
+                    Base::judgeCreatPath($filepath, 0777);
+                }
+
+                $alltestnum = sizeof($testfilein);
+                $actestnum = 0;
+                $onetestscore = 0;
+                if ($alltestnum > 0) {
+                    $onetestscore = 100 / $alltestnum;
+                }
+
+                Db::table('oj')
+                    ->where('id', $problem_id)
+                    ->where('isdel', 0)
+                    ->increment('ALLSubmitNum', 1);
+
+                //代码所在路径+前缀名称main
+                $runcodefilepath = $filepath . 'main';
+                //编译
+                $out = [];
+                $compiler_res_json = Base::compiler($userlanguage, $code, $filepath, $runcodefilepath);
+                if (!isset($compiler_res_json['code']) || $compiler_res_json['code'] != 1) {
+                    continue;
+                }
+                $out = $compiler_res_json['result'];
+                if (!empty($out)) {
+                    Base::deleteAllFile($filepath);
+                    $code = $code . "\n\n\n报错详情：\n";
+                    // 去除路径信息
+                    $err_data = '';
+                    foreach ($out as &$err_tem) {
+                        $err_data .= $err_tem . "\n";
+                    }
+                    $tp = Base::utfsubstr(Base::$sandbox_path, 1, strlen(Base::$sandbox_path)) . $md5aid . '/' . $mainfile . '/';
+                    $err_data = str_replace($tp, '', $err_data);
+                    $tp = $md5aid . '/' . $mainfile . '/';
+                    $err_data = str_replace($tp, '', $err_data);
+                    Base::removeBr($err_data);
+
+                    $code .= $err_data;
+
+                    Db::table('contestrank')
+                        ->where('id', $tem->id)
+                        ->where('isdel', 0)
+                        ->update(['score' => 0]);
+                    Base::insertToDb('codehistory', [
+                        'userid' => $user_id,
+                        'status' => '编译出错',
+                        'problemid' => $problem_id,
+                        'time' => date('Y-m-d H:i:s', time()),
+                        'usetime' => 0,
+                        'usememory' => 0,
+                        'code' => $code,
+                        'language' => $userlanguage,
+                        'contestid' => $contest_id
+                    ]);
+                    continue;
+                }
+
+                //输出文件
+                $outpath = $filepath . 'main.out';
+                Base::writeToFile($outpath, '');
+                //错误文件
+                $errpath = $filepath . 'main.err';
+                Base::writeToFile($errpath, '');
+                $maxtime = '';
+                $maxmemory = '';
+                // 遍历测试样例
+                foreach ($testfileout as $temout) {
+                    Base::writeToFile($outpath, '');
+                    $path_parts = pathinfo($temout);
+                    //文件全名
+                    $fullname = $path_parts['basename'];
+                    //文件前缀名
+                    $testname = pathinfo($fullname, PATHINFO_FILENAME);
+                    //运行
+                    $out = [];
+                    $out = Base::run($userlanguage, $filepath, $alltestpath . $testname . '.in ', $outpath, $errpath, $runcodefilepath, $limittime, $limitmemory);
+
+                    if (!$out || empty($out)) {
+                        continue;
+                    }
+                    $out = $out[0];
+                    $run_resource_consumption = Base::getCodeTimeMemory($out);
+                    if (!$run_resource_consumption || !isset($run_resource_consumption['status'])) {
+                        continue;
+                    }
+
+                    $status = $run_resource_consumption['status'] ?? 0;
+                    $time_used = $run_resource_consumption['time_used'] ?? 0;
+                    $memory_used = $run_resource_consumption['memory_used'] ?? 0;
+
+                    if ($status == Base::$judge_server_error) {
+                        continue;
+                    }
+
+                    //运行错误
+                    if ($status == Base::$judge_code_error) {
+                        //读取输出
+                        $code .= "\n\n\n报错详情：\n";
+                        $resout = Base::getFileText($errpath);
+                        Base::deleteallfile($filepath);
+                        // 去除路径信息                    
+                        $tp = Base::utfsubstr(Base::$sandbox_path, 1, strlen(Base::$sandbox_path)) . $md5aid . '/' . $mainfile . '/';
+                        $resout = str_replace($tp, '', $resout);
+                        $tp = $md5aid . '/' . $mainfile . '/';
+                        $resout = str_replace($tp, '', $resout);
+                        Base::removeBr($resout);
+
+                        if (strlen($resout) > Base::$code_out_limit) {
+                            $code = Base::utfsubstr($code, 0, Base::$code_out_limit, true) . "\n" . '（仅显示前' . Base::$code_out_limit . '个字符）';
+                        }
+                        $code .= $resout . "\n";
+
+                        Base::insertToDb('codehistory', [
+                            'userid' => $user_id,
+                            'status' => '运行出错',
+                            'problemid' => $problem_id,
+                            'time' => date('Y-m-d H:i:s', time()),
+                            'usetime' => $time_used,
+                            'usememory' => $memory_used,
+                            'code' => $code,
+                            'language' => $userlanguage,
+                            'contestid' => $contest_id
+                        ]);
+                        continue;
+                    }
+
+                    $maxtime = max($maxtime, $time_used);
+                    $maxmemory = max($maxmemory, $memory_used);
+
+                    $testout = '';
+                    $testoutpath = $alltestpath . $fullname;
+
+                    if ($status != Base::$judge_code_finish) {
+                        Base::deleteallfile($filepath);
+                        $tips = '';
+                        switch ($status) {
+                            case Base::$judge_code_tle:
+                                $tips = 'TLE';
+                                break;
+                            case Base::$judge_code_mle:
+                                $tips = 'MLE';
+                                break;
+                            case Base::$judge_code_re:
+                                $tips = 'RE';
+                                break;
+                            default:
+                                break;
+                        }
+                        Base::insertToDb('codehistory', [
+                            'userid' => $user_id,
+                            'status' => $tips,
+                            'problemid' => $problem_id,
+                            'time' => date('Y-m-d H:i:s', time()),
+                            'usetime' => $maxtime,
+                            'usememory' => $maxmemory,
+                            'code' => $code,
+                            'language' => $userlanguage,
+                            'contestid' => $contest_id
+                        ]);
+                        continue;
+                    }
+                    //读取输出
+                    $resout = Base::getFileText($outpath);
+                    $testout = Base::getFileText($testoutpath);
+                    //处理空格和换行错误
+                    $testout = str_replace([' ', "\n", "\r", "\r\n"], '', $testout);
+                    $resout = str_replace([' ', "\n", "\r", "\r\n"], '', $resout);
+
+                    //答案错误
+                    if ($testout == $resout) {
+                        ++$actestnum;
+                    }
+                    //删除新建文件下当前输出
+                    Base::deleteallfile($outpath);
+                }
+                //最后删除文件夹
+                Base::deleteallfile($filepath);
+                //正确AC百分比,保留两位小数
+                $ACpoint = round(((float) $problem_db->ACNum + 1) / ((float) $problem_db->ALLSubmitNum + 1), 2);
+                Db::table('oj')
+                    ->where('id', $problem_id)
+                    ->update(['ACpoint' => $ACpoint]);
+
+                if ($maxtime == '') {
+                    $maxtime = '0';
+                }
+                if ($maxmemory == '') {
+                    $maxmemory = '0';
+                }
+                $resscore = (int) ($actestnum * $onetestscore);
+                if ($actestnum >= $alltestnum) {
+                    $resscore = 100;
+                }
+                Db::table('contestrank')
+                    ->where('id', $tem->id)
+                    ->where('isdel', 0)
+                    ->update(['score' => $resscore]);
+
+                $hasac = Db::table('solveproblem')
+                    ->where('problemid', $problem_id)
+                    ->where('userid', $user_id)
+                    ->where('language', $userlanguage)
+                    ->where('isdel', 0)
+                    ->exists();
+                if (!$hasac && $resscore == 100) {
+                    Db::table('solveproblem')->insert([
+                        'userid' => $user_id,
+                        'problemid' => $problem_id,
+                        'time' => date('Y-m-d H:i:s', time()),
+                        'code' => $code,
+                        'language' => $userlanguage
+                    ]);
+                    Base::addAcMoney($user_id, $problem_name, $userlanguage);
+                }
+                if ($resscore == 100) {
+                    Base::insertToDb('codehistory', [
+                        'userid' => $user_id,
+                        'status' => 'AC',
+                        'problemid' => $problem_id,
+                        'time' => date('Y-m-d H:i:s', time()),
+                        'usetime' => $maxtime,
+                        'usememory' => $maxmemory,
+                        'code' => $code,
+                        'language' => $userlanguage,
+                        'contestid' => $contest_id
+                    ]);
+                } else {
+                    Base::insertToDb('codehistory', [
+                        'userid' => $user_id,
+                        'status' => '答案错误',
+                        'problemid' => $problem_id,
+                        'time' => date('Y-m-d H:i:s', time()),
+                        'usetime' => $maxtime,
+                        'usememory' => $maxmemory,
+                        'code' => $code,
+                        'language' => $userlanguage,
+                        'contestid' => $contest_id
+                    ]);
+                }
+                $user_db = Base::getUserData($user_id);
+                $msg = '用户【' . ($user_db->name ?? '') . '】在竞赛【' . $contest_db->name . '】中的赛题【' . $problem_db->problemName . '】中得' . $resscore . '分';
+                $now = date('Y-m-d H:i:s', time());
+                $msg_id = Base::insertToDb(
+                    'privatechat',
+                    [
+                        'post_user_id' => $robot_db->id,
+                        'get_user_id' => $my_aid,
+                        'msg' => $msg,
+                        'time' => $now
+                    ]
+                );
+                Gateway::sendToUid(Gateway::getUidByClientId($client_id), json_encode([
+                    'id' => Base::getChatUserUidById($msg_id),
+                    'type' => ChatBase::$type_private_chat_name,
+                    'msgtype' => 'private_chat',
+                    'post_user_id' => Base::getChatUserUidById($robot_db->id),
+                    'get_user_id' => Base::getChatUserUidById($my_aid),
+                    'name' => $robot_db->name,
+                    'headimage' => $robot_db->headimage,
+                    'msg' => $msg,
+                    'time' => $now
+                ]));
+            }
+
+            // 更新排名
+            \app\controller\Contest::sendUpdateRankMQ($contest_id);
+
+            $user = Db::table('joincontest')
+                ->where('contestid', $contest_id)
+                ->where('isdel', 0)
+                ->pluck('userid');
+            foreach ($user as &$tem) {
+                $redis4->del('Contest' . $contest_id . 'problemdata' . $tem);
+            }
+
+            $msg = '提醒：竞赛【' . $contest_db->name . '】重新计算排名任务已下达！';
+
+            $msg_id = Base::insertToDb(
+                'privatechat',
+                [
+                    'post_user_id' => $robot_db->id,
+                    'get_user_id' => $my_aid,
+                    'msg' => $msg,
+                    'time' => $now
+                ]
+            );
+            Gateway::sendToUid(Gateway::getUidByClientId($client_id), json_encode([
+                'id' => Base::getChatUserUidById($msg_id),
+                'type' => ChatBase::$type_private_chat_name,
+                'msgtype' => 'private_chat',
+                'post_user_id' => Base::getChatUserUidById($robot_db->id),
+                'get_user_id' => Base::getChatUserUidById($my_aid),
+                'name' => $robot_db->name,
+                'headimage' => $robot_db->headimage,
+                'msg' => $msg,
+                'time' => $now
+            ]));
+            ChatBase::updateNoLookNum(ChatBase::$type_private_chat_name, $robot_db->id, $my_aid);
+        }
+        return '题目【' . $problem_name . '】所在竞赛均重判结束！';
+    }
+
+    /**
+     * 获取管理员用户名单
+     * @param string $reply 消息
+     */
+    static private function loadAdminRootUser(&$reply)
+    {
+        $user_db = Db::table('user')
+            ->where('isdel', 0)
+            ->where('grade', '>', 1)
+            ->orderBy('grade', 'desc')
+            ->orderBy('id', 'asc')
+            ->select('email', 'name', 'grade')
+            ->get();
+        foreach ($user_db as &$t) {
+            $reply .= '用户：' . $t->name . '（邮箱：' . $t->email . '）的权限为：' . ($t->grade == 3 ? '超级管理员' : ($t->grade == 2 ? '管理员' : '用户')) . "\n";
+        }
+    }
+
+    /**
+     * 重置全站用户头像
+     * @param string $reply 消息
+     */
+    static private function resetUserHeadimage(&$reply)
+    {
+        $user_db = Db::table('user')
+            ->select('id', 'email')
+            ->get();
+
+        foreach ($user_db as &$tem) {
+            $headimage = 'https://q1.qlogo.cn/headimg_dl?dst_uin=' . $tem->email . '&spec=640';
+            Db::table('user')
+                ->where('id', $tem->id)
+                ->update([
+                    'headimage' => $headimage
+                ]);
+            Base::updateUserDataRedis($tem->id);
+        }
+        Base::deleteAllFile(Base::$LTPP_public_static_path . '/headimage');
+        $reply = '全站用户头像已设置成邮箱头像';
+    }
+
+    /**
+     * 设置全站用户图片背景
+     * @param string $reply 消息
+     * @param string $url 图片地址
+     */
+    static private function resetUserBkImage(&$reply, &$url = '')
+    {
+        if (!$url) {
+            $url = '';
+        }
+        Db::table('user')->update(['bkimage' => $url]);
+        Base::updateAllUserDataRedis();
+        $path = Base::$LTPP_public_static_path . '/background/image';
+        Base::deleteAllFile($path);
+        Base::judgeCreatPath($path);
+        $reply = '全站用户图片背景设置完成';
+    }
+
+    /**
+     * 设置全站用户视频背景
+     * @param string $reply 消息
+     * @param string $url 视频地址
+     */
+    static private function resetUserBkVideo(&$reply, &$url = '')
+    {
+        if (!$url) {
+            $url = '';
+        }
+        Db::table('user')->update(['bkvideo' => $url]);
+        Base::updateAllUserDataRedis();
+        $path = Base::$LTPP_public_static_path . '/background/video';
+        Base::deleteAllFile($path);
+        Base::judgeCreatPath($path);
+        $reply = '全站用户视频背景设置完成';
+    }
+
+    /**
+     * ChatGPT回答
+     * @param string $msg 用户的消息
+     * @param string $reply 消息
+     */
+    static private function gptAnswer($userid, $msg, &$reply)
+    {
+        $is_root = Base::judgeIsRoot($userid);
+        $user_data = Base::getUserData($userid);
+        $money = $user_data->money;
+        $res_msg = '';
+        if ($money < PrivateRobot::$one_msg_cost && !$is_root) {
+            $reply = '机器人通知：余额不足,请充值！';
+            $res_msg = '(每次成功提问并得到回答花费' . PrivateRobot::$one_msg_cost . '学虫币)';
+            return $res_msg;
+        }
+        $msg = '请使用中文回答，' . $msg;
+        $reply = PrivateChat::gptSend($userid, $msg);
+
+        if (!$reply) {
+            $res_msg = PrivateChat::$gpt_err_msg;
+        } else if (!$is_root) {
+            Db::table('user')
+                ->where('id', $userid)
+                ->decrement('money', PrivateRobot::$one_msg_cost);
+            Base::updateUserDataRedis($userid);
+            $user_data = Base::getUserData($userid);
+            $money = rtrim(rtrim($user_data->money, '0'), '.');
+            $res_msg = "\n\n" . '(本次提问花费：' . PrivateRobot::$one_msg_cost . '元，当前账户余额：' . $money . '学虫币)';
+        }
+        return $res_msg;
+    }
+
+    /**
+     * 调用GPT
+     */
+    static public function gptSend($userid, $msg)
+    {
+        if (!$userid || !$msg) {
+            return null;
+        }
+        $robot = Base::getRobotId();
+        $history = Db::table('privatechat')
+            ->orWhere(function ($query) use ($userid, $robot) {
+                $query
+                    ->where('post_user_id', $userid)
+                    ->where('get_user_id', $robot)
+                    ->where('isdel', 0);
+            })
+            ->orWhere(function ($query) use ($userid, $robot) {
+                $query
+                    ->where('post_user_id', $robot)
+                    ->where('get_user_id', $userid)
+                    ->where('isdel', 0);
+            })
+            ->select('id', 'post_user_id', 'get_user_id', 'msg')
+            ->orderBy('id', 'desc')
+            ->limit(PrivateChat::$gpt_chat_history_limit)
+            ->get();
+        $msg_list = [];
+        foreach ($history as &$t) {
+            if ($t->msg == PrivateChat::$gpt_err_msg) {
+                continue;
+            }
+            $msg_list[] = [
+                'role' => $t->post_user_id == $userid && $t->get_user_id == $robot ? 'user' : 'system',
+                'content' => $t->msg
+            ];
+        }
+        $msg_list = array_reverse($msg_list);
+        $msg_list[] = [
+            'role' => 'user',
+            'content' => $msg
+        ];
+        $data = ['messages' => $msg_list];
+        $result = Base::sendRequest(PrivateRobot::$chatgpt_url, [], $data);
+        return $result;
+    }
+
+    /**
+     * 机器人自动消息回复root用户
+     * @param object $user_db 机器人的数据库数据
+     * @param object $db_my 用户的数据库个人数据
+     * @param string $client_id 客户端id
+     * @param string $msg 用户发给机器人的消息
+     */
+    static protected function rootSendToRobot(&$user_db, &$db_my, &$client_id, &$msg)
+    {
+        $now = date('Y-m-d H:i:s', time());
+        $reply = '';
+        $do = '';
+        for ($i = 0; $i < strlen($msg); ++$i) {
+            if ($msg[$i] == ' ') {
+                for ($j = $i + 1; $j < strlen($msg); ++$j) {
+                    $reply .= $msg[$j];
+                }
+                break;
+            }
+            $do .= $msg[$i];
+        }
+        $res_msg = '';
+        switch ($do) {
+            case '1':
+                $reply = '用户总数为：' . Db::table('user')->where('isdel', 0)->count();
+                break;
+            case '2':
+                $reply = '文章总数为：' . Db::table('article')->where('isdel', 0)->count();
+                break;
+            case '3':
+                $reply = '题库总数为：' . Db::table('oj')->where('isdel', 0)->count();
+                break;
+            case '4':
+                $reply = '竞赛总数为：' . Db::table('contest')->where('isdel', 0)->count();
+                break;
+            case '5':
+                $reply = '代码运行记录总数为：' . Db::table('codehistory')->where('isdel', 0)->count();
+                break;
+            case '6':
+                $reply = 'public文件夹大小为：' . Base::getFileSize('/home/LTPP/public/') / Base::$one_mb_size . 'MB';
+                break;
+            case '7':
+                $reply = '私聊的消息总数为：' . Db::table('privatechat')->where('isdel', 0)->count() . "\n" . '群聊的消息总数为：' . Db::table('groupchat')->where('isdel', 0)->count();
+                break;
+            case '8':
+                PrivateRobot::loadLinuxMore($reply);
+                break;
+            case '9':
+                PrivateRobot::loadAdminRootUser($reply);
+                break;
+            case '10':
+                Db::table('user')->update([
+                    'isusemusic' => 1
+                ]);
+                Base::updateAllUserDataRedis();
+                $reply = '开启成功';
+                break;
+            case '11':
+                PrivateRobot::deleteLogMore($reply);
+                break;
+            case '12':
+                Base::deleteAllFile('/tmp');
+                Base::judgeCreatPath('/tmp');
+                Base::chmodFile('/tmp', 0777);
+                $reply = '清空tmp目录成功';
+                break;
+            case '13':
+                $all_user = Db::table('user')
+                    ->where('isdel', 0)
+                    ->select('id', 'email')
+                    ->get();
+                $insert_data = [];
+                $i = 0;
+                $reply = '来自' . $user_db->name . '的提醒：' . "\n" . $reply;
+                Gateway::sendToAll(json_encode([
+                    'msgtype' => 'notice',
+                    'name' => $user_db->name,
+                    'msg' => $reply,
+                    'time' => date('Y-m-d H:i:s', time())
+                ]));
+                foreach ($all_user as &$tem) {
+                    ++$i;
+                    if ($i % 1000 == 0) {
+                        Db::table('privatechat')->insert($insert_data);
+                        $insert_data = [];
+                    }
+                    $insert_data[] = [
+                        'post_user_id' => $user_db->id,
+                        'get_user_id' => $tem->id,
+                        'msg' => $reply,
+                        'time' => $now
+                    ];
+                    ChatBase::updateNoLookNum(ChatBase::$type_private_chat_name, $user_db->id, $tem->id);
+                    $has = Db::table('privateuser')
+                        ->where('get_user_id', $tem->id)
+                        ->where('post_user_id', $user_db->id)
+                        ->where('isdel', 0)
+                        ->exists();
+                    if (!$has) {
+                        Base::insertToDb('privateuser', [
+                            'post_user_id' => $user_db->id,
+                            'get_user_id' => $tem->id,
+                            'isdel' => 0,
+                            'time' => $now
+                        ]);
+                    }
+                }
+                if (!empty($insert_data)) {
+                    Db::table('privatechat')->insert($insert_data);
+                }
+                $insert_data = [];
+                return;
+            case '14':
+                PrivateRobot::resetUserHeadimage($reply);
+                break;
+            case '15':
+                Db::table('user')->update([
+                    'isusemusic' => 0
+                ]);
+                Base::updateAllUserDataRedis();
+                $reply = '关闭成功';
+                break;
+            case '16':
+                $url = $reply;
+                PrivateRobot::resetUserBkImage($reply, $url);
+                break;
+            case '17':
+                $url = $reply;
+                PrivateRobot::resetUserBkVideo($reply, $url);
+                break;
+            case '18':
+                $reply = PrivateRobot::rejudgeOneProblem($client_id, $db_my->id, $reply, $user_db);
+                break;
+            case '19':
+                $reply = Ssh::buy($db_my->id, $reply);
+                break;
+            case '帮助':
+                $reply = PrivateChat::$robot_root_default . '（仅限购一个，价格' . Ssh::$price . '学虫币）';
+                break;
+            case '？':
+                $reply = PrivateChat::$robot_root_default . '（仅限购一个，价格' . Ssh::$price . '学虫币）';
+                break;
+            case 'help':
+                $reply = PrivateChat::$robot_root_default . '（仅限购一个，价格' . Ssh::$price . '学虫币）';
+                break;
+            case '?':
+                $reply = PrivateChat::$robot_root_default . '（仅限购一个，价格' . Ssh::$price . '学虫币）';
+                break;
+            default:
+                $res_msg = PrivateRobot::gptAnswer($db_my->id, $msg, $reply);
+                break;
+        }
+        $msg_id = Base::insertToDb(
+            'privatechat',
+            [
+                'post_user_id' => $user_db->id,
+                'get_user_id' => $db_my->id,
+                'msg' => $reply,
+                'time' => $now
+            ]
+        );
+        Gateway::sendToUid(Gateway::getUidByClientId($client_id), json_encode([
+            'id' => Base::getChatUserUidById($msg_id),
+            'type' => ChatBase::$type_private_chat_name,
+            'msgtype' => 'private_chat',
+            'post_user_id' => Base::getChatUserUidById($user_db->id),
+            'get_user_id' => Base::getChatUserUidById($db_my->id),
+            'name' => $user_db->name,
+            'headimage' => $user_db->headimage,
+            'msg' => $reply . $res_msg,
+            'time' => $now
+        ]));
+        $has = Db::table('privateuser')
+            ->where('get_user_id', $db_my->id)
+            ->where('post_user_id', $user_db->id)
+            ->where('isdel', 0)
+            ->exists();
+        if (!$has) {
+            Base::insertToDb('privateuser', [
+                'post_user_id' => $user_db->id,
+                'get_user_id' => $db_my->id,
+                'isdel' => 0,
+                'time' => $now
+            ]);
+        }
+    }
+
+    /**
+     * 机器人自动消息回复admin用户
+     * @param object $user_db 机器人的数据库数据
+     * @param object $db_my 用户的数据库个人数据
+     * @param string $client_id 客户端id
+     * @param string $msg 用户发给机器人的消息
+     */
+    static protected function adminSendToRobot(&$user_db, &$db_my, &$client_id, &$msg)
+    {
+        $now = date('Y-m-d H:i:s', time());
+        $reply = '';
+        $do = '';
+        for ($i = 0; $i < strlen($msg); ++$i) {
+            if ($msg[$i] == ' ') {
+                for ($j = $i + 1; $j < strlen($msg); ++$j) {
+                    $reply .= $msg[$j];
+                }
+                break;
+            }
+            $do .= $msg[$i];
+        }
+
+        $res_msg = '';
+        switch ($do) {
+            case '1':
+                $reply = PrivateRobot::rejudgeOneProblem($client_id, $db_my->id, $reply, $user_db);
+                break;
+            case '2':
+                $reply = Ssh::buy($db_my->id, $reply);
+                break;
+            case '帮助':
+                $reply = PrivateChat::$robot_admin_default . '（仅限购一个，价格' . Ssh::$price . '学虫币）';
+                break;
+            case '？':
+                $reply = PrivateChat::$robot_admin_default . '（仅限购一个，价格' . Ssh::$price . '学虫币）';
+                break;
+            case 'help':
+                $reply = PrivateChat::$robot_admin_default . '（仅限购一个，价格' . Ssh::$price . '学虫币）';
+                break;
+            case '?':
+                $reply = PrivateChat::$robot_admin_default . '（仅限购一个，价格' . Ssh::$price . '学虫币）';
+                break;
+            default:
+                $res_msg = PrivateRobot::gptAnswer($db_my->id, $msg, $reply);
+                break;
+        }
+        $msg_id = Base::insertToDb(
+            'privatechat',
+            [
+                'post_user_id' => $user_db->id,
+                'get_user_id' => $db_my->id,
+                'msg' => $reply,
+                'time' => $now
+            ]
+        );
+        Gateway::sendToUid(Gateway::getUidByClientId($client_id), json_encode([
+            'id' => Base::getChatUserUidById($msg_id),
+            'type' => ChatBase::$type_private_chat_name,
+            'msgtype' => 'private_chat',
+            'post_user_id' => Base::getChatUserUidById($user_db->id),
+            'get_user_id' => Base::getChatUserUidById($db_my->id),
+            'name' => $user_db->name,
+            'headimage' => $user_db->headimage,
+            'msg' => $reply . $res_msg,
+            'time' => $now
+        ]));
+        $has = Db::table('privateuser')
+            ->where('get_user_id', $db_my->id)
+            ->where('post_user_id', $user_db->id)
+            ->where('isdel', 0)
+            ->exists();
+        if (!$has) {
+            Base::insertToDb('privateuser', [
+                'post_user_id' => $user_db->id,
+                'get_user_id' => $db_my->id,
+                'isdel' => 0,
+                'time' => $now
+            ]);
+        }
+    }
+
+    /**
+     * 机器人自动消息回复普通用户
+     * @param object $user_db 机器人的数据库数据
+     * @param object $db_my 用户的数据库个人数据
+     * @param string $client_id 客户端id
+     * @param string $msg 用户发给机器人的消息
+     */
+    static protected function userSendToRobot(&$user_db, &$db_my, &$client_id, &$msg)
+    {
+        $now = date('Y-m-d H:i:s', time());
+        $reply = '';
+        $do = '';
+        for ($i = 0; $i < strlen($msg); ++$i) {
+            if ($msg[$i] == ' ') {
+                for ($j = $i + 1; $j < strlen($msg); ++$j) {
+                    $reply .= $msg[$j];
+                }
+                break;
+            }
+            $do .= $msg[$i];
+        }
+        $res_msg = '';
+        switch ($do) {
+            case '1':
+                $reply = Ssh::buy($db_my->id, $reply);
+                break;
+            case '帮助':
+                $reply = PrivateChat::$robot_user_default . '（仅限购一个，价格' . Ssh::$price . '学虫币）';
+                break;
+            case '？':
+                $reply = PrivateChat::$robot_user_default . '（仅限购一个，价格' . Ssh::$price . '学虫币）';
+                break;
+            case 'help':
+                $reply = PrivateChat::$robot_user_default . '（仅限购一个，价格' . Ssh::$price . '学虫币）';
+                break;
+            case '?':
+                $reply = PrivateChat::$robot_user_default . '（仅限购一个，价格' . Ssh::$price . '学虫币）';
+                break;
+            default:
+                $res_msg = PrivateRobot::gptAnswer($db_my->id, $msg, $reply);
+                $res_msg = $reply . $res_msg;
+                break;
+        }
+
+        $msg_id = Base::insertToDb(
+            'privatechat',
+            [
+                'post_user_id' => $user_db->id,
+                'get_user_id' => $db_my->id,
+                'msg' => $reply,
+                'time' => $now
+            ]
+        );
+
+        Gateway::sendToUid(Gateway::getUidByClientId($client_id), json_encode([
+            'id' => Base::getChatUserUidById($msg_id),
+            'type' => ChatBase::$type_private_chat_name,
+            'msgtype' => 'private_chat',
+            'post_user_id' => Base::getChatUserUidById($user_db->id),
+            'get_user_id' => Base::getChatUserUidById($db_my->id),
+            'name' => $user_db->name,
+            'headimage' => $user_db->headimage,
+            'msg' => $reply . $res_msg,
+            'time' => $now
+        ]));
+
+        $has = Db::table('privateuser')
+            ->where('get_user_id', $db_my->id)
+            ->where('post_user_id', $user_db->id)
+            ->where('isdel', 0)
+            ->exists();
+        if (!$has) {
+            Base::insertToDb('privateuser', [
+                'post_user_id' => $user_db->id,
+                'get_user_id' => $db_my->id,
+                'isdel' => 0,
+                'time' => $now
+            ]);
+        }
+    }
+
+}
