@@ -3,7 +3,7 @@
  * @Author: SQS 1491579574@qq.com
  * @Date: 2023-06-02 11:58:18
  * @LastEditors: wmzn-ltpp 1491579574@qq.com
- * @LastEditTime: 2023-10-14 14:46:54
+ * @LastEditTime: 2023-10-14 14:54:34
  * @FilePath: \LTPP-CODE\app\queue\redis\BuySsh.php
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
@@ -183,7 +183,8 @@ class BuySsh implements Consumer
                 ->lockForUpdate()
                 ->decrement('money', Ssh::$price);
             Base::updateUserDataRedis($my_aid);
-
+            // 更新下一个端口
+            $redis22->setNx(Ssh::$port_key, $port + 2);
             $url = Base::getSettingKeyData('ssh_back_url');
             $ssh_ip = Base::getIp($url);
             $content = '> 您的SSH登录命令为：ssh -p ' . $port . ' ltpp@' . $ssh_ip . "\n" .
