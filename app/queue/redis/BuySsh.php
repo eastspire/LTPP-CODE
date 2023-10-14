@@ -69,7 +69,7 @@ class BuySsh implements Consumer
             $msg = '';
 
             $my_data = Base::getUserData($my_aid);
-            if (!$my_data || !isset($my_data->email)) {
+            if (!$my_data) {
                 return;
             }
             $has_buy = Ssh::judgeHasBuy($my_aid);
@@ -89,7 +89,7 @@ class BuySsh implements Consumer
             }
 
             $redis22->set($key, true);
-            $my_email = $my_data->email ?? '';
+
             $password = $data['my_password'];
             if (!$password) {
                 $password = rand(100000, 999999);
@@ -108,12 +108,9 @@ class BuySsh implements Consumer
                     $res = Base::sendRequest(Base::getSettingKeyData('ssh_back_url'), [], [
                         'user_id' => $my_aid,
                         'port' => $port,
-                        'password' => $password,
-                        'email' => $my_email,
-                        'email_url' => Base::getSettingKeyData('mysmtpurl'),
-                        'email_mail_name' => Base::getSettingKeyData('mysmtpname'),
-                        'email_mail_password' => Base::getSettingKeyData('mysmtppassword'),
+                        'password' => $password
                     ]);
+
                     if (!$res) {
                         $redis22->del($key);
                         $msg = 'LTPP-SSH服务未启动！购买失败！请重试！';
