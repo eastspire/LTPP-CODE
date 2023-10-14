@@ -187,8 +187,8 @@ class BuySsh implements Consumer
             $url = Base::getSettingKeyData('ssh_back_url');
             $ssh_ip = Base::getIp($url);
             $content = '> 您的SSH登录命令为：ssh -p ' . $port . ' ltpp@' . $ssh_ip . "\n" .
-                'ltpp用户登录密码：' . $password . "\n" . 'root用户（默认关闭root用户远程登陆）密码：ltpp' . "\n\n" .
-                '> 在线版本VSCODE访问地址：http://' . $ssh_ip . ':' . ($port + 1) . "\n" . '在线版本VSCODE访问密码：' . $password;
+                '> ltpp用户登录密码：' . $password . "\n" . '> root用户（默认关闭root用户远程登陆）密码：ltpp' . "\n\n" .
+                '> 在线版本VSCODE访问地址：http://' . $ssh_ip . ':' . ($port + 1) . "\n" . '> 在线版本VSCODE访问密码：' . $password;
             Robot::sendChatToOneUserMsgAndEmail($my_aid, '#### ' . $title . "\n" . $content);
             $redis22->del($key);
         } catch (Exception $e) {
