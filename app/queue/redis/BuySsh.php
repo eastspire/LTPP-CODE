@@ -3,7 +3,7 @@
  * @Author: SQS 1491579574@qq.com
  * @Date: 2023-06-02 11:58:18
  * @LastEditors: wmzn-ltpp 1491579574@qq.com
- * @LastEditTime: 2023-10-14 12:49:12
+ * @LastEditTime: 2023-10-14 14:24:24
  * @FilePath: \LTPP-CODE\app\queue\redis\BuySsh.php
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
@@ -41,12 +41,14 @@ class BuySsh implements Consumer
             ->select('port')
             ->first();
         if ($db) {
+            // 当前端口
             $port = $db->port + 2;
-            $redis22->set($key, $port);
         } else {
+            // 当前端口
             $port = Ssh::$port_begin;
-            $redis22->set($key, $port);
         }
+        // 更新下一个端口
+        $redis22->set($key, $port + 2);
         return (int) $port;
     }
 
