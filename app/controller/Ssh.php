@@ -89,7 +89,10 @@ class Ssh
             if ($has_buy) {
                 $url = Base::getSettingKeyData('ssh_back_url');
                 $ssh_ip = Base::getIp($url);
-                $msg = '您已购买过本产品！' . "\n" . '登录命令：ssh -p ' . ($has_buy->port ?? '') . ' ltpp@' . $ssh_ip . "\n" . '登陆密码：' . ($has_buy->password ?? '');
+                $port = $has_buy->port ?? '';
+                $password = $has_buy->password ?? '';
+                $msg = '您已购买过本产品！' . "\n" . '登录命令：ssh -p ' . $port . ' ltpp@' . $ssh_ip . "\n" . '登陆密码：' . $password . "\n" .
+                    '在线版本VSCODE访问地址：http://' . $ssh_ip . ':' . $port . "\n" . '在线版本VSCODE访问密码：' . $password;
                 return $msg;
             }
             if ($my_data->money < Ssh::$price) {

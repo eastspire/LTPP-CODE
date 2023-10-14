@@ -2,8 +2,8 @@
 /*
  * @Author: SQS 1491579574@qq.com
  * @Date: 2023-06-02 11:58:18
- * @LastEditors: 18855190718 1491579574@qq.com
- * @LastEditTime: 2023-10-08 12:08:52
+ * @LastEditors: wmzn-ltpp 1491579574@qq.com
+ * @LastEditTime: 2023-10-14 12:49:12
  * @FilePath: \LTPP-CODE\app\queue\redis\BuySsh.php
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
@@ -33,7 +33,7 @@ class BuySsh implements Consumer
         $redis22 = Redis::connection('db22');
         $port = $redis22->get($key);
         if ($port) {
-            $redis22->setNx($key, $port + 1);
+            $redis22->setNx($key, $port + 2);
             return (int) $port;
         }
         $db = Db::table('ssh')
@@ -41,9 +41,8 @@ class BuySsh implements Consumer
             ->select('port')
             ->first();
         if ($db) {
-            $port = $db->port;
+            $port = $db->port + 2;
             $redis22->set($key, $port);
-            ++$port;
         } else {
             $port = Ssh::$port_begin;
             $redis22->set($key, $port);
@@ -85,7 +84,7 @@ class BuySsh implements Consumer
 
             if ($redis22->exists($key)) {
                 $msg = '请耐心等待购买结束！';
-                Robot::sendChatToOneUserMsg($my_aid, $title . "<br/>" . $msg);
+                Robot::sendChatToOneUserMsg($my_aid, $title . "\n" . $msg);
                 return;
             }
 
@@ -99,7 +98,7 @@ class BuySsh implements Consumer
             if ($my_data->money < Ssh::$price) {
                 $redis22->del($key);
                 $msg = '余额不足！购买失败！';
-                Robot::sendChatToOneUserMsg($my_aid, $title . "<br/>" . $msg);
+                Robot::sendChatToOneUserMsg($my_aid, $title . "\n" . $msg);
                 return;
             }
 
@@ -118,7 +117,7 @@ class BuySsh implements Consumer
                     if (!$res) {
                         $redis22->del($key);
                         $msg = 'LTPP-SSH服务未启动！购买失败！请重试！';
-                        Robot::sendChatToOneUserMsg($my_aid, $title . "<br/>" . $msg);
+                        Robot::sendChatToOneUserMsg($my_aid, $title . "\n" . $msg);
                         return;
                     }
 
@@ -127,7 +126,7 @@ class BuySsh implements Consumer
                     if (!isset($res->code) || !isset($res->title)) {
                         $redis22->del($key);
                         $msg = 'LTPP-SSH服务未启动！购买失败！请重试！';
-                        Robot::sendChatToOneUserMsg($my_aid, $title . "<br/>" . $msg);
+                        Robot::sendChatToOneUserMsg($my_aid, $title . "\n" . $msg);
                         return;
                     }
                     $content = '';
@@ -139,7 +138,7 @@ class BuySsh implements Consumer
                         if (isset($res->content)) {
                             $msg = $res->content;
                         }
-                        Robot::sendChatToOneUserMsg($my_aid, $title . "<br/>" . $msg);
+                        Robot::sendChatToOneUserMsg($my_aid, $title . "\n" . $msg);
                         return;
                     }
 
@@ -148,13 +147,13 @@ class BuySsh implements Consumer
                     } else if ($res->code != 0) {
                         $redis22->del($key);
                         $msg = 'LTPP-SSH服务错误！购买失败！请重试！';
-                        Robot::sendChatToOneUserMsg($my_aid, $title . "<br/>" . $msg);
+                        Robot::sendChatToOneUserMsg($my_aid, $title . "\n" . $msg);
                         return;
                     }
                 } catch (Exception $e) {
                     $title = '用户【' . $my_data->name . '】购买LTPP-SSH异常';
                     $content = $e->getMessage();
-                    Robot::sendChatToOneUserMsg(Base::getRootId(), $title . "<br/>" . $content);
+                    Robot::sendChatToOneUserMsg(Base::getRootId(), $title . "\n" . $content);
                     return;
                 }
             }
@@ -172,12 +171,12 @@ class BuySsh implements Consumer
             if (!$res) {
                 $redis22->del($key);
                 $msg = '购买失败！请重试！';
-                Robot::sendChatToOneUserMsg($my_aid, $title . "<br/>" . $msg);
-                Robot::sendChatToOneUserMsg(Base::getRootId(), '【' . $now . '】用户【' . $my_data->name . '】购买LTPP-SSH失败' . "<br/>" . $msg);
+                Robot::sendChatToOneUserMsg($my_aid, $title . "\n" . $msg);
+                Robot::sendChatToOneUserMsg(Base::getRootId(), '【' . $now . '】用户【' . $my_data->name . '】购买LTPP-SSH失败' . "\n" . $msg);
                 return;
             }
 
-            Robot::sendChatToOneUserMsg(Base::getRootId(), '【' . $now . '】用户【' . $my_data->name . '】购买LTPP-SSH成功' . "<br/>" . json_encode($data));
+            Robot::sendChatToOneUserMsg(Base::getRootId(), '【' . $now . '】用户【' . $my_data->name . '】购买LTPP-SSH成功' . "\n" . json_encode($data));
 
             $res = Db::table('user')
                 ->where('id', $my_aid)
@@ -188,15 +187,16 @@ class BuySsh implements Consumer
 
             $url = Base::getSettingKeyData('ssh_back_url');
             $ssh_ip = Base::getIp($url);
-            $content = '您的登录命令为：ssh -p ' . $port . ' ltpp@' . $ssh_ip . '<br>' .
-                '登录密码：' . $password . '<br>root用户（默认关闭root用户远程登陆）密码：ltpp<br>' .
+            $content = '您的SSH登录命令为：ssh -p ' . $port . ' ltpp@' . $ssh_ip . "\n" .
+                '登录密码：' . $password . "\n" . 'root用户（默认关闭root用户远程登陆）密码：ltpp' . "\n" .
+                '在线版本VSCODE访问地址：http://' . $ssh_ip . ':' . $port . "\n" . '在线版本VSCODE访问密码：' . $password .
                 '如需使用本产品，请在控制台中运行该命令并输入密码';
-            Robot::sendChatToOneUserMsgAndEmail($my_aid, $title . "<br/>" . $content);
+            Robot::sendChatToOneUserMsgAndEmail($my_aid, $title . "\n" . $content);
             $redis22->del($key);
         } catch (Exception $e) {
             $title = '用户【' . ($my_data->name ?? '') . '】购买LTPP-SSH异常';
             $content = $e->getMessage();
-            Robot::sendChatToOneUserMsg(Base::getRootId(), $title . "<br/>" . $content);
+            Robot::sendChatToOneUserMsg(Base::getRootId(), $title . "\n" . $content);
             $redis22->del($key);
         }
     }
