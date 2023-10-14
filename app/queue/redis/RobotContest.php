@@ -78,35 +78,15 @@ class RobotContest implements Consumer
      * @param int $page
      * @return int $contestrank_id
      */
-    private function getCodeFromContestRank($problem_id = 0, $page = 1, $my_id = 0)
+    private function getCodeFromContestRank($problem_id = 0, $page = 1)
     {
         $can_total_score = (rand(0, 100) % 10 <= 2);
-        $order_by = rand(0, 1) ? 'asc' : 'desc';
-        if ($can_total_score) {
-            $all = Db::table('contestrank')
-                ->where('score', 100)
-                ->where('problemid', $problem_id)
-                ->where('isdel', 0)
-                ->count();
-            if ($all) {
-                if ($page > $all) {
-                    $page = ($page % $all) + 1;
-                }
-                $db = Db::table('contestrank')
-                    ->where('score', 100)
-                    ->where('problemid', $problem_id)
-                    ->where('isdel', 0)
-                    ->select('id')
-                    ->orderBy('id', $order_by)
-                    ->paginate(1, '*', 'page', $page)
-                    ->items();
-                if ($db) {
-                    return $db[0]->id;
-                }
-            }
+        if (!$can_total_score) {
+            return 0;
         }
+        $order_by = rand(0, 1) ? 'asc' : 'desc';
         $all = Db::table('contestrank')
-            ->where('score', '<', 100)
+            ->where('score', 100)
             ->where('problemid', $problem_id)
             ->where('isdel', 0)
             ->count();
@@ -115,7 +95,7 @@ class RobotContest implements Consumer
                 $page = ($page % $all) + 1;
             }
             $db = Db::table('contestrank')
-                ->where('score', '<', 100)
+                ->where('score', 100)
                 ->where('problemid', $problem_id)
                 ->where('isdel', 0)
                 ->select('id')
@@ -126,7 +106,7 @@ class RobotContest implements Consumer
                 return $db[0]->id;
             }
         }
-        // 没有竞赛的题目的提交记录，后续走代码历史查询
+        // 没有竞赛的题目的AC提交记录，后续走代码历史查询
         return 0;
     }
 
@@ -472,9 +452,9 @@ class RobotContest implements Consumer
                         }
                         if (rand(0, 1)) {
                             // 随机选择是否提交运行
-                            $code_id = $this->getCodeFromContestRank($one_problem_id, $one_person_index + 1, $one_person_id);
+                            $code_id = $this->getCodeFromContestRank($one_problem_id, $one_person_index + 1);
                             if ($code_id) {
-                                // 竞赛中有提交记录
+                                // 竞赛中有AC提交记录
                                 $this->addCodeFromContestRank($one_contest_id, $code_id, $one_person_id);
                             } else {
                                 // 从代码历史查询记录，没有记录会自带生成一个记录
