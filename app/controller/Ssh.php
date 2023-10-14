@@ -2,8 +2,8 @@
 /*
  * @Author: 18855190718 1491579574@qq.com
  * @Date: 2023-01-27 17:09:26
- * @LastEditors: 18855190718 1491579574@qq.com
- * @LastEditTime: 2023-10-08 07:41:03
+ * @LastEditors: wmzn-ltpp 1491579574@qq.com
+ * @LastEditTime: 2023-10-14 14:34:44
  * @FilePath: \LTPP-CODE\app\controller\Ssh.php
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
@@ -91,8 +91,9 @@ class Ssh
                 $ssh_ip = Base::getIp($url);
                 $port = $has_buy->port ?? '';
                 $password = $has_buy->password ?? '';
-                $msg = '您已购买过本产品！' . "\n" . '登录命令：ssh -p ' . $port . ' ltpp@' . $ssh_ip . "\n" . '登陆密码：' . $password . "\n" .
-                    '在线版本VSCODE访问地址：http://' . $ssh_ip . ':' . $port . "\n" . '在线版本VSCODE访问密码：' . $password;
+                $msg = '#### 您已购买过本产品！' . "\n" . '> 您的SSH登录命令为：ssh -p ' . $port . ' ltpp@' . $ssh_ip . "\n" .
+                    'ltpp用户登录密码：' . $password . "\n" . 'root用户（默认关闭root用户远程登陆）密码：ltpp' . "\n\n" .
+                    '> 在线版本VSCODE访问地址：http://' . $ssh_ip . ':' . ($port + 1) . "\n" . '在线版本VSCODE访问密码：' . $password;
                 return $msg;
             }
             if ($my_data->money < Ssh::$price) {

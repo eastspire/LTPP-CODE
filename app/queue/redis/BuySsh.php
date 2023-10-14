@@ -3,7 +3,7 @@
  * @Author: SQS 1491579574@qq.com
  * @Date: 2023-06-02 11:58:18
  * @LastEditors: wmzn-ltpp 1491579574@qq.com
- * @LastEditTime: 2023-10-14 14:24:24
+ * @LastEditTime: 2023-10-14 14:39:12
  * @FilePath: \LTPP-CODE\app\queue\redis\BuySsh.php
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
@@ -86,7 +86,7 @@ class BuySsh implements Consumer
 
             if ($redis22->exists($key)) {
                 $msg = '请耐心等待购买结束！';
-                Robot::sendChatToOneUserMsg($my_aid, $title . "\n" . $msg);
+                Robot::sendChatToOneUserMsg($my_aid, '#### ' . $title . "\n" . $msg);
                 return;
             }
 
@@ -100,7 +100,7 @@ class BuySsh implements Consumer
             if ($my_data->money < Ssh::$price) {
                 $redis22->del($key);
                 $msg = '余额不足！购买失败！';
-                Robot::sendChatToOneUserMsg($my_aid, $title . "\n" . $msg);
+                Robot::sendChatToOneUserMsg($my_aid, '#### ' . $title . "\n" . $msg);
                 return;
             }
 
@@ -116,7 +116,7 @@ class BuySsh implements Consumer
                     if (!$res) {
                         $redis22->del($key);
                         $msg = 'LTPP-SSH服务未启动！购买失败！请重试！';
-                        Robot::sendChatToOneUserMsg($my_aid, $title . "\n" . $msg);
+                        Robot::sendChatToOneUserMsg($my_aid, '#### ' . $title . "\n" . $msg);
                         return;
                     }
 
@@ -125,7 +125,7 @@ class BuySsh implements Consumer
                     if (!isset($res->code) || !isset($res->title)) {
                         $redis22->del($key);
                         $msg = 'LTPP-SSH服务未启动！购买失败！请重试！';
-                        Robot::sendChatToOneUserMsg($my_aid, $title . "\n" . $msg);
+                        Robot::sendChatToOneUserMsg($my_aid, '#### ' . $title . "\n" . $msg);
                         return;
                     }
                     $content = '';
@@ -137,7 +137,7 @@ class BuySsh implements Consumer
                         if (isset($res->content)) {
                             $msg = $res->content;
                         }
-                        Robot::sendChatToOneUserMsg($my_aid, $title . "\n" . $msg);
+                        Robot::sendChatToOneUserMsg($my_aid, '#### ' . $title . "\n" . $msg);
                         return;
                     }
 
@@ -146,13 +146,13 @@ class BuySsh implements Consumer
                     } else if ($res->code != 0) {
                         $redis22->del($key);
                         $msg = 'LTPP-SSH服务错误！购买失败！请重试！';
-                        Robot::sendChatToOneUserMsg($my_aid, $title . "\n" . $msg);
+                        Robot::sendChatToOneUserMsg($my_aid, '#### ' . $title . "\n" . $msg);
                         return;
                     }
                 } catch (Exception $e) {
                     $title = '用户【' . $my_data->name . '】购买LTPP-SSH异常';
                     $content = $e->getMessage();
-                    Robot::sendChatToOneUserMsg(Base::getRootId(), $title . "\n" . $content);
+                    Robot::sendChatToOneUserMsg(Base::getRootId(), '#### ' . $title . "\n" . $content);
                     return;
                 }
             }
@@ -170,7 +170,7 @@ class BuySsh implements Consumer
             if (!$res) {
                 $redis22->del($key);
                 $msg = '购买失败！请重试！';
-                Robot::sendChatToOneUserMsg($my_aid, $title . "\n" . $msg);
+                Robot::sendChatToOneUserMsg($my_aid, '#### ' . $title . "\n" . $msg);
                 Robot::sendChatToOneUserMsg(Base::getRootId(), '【' . $now . '】用户【' . $my_data->name . '】购买LTPP-SSH失败' . "\n" . $msg);
                 return;
             }
@@ -186,16 +186,15 @@ class BuySsh implements Consumer
 
             $url = Base::getSettingKeyData('ssh_back_url');
             $ssh_ip = Base::getIp($url);
-            $content = '您的SSH登录命令为：ssh -p ' . $port . ' ltpp@' . $ssh_ip . "\n" .
-                '登录密码：' . $password . "\n" . 'root用户（默认关闭root用户远程登陆）密码：ltpp' . "\n" .
-                '在线版本VSCODE访问地址：http://' . $ssh_ip . ':' . $port . "\n" . '在线版本VSCODE访问密码：' . $password .
-                '如需使用本产品，请在控制台中运行该命令并输入密码';
-            Robot::sendChatToOneUserMsgAndEmail($my_aid, $title . "\n" . $content);
+            $content = '> 您的SSH登录命令为：ssh -p ' . $port . ' ltpp@' . $ssh_ip . "\n" .
+                'ltpp用户登录密码：' . $password . "\n" . 'root用户（默认关闭root用户远程登陆）密码：ltpp' . "\n\n" .
+                '> 在线版本VSCODE访问地址：http://' . $ssh_ip . ':' . ($port + 1) . "\n" . '在线版本VSCODE访问密码：' . $password;
+            Robot::sendChatToOneUserMsgAndEmail($my_aid, '#### ' . $title . "\n" . $content);
             $redis22->del($key);
         } catch (Exception $e) {
             $title = '用户【' . ($my_data->name ?? '') . '】购买LTPP-SSH异常';
             $content = $e->getMessage();
-            Robot::sendChatToOneUserMsg(Base::getRootId(), $title . "\n" . $content);
+            Robot::sendChatToOneUserMsg(Base::getRootId(), '#### ' . $title . "\n" . $content);
             $redis22->del($key);
         }
     }
