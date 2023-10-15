@@ -983,16 +983,50 @@ class Base
     }
 
     /**
+     * 从url获取ip/域名端口
+     * @param string $url
+     * @return string $port
+     */
+    static public function getPort($url)
+    {
+        $port = '';
+        try {
+            if (!is_string($url)) {
+                return $port;
+            }
+            $cnt = 0;
+            $len = strlen($url);
+            for ($i = 0; $i < $len; ++$i) {
+                if ($url[$i] == ':') {
+                    ++$cnt;
+                }
+                if ($cnt == 2) {
+                    for ($j = $i + 1; $j < $len; ++$j) {
+                        if ($url[$j] < '0' || $url[$j] > '9') {
+                            break;
+                        }
+                        $port .= $url[$j];
+                    }
+                    break;
+                }
+            }
+        } catch (Exception $e) {
+            return $port;
+        }
+        return $port;
+    }
+
+    /**
      * 从url获取ip/域名地址
      * @param string $url
      * @return string $ip
      */
     static public function getIp($url)
     {
-        $ip = '';
+        $ip = '127.0.0.1';
         try {
             if (!is_string($url)) {
-                return '127.0.0.1';
+                return $ip;
             }
             $len = strlen($url);
             $begin = false;
@@ -1013,10 +1047,10 @@ class Base
                 }
                 $ip .= $url[$i];
             }
-            return $ip;
         } catch (Exception $e) {
             return $ip;
         }
+        return $ip;
     }
 
     /**

@@ -2,8 +2,8 @@
 /*
  * @Author: 18855190718 1491579574@qq.com
  * @Date: 2023-01-12 12:38:58
- * @LastEditors: 18855190718 1491579574@qq.com
- * @LastEditTime: 2023-07-24 00:51:19
+ * @LastEditors: wmzn-ltpp 1491579574@qq.com
+ * @LastEditTime: 2023-10-15 22:18:16
  * @FilePath: \LTPP-CODE\app\controller\Email.php
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
@@ -57,48 +57,35 @@ class Email extends Image
                 Robot::sendChatToOneUserMsg(Base::getRootId(), '邮件异常信息：' . "\n" . $e->getMessage());
             }
         } else {
-            Email::mail($to, $title, $content);
+            $mail_url = Base::getSettingKeyData('mysmtpurl');
+            $mail_username = Base::getSettingKeyData('mysmtpname');
+            $mail_password = Base::getSettingKeyData('mysmtppassword');
+            if (!$mail_url || !$mail_username) {
+                return;
+            }
+            $mail = new PHPMailer(true);
+            $mail->SMTPDebug = 0;
+            $mail->isSMTP();
+            $mail->Host = Base::getIp($mail_url);
+            if ($mail_password) {
+                $mail->SMTPAuth = true;
+                $mail->Username = $mail_username;
+                $mail->Password = $mail_password;
+            } else {
+                $mail->SMTPAuth = false;
+            }
+            $mail->Port = Base::getPort($mail_url);
+            $mail->setFrom($mail_username, $to);
+            $mail->addAddress($to);
+            $mail->isHTML(true);
+            $mail->Subject = $title;
+            $mail->Body = $content;
+            try {
+                $mail->send();
+            } catch (Exception $e) {
+                Robot::sendChatToOneUserMsg(Base::getRootId(), '邮件异常信息：' . "\n" . $e->getMessage());
+            }
         }
         return;
-    }
-
-    /**
-     * 个人邮件服务器
-     * @param string $to 接收者邮箱
-     * @param string $title 邮件标题
-     * @param string $content 邮件内容
-     */
-    static public function mail($to = '', $title = '', $content = '')
-    {
-        /**
-         * 个人mail服务器地址
-         */
-        $url = Base::getSettingKeyData('mysmtpurl');
-
-        /**
-         * 个人mail服务器账号
-         */
-        $mail_name = Base::getSettingKeyData('mysmtpname');
-
-        /**
-         * 个人mail服务器密码
-         */
-        $mail_password = Base::getSettingKeyData('mysmtppassword');
-
-        // 需要发送的数据
-        $data = [
-            'mail_from' => $mail_name,
-            'password' => $mail_password,
-            'mail_to' => $to,
-            'subject' => $title,
-            'content' => $content,
-            'subtype' => 'html'
-        ];
-        try {
-            Base::sendRequest($url, Base::$default_http_header, $data);
-        } catch (Exception $e) {
-            Robot::sendChatToOneUserMsg(Base::getRootId(), '邮件异常信息：' . "\n" . $e->getMessage());
-            return;
-        }
     }
 }
