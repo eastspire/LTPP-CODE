@@ -2,7 +2,7 @@
  * @Author: 18855190718 1491579574@qq.com
  * @Date: 2023-01-12 12:38:58
  * @LastEditors: wmzn-ltpp 1491579574@qq.com
- * @LastEditTime: 2023-10-15 10:43:57
+ * @LastEditTime: 2023-10-15 12:15:01
  * @FilePath: \LTPP-CODE\Frontend\src\plugins\axios.js
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
@@ -20,7 +20,7 @@ import store from '../plugins/vuex.js'
 // axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
 let public_network_url = 'https://api.ltpp.vip';
-let private_network_url = 'https://hbnuoj.ltpp.vip';
+let private_network_url = 'http://hbnuoj.ltpp.vip';
 
 let config = {
     baseURL: store.state.is_public_network == 1 ? public_network_url : private_network_url, //process.env.baseURL || process.env.apiUrl || ""
