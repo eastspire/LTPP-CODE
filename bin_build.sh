@@ -11,4 +11,3 @@
 ###
 php webman build:bin 8.2
 php webman build:bin 8.2
-./bin_up.sh

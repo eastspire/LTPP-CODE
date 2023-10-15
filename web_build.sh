@@ -13,4 +13,3 @@ cd Frontend
 cnpm run build
 cnpm run build
 cd ../
-./web_up.sh
