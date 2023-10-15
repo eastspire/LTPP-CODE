@@ -1,8 +1,8 @@
 /*
  * @Author: 18855190718 1491579574@qq.com
  * @Date: 2023-01-12 12:38:58
- * @LastEditors: 18855190718 1491579574@qq.com
- * @LastEditTime: 2023-08-10 10:42:37
+ * @LastEditors: wmzn-ltpp 1491579574@qq.com
+ * @LastEditTime: 2023-10-15 13:23:39
  * @FilePath: \LTPP-CODE\Frontend\vue.config.js
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
@@ -18,6 +18,7 @@ console.log('当前环境为' + (is_dev ? '【开发环境】' : '【生产环�
 
 module.exports = {
     publicPath: './',
+    outputDir: 'frontend',
     runtimeCompiler: true,
     devServer: {
         historyApiFallback: true,
