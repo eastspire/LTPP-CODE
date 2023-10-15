@@ -1,8 +1,8 @@
 /*
  * @Author: 18855190718 1491579574@qq.com
  * @Date: 2023-01-12 12:38:58
- * @LastEditors: 18855190718 1491579574@qq.com
- * @LastEditTime: 2023-09-24 22:23:40
+ * @LastEditors: wmzn-ltpp 1491579574@qq.com
+ * @LastEditTime: 2023-10-15 10:43:57
  * @FilePath: \LTPP-CODE\Frontend\src\plugins\axios.js
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
@@ -19,8 +19,8 @@ import store from '../plugins/vuex.js'
 // axios.defaults.headers.common['Authorization'] = AUTH_TOKEN;
 // axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
-let public_network_url = 'http://124.223.3.199';
-let private_network_url = 'http://210.45.137.12';
+let public_network_url = 'https://api.ltpp.vip';
+let private_network_url = 'https://hbnuoj.ltpp.vip';
 
 let config = {
     baseURL: store.state.is_public_network == 1 ? public_network_url : private_network_url, //process.env.baseURL || process.env.apiUrl || ""
@@ -38,11 +38,11 @@ _axios.interceptors.request.use(
         /* 存在则不进行请求后端音乐地址 */
         if (config.portType && config.portType.process && config.portType.process) {
             // 端口前统一加4与后端对应
-            let T_port = ":4" + config.portType.process;
-            config.baseURL += T_port;
+            // let T_port = ":4" + config.portType.process;
+            // config.baseURL += T_port;
             return config;
         } else {
-            config.baseURL += ":48787";
+            // config.baseURL += ":48787";
             if (config.dataType == 'jsonp') {
                 musicbkurl = window.sessionStorage.getItem("musicbkurl");
                 if (!musicbkurl) {
