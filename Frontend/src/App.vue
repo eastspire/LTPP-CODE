@@ -87,19 +87,24 @@ export default {
     },
     async getVersion(is_electron = false) {
       while (true) {
+        let skip = false;
         const { data: res } = await this.$ajax({
           method: "post",
           url: "/Version/getVersion",
           portType: {
             process: "8793",
           },
-        }).catch(async (e) => {
+        }).catch(() => {
+          skip = true;
           this.$route.path != "/maintenance" &&
             this.$router.replace({
               path: "/maintenance",
               replace: true,
             });
         });
+        if (skip) {
+          continue;
+        }
         if (res.code == 1) {
           if (this.version < res.version) {
             if (!is_electron) {
