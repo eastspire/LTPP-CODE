@@ -146,27 +146,21 @@ class Base
      * 文字编码
      */
     static $str_encoding = 'UTF-8,GBK,GB2312,BIG5';
+
     /**
      * IP请求限制次数
      */
     static $GLOBiplimit = 0;
+
     /**
      * IP拉黑达到的请求次数
      */
     static $GLOBipblack = 0;
+
     /**
      * 请求频率过期时间
      */
     static $GLOBiplimitTime = 0;
-    /**
-     * 最大同时判题设置
-     */
-    static $GLOBmaxjudge = 0;
-    /**
-     * 等待超时时间
-     */
-    static $GLOBmaxwaittime = 0;
-
 
     /**
      * RobotContest Redis前缀

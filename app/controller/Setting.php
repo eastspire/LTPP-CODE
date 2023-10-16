@@ -545,30 +545,6 @@ class Setting extends Image
                 // 后端音乐地址更改，后端音乐服务重启
                 $this->runMusic($request);
             }
-            if ($data['GLOBmaxwaittime'] != $redis5->get('GLOBmaxwaittime')) {
-                if (!is_numeric($data['GLOBmaxwaittime'])) {
-                    return json(['code' => -1, 'msg' => '类型错误！请填写数字！']);
-                }
-                Db::table('setting')
-                    ->where('id', $db->id)
-                    ->where('isdel', 0)
-                    ->lockForUpdate()
-                    ->update(['GLOBmaxwaittime' => $data['GLOBmaxwaittime']]);
-                $redis5->del('GLOBmaxwaittime');
-                $redis5->set('GLOBmaxwaittime', $data['GLOBmaxwaittime']);
-            }
-            if ($data['GLOBmaxjudge'] != $redis5->get('GLOBmaxjudge')) {
-                if (!is_numeric($data['GLOBmaxjudge'])) {
-                    return json(['code' => -1, 'msg' => '类型错误！请填写数字！']);
-                }
-                Db::table('setting')
-                    ->where('id', $db->id)
-                    ->where('isdel', 0)
-                    ->lockForUpdate()
-                    ->update(['GLOBmaxjudge' => $data['GLOBmaxjudge']]);
-                $redis5->del('GLOBmaxjudge');
-                $redis5->set('GLOBmaxjudge', $data['GLOBmaxjudge']);
-            }
             if ($data['classurl'] != $redis5->get('classurl')) {
                 Db::table('setting')
                     ->where('id', $db->id)

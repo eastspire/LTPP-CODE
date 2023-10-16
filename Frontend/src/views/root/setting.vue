@@ -987,8 +987,6 @@ export default {
         smtp: "",
         smtpkey: "",
         GLOBlinuxurl: "",
-        GLOBmaxjudge: "",
-        GLOBmaxwaittime: "",
         GLOBipfrequency: "",
         GLOBipblack: "",
         GLOBiplimit: "",
