@@ -35,14 +35,14 @@
       <a
         @click="choosePublic()"
         class="link animate"
-        v-if="!$store.state.is_public_network"
+        v-if="!$store.state.is_public_network && !is_ssl"
       >
         | 切换公网版本 |</a
       >
       <a
         @click="choosePrivate()"
         class="link animate"
-        v-if="$store.state.is_public_network"
+        v-if="$store.state.is_public_network && !is_ssl"
       >
         | 切换内网版本 |</a
       >
@@ -55,6 +55,7 @@ export default {
   date() {
     return {
       footmeddage: "",
+      is_ssl: true,
     };
   },
   mounted() {
@@ -64,6 +65,11 @@ export default {
     let date = new Date();
     let year = date.getFullYear();
     this.footmeddage = "©2021 - " + year + " LTPP版权所有";
+    if (window.location.protocol === "https:") {
+      this.is_ssl = true;
+    } else {
+      this.is_ssl = false;
+    }
   },
   methods: {
     choosePublic() {
