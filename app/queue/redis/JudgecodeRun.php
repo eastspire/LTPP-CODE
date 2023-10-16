@@ -3,7 +3,7 @@
  * @Author: SQS 1491579574@qq.com
  * @Date: 2023-06-02 11:58:18
  * @LastEditors: wmzn-ltpp 1491579574@qq.com
- * @LastEditTime: 2023-10-16 14:04:51
+ * @LastEditTime: 2023-10-16 18:00:48
  * @FilePath: \LTPP-CODE\app\queue\redis\JudgecodeRun.php
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
@@ -30,7 +30,7 @@ class JudgecodeRun implements Consumer
             $my_aid = $data['my_aid'] ?? 0;
             $code_id = $data['code_id'] ?? 0;
             $code = $data['code'] ?? '';
-            $userlanguage = $data['userlanguage '] ?? 'C++';
+            $userlanguage = $data['userlanguage'] ?? 'C++';
             $contest_id = $data['contest_id'];
             $problem_id = $data['problem_id'];
             if (!$my_aid || !$problem_id || !$code || !$userlanguage) {

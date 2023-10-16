@@ -3,7 +3,7 @@
  * @Author: SQS 1491579574@qq.com
  * @Date: 2023-06-02 11:58:18
  * @LastEditors: wmzn-ltpp 1491579574@qq.com
- * @LastEditTime: 2023-10-16 14:05:54
+ * @LastEditTime: 2023-10-16 18:00:15
  * @FilePath: \LTPP-CODE\app\queue\redis\WebcodeRun.php
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
@@ -29,7 +29,7 @@ class WebcodeRun implements Consumer
             $my_aid = $data['my_aid'] ?? 0;
             $code_id = $data['code_id'] ?? 0;
             $code = $data['code'] ?? '';
-            $userlanguage = $data['userlanguage '] ?? 'C++';
+            $userlanguage = $data['userlanguage'] ?? 'C++';
             $testin = $data['testin'] ?? '';
             if (!$my_aid || !$code || !$userlanguage) {
                 return;
