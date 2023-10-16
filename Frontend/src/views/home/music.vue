@@ -226,7 +226,7 @@ export default {
         portType: {
           process: "8797",
         },
-      }).catch((t) => {
+      }).catch(() => {
         setTimeout(() => {
           this.postmusicurl();
         }, 666);
@@ -245,13 +245,7 @@ export default {
         portType: {
           process: "8793",
         },
-      }).catch((t) => {
-        // this.$msg({
-        //   type: "error",
-        //   message: t,
-        //   duration: 1600,
-        //   offset: 80,
-        // });
+      }).catch(() => {
         setTimeout(() => {
           this.getuid();
         }, 666);
@@ -272,18 +266,13 @@ export default {
         portType: {
           process: "8793",
         },
-      }).catch((t) => {
-        this.$msg({
-          type: "error",
-          message: t,
-          duration: 1600,
-          offset: 80,
-        });
+      }).catch(() => {
+        return;
       });
       if (res1.code == 1 && res1.musiclovelistid) {
         this.lovemusiclistid = res1.musiclovelistid;
       }
-      await this.init();
+      this.init();
     },
 
     /* 登陆二维码 */
@@ -299,13 +288,8 @@ export default {
           timerstamp: new Date().getTime(),
           realIP: this.randomip(),
         },
-      }).catch((t) => {
-        // this.$msg({
-        //   type: "error",
-        //   message: t,
-        //   duration: 1600,
-        //   offset: 80,
-        // });
+      }).catch(() => {
+        return;
       });
       if (res1.code == 200) {
         this.key = res1.data.unikey;
@@ -324,13 +308,8 @@ export default {
           qrimg: true,
           realIP: this.randomip(),
         },
-      }).catch((t) => {
-        // this.$msg({
-        //   type: "error",
-        //   message: t,
-        //   duration: 1600,
-        //   offset: 80,
-        // });
+      }).catch(() => {
+        return;
       });
       if (res2.code == 200) {
         this.loginimage = res2.data.qrimg;
@@ -361,13 +340,8 @@ export default {
           timerstamp: new Date().getTime(),
           realIP: this.randomip(),
         },
-      }).catch((t) => {
-        // this.$msg({
-        //   type: "error",
-        //   message: t,
-        //   duration: 1600,
-        //   offset: 80,
-        // });
+      }).catch(() => {
+        return;
       });
       if (res.code == 400) {
         /* 参数错误 */
@@ -423,14 +397,8 @@ export default {
           cookie: window.localStorage.getItem("cookie"),
           realIP: this.randomip(),
         },
-      }).catch((t) => {
+      }).catch(() => {
         this.offset = Math.max(0, this.offset - 1);
-        // this.$msg({
-        //   type: "error",
-        //   message: t,
-        //   duration: 1600,
-        //   offset: 80,
-        // });
         setTimeout(() => {
           this.getmyloveidlist();
         }, 666);
@@ -439,7 +407,7 @@ export default {
       let temlist = res.songs;
       let musiclist = [];
       if (res.code == 200) {
-        temlist.forEach((item, index) => {
+        temlist.forEach((item) => {
           /* id转具体信息 */
           let temmusics = {};
           temmusics.id = item.id;
@@ -470,13 +438,7 @@ export default {
           timerstamp: new Date().getTime(),
           realIP: this.randomip(),
         },
-      }).catch((t) => {
-        // this.$msg({
-        //   type: "error",
-        //   message: t,
-        //   duration: 1600,
-        //   offset: 80,
-        // });
+      }).catch(() => {
         return;
       });
 
@@ -493,13 +455,7 @@ export default {
           timerstamp: new Date().getTime(),
           realIP: this.ip,
         },
-      }).catch((t) => {
-        // this.$msg({
-        //   type: "error",
-        //   message: t,
-        //   duration: 1600,
-        //   offset: 80,
-        // });
+      }).catch(() => {
         return;
       });
 
