@@ -31,6 +31,7 @@ class UpdateOj implements Consumer
                 return;
             }
             Db::table('oj')
+                ->where('id', $problem_id)
                 ->update($problem_data);
             Base::updateOjDataRedis($problem_id);
         } catch (Exception $e) {

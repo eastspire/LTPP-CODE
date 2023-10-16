@@ -3,7 +3,7 @@
  * @Author: SQS 1491579574@qq.com
  * @Date: 2023-06-02 11:58:18
  * @LastEditors: wmzn-ltpp 1491579574@qq.com
- * @LastEditTime: 2023-10-16 10:19:34
+ * @LastEditTime: 2023-10-16 16:15:27
  * @FilePath: \LTPP-CODE\app\queue\redis\UpdateCode.php
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
@@ -31,6 +31,7 @@ class UpdateCode implements Consumer
                 return;
             }
             Db::table('codehistory')
+                ->where('id', $code_id)
                 ->update($code_data);
             Base::updateCodeDataRedis($code_id);
         } catch (Exception $e) {
