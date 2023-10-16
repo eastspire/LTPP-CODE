@@ -2,7 +2,7 @@
  * @Author: 18855190718 1491579574@qq.com
  * @Date: 2023-08-07 22:11:28
  * @LastEditors: wmzn-ltpp 1491579574@qq.com
- * @LastEditTime: 2023-10-16 15:37:22
+ * @LastEditTime: 2023-10-16 19:55:03
  * @FilePath: \LTPP-CODE\Frontend\src\components\myide.vue
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
@@ -628,6 +628,8 @@ export default {
           this.testQueryOne(this.code_id);
         }, 1000);
       } else {
+        this.isup = false;
+        this.istest = false;
         this.$msg({
           type: "error",
           message: res.msg,
@@ -745,6 +747,8 @@ export default {
           this.submitQueryOne(this.code_id);
         }, 1000);
       } else {
+        this.isup = false;
+        this.istest = false;
         this.$msg({
           type: "error",
           message: res.msg,
