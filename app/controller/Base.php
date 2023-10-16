@@ -10,6 +10,22 @@ use Webman\RedisQueue\Redis as RedisQueue;
 
 class Base
 {
+
+    /**
+     * 代码提交成功提示
+     */
+    static $code_up_success_msg = '代码提交成功';
+
+    /**
+     * 代码提交失败提示
+     */
+    static $code_up_fail_msg = '代码提交失败！请重新提交！';
+
+    /**
+     * 代码提交等待关键词
+     */
+    static $code_up_waiting = '等待中';
+
     /**
      * Redis密码
      */
@@ -49,6 +65,26 @@ class Base
      * 购买SSH消息队列名称
      */
     static $redis_queue_buy_ssh_name = 'buy_ssh';
+
+    /**
+     * 在线测试代码消息队列名称
+     */
+    static $redis_queue_webcode_run_name = 'webcode_run';
+
+    /**
+     * 在线判题消息队列名称
+     */
+    static $redis_queue_judgecode_run_name = 'judgecode_run';
+
+    /**
+     * 更新代码信息消息队列名称
+     */
+    static $redis_queue_update_code_name = 'update_code';
+
+    /**
+     * 更新题库信息消息队列名称
+     */
+    static $redis_queue_update_oj_name = 'update_oj';
 
     /**
      * 机器人参赛消息队列名称
@@ -1162,6 +1198,48 @@ class Base
     }
 
     /**
+     * 代码结果缓存
+     */
+    static public function saveCodeJson($code_id = 0, $json = '')
+    {
+        $redis34 = Redis::connection('db34');
+        $key = 'CodeJson' . $code_id;
+        $redis34->setEx($key, Base::$redis_timeout, json_encode($json));
+    }
+
+    /**
+     * 删除代码结果缓存
+     */
+    static public function deleteCodeJson($code_id = 0)
+    {
+        $redis33 = Redis::connection('db33');
+        $redis34 = Redis::connection('db34');
+        $key = 'CodeJson' . $code_id;
+        $redis34->del($key);
+        $key = 'CodeData' . $code_id;
+        $redis33->del($key);
+    }
+
+    /**
+     * 获取代码结果缓存
+     */
+    static public function getCodeJson($code_id = 0)
+    {
+        $redis34 = Redis::connection('db34');
+        $key = 'CodeJson' . $code_id;
+        $json = $redis34->get($key);
+        if (!$json) {
+            return [];
+        }
+        try {
+            $json = json_decode($json, true);
+        } catch (Exception $e) {
+            $json = [];
+        }
+        return $json;
+    }
+
+    /**
      * 大整数加法
      * @param string $a 第一个字符串数字
      * @param string $b 第二个字符串数字
@@ -2204,6 +2282,36 @@ class Base
     }
 
     /**
+     * 获取缓存中代码信息
+     * @param int $code_id
+     */
+    static public function getCodeData($code_id)
+    {
+        try {
+            if (!is_numeric($code_id)) {
+                return [];
+            }
+            $redis33 = Redis::connection('db33');
+            $key = 'CodeData' . $code_id;
+            $db = $redis33->get($key);
+            if ($db) {
+                return json_decode($db, false);
+            }
+            $db = Db::table('codehistory')
+                ->where('id', $code_id)
+                ->where('isdel', 0)
+                ->first();
+            if (!$db) {
+                return [];
+            }
+            $redis33->setEx($key, Base::$redis_timeout, json_encode($db));
+            return $db;
+        } catch (Exception $e) {
+            return [];
+        }
+    }
+
+    /**
      * 获取缓存中用户信息
      * @param int $user_id
      */
@@ -2384,6 +2492,28 @@ class Base
         } catch (Exception $e) {
             return [];
         }
+    }
+
+    /**
+     * 根据ID更新代码缓存信息
+     * @param int $code_id
+     */
+    static public function updateCodeDataRedis($code_id)
+    {
+        if (!is_numeric($code_id)) {
+            return;
+        }
+        $redis33 = Redis::connection('db33');
+        $key = 'CodeData' . $code_id;
+        $redis33->del($key);
+        $db = Db::table('codehistory')
+            ->where('id', $code_id)
+            ->where('isdel', 0)
+            ->first();
+        if (!$db) {
+            return;
+        }
+        $redis33->setEx($key, Base::$redis_timeout, json_encode($db));
     }
 
     /**

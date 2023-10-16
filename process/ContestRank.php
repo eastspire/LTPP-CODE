@@ -6,6 +6,7 @@ use app\controller\Contest;
 use app\controller\Robot;
 use Exception;
 use stdClass;
+use support\Db;
 use support\Redis;
 use Workerman\Crontab\Crontab;
 use Webman\RedisQueue\Redis as RedisQueue;
@@ -14,6 +15,10 @@ class ContestRank
 {
     static $lock = false;
 
+    static $times = 0;
+
+    static $limit = 60;
+
     public function onWorkerStart()
     {
         // 每一秒钟执行一次
@@ -21,6 +26,9 @@ class ContestRank
             try {
                 if (ContestRank::$lock) {
                     return;
+                }
+                if (ContestRank::$times > ContestRank::$limit) {
+                    ContestRank::$times = 0;
                 }
                 ContestRank::$lock = true;
                 $redis24 = Redis::connection('db24');
@@ -36,11 +44,22 @@ class ContestRank
                     RedisQueue::send(Base::$redis_queue_contest_rank, ['contest_id' => $key]);
                 }
                 $obj = null;
+                if (ContestRank::$times % ContestRank::$limit == 0) {
+                    $contest_list = Db::table('contest')
+                        ->where('isdel', 0)
+                        ->pluck('id')
+                        ->toArray();
+                    foreach ($contest_list as &$contest_id) {
+                        // 发布任务
+                        RedisQueue::send(Base::$redis_queue_contest_rank, ['contest_id' => $contest_id]);
+                    }
+                }
+                ContestRank::$times++;
                 ContestRank::$lock = false;
             } catch (Exception $e) {
                 ContestRank::$lock = false;
                 // 发送通知
-                $msg = '排名缓冲区异常：' . $e->getMessage();
+                $msg = 'ContestRank进程异常:' . $e->getMessage();
                 Robot::sendChatToOneUserMsg(Base::getRootId(), $msg);
             }
         });

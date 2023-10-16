@@ -2,8 +2,8 @@
 /*
  * @Author: 18855190718 1491579574@qq.com
  * @Date: 2023-01-19 23:50:37
- * @LastEditors: 18855190718 1491579574@qq.com
- * @LastEditTime: 2023-10-10 23:19:47
+ * @LastEditors: wmzn-ltpp 1491579574@qq.com
+ * @LastEditTime: 2023-10-16 15:16:50
  * @FilePath: \LTPP-CODE\app\controller\Contest.php
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
@@ -319,7 +319,7 @@ class Contest
             }
         }
         Base::dataToSafe($data);
-        return \json(['code' => 1, 'data' => $data, 'allnum' => $allnum]);
+        return json(['code' => 1, 'data' => $data, 'allnum' => $allnum]);
     }
 
 
@@ -348,7 +348,7 @@ class Contest
             ->where('isdel', 0)
             ->exists();
         if ($isjoin) {
-            return \json(['code' => -1, 'msg' => '您已报名该竞赛，无法多次报名']);
+            return json(['code' => -1, 'msg' => '您已报名该竞赛，无法多次报名']);
         }
         $res = Db::table('joincontest')
             ->lockForUpdate()
@@ -364,9 +364,9 @@ class Contest
         if ($res) {
             Contest::sendUpdateRankMQ($contest_id);
             Base::updateContestData($contest_id);
-            return \json(['code' => 1, 'msg' => '报名成功']);
+            return json(['code' => 1, 'msg' => '报名成功']);
         }
-        return \json(['code' => -1, 'msg' => '报名失败，请重新尝试！']);
+        return json(['code' => -1, 'msg' => '报名失败，请重新尝试！']);
     }
 
     /**
@@ -400,9 +400,9 @@ class Contest
         }
         Base::dataToSafe($db);
         if ($db) {
-            return \json(['code' => 1, 'data' => $db, 'msg' => '列表加载成功', 'allnum' => $allnum]);
+            return json(['code' => 1, 'data' => $db, 'msg' => '列表加载成功', 'allnum' => $allnum]);
         }
-        return \json(['code' => 0, 'msg' => Base::$no_more_msg, 'allnum' => 0]);
+        return json(['code' => 0, 'msg' => Base::$no_more_msg, 'allnum' => 0]);
     }
 
     /**
@@ -446,7 +446,7 @@ class Contest
                 ->where('isdel', 0)
                 ->count();
         }
-        return \json(['code' => 1, 'msg' => '搜索到' . $allnum . '条信息', 'data' => $db, 'allnum' => $allnum]);
+        return json(['code' => 1, 'msg' => '搜索到' . $allnum . '条信息', 'data' => $db, 'allnum' => $allnum]);
     }
 
     /**
@@ -470,9 +470,9 @@ class Contest
             ->count();
         Base::dataToSafe($db);
         if ($db) {
-            return \json(['code' => 1, 'data' => $db, 'msg' => '列表加载成功', 'allnum' => $allnum]);
+            return json(['code' => 1, 'data' => $db, 'msg' => '列表加载成功', 'allnum' => $allnum]);
         }
-        return \json(['code' => 0, 'msg' => Base::$no_more_msg, 'allnum' => 0]);
+        return json(['code' => 0, 'msg' => Base::$no_more_msg, 'allnum' => 0]);
     }
 
     /**
@@ -498,7 +498,7 @@ class Contest
             ->where('isdel', 0)
             ->count();
         Base::dataToSafe($db);
-        return \json(['code' => 1, 'msg' => '搜索到' . $allnum . '条信息', 'data' => $db, 'allnum' => $allnum]);
+        return json(['code' => 1, 'msg' => '搜索到' . $allnum . '条信息', 'data' => $db, 'allnum' => $allnum]);
     }
 
     /**
@@ -514,16 +514,16 @@ class Contest
         $contest_id = Base::getIdByUid($contest_uid);
         $ismycontest = Contest::judgeIsMyContest($contest_id, $my_aid);
         if (!$ismycontest) {
-            return \json(['code' => -1, 'msg' => '权限不足']);
+            return json(['code' => -1, 'msg' => '权限不足']);
         }
         $db = Base::getContestData($contest_id);
         Base::dataToSafe($db);
         if ($db) {
             $db->begin = strtotime($db->begin) * 1000;
             $db->end = strtotime($db->end) * 1000;
-            return \json(['code' => 1, 'msg' => '竞赛加载成功', 'data' => $db]);
+            return json(['code' => 1, 'msg' => '竞赛加载成功', 'data' => $db]);
         }
-        return \json(['code' => -1, 'msg' => '竞赛加载失败']);
+        return json(['code' => -1, 'msg' => '竞赛加载失败']);
     }
 
     /**
@@ -539,9 +539,9 @@ class Contest
         $db = Base::getContestData($contest_id);
         Base::dataToSafe($db);
         if ($db) {
-            return \json(['code' => 1, 'msg' => '竞赛加载成功', 'data' => $db]);
+            return json(['code' => 1, 'msg' => '竞赛加载成功', 'data' => $db]);
         }
-        return \json(['code' => -1, 'msg' => '竞赛加载失败']);
+        return json(['code' => -1, 'msg' => '竞赛加载失败']);
     }
 
     /**
@@ -574,7 +574,7 @@ class Contest
         if ($now < $begintime) {
             $ismycontest = Contest::judgeIsMyContest($contest_id, $my_aid);
             if (!$ismycontest) {
-                return \json(['code' => -1, 'msg' => '竞赛未开始！无法查看赛题列表！']);
+                return json(['code' => -1, 'msg' => '竞赛未开始！无法查看赛题列表！']);
             }
         }
 
@@ -582,7 +582,7 @@ class Contest
         //缓存存在读取缓存
         if ($redis4->get('Contest' . $contest_id . 'problemdata' . $my_aid)) {
             $redispro = json_decode($redis4->get('Contest' . $contest_id . 'problemdata' . $my_aid) ?? '', true);
-            return \json(['code' => 1, 'msg' => '赛题列表加载完成', 'data' => $redispro]);
+            return json(['code' => 1, 'msg' => '赛题列表加载完成', 'data' => $redispro]);
         }
 
         $db = Db::table('contestproblem')
@@ -627,7 +627,7 @@ class Contest
         Base::dataToSafe($res);
         //存入缓存
         $redis4->set('Contest' . $contest_id . 'problemdata' . $my_aid, json_encode($res));
-        return \json(['code' => 1, 'msg' => '竞赛题目列表加载完成', 'data' => $res]);
+        return json(['code' => 1, 'msg' => '竞赛题目列表加载完成', 'data' => $res]);
     }
 
     /**
@@ -643,7 +643,7 @@ class Contest
         $contest_id = Base::getIdByUid($contest_uid);
         $ismycontest = Contest::judgeIsMyContest($contest_id, $my_aid);
         if (!$ismycontest) {
-            return \json(['code' => -1, 'msg' => '权限不足']);
+            return json(['code' => -1, 'msg' => '权限不足']);
         }
         $db = Db::table('contestproblem')
             ->where('contestid', $contest_id)
@@ -663,7 +663,7 @@ class Contest
             $res[] = $temdb;
         }
         Base::dataToSafe($res);
-        return \json(['code' => 1, 'msg' => '竞赛题目已选择列表加载完成', 'data' => $res]);
+        return json(['code' => 1, 'msg' => '竞赛题目已选择列表加载完成', 'data' => $res]);
     }
 
     /**
@@ -675,7 +675,7 @@ class Contest
         $my_aid = Base::getIdByUid($my_uid);
         $isadmin = Base::judgeIsAdmin($my_aid);
         if (!$isadmin) {
-            return \json(['code' => -1, 'msg' => '权限不足']);
+            return json(['code' => -1, 'msg' => '权限不足']);
         }
         $data = $request->post('data');
         $time = $request->post('time');
@@ -688,7 +688,7 @@ class Contest
             return json(['code' => -1, 'msg' => '竞赛信息不完整']);
         }
         if (strlen($data['name']) <= 2) {
-            return \json(['code' => -1, 'msg' => '竞赛名称长度过短']);
+            return json(['code' => -1, 'msg' => '竞赛名称长度过短']);
         }
         if ($time == '') {
             return json(['code' => -1, 'msg' => '请设置竞赛开始时间和结束时间']);
@@ -699,7 +699,7 @@ class Contest
         $begin = (int) ($time[0] / 1000);
         $end = (int) ($time[1] / 1000);
         if ($end - $begin < 600) {
-            return \json(['code' => -1, 'msg' => '竞赛时长必须大于等于10分钟']);
+            return json(['code' => -1, 'msg' => '竞赛时长必须大于等于10分钟']);
         }
         $begin = date('Y-m-d H:i:s', (int) $begin);
         $end = date('Y-m-d H:i:s', (int) $end);
@@ -710,7 +710,7 @@ class Contest
         if ($userdb) {
             $data['creater'] = $userdb->name;
         } else {
-            return \json(['code' => -1, 'msg' => '该账号不存在']);
+            return json(['code' => -1, 'msg' => '该账号不存在']);
         }
         //插入竞赛信息
         $res_id = Base::insertToDb('contest', $data);
@@ -749,14 +749,14 @@ class Contest
             }
         }
         if ($postpronum <= 0) {
-            return \json(['code' => -1, 'msg' => '赛题不能为空']);
+            return json(['code' => -1, 'msg' => '赛题不能为空']);
         }
         Db::table('contestproblem')
             ->insert($insert_pro);
         // 默认参加竞赛人员
         if ($defaultnum) {
             if (!is_numeric($defaultnum)) {
-                return \json(['code' => -1, 'msg' => '默认参赛人数必须是整数']);
+                return json(['code' => -1, 'msg' => '默认参赛人数必须是整数']);
             }
             $total = Db::table('user')->where('isdel', 0)->count();
             if ($defaultnum > $total) {
@@ -821,7 +821,7 @@ class Contest
             $redis4->set('Contest' . $res_id . 'problemdata' . $tem->userid, json_encode($proary));
         }
         Base::updateContestData($res_id);
-        return \json(['code' => 1, 'msg' => '竞赛添加成功']);
+        return json(['code' => 1, 'msg' => '竞赛添加成功']);
     }
 
     /**
@@ -840,7 +840,7 @@ class Contest
         $data['id'] = $contest_id;
         $ismycontest = Contest::judgeIsMyContest($contest_id, $my_aid);
         if (!$ismycontest) {
-            return \json(['code' => -1, 'msg' => '权限不足']);
+            return json(['code' => -1, 'msg' => '权限不足']);
         }
         if ($time[0] == '' || $time[1] == '') {
             return json(['code' => -1, 'msg' => '请设置竞赛开始时间和结束时间']);
@@ -848,7 +848,7 @@ class Contest
         $begin = $time[0] / 1000;
         $end = $time[1] / 1000;
         if ($end - $begin < 600) {
-            return \json(['code' => -1, 'msg' => '竞赛时长必须大于等于10分钟']);
+            return json(['code' => -1, 'msg' => '竞赛时长必须大于等于10分钟']);
         }
         $begin = date('Y-m-d H:i:s', $begin);
         $end = date('Y-m-d H:i:s', $end);
@@ -856,7 +856,7 @@ class Contest
         $data['end'] = $end;
         $contest_db = Base::getContestData($contest_id);
         if (!$contest_db) {
-            return \json(['code' => -1, 'msg' => '竞赛不存在！']);
+            return json(['code' => -1, 'msg' => '竞赛不存在！']);
         }
         $now = date('Y-m-d H:i:s', time());
         if ($contest_db->end < $data['end'] && $now <= $data['end']) {
@@ -894,7 +894,7 @@ class Contest
             ->where('isdel', 0)
             ->update(['isdel' => 1]);
         if (!$problemdata) {
-            return \json(['code' => -1, 'msg' => '竞赛题目不能为空！']);
+            return json(['code' => -1, 'msg' => '竞赛题目不能为空！']);
         }
         foreach ($problemdata as &$tem) {
             $prodb = Db::table('oj')
@@ -933,7 +933,7 @@ class Contest
         $redis4->del('Contest' . $contest_id . 'problemIndex');
         $redis4->del('Contest' . $contest_id . 'HtmlRank');
         Base::updateContestData($contest_id);
-        return \json(['code' => 1, 'msg' => '竞赛更新成功']);
+        return json(['code' => 1, 'msg' => '竞赛更新成功']);
     }
 
     /**
@@ -949,7 +949,7 @@ class Contest
         $contest_id = Base::getIdByUid($contest_uid);
         $isroot = Base::judgeIsRoot($my_aid);
         if (!$isroot) {
-            return \json(['code' => -1, 'msg' => '权限不足']);
+            return json(['code' => -1, 'msg' => '权限不足']);
         }
         $joinuser = Db::table('joincontest')
             ->where('contestid', $contest_id)
@@ -1021,9 +1021,9 @@ class Contest
         $redis30->del(Base::$redis_contest_code_list_key_name . $contest_id);
 
         if ($db) {
-            return \json(['code' => 1, 'msg' => '删除竞赛成功']);
+            return json(['code' => 1, 'msg' => '删除竞赛成功']);
         }
-        return \json(['code' => 1, 'msg' => '删除竞赛出错']);
+        return json(['code' => 1, 'msg' => '删除竞赛出错']);
     }
 
     /**
@@ -1043,9 +1043,9 @@ class Contest
             ->where('isdel', 0)
             ->exists();
         if ($isjoin) {
-            return \json(['code' => 1, 'msg' => '您已经报名该竞赛']);
+            return json(['code' => 1, 'msg' => '您已经报名该竞赛']);
         }
-        return \json(['code' => -1, 'msg' => '您未报名该竞赛']);
+        return json(['code' => -1, 'msg' => '您未报名该竞赛']);
     }
 
     /**
@@ -1092,9 +1092,9 @@ class Contest
         }
         Base::dataToSafe($res);
         if ($db) {
-            return \json(['code' => 1, 'data' => $res, 'msg' => '列表加载成功', 'allnum' => $allnum]);
+            return json(['code' => 1, 'data' => $res, 'msg' => '列表加载成功', 'allnum' => $allnum]);
         }
-        return \json(['code' => 0, 'msg' => Base::$no_more_msg, 'allnum' => 0]);
+        return json(['code' => 0, 'msg' => Base::$no_more_msg, 'allnum' => 0]);
     }
 
     /**
@@ -1140,9 +1140,9 @@ class Contest
         }
         Base::dataToSafe($res);
         if ($db) {
-            return \json(['code' => 1, 'data' => $res, 'msg' => '列表加载成功', 'allnum' => $allnum]);
+            return json(['code' => 1, 'data' => $res, 'msg' => '列表加载成功', 'allnum' => $allnum]);
         }
-        return \json(['code' => 0, 'msg' => Base::$no_more_msg, 'allnum' => 0]);
+        return json(['code' => 0, 'msg' => Base::$no_more_msg, 'allnum' => 0]);
     }
 
     /**
@@ -1162,10 +1162,10 @@ class Contest
         $redis4 = Redis::connection('db4');
         $contest_db = Base::getContestData($contest_id);
         if (!$contest_db) {
-            return \json(['code' => -1, 'peopledata' => [], 'timedata' => [], 'data' => [], 'msg' => '竞赛不存在！']);
+            return json(['code' => -1, 'peopledata' => [], 'timedata' => [], 'data' => [], 'msg' => '竞赛不存在！']);
         }
         if ($contest_db->type == 'OI') {
-            return \json(['code' => -1, 'peopledata' => [], 'timedata' => [], 'data' => [], 'msg' => 'OI赛制无法查看可视化排名!']);
+            return json(['code' => -1, 'peopledata' => [], 'timedata' => [], 'data' => [], 'msg' => 'OI赛制无法查看可视化排名!']);
         }
         //判断竞赛是否结束
         $begintime = strtotime($contest_db->begin);
@@ -1195,19 +1195,19 @@ class Contest
                 }
                 //确保时间数组最后是当前时间和结束时间较小那个，不会产生小于这两者的情况，便于后面计算不会漏算
                 $timearray[$div] = min($contest_db->end, date('Y-m-d H:i:s', (int) time()));
-                return \json(['code' => 1, 'peopledata' => json_decode($redis4->get('ContestRank' . $contest_id . 'peopledata') ?? '', true), 'timedata' => $timearray, 'data' => [], 'msg' => '竞赛结束才能查看封榜排名！']);
+                return json(['code' => 1, 'peopledata' => json_decode($redis4->get('ContestRank' . $contest_id . 'peopledata') ?? '', true), 'timedata' => $timearray, 'data' => [], 'msg' => '竞赛结束才能查看封榜排名！']);
             }
             $redispeo = json_decode($redis4->get('ContestRank' . $contest_id . 'peopledata') ?? '', true);
             $redistime = json_decode($redis4->get('ContestRank' . $contest_id . 'timedata') ?? '', true);
             $redisdata = json_decode($redis4->get('ContestRank' . $contest_id . 'echartsrank') ?? '', true);
-            return \json(['code' => 1, 'peopledata' => $redispeo, 'timedata' => $redistime, 'data' => $redisdata, 'msg' => '统计信息完成！']);
+            return json(['code' => 1, 'peopledata' => $redispeo, 'timedata' => $redistime, 'data' => $redisdata, 'msg' => '统计信息完成！']);
         }
         //排名锁存在则返回
         $lockoneecharts = 'contestranklockecharts' . $contest_id;
         //加锁
         $lock_res = $redis4->setNx($lockoneecharts, 1);
         if (!$lock_res) {
-            return \json(['code' => 1, 'peopledata' => [], 'timedata' => [], 'data' => [], 'msg' => '信息计算中！']);
+            return json(['code' => 1, 'peopledata' => [], 'timedata' => [], 'data' => [], 'msg' => '信息计算中！']);
         }
 
         //参与人员id名单
@@ -1223,7 +1223,7 @@ class Contest
             $redis4->set('ContestRank' . $contest_id . 'echartsrank', json_encode([]));
             // 解锁
             $redis4->del($lockoneecharts);
-            return \json(['code' => 1, 'peopledata' => [], 'timedata' => [], 'data' => [], 'msg' => '参赛人数较多，不显示Echarts排名！']);
+            return json(['code' => 1, 'peopledata' => [], 'timedata' => [], 'data' => [], 'msg' => '参赛人数较多，不显示Echarts排名！']);
         }
         //参赛人员名称名单
         $respeople = array();
@@ -1283,7 +1283,7 @@ class Contest
             $redis4->set('ContestRank' . $contest_id . 'echartsrank', json_encode($resdata));
             // 解锁
             $redis4->del($lockoneecharts);
-            return \json(['peopledata' => $respeople, 'timedata' => $restimedata, 'data' => $resdata, 'msg' => '竞赛未开始！']);
+            return json(['peopledata' => $respeople, 'timedata' => $restimedata, 'data' => $resdata, 'msg' => '竞赛未开始！']);
         }
 
         //没有用户提交代码初始化
@@ -1372,7 +1372,7 @@ class Contest
         $redis4->set('ContestRank' . $contest_id . 'timedata', json_encode($restimedata));
         $redis4->set('ContestRank' . $contest_id . 'echartsrank', json_encode($resdata));
         $redis4->del($lockoneecharts);
-        return \json(['peopledata' => $respeople, 'timedata' => $restimedata, 'data' => $resdata, 'msg' => '加载成功']);
+        return json(['peopledata' => $respeople, 'timedata' => $restimedata, 'data' => $resdata, 'msg' => '加载成功']);
     }
 
     /**
@@ -2122,7 +2122,11 @@ class Contest
             //缓存存在读取缓存
             $html = $redis4->get($key);
             if (!$is_redis_queue && $html) {
+                // 非消息队列获取排名，排名在缓存
                 return $html;
+            } else if (!$is_redis_queue) {
+                // 非消息队列获取排名，排名不在缓存
+                return '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><title>LTPP【' . $contest_db->name . '】竞赛排名</title><style>' . $msg_css . '</style><script>' . $js . '</script></head><body><h1>竞赛排名计算中</h1></body></html>';
             }
             $lockone = 'contestranklock' . $contest_id;
             if ($redis4->exists($lockone)) {
@@ -2255,13 +2259,23 @@ class Contest
         if (!$my_aid) {
             $my_aid = 0;
         }
-        Contest::judgeLimitIsSafe($limit);
         if (!$contest_db) {
             return json(['code' => -1, 'msg' => '竞赛不存在！', 'data' => [], 'problemIndex' => []]);
         }
         if ($contest_db->type != 'ACM' && $contest_db->type != 'SQS') {
             return json(['code' => -1, 'msg' => '竞赛类型与预期不匹配！', 'data' => [], 'problemIndex' => []]);
         }
+        $begintime = strtotime($contest_db->begin);
+        $endtime = strtotime($contest_db->end);
+        $isbegin = false;
+        if (time() >= $begintime) {
+            $isbegin = true;
+        }
+        if (!$isbegin) {
+            // 未开始
+            return json(['code' => 1, 'data' => [], 'problemIndex' => [], 'msg' => '竞赛未开始！无法查看排名！']);
+        }
+        Contest::judgeLimitIsSafe($limit);
         if (
             !$is_redis_queue &&
             $redis4->exists('Contest' . $contest_id . 'resarray') &&
@@ -2271,7 +2285,7 @@ class Contest
                 $rediscon = json_decode($redis4->get('Contest' . $contest_id . 'resarray') ?? '', true);
                 $redispro = json_decode($redis4->get('Contest' . $contest_id . 'problemIndex') ?? '', true);
             } catch (Exception $e) {
-                return \json(['code' => -1, 'msg' => '竞赛缓存异常！', 'data' => [], 'problemIndex' => []]);
+                return json(['code' => -1, 'msg' => '竞赛缓存异常！', 'data' => [], 'problemIndex' => []]);
             }
             $my_loc = 1;
             $total = sizeof($rediscon);
@@ -2284,29 +2298,18 @@ class Contest
                 }
                 $rediscon = Base::paging($page, $limit, $rediscon);
             }
-            return \json(['code' => 1, 'data' => $rediscon, 'problemIndex' => $redispro, 'myrank' => $my_loc, 'total' => $total]);
+            return json(['code' => 1, 'data' => $rediscon, 'problemIndex' => $redispro, 'myrank' => $my_loc, 'total' => $total]);
         }
-
+        if (!$is_redis_queue) {
+            return json(['code' => -1, 'msg' => '竞赛排名计算中！', 'data' => [], 'problemIndex' => []]);
+        }
         //排名锁
         $lockone = 'contestranklock' . $contest_id;
         $now_key_value = Base::randString();
         //加锁
         $lock_res = $redis4->setNx($lockone, $now_key_value);
-
-        if (!$lock_res && !$is_redis_queue) {
+        if (!$lock_res) {
             return json(['code' => -1, 'msg' => '竞赛排名计算中！', 'data' => [], 'problemIndex' => []]);
-        }
-
-        $begintime = strtotime($contest_db->begin);
-        $endtime = strtotime($contest_db->end);
-        $isbegin = false;
-        if (time() >= $begintime) {
-            $isbegin = true;
-        }
-        if (!$isbegin) {
-            // 未开始
-            $redis4->del($lockone);
-            return \json(['code' => 1, 'data' => [], 'problemIndex' => []]);
         }
         // 题目
         $prolist = Db::table('contestproblem')
@@ -2346,7 +2349,7 @@ class Contest
         foreach ($res as &$tem) {
             $now_lock = $redis4->get($lockone);
             if (!$now_lock || $now_lock != $now_key_value) {
-                return \json(['code' => 1, 'data' => [], 'problemIndex' => []]);
+                return json(['code' => 1, 'data' => [], 'problemIndex' => []]);
             }
             $ta = [];
             $db = Base::getUserData($tem->userid);
@@ -2473,7 +2476,7 @@ class Contest
             }
             $resarray = Base::paging($page, $limit, $resarray);
         }
-        return \json(['code' => 1, 'data' => $resarray, 'problemIndex' => $problemIndex, 'myrank' => $my_loc, 'total' => $total]);
+        return json(['code' => 1, 'data' => $resarray, 'problemIndex' => $problemIndex, 'myrank' => $my_loc, 'total' => $total]);
     }
 
     /**
@@ -2508,11 +2511,11 @@ class Contest
         }
         if (!$isbegin) {
             // 未开始
-            return \json(['code' => -1, 'data' => [], 'problemIndex' => [], 'msg' => '竞赛未开始！无法查看排名！']);
+            return json(['code' => -1, 'data' => [], 'problemIndex' => [], 'msg' => '竞赛未开始！无法查看排名！']);
         }
         // OI赛制未结束，非管理员不可看
         if ($contest_db->type == 'OI' && time() <= $endtime && !$is_mycontest && !$is_redis_queue) {
-            return \json(['code' => -1, 'data' => [], 'problemIndex' => [], 'msg' => '竞赛未结束！无法查看排名！']);
+            return json(['code' => -1, 'data' => [], 'problemIndex' => [], 'msg' => '竞赛未结束！无法查看排名！']);
         }
 
         if (
@@ -2524,7 +2527,7 @@ class Contest
                 $rediscon = json_decode($redis4->get('Contest' . $contest_id . 'resarray') ?? '', true);
                 $redispro = json_decode($redis4->get('Contest' . $contest_id . 'problemIndex') ?? '', true);
             } catch (Exception $e) {
-                return \json(['code' => -1, 'msg' => '竞赛缓存异常！', 'data' => [], 'problemIndex' => []]);
+                return json(['code' => -1, 'msg' => '竞赛缓存异常！', 'data' => [], 'problemIndex' => []]);
             }
             $my_loc = 1;
             $total = sizeof($rediscon);
@@ -2537,17 +2540,20 @@ class Contest
                 }
                 $rediscon = Base::paging($page, $limit, $rediscon);
             }
-            return \json(['code' => 1, 'data' => $rediscon, 'problemIndex' => $redispro, 'myrank' => $my_loc, 'total' => $total]);
+            return json(['code' => 1, 'data' => $rediscon, 'problemIndex' => $redispro, 'myrank' => $my_loc, 'total' => $total]);
+        }
+        if (!$is_redis_queue) {
+            // 没有缓存且不是消息队列就返回
+            return json(['code' => -1, 'data' => [], 'problemIndex' => [], 'msg' => '竞赛排名计算中！']);
         }
         $lockone = 'contestranklock' . $contest_id;
         $now_key_value = Base::randString();
         //加锁
         $lock_res = $redis4->setNx($lockone, $now_key_value);
-
-        if (!$lock_res && !$is_redis_queue) {
-            return \json(['code' => -1, 'data' => [], 'problemIndex' => [], 'msg' => '竞赛排名计算中！']);
+        if (!$lock_res) {
+            // 未抢到锁
+            return json(['code' => -1, 'data' => [], 'problemIndex' => [], 'msg' => '竞赛排名计算中！']);
         }
-
         // 题目
         $prolist = Db::table('contestproblem')
             ->where('contestid', $contest_id)
@@ -2582,7 +2588,7 @@ class Contest
         foreach ($res as &$tem) {
             $now_lock = $redis4->get($lockone);
             if (!$now_lock || $now_lock != $now_key_value) {
-                return \json(['code' => 1, 'data' => [], 'problemIndex' => []]);
+                return json(['code' => 1, 'data' => [], 'problemIndex' => []]);
             }
             $ta = [];
             $db = Base::getUserData($tem->userid);
@@ -2726,7 +2732,7 @@ class Contest
             }
             $resarray = Base::paging($page, $limit, $resarray);
         }
-        return \json(['code' => 1, 'data' => $resarray, 'problemIndex' => $problemIndex, 'myrank' => $my_loc, 'total' => $total]);
+        return json(['code' => 1, 'data' => $resarray, 'problemIndex' => $problemIndex, 'myrank' => $my_loc, 'total' => $total]);
     }
 
     /**

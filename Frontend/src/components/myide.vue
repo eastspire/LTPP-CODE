@@ -1,8 +1,8 @@
 <!--
  * @Author: 18855190718 1491579574@qq.com
  * @Date: 2023-08-07 22:11:28
- * @LastEditors: 18855190718 1491579574@qq.com
- * @LastEditTime: 2023-10-12 15:24:34
+ * @LastEditors: wmzn-ltpp 1491579574@qq.com
+ * @LastEditTime: 2023-10-16 15:04:04
  * @FilePath: \LTPP-CODE\Frontend\src\components\myide.vue
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
@@ -362,12 +362,20 @@ export default {
     }, 0);
   },
   destroyed() {
-    this.save(true);
-    this.ide_base && this.ide_base.dispose();
-    this.editor && this.editor.dispose();
+    try {
+      this.save(true);
+      this.ide_base && this.ide_base.dispose();
+      this.editor && this.editor.dispose();
+    } catch (err) {}
+    try {
+      clearInterval(this.up_timer);
+      this.up_timer = null;
+    } catch (err) {}
   },
   data() {
     return {
+      code_id: "",
+      up_timer: null,
       my_language: "cpp",
       ide_base_id: "my_ide_base",
       ide_base: null,
@@ -522,6 +530,59 @@ export default {
         },
       });
     },
+    async testQueryOne(code_id) {
+      if (!this.editor || !code_id) {
+        return;
+      }
+      this.save();
+      this.isshow = false;
+      this.istest = true;
+      this.isac = false;
+      this.iswrong = false;
+      this.my_code = this.editor.getValue();
+      const { data: res } = await this.$ajax({
+        method: "post",
+        url: "/Webcode/queryCode",
+        portType: {
+          process: "8791",
+        },
+        data: {
+          code_id: code_id,
+        },
+      }).catch((t) => {
+        this.isup = false;
+        this.istest = false;
+        this.$msg({
+          type: "error",
+          message: t,
+          duration: 1600,
+          offset: 80,
+        });
+      });
+      if (!res.code) {
+        // code为0
+        // 等待中
+        return;
+      }
+      try {
+        clearInterval(this.up_timer);
+        this.up_timer = null;
+      } catch (err) {}
+      this.deleteCode(code_id);
+      this.isup = false;
+      this.istest = false;
+      this.usetime = res.usetime;
+      this.usememory = res.usememory;
+      this.iswrong = true;
+      this.wrong = res.result;
+      if (res.code == 1) {
+        this.istestres = true;
+      } else {
+        this.istestres = false;
+      }
+      this.isshow = true;
+      this.istest = false;
+    },
     async testone() {
       if (!this.editor) {
         return;
@@ -540,7 +601,7 @@ export default {
         },
         data: {
           code: this.my_code,
-          num: this.testin,
+          testin: this.testin,
           userlanguage: this.$SqsGlobal.language_map[this.my_language],
         },
       }).catch((t) => {
@@ -552,18 +613,90 @@ export default {
           duration: 1600,
           offset: 80,
         });
+        return;
       });
+      if (res.code == 1) {
+        this.code_id = res.code_id;
+        this.up_timer = setInterval(() => {
+          this.testQueryOne(this.code_id);
+        }, 1000);
+      } else {
+        this.$msg({
+          type: "error",
+          message: res.msg,
+          duration: 1600,
+          offset: 80,
+        });
+      }
+    },
+    async deleteCode(code_id) {
+      this.$ajax({
+        method: "post",
+        url: "/Webcode/deleteCode",
+        portType: {
+          process: "8791",
+        },
+        data: {
+          code_id: code_id,
+        },
+      }).catch(() => {});
+    },
+    async submitQueryOne(code_id) {
+      if (!this.editor || !code_id) {
+        return;
+      }
+      this.save();
+      this.isshow = false;
+      this.istest = true;
+      this.isac = false;
+      this.iswrong = false;
+      this.my_code = this.editor.getValue();
+      const { data: res } = await this.$ajax({
+        method: "post",
+        url: "/Ojjudge/queryCode",
+        portType: {
+          process: "8791",
+        },
+        data: {
+          code_id: code_id,
+        },
+      }).catch((t) => {
+        this.isup = false;
+        this.istest = false;
+        this.$msg({
+          type: "error",
+          message: t,
+          duration: 1600,
+          offset: 80,
+        });
+      });
+      if (!res.code) {
+        // code为0
+        // 等待中
+        return;
+      }
+      try {
+        clearInterval(this.up_timer);
+        this.up_timer = null;
+      } catch (err) {}
+      this.deleteCode(code_id);
+      this.isup = false;
+      this.istest = false;
       this.usetime = res.usetime;
       this.usememory = res.usememory;
-      this.iswrong = true;
-      this.wrong = res.result;
       if (res.code == 1) {
-        this.istestres = true;
+        this.ac = res.result;
+        this.isac = true;
+        this.iswrong = false;
+        this.wrong = "";
       } else {
-        this.istestres = false;
+        this.isac = false;
+        this.iswrong = true;
+        this.ac = "";
+        this.wrong = res.result;
       }
       this.isshow = true;
-      this.istest = false;
+      this.isup = false;
     },
     async submit() {
       if (!this.editor) {
@@ -597,22 +730,21 @@ export default {
           duration: 1600,
           offset: 80,
         });
+        return;
       });
-      this.usetime = res.usetime;
-      this.usememory = res.usememory;
       if (res.code == 1) {
-        this.ac = res.result;
-        this.isac = true;
-        this.iswrong = false;
-        this.wrong = "";
+        this.code_id = res.code_id;
+        this.up_timer = setInterval(() => {
+          this.submitQueryOne(this.code_id);
+        }, 1000);
       } else {
-        this.isac = false;
-        this.iswrong = true;
-        this.ac = "";
-        this.wrong = res.result;
+        this.$msg({
+          type: "error",
+          message: res.msg,
+          duration: 1600,
+          offset: 80,
+        });
       }
-      this.isshow = true;
-      this.isup = false;
     },
     reset() {
       this.$alert("还原模板将覆盖当前代码！请谨慎操作！", "提示", {

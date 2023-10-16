@@ -66,6 +66,8 @@
 | 30  |竞赛代码缓存key索引所在竞赛索引|
 | 31  |竞赛查重索引ID|
 | 32  |竞赛查重锁|
+| 33  |代码缓存|
+| 34  |代码结果缓存|
 
 ### 使用脚本一键安装
 > https://gitee.com/wmzn/install/blob/master/WebInstall.sh

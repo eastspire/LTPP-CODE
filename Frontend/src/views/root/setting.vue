@@ -447,13 +447,13 @@
               margin: 1rem 0rem 1rem 0rem;
             "
           >
-            个人邮件服务器地址
+            个人邮件服务器地址-协议+IP地址/域名:端口
           </p>
           <el-input
             type="password"
             show-password
             style="font-size: 1.06rem"
-            placeholder="请输入个人邮件服务器地址"
+            placeholder="请输入个人邮件服务器地址-协议+IP地址/域名:端口"
             v-model.lazy="resdata.mysmtpurl"
             @keyup.enter.native="updatesetting()"
           >
@@ -556,56 +556,6 @@
             style="font-size: 1.06rem"
             placeholder="请输入后端音乐地址（例如：http://0.0.0.0:11111）"
             v-model.lazy="resdata.musicbkurl"
-            @keyup.enter.native="updatesetting()"
-          >
-            <el-button
-              slot="append"
-              icon="el-icon-upload"
-              @click="updatesetting()"
-              >更新</el-button
-            >
-          </el-input>
-          <p
-            style="
-              font-size: 1.06rem;
-              text-align: left;
-              font-weight: bold;
-              margin: 1rem 0rem 1rem 0rem;
-            "
-          >
-            最大同时判题数目
-          </p>
-          <el-input
-            type="password"
-            show-password
-            style="font-size: 1.06rem"
-            placeholder="请输入最大同时判题数目"
-            v-model.lazy="resdata.GLOBmaxjudge"
-            @keyup.enter.native="updatesetting()"
-          >
-            <el-button
-              slot="append"
-              icon="el-icon-upload"
-              @click="updatesetting()"
-              >更新</el-button
-            >
-          </el-input>
-          <p
-            style="
-              font-size: 1.06rem;
-              text-align: left;
-              font-weight: bold;
-              margin: 1rem 0rem 1rem 0rem;
-            "
-          >
-            最大等待时间（超过最大判题数目）
-          </p>
-          <el-input
-            type="password"
-            show-password
-            style="font-size: 1.06rem"
-            placeholder="请输入最大等待时间"
-            v-model.lazy="resdata.GLOBmaxwaittime"
             @keyup.enter.native="updatesetting()"
           >
             <el-button

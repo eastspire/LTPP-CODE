@@ -19,7 +19,8 @@ import store from '../plugins/vuex.js'
 // axios.defaults.headers.common['Authorization'] = AUTH_TOKEN;
 // axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
-let public_network_url = 'https://api.ltpp.vip';
+// let public_network_url = 'https://api.ltpp.vip';
+let public_network_url = 'http://192.168.242.128:48787';
 let private_network_url = 'http://hbnuoj.ltpp.vip';
 
 let config = {
