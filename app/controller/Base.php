@@ -1053,7 +1053,7 @@ class Base
      */
     static public function getIp($url)
     {
-        $ip = '127.0.0.1';
+        $ip = '';
         try {
             if (!is_string($url)) {
                 return $ip;

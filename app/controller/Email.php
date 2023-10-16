@@ -25,66 +25,62 @@ class Email extends Image
      */
     static public function mailto($to = '', $title = '', $content = '')
     {
-        $offline = (int) Base::getSettingKeyData('offline');
-        if ($offline == 1) {
-            return;
-        }
-        $useqqmail = (int) Base::getSettingKeyData('useqqmail');
-        if ($useqqmail == 1) {
-            $smtpemail = Base::getSettingKeyData('smtp');
-            $smtpkey = Base::getSettingKeyData('smtpkey');
-            if (!$smtpemail || !$smtpemail) {
+        try {
+            $offline = (int) Base::getSettingKeyData('offline');
+            if ($offline == 1) {
                 return;
             }
-            $mail = new PHPMailer(true);
-            $mail->SMTPDebug = 0; //取消debug，防止输出影响结果
-            $mail->isSMTP();
-            $mail->Host = 'smtp.qq.com'; //qq邮箱的服务器地址
-            $mail->SMTPAuth = true;
-            $mail->Username = $smtpemail; //授权的qq邮箱
-            $mail->Password = $smtpkey; //qq授权码，不是密码！！！
-            $mail->SMTPSecure = 'ssl'; // 使用 ssl 加密方式登录boolean
-            $mail->Port = 465; //smtp 服务器的远程服务器端口号
-            //Recipients
-            $mail->setFrom($smtpemail, $to); //授权的qq邮箱（和上面一样），自己起的昵称
-            $mail->addAddress($to); // 传过来的收件人
-            $mail->isHTML(true); // Set email format to HTML
-            $mail->Subject = $title; //传过来的标题
-            $mail->Body = $content; //传过来的内容
-            try {
-                $mail->send();
-            } catch (Exception $e) {
-                Robot::sendChatToOneUserMsg(Base::getRootId(), '邮件异常信息：' . "\n" . $e->getMessage());
-            }
-        } else {
-            $mail_url = Base::getSettingKeyData('mysmtpurl');
-            $mail_username = Base::getSettingKeyData('mysmtpname');
-            $mail_password = Base::getSettingKeyData('mysmtppassword');
-            if (!$mail_url || !$mail_username) {
-                return;
-            }
-            $mail = new PHPMailer(true);
-            $mail->SMTPDebug = 0;
-            $mail->isSMTP();
-            $mail->Host = Base::getIp($mail_url);
-            if ($mail_password) {
+            $useqqmail = (int) Base::getSettingKeyData('useqqmail');
+            if ($useqqmail == 1) {
+                $smtpemail = Base::getSettingKeyData('smtp');
+                $smtpkey = Base::getSettingKeyData('smtpkey');
+                if (!$smtpemail || !$smtpemail) {
+                    return;
+                }
+                $mail = new PHPMailer(true);
+                $mail->SMTPDebug = 0; //取消debug，防止输出影响结果
+                $mail->isSMTP();
+                $mail->Host = 'smtp.qq.com'; //qq邮箱的服务器地址
                 $mail->SMTPAuth = true;
-                $mail->Username = $mail_username;
-                $mail->Password = $mail_password;
-            } else {
-                $mail->SMTPAuth = false;
-            }
-            $mail->Port = Base::getPort($mail_url);
-            $mail->setFrom($mail_username, $to);
-            $mail->addAddress($to);
-            $mail->isHTML(true);
-            $mail->Subject = $title;
-            $mail->Body = $content;
-            try {
+                $mail->Username = $smtpemail; //授权的qq邮箱
+                $mail->Password = $smtpkey; //qq授权码，不是密码！！！
+                $mail->SMTPSecure = 'ssl'; // 使用 ssl 加密方式登录boolean
+                $mail->Port = 465; //smtp 服务器的远程服务器端口号
+                //Recipients
+                $mail->setFrom($smtpemail, $to); //授权的qq邮箱（和上面一样），自己起的昵称
+                $mail->addAddress($to); // 传过来的收件人
+                $mail->isHTML(true); // Set email format to HTML
+                $mail->Subject = $title; //传过来的标题
+                $mail->Body = $content; //传过来的内容
                 $mail->send();
-            } catch (Exception $e) {
-                Robot::sendChatToOneUserMsg(Base::getRootId(), '邮件异常信息：' . "\n" . $e->getMessage());
+            } else {
+                $mail_url = Base::getSettingKeyData('mysmtpurl');
+                $mail_username = Base::getSettingKeyData('mysmtpname');
+                $mail_password = Base::getSettingKeyData('mysmtppassword');
+                if (!$mail_url || !$mail_username) {
+                    return;
+                }
+                $mail = new PHPMailer(true);
+                $mail->SMTPDebug = 0;
+                $mail->isSMTP();
+                $mail->Host = Base::getIp($mail_url);
+                if ($mail_password) {
+                    $mail->SMTPAuth = true;
+                    $mail->Username = $mail_username;
+                    $mail->Password = $mail_password;
+                } else {
+                    $mail->SMTPAuth = false;
+                }
+                $mail->Port = Base::getPort($mail_url);
+                $mail->setFrom($mail_username, $to);
+                $mail->addAddress($to);
+                $mail->isHTML(true);
+                $mail->Subject = $title;
+                $mail->Body = $content;
+                $mail->send();
             }
+        } catch (Exception $e) {
+            Robot::sendChatToOneUserMsg(Base::getRootId(), '邮件异常信息：' . "\n" . $e->getMessage());
         }
         return;
     }
