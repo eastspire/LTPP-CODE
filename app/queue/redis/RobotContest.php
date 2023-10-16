@@ -2,8 +2,8 @@
 /*
  * @Author: SQS 1491579574@qq.com
  * @Date: 2023-06-02 11:58:18
- * @LastEditors: 18855190718 1491579574@qq.com
- * @LastEditTime: 2023-10-11 21:29:13
+ * @LastEditors: wmzn-ltpp 1491579574@qq.com
+ * @LastEditTime: 2023-10-16 16:31:44
  * @FilePath: \LTPP-CODE\app\queue\redis\RobotContest.php
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
@@ -291,6 +291,7 @@ class RobotContest implements Consumer
         $db = Db::table('codehistory')
             ->where('id', $code_id)
             ->where('isdel', 0)
+            ->where('status', '!=', Base::$code_up_waiting)
             ->first();
         if (!$db) {
             return;
