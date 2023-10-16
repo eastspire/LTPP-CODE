@@ -244,6 +244,11 @@ class Ojjudge
                 'msg' => '参数错误'
             ]);
         }
+        //代码检测
+        $check_safe_json = Base::judgeCodeSafe($code, $userlanguage);
+        if (!isset($check_safe_json['code']) || $check_safe_json['code'] != 1) {
+            return json($check_safe_json);
+        }
         $code_id = Base::insertToDb('codehistory', [
             'userid' => $my_aid,
             'status' => Base::$code_up_waiting,
@@ -389,13 +394,6 @@ class Ojjudge
 
         $limittime = (int) $db->Time;
         $limitmemory = ((int) $db->Memory) << 20;
-
-        //代码检测
-        $check_safe_json = Base::judgeCodeSafe($code, $userlanguage);
-        if (!isset($check_safe_json['code']) || $check_safe_json['code'] != 1) {
-            Ojjudge::updateCodeStatus($code_id, '运行出错', 0, 0);
-            return $check_safe_json;
-        }
 
         $md5aid = md5($my_aid);
         $mainfile = '';

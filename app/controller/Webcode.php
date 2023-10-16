@@ -24,6 +24,11 @@ class Webcode
         $code = $request->post('code');
         $testin = $request->post('testin');
         $userlanguage = $request->post('userlanguage');
+        //代码检测
+        $check_safe_json = Base::judgeCodeSafe($code, $userlanguage);
+        if (!isset($check_safe_json['code']) || $check_safe_json['code'] != 1) {
+            return json($check_safe_json);
+        }
         $code_id = Base::insertToDb('codehistory', [
             'userid' => $my_aid,
             'status' => Base::$code_up_waiting,
@@ -139,13 +144,6 @@ class Webcode
         }
         $limittime = (int) Base::getSettingKeyData('idemaxtime');
         $limitmemory = ((int) Base::getSettingKeyData('idemaxmemory') ?? 0) << 20;
-        //代码检测
-        $check_safe_json = Base::judgeCodeSafe($code, $userlanguage);
-        if (!isset($check_safe_json['code']) || $check_safe_json['code'] != 1) {
-            Webcode::updateCodeStatus($code_id, '编译出错', 0, 0);
-            return $check_safe_json;
-        }
-
         $md5aid = md5($my_aid);
         $mainfile = '';
         //用户文件夹

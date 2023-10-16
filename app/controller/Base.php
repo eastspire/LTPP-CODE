@@ -2710,9 +2710,8 @@ class Base
         if (!$code) {
             return [
                 'code' => -1,
-                'result' => '请编写后再次提交哦！',
-                'usememory' => 0,
-                'usetime' => 0
+                'msg' => '请编写后再次提交哦！',
+                'code_id' => 0
             ];
         }
         switch ($userlanguage) {
@@ -2741,16 +2740,14 @@ class Base
             default:
                 return [
                     'code' => -1,
-                    'result' => '请选择语言后提交！',
-                    'usememory' => 0,
-                    'usetime' => 0
+                    'msg' => '请选择语言后提交！',
+                    'code_id' => 0
                 ];
         }
         return [
             'code' => 1,
-            'result' => Base::$code_safe,
-            'usememory' => 0,
-            'usetime' => 0
+            'msg' => Base::$code_safe,
+            'code_id' => 0
         ];
     }
 

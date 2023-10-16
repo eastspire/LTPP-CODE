@@ -3,7 +3,7 @@
  * @Author: SQS 1491579574@qq.com
  * @Date: 2023-06-02 11:58:18
  * @LastEditors: wmzn-ltpp 1491579574@qq.com
- * @LastEditTime: 2023-10-16 18:00:15
+ * @LastEditTime: 2023-10-16 19:50:05
  * @FilePath: \LTPP-CODE\app\queue\redis\WebcodeRun.php
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
@@ -31,7 +31,7 @@ class WebcodeRun implements Consumer
             $code = $data['code'] ?? '';
             $userlanguage = $data['userlanguage'] ?? 'C++';
             $testin = $data['testin'] ?? '';
-            if (!$my_aid || !$code || !$userlanguage) {
+            if (!$my_aid || !$code_id || !$userlanguage) {
                 return;
             }
             $json = Webcode::run($my_aid, $code_id, $code, $userlanguage, $testin);
