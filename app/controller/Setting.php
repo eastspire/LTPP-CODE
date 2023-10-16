@@ -541,7 +541,6 @@ class Setting extends Image
                     ->update(['musicbkurl' => $data['musicbkurl']]);
                 $redis5->del('musicbkurl');
                 $redis5->set('musicbkurl', $data['musicbkurl']);
-
                 // 后端音乐地址更改，后端音乐服务重启
                 $this->runMusic($request);
             }
