@@ -338,61 +338,19 @@ class Setting extends Image
         if (!$isroot) {
             return json(['code' => -1, 'msg' => '无权限']);
         }
-        $port = '';
+        $port = '3000';
         // 获取音乐后端端口
-        $redis5 = Redis::connection('db5');
-        if ($redis5->get('musicbkurl')) {
-            $bkmusicurl = $redis5->get('musicbkurl');
-            $loc = array();
-            for ($i = 0; $i < strlen($bkmusicurl); ++$i) {
-                if ($bkmusicurl[$i] === ':') {
-                    $loc[] = $i;
-                }
-            }
-            for ($i = $loc[sizeof($loc) - 1] + 1; $i < strlen($bkmusicurl); ++$i) {
-                $port .= $bkmusicurl[$i];
-            }
-        } else {
-            $db = Db::table('setting')
-                ->where('isdel', 0)
-                ->select('musicbkurl')
-                ->orderBy('id', 'desc')
-                ->first();
-            if ($db) {
-                $bkmusicurl = $db->musicbkurl;
-                $redis5->set('musicbkurl', $bkmusicurl);
-                $loc = array();
-                for ($i = 0; $i < strlen($bkmusicurl); ++$i) {
-                    if ($bkmusicurl[$i] === ':') {
-                        $loc[] = $i;
-                    }
-                }
-                for ($i = $loc[sizeof($loc) - 1] + 1; $i < strlen($bkmusicurl); ++$i) {
-                    $port .= $bkmusicurl[$i];
-                }
-            } else {
-                $port = '3000';
-            }
+        $musicbkurl = Base::getSettingKeyData('musicbkurl');
+        $port = Base::getPort($musicbkurl);
+        if (!$port) {
+            $port = '3000';
         }
         $out = [];
-        // 先强制清空node进程
-        exec('killall -9 node');
-        //查看指定（music）正在运行的node进程
-        exec("ps -ax|grep /home/LTPP/Music/node 2>&1", $out);
-        $sum = 0;
-        foreach ($out as &$tem) {
-            $sum += substr_count($tem, '/home/LTPP/Music/node');
-        }
-        if ($sum <= 2) {
-            //  >重定向追加输出
-            //指定端口运行
-            //nohup PORT=3000 node /home/LTPP/Music/app.js > /home/LTPP/Music/music.log 2>&1 &
-            // PORT 不是系统命令，需要目录进行引导
-            // 不能使用，会报错
-            exec('PORT=' . $port . ' /home/LTPP/Music/app.js > /home/LTPP/Music/music.log 2>&1 &');
-            return json(['code' => 1, 'msg' => '重启成功！']);
-        }
-        return json(['code' => -1, 'msg' => '进程已在运行！']);
+        exec('pkill -9 node 2>&1', $out);
+        $out = [];
+        exec('PORT=' . $port . ' /home/LTPP/Music/app.js > /home/LTPP/Music/music.log 2>&1 &', $out);
+        $out = [];
+        return json(['code' => 1, 'msg' => '重启成功！']);
     }
 
     /**
