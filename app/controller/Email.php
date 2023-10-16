@@ -72,7 +72,7 @@ class Email extends Image
                     $mail->SMTPAuth = false;
                 }
                 $mail->Port = Base::getPort($mail_url);
-                $mail->setFrom($mail_username, $to);
+                $mail->setFrom($mail_username, Base::$app_name);
                 $mail->addAddress($to);
                 $mail->isHTML(true);
                 $mail->Subject = $title;

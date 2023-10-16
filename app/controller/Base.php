@@ -12,6 +12,11 @@ class Base
 {
 
     /**
+     * 软件名称
+     */
+    static $app_name = 'LTPP在线开发平台';
+
+    /**
      * 代码提交成功提示
      */
     static $code_up_success_msg = '代码提交成功';
