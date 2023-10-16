@@ -2,7 +2,7 @@
  * @Author: 18855190718 1491579574@qq.com
  * @Date: 2023-08-07 22:11:28
  * @LastEditors: wmzn-ltpp 1491579574@qq.com
- * @LastEditTime: 2023-10-16 15:04:04
+ * @LastEditTime: 2023-10-16 15:37:22
  * @FilePath: \LTPP-CODE\Frontend\src\components\myide.vue
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
@@ -109,7 +109,7 @@
             type="textarea"
             :autosize="{ minRows: 1, maxRows: 20 }"
             placeholder="请输入测试样例"
-            v-model.lazy="testin"
+            v-model.lazy="local_testin"
             style="font-size: 1rem; font-weight: bold; overflow-x: hidden"
           >
           </el-input>
@@ -270,6 +270,11 @@ export default {
       },
     },
   },
+  watch: {
+    testin(new_value) {
+      this.local_testin = new_value;
+    },
+  },
   created() {
     this.my_ide_id = this.randomString();
     this.istestres = false;
@@ -283,6 +288,7 @@ export default {
     this.usememory = 0;
   },
   mounted() {
+    this.local_testin = this.testin;
     let theme = window.localStorage.getItem("theme") ?? "vs-dark";
     if (theme) {
       this.usertheme = theme;
@@ -374,6 +380,7 @@ export default {
   },
   data() {
     return {
+      local_testin: "",
       code_id: "",
       up_timer: null,
       my_language: "cpp",
@@ -601,7 +608,7 @@ export default {
         },
         data: {
           code: this.my_code,
-          testin: this.testin,
+          testin: this.local_testin,
           userlanguage: this.$SqsGlobal.language_map[this.my_language],
         },
       }).catch((t) => {
@@ -760,7 +767,7 @@ export default {
           this.istest = false;
           this.usetime = 0;
           this.usememory = 0;
-          this.testin = "";
+          this.local_testin = "";
           this.ac = "";
           this.wrong = "";
           this.isac = false;
