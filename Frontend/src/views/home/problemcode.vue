@@ -99,7 +99,8 @@
                   v-show="
                     scope.row.status == 'AC' ||
                     scope.row.status == '正常运行' ||
-                    scope.row.status == '等待中'
+                    scope.row.status == '等待中' ||
+                    scope.row.status == '运行中'
                   "
                   @click="
                     key = scope.row.status;
@@ -138,7 +139,8 @@
                     scope.row.status != 'AC' &&
                     scope.row.status != '正常运行' &&
                     scope.row.status != '答案错误' &&
-                    scope.row.status != '等待中'
+                    scope.row.status != '等待中' &&
+                    scope.row.status != '运行中'
                   "
                   style="
                     font-size: 1.06rem;

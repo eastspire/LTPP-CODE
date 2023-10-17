@@ -3,7 +3,7 @@
  * @Author: 18855190718 1491579574@qq.com
  * @Date: 2023-01-27 17:09:26
  * @LastEditors: wmzn-ltpp 1491579574@qq.com
- * @LastEditTime: 2023-10-16 15:57:22
+ * @LastEditTime: 2023-10-17 11:09:39
  * @FilePath: \LTPP-CODE\app\controller\Version.php
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
@@ -21,7 +21,7 @@ class Version
      * 软件版本
      * @var string $version 软件版本
      */
-    static $version = '1.4.1';
+    static $version = '1.4.2';
 
     /**
      * 安装包路径

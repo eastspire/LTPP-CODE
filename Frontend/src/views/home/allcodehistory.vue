@@ -73,7 +73,8 @@
                     v-show="
                       scope.row.status == 'AC' ||
                       scope.row.status == '加载中' ||
-                      scope.row.status == '等待中'
+                      scope.row.status == '等待中' ||
+                      scope.row.status == '运行中'
                     "
                     style="
                       font-size: 1.06rem;
@@ -100,7 +101,8 @@
                       scope.row.status != 'AC' &&
                       scope.row.status != '加载中' &&
                       scope.row.status != '答案错误' &&
-                      scope.row.status != '等待中'
+                      scope.row.status != '等待中' &&
+                      scope.row.status != '运行中'
                     "
                     style="
                       font-size: 1.06rem;

@@ -296,6 +296,12 @@ class Ojjudge
      */
     static public function run($my_aid = 0, $code_id = 0, $code = '', $userlanguage = 'C++', $problem_id = 0, $contest_id = 0)
     {
+        RedisQueue::send(Base::$redis_queue_update_code_name, [
+            'code_id' => $code_id,
+            'code_data' => [
+                'status' => Base::$code_up_running,
+            ]
+        ]);
         if (!$my_aid || !$code_id || !$code || !$userlanguage || !$problem_id) {
             return [
                 'code' => -1,

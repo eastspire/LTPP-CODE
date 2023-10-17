@@ -32,6 +32,11 @@ class Base
     static $code_up_waiting = '等待中';
 
     /**
+     * 代码提交运行关键词
+     */
+    static $code_up_running = '运行中';
+
+    /**
      * Redis密码
      */
     static $redis_password = 'SQS';

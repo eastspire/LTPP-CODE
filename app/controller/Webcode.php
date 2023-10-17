@@ -139,6 +139,12 @@ class Webcode
      */
     static public function run($my_aid = 0, $code_id = 0, $code = '', $userlanguage = 'C++', $testin = '')
     {
+        RedisQueue::send(Base::$redis_queue_update_code_name, [
+            'code_id' => $code_id,
+            'code_data' => [
+                'status' => Base::$code_up_running,
+            ]
+        ]);
         if (!$my_aid || !$code_id || !Base::getCodeData($code_id)) {
             return ['code' => -1, 'result' => '参数错误', 'usememory' => 0, 'usetime' => 0];
         }
