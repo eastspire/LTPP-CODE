@@ -425,7 +425,7 @@ class RobotContest implements Consumer
             $people_list = $this->getPeopleList($one_contest_id);
             $problem_list = $this->getProblemList($one_contest_id);
             $this_contest_is_end = false;
-            $submit_times = rand(1, 4);
+            $submit_times = rand(4, 8);
             // 竞赛持续秒数
             $contest_run_time_seconds = strtotime($contest_db->end) - time();
             if ($contest_run_time_seconds < 0 || $contest_run_time_seconds > Base::$robot_contest_can_join_limit_contest_time) {
