@@ -114,8 +114,8 @@ class Ojjudge
         if ($code_db->userid != $my_aid) {
             return json(['code' => -1, 'result' => '用户身份错误', 'usememory' => 0, 'usetime' => 0]);
         }
-        if ($code_db->status == Base::$code_up_waiting) {
-            // 等待中
+        if ($code_db->status == Base::$code_up_waiting || $code_db->status == Base::$code_up_running) {
+            // 等待/运行中
             return json(['code' => 0, 'result' => $code_db->status, 'usememory' => $code_db->usememory, 'usetime' => $code_db->usetime]);
         }
         return json(['code' => 1, 'result' => $code_db->status, 'usememory' => $code_db->usememory, 'usetime' => $code_db->usetime]);
@@ -296,12 +296,7 @@ class Ojjudge
      */
     static public function run($my_aid = 0, $code_id = 0, $code = '', $userlanguage = 'C++', $problem_id = 0, $contest_id = 0)
     {
-        RedisQueue::send(Base::$redis_queue_update_code_name, [
-            'code_id' => $code_id,
-            'code_data' => [
-                'status' => Base::$code_up_running,
-            ]
-        ]);
+        Ojjudge::updateCodeStatus($code_id, Base::$code_up_running, 0, 0);
         if (!$my_aid || !$code_id || !$code || !$userlanguage || !$problem_id) {
             return [
                 'code' => -1,
