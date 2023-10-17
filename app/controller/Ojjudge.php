@@ -103,10 +103,6 @@ class Ojjudge
         }
         $code_uid = $request->post('code_id');
         $code_id = Base::getIdByUid($code_uid);
-        $json = Base::getCodeJson($code_id);
-        if ($json) {
-            return json($json);
-        }
         $code_db = Base::getCodeData($code_id);
         if (!$code_db) {
             return json(['code' => -1, 'result' => '代码不存在', 'usememory' => 0, 'usetime' => 0]);
@@ -114,11 +110,12 @@ class Ojjudge
         if ($code_db->userid != $my_aid) {
             return json(['code' => -1, 'result' => '用户身份错误', 'usememory' => 0, 'usetime' => 0]);
         }
-        if ($code_db->status == Base::$code_up_waiting || $code_db->status == Base::$code_up_running) {
-            // 等待/运行中
-            return json(['code' => 0, 'result' => $code_db->status, 'usememory' => $code_db->usememory, 'usetime' => $code_db->usetime]);
+        $json = Base::getCodeJson($code_id);
+        if ($json) {
+            return json($json);
         }
-        return json(['code' => 1, 'result' => $code_db->status, 'usememory' => $code_db->usememory, 'usetime' => $code_db->usetime]);
+        // 这里code得是0，状态只能从缓存读取信息
+        return json(['code' => 0, 'result' => $code_db->status, 'usememory' => $code_db->usememory, 'usetime' => $code_db->usetime]);
     }
 
     /**
@@ -809,7 +806,7 @@ class Ojjudge
                         ->update(['totaltime' => time() - $begintime]);
                     return [
                         'code' => 1,
-                        'result' => '恭喜您AK了',
+                        'result' => Base::$ak_msg,
                         'usetime' => $maxtime,
                         'usememory' => $maxmemory,
                     ];
@@ -817,7 +814,7 @@ class Ojjudge
                 if ($acnum > $pronum) {
                     return [
                         'code' => 1,
-                        'result' => '恭喜您AK了',
+                        'result' => Base::$ak_msg,
                         'usetime' => $maxtime,
                         'usememory' => $maxmemory,
                     ];
@@ -825,7 +822,7 @@ class Ojjudge
 
                 return [
                     'code' => 1,
-                    'result' => '恭喜您AC了！',
+                    'result' => Base::$ac_msg,
                     'usetime' => $maxtime,
                     'usememory' => $maxmemory,
                 ];
@@ -885,7 +882,7 @@ class Ojjudge
             Base::updateOjDataRedis($problem_id);
             return [
                 'code' => 1,
-                'result' => '恭喜您AC了',
+                'result' => Base::$ac_msg,
                 'usetime' => $maxtime,
                 'usememory' => $maxmemory,
             ];

@@ -566,7 +566,7 @@ export default {
           offset: 80,
         });
       });
-      if (!res.code) {
+      if (res.code == 0) {
         // code为0
         // 等待中
         return;
@@ -679,7 +679,7 @@ export default {
           offset: 80,
         });
       });
-      if (!res.code) {
+      if (res.code == 0) {
         // code为0
         // 等待中
         return;

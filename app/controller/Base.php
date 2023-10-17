@@ -37,6 +37,16 @@ class Base
     static $code_up_running = '运行中';
 
     /**
+     * AC提示
+     */
+    static $ac_msg = '恭喜您AC了';
+
+    /**
+     * AK提示
+     */
+    static $ak_msg = '恭喜您AK了';
+
+    /**
      * Redis密码
      */
     static $redis_password = 'SQS';
