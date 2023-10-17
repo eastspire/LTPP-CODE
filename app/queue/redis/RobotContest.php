@@ -292,6 +292,7 @@ class RobotContest implements Consumer
             ->where('id', $code_id)
             ->where('isdel', 0)
             ->where('status', '!=', Base::$code_up_waiting)
+            ->where('status', '!=', Base::$code_up_running)
             ->first();
         if (!$db) {
             return;
@@ -342,7 +343,7 @@ class RobotContest implements Consumer
                 'userid' => $my_id,
                 'problemid' => $db->problemid,
                 'language' => $db->language,
-                'status' => $db->status,
+                'status' => $db->status == '正常运行' ? '答案错误' : $db->status,
                 'time' => $now,
                 'usetime' => rand(10, 100),
                 'usememory' => rand(10, 100),
