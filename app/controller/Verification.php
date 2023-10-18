@@ -88,7 +88,7 @@ class Verification extends Email
         $judge = Db::table('user')
             ->where('name', $name)
             ->where('isdel', 0)
-            ->select('email')
+            ->select('id', 'email')
             ->first();
 
         if (!$judge) {
@@ -104,27 +104,25 @@ class Verification extends Email
             return \json(['code' => -1, 'msg' => '重置密码速度太快，10分钟后即可重新尝试！']);
         }
         $redis2->setEx('resetpasswd' . $name . $to, 600, 1);
-
-        $loc = $request->getRemoteIp();
-        $num = rand(100000, 999999); //闭区间随机数
+        $loc = $request->getRealIp($safe_mode = true);
+        $num = rand(100000, 999999);
         $offline = (int) Base::getSettingKeyData('offline');
         if ($offline == 0) {
-            $content = "LTPP检测到您的账号正在进行重置密码操作<br>
+            $content = Base::$app_name . "检测到您的账号正在进行重置密码操作<br>
             如不是本人操作请使用该邮件密码进行登录并改密<br/>
             操作者ip地址：$loc<br/>
             您的新密码是(此密码请勿泄露给他人)";
             RedisQueue::send(Base::$redis_queue_send_mail_name, [
                 'to' => $to,
-                'title' => '新密码',
+                'title' => Base::$app_name . '【新密码】',
                 'content' => "$content : $num"
             ]);
         }
         Db::table('user')
-            ->where('name', $name)
+            ->where('id', $judge->id)
             ->update(['password' => Base::passwordEncryption($num)]);
-
+        Base::updateUserDataRedis($judge->id);
         return json(['code' => 1, 'msg' => '密码更新成功']);
-
     }
 
     /**

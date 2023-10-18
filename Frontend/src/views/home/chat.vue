@@ -318,7 +318,6 @@
       </span>
     </el-dialog>
     <el-drawer
-      @closed="resetHeadImageFileList"
       :size="drawer_size"
       @contextmenu.prevent=""
       title="新建群聊"
@@ -427,7 +426,6 @@
     </el-dialog>
     <div>
       <el-dialog
-        @closed="resetFileList"
         @contextmenu.prevent.native="isSeeUpload = false"
         :visible.sync="isSeeUpload"
         width="30%"
@@ -1071,7 +1069,7 @@ export default {
       this.filelist = res.data;
     },
     //上传文件成功
-    async uploadFinish(response) {
+    async uploadFinish(response, file, file_list) {
       if (response && response.code && response.code == 1) {
         this.$msg({
           type: "success",
@@ -1093,38 +1091,30 @@ export default {
           offset: 80,
         });
       }
+      this.deleteOneFileHistoryFromUpList(file, file_list);
     },
     judgeIsString(str) {
       return typeof str == "string" && str.constructor == String;
     },
-    resetFileList() {
-      try {
-        this.$refs.upload_file.clearFiles();
-      } catch (err) {}
-    },
-    resetHeadImageFileList() {
-      try {
-        this.$refs.upload_headimage.clearFiles();
-      } catch (err) {}
-    },
-    uploadPhotoSuccess(res) {
-      if (res.code == 1) {
-        this.group_data.headimage = res.url;
-        this.creat__group_chat_image = res.url;
+    uploadPhotoSuccess(response, file, file_list) {
+      if (response.code == 1) {
+        this.group_data.headimage = response.url;
+        this.creat__group_chat_image = response.url;
         this.$msg({
           type: "success",
-          message: res.msg,
+          message: response.msg,
           duration: 1600,
           offset: 80,
         });
       } else {
         this.$msg({
           type: "error",
-          message: res.msg,
+          message: response.msg,
           duration: 1600,
           offset: 80,
         });
       }
+      this.deleteOneFileHistoryFromUpList(file, file_list);
     },
     async getlinuxurl() {
       const res = await this.getBackurl();

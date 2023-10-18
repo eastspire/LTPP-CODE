@@ -3,7 +3,7 @@
  * @Author: 18855190718 1491579574@qq.com
  * @Date: 2023-01-12 12:38:58
  * @LastEditors: wmzn-ltpp 1491579574@qq.com
- * @LastEditTime: 2023-10-15 22:18:16
+ * @LastEditTime: 2023-10-18 21:52:08
  * @FilePath: \LTPP-CODE\app\controller\Email.php
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
@@ -60,17 +60,24 @@ class Email extends Image
                 if (!$mail_url || !$mail_username) {
                     return;
                 }
+                if ($mail_password) {
+                    // 有密码走宝塔邮局
+                    Base::sendRequest($mail_url, ['Content-Type: application/json'], [
+                        'mail_from' => $mail_username,
+                        'password' => $mail_password,
+                        'mail_to' => $to,
+                        'subject' => $title,
+                        'content' => $content,
+                        'subtype' => 'html'
+                    ]);
+                    return;
+                }
+                // 无密码走邮件容器
                 $mail = new PHPMailer(true);
                 $mail->SMTPDebug = 0;
                 $mail->isSMTP();
                 $mail->Host = Base::getIp($mail_url);
-                if ($mail_password) {
-                    $mail->SMTPAuth = true;
-                    $mail->Username = $mail_username;
-                    $mail->Password = $mail_password;
-                } else {
-                    $mail->SMTPAuth = false;
-                }
+                $mail->SMTPAuth = false;
                 $mail->Port = Base::getPort($mail_url);
                 $mail->setFrom($mail_username, Base::$app_name);
                 $mail->addAddress($to);

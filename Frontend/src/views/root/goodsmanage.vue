@@ -246,7 +246,6 @@
     </div>
 
     <el-dialog
-      @closed="resetAddFileList"
       title="新增商品"
       :visible.sync="see_add_dialog"
       class="Mdialog"
@@ -369,7 +368,6 @@
     </el-dialog>
 
     <el-dialog
-      @closed="resetUpdateFileList"
       title="更新商品"
       :visible.sync="see_update_dialog"
       class="Mdialog"
@@ -503,10 +501,9 @@
 
     <el-dialog
       title="批量新增商品"
-      @closed="resetLargeNumFileList"
       :visible.sync="see_more_add_dialog"
       class="Mdialog"
-      :width="($store.state.max_width / $store.state.now_width) * 100 + '%'"
+      width="30%"
     >
       <el-upload
         class="upload-demo"
@@ -595,22 +592,7 @@ export default {
     };
   },
   methods: {
-    resetAddFileList() {
-      try {
-        this.$refs.upload_add.clearFiles();
-      } catch (err) {}
-    },
-    resetUpdateFileList() {
-      try {
-        this.$refs.upload_update.clearFiles();
-      } catch (err) {}
-    },
-    resetLargeNumFileList() {
-      try {
-        this.$refs.upload_large_num.clearFiles();
-      } catch (err) {}
-    },
-    upSuccess(response) {
+    upSuccess(response, file, file_list) {
       this.see_update_dialog = false;
       this.see_add_dialog = false;
       this.goods_data = [];
@@ -629,6 +611,7 @@ export default {
           offset: 80,
         });
       }
+      this.deleteOneFileHistoryFromUpList(file, file_list);
       this.getlist();
     },
     async getlinuxurl() {

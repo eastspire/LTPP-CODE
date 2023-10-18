@@ -80,6 +80,17 @@ Vue.directive('domDrag', {
     }
 });
 
+// 从上传文件列表中删除上传的文件
+Vue.prototype.deleteOneFileHistoryFromUpList = function (file, file_list) {
+    try {
+        const index = file_list.indexOf(file);
+        if (index !== -1) {
+            file_list.splice(index, 1);
+        }
+    } catch (err) {
+    }
+}
+
 // 随机字符串
 Vue.prototype.randomString = function (length = 32) {
     let f_timestamp = new Date().getTime();

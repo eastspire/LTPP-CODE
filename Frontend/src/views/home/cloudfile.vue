@@ -552,7 +552,6 @@
           :visible.sync="IsShowUp"
           width="30%"
           :append-to-body="true"
-          @closed="resetFileList"
         >
           <div
             style="width: 100%;margin-left=auto;margin-right:auto;text-align:center;height:auto;"
@@ -1025,13 +1024,8 @@ export default {
       });
       this.list = res.data;
     },
-    resetFileList() {
-      try {
-        this.$refs.upload.clearFiles();
-      } catch (err) {}
-    },
     //上传文件自动刷新
-    async reloadList(response) {
+    async reloadList(response, file, file_list) {
       if (response && response.code && response.code != 1) {
         this.$msg({
           type: "error",
@@ -1047,6 +1041,7 @@ export default {
           offset: 80,
         });
       }
+      this.deleteOneFileHistoryFromUpList(file, file_list);
       this.getPercentage();
       const { data: res } = await this.$ajax({
         method: "post",

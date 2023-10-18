@@ -3,7 +3,7 @@
  * @Author: SQS 1491579574@qq.com
  * @Date: 2023-06-02 11:58:18
  * @LastEditors: wmzn-ltpp 1491579574@qq.com
- * @LastEditTime: 2023-10-16 16:31:44
+ * @LastEditTime: 2023-10-18 22:06:52
  * @FilePath: \LTPP-CODE\app\queue\redis\RobotContest.php
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
@@ -464,8 +464,8 @@ class RobotContest implements Consumer
                                 $this->addCodeFromCodeHistory($one_contest_id, $code_id, $one_person_id);
                             }
                             Contest::sendUpdateRankMQ($one_contest_id);
-                            sleep($one_sleep_time_list[$one_problem_index]);
                         }
+                        sleep($one_sleep_time_list[$one_problem_index]);
                     }
                     if ($this_contest_is_end) {
                         break;

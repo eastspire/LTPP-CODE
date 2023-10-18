@@ -3,7 +3,7 @@
  * @Author: 18855190718 1491579574@qq.com
  * @Date: 2023-01-19 23:50:37
  * @LastEditors: wmzn-ltpp 1491579574@qq.com
- * @LastEditTime: 2023-10-16 15:16:50
+ * @LastEditTime: 2023-10-18 22:10:48
  * @FilePath: \LTPP-CODE\app\controller\Contest.php
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
@@ -2015,7 +2015,7 @@ class Contest
             $res .= '<table><tr><th class="tips" colspan="3">代码相似度达到【 ' . $key * 100 . '% 】</th></tr>' . $value . '</table><br/><br/><br/><br/><br/><br/>';
         }
         $res .= '</body></html>';
-        $key = Base::getSafeUniqidByIdOnce($contest_id);
+        $key = Base::getContestSimilarityId($contest_id);
         // 二级路径更安全，防止被破解
         $path = 'static/contest/' . Base::doubleMd5($contest_id) . '/' . $key . '/';
         $save_path = Base::$LTPP_public_path . $path;

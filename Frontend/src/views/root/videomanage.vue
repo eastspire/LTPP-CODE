@@ -217,7 +217,6 @@
     </el-dialog>
     <!-- 添加对话框 -->
     <el-dialog
-      @closed="resetFileList"
       :width="($store.state.max_width / $store.state.now_width) * 100 + '%'"
       style="text-align: center; font-size: 2rem; font-weight: bold"
       title=""
@@ -415,12 +414,7 @@ export default {
         this.getlist();
       }
     },
-    resetFileList() {
-      try {
-        this.$refs.upload.clearFiles();
-      } catch (err) {}
-    },
-    getupres(response) {
+    getupres(response, file, file_list) {
       if (response && response.code && response.code != 1) {
         this.$msg({
           type: "error",
@@ -436,6 +430,7 @@ export default {
           offset: 80,
         });
       }
+      this.deleteOneFileHistoryFromUpList(file, file_list);
       this.getlist();
     },
     //获取视频列表

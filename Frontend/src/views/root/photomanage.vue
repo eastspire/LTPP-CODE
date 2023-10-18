@@ -72,7 +72,7 @@
             style="width: 100%; text-align: center"
             :headers="head"
             :auto-upload="true"
-            :on-success="getlist"
+            :on-success="upSuccess"
             drag
             ref="upload"
             :action="backurl"
@@ -119,9 +119,6 @@ export default {
       authorization: "Bearer " + window.localStorage.getItem("authorization"),
       key: window.localStorage.getItem("key"),
     };
-  },
-  deactivated() {
-    this.resetFileList();
   },
   data() {
     return {
@@ -211,10 +208,24 @@ export default {
           });
         });
     },
-    resetFileList() {
-      try {
-        this.$refs.upload.clearFiles();
-      } catch (err) {}
+    upSuccess(response, file, file_list) {
+      if (response && response.code && response.code != 1) {
+        this.$msg({
+          type: "error",
+          message: response.msg,
+          duration: 1600,
+          offset: 80,
+        });
+      } else {
+        this.$msg({
+          type: "success",
+          message: response.msg,
+          duration: 1600,
+          offset: 80,
+        });
+      }
+      this.deleteOneFileHistoryFromUpList(file, file_list);
+      this.getlist();
     },
     //获取图片列表
     async getlist() {

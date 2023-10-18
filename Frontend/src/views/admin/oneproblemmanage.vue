@@ -476,7 +476,6 @@ export default {
   },
   deactivated() {
     this.show_ide = false;
-    this.resetFileList();
   },
   data() {
     return {
@@ -782,11 +781,6 @@ export default {
           offset: 80,
         });
       }
-    },
-    resetFileList() {
-      try {
-        this.$refs.upload.clearFiles();
-      } catch (err) {}
     },
     // 样例上传回调
     getupres(response) {
