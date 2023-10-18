@@ -37,9 +37,6 @@ return [
     //         ]
     //     ]
     // ],
-    'Copy' => [
-        'handler' => process\Copy::class
-    ],
     'Useronline' => [
         'handler' => process\Useronline::class
     ],
