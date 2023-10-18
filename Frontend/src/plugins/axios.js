@@ -20,7 +20,7 @@ import store from '../plugins/vuex.js'
 // axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
 let public_network_url = 'https://api.ltpp.vip';
-let private_network_url = 'http://hbnuoj.ltpp.vip';
+let private_network_url = 'http://hbnuoj.ltpp.vip:48787';
 
 let config = {
     baseURL: store.state.is_public_network == 1 ? public_network_url : private_network_url, //process.env.baseURL || process.env.apiUrl || ""
