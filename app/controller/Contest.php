@@ -351,7 +351,6 @@ class Contest
             return json(['code' => -1, 'msg' => '您已报名该竞赛，无法多次报名']);
         }
         $res = Db::table('joincontest')
-            ->lockForUpdate()
             ->insert([
                 'userid' => $my_aid,
                 'contestid' => $contest_id
