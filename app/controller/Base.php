@@ -2900,7 +2900,7 @@ class Base
                     break;
                 case 'TypeScript':
                     Base::writeToFile($runcodefilepath . '.ts', $code);
-                    exec('/usr/local/nodejs/bin/tsc  --outFile ' . $runcodefilepath . '.js ' . $runcodefilepath . '.ts 2>&1', $out);
+                    exec('/usr/local/nodejs/bin/tsc -t es2022 --outFile ' . $runcodefilepath . '.js ' . $runcodefilepath . '.ts 2>&1', $out);
                     break;
                 case 'Python3':
                     Base::writeToFile($runcodefilepath . '.py', $code);
