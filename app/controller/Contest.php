@@ -550,7 +550,6 @@ class Contest
      */
     public function lookContestProblem(Request $request)
     {
-        $now = time();
         $contest_uid = $request->post('contest_id');
         $contest_id = Base::getIdByUid($contest_uid);
         $my_uid = JwtToken::getCurrentId();
@@ -561,9 +560,11 @@ class Contest
             ->where('userid', $my_aid)
             ->where('isdel', 0)
             ->exists();
-        if (!$isjoin) {
+        $is_me_contest = Contest::judgeIsMyContest($contest_id, $my_aid);
+        if (!$isjoin && !$is_me_contest) {
             return json(['code' => -1, 'msg' => '您未报名该竞赛']);
         }
+        $now = time();
         //竞赛是否开始
         $contest_db = Base::getContestData($contest_id);
         if (!$contest_db) {
