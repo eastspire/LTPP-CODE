@@ -536,7 +536,7 @@ class Video
         $is_end = (sizeof($res_db->toArray()) < $limit);
         $res = array();
         foreach ($res_db as &$tem) {
-            $img1 = $tem->userheadimg = Base::getUserHeadimage($tem->userid);
+            $tem->userheadimg = Base::getUserHeadimage($tem->userid);
             $temary = get_object_vars($tem);
             $temary['touserarray'] = array();
             $temdb = Db::table('videocomment')
@@ -547,7 +547,7 @@ class Video
                 ->get();
             if ($temdb && !empty($temdb)) {
                 foreach ($temdb as $tt) {
-                    $tt->userheadimg = $img1;
+                    $tt->userheadimg = Base::getUserHeadimage($tt->userid);
                     $tt->touserheadimg = Base::getUserHeadimage($tt->touserid);
                     $temary['touserarray'][] = get_object_vars($tt);
                 }

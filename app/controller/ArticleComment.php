@@ -75,8 +75,10 @@ class ArticleComment
         Db::table('articlecomment')
             ->where('id', $res_id)
             ->update(['maincommentid' => $res_id]);
+
         $data['maincommentid'] = $res_id;
         $data['touserarray'] = [];
+
         if ($my_aid != $article_db->writerid) {
             $data = [
                 'userid' => $article_db->writerid,
@@ -160,7 +162,6 @@ class ArticleComment
         ) {
             return \json(['code' => -1, 'msg' => '评论已被删除，无法回复，请刷新页面！', 'data' => []]);
         }
-        ;
         $resid = Base::insertToDb('articlecomment', $data);
 
         if ($my_aid != $touser_id) {
@@ -263,10 +264,7 @@ class ArticleComment
         $res = array();
         foreach ($comment_db as &$tem) {
             $tem->userheadimg = '';
-            $img1 = Base::getUserHeadimage($tem->userid);
-            if ($img1) {
-                $tem->userheadimg = $img1;
-            }
+            $tem->userheadimg = Base::getUserHeadimage($tem->userid);
             $temary = get_object_vars($tem);
             $temary['touserarray'] = array();
             $temdb = Db::table('articlecomment')
@@ -276,19 +274,12 @@ class ArticleComment
                 ->where('isdel', 0)
                 ->select(ArticleComment::$comment_db_key)
                 ->get();
-
             if ($temdb && !empty($temdb)) {
                 foreach ($temdb as &$tt) {
                     $tt->userheadimg = '';
                     $tt->touserheadimg = '';
-                    $img1 = Base::getUserHeadimage($tt->userid);
-                    if ($img1) {
-                        $tt->userheadimg = $img1;
-                    }
-                    $img2 = Base::getUserHeadimage($tt->touserid);
-                    if ($img2) {
-                        $tt->touserheadimg = $img2;
-                    }
+                    $tt->userheadimg = Base::getUserHeadimage($tt->userid);
+                    $tt->touserheadimg = Base::getUserHeadimage($tt->touserid);
                     $temary['touserarray'][] = get_object_vars($tt);
                 }
             }
