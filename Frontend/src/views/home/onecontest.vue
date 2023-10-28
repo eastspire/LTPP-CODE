@@ -98,7 +98,12 @@
             >
             </mavon-editor>
           </div>
-          <div v-show="isjoin && isgetprolist && (isbegin || is_my_contest)">
+          <div
+            v-show="
+              isgetprolist &&
+              ((isbegin && isjoin && !is_my_contest) || is_my_contest)
+            "
+          >
             <p
               style="
                 font-size: 1.06rem;
