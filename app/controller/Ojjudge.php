@@ -20,11 +20,11 @@ class Ojjudge
      * @param string $userlanguage 用户编程语言
      * @param string $code 代码
      * @param string $time 时间
+     * @param object $contestdb 竞赛
      * @return void
      */
-    static private function updateUserTotalScore($contest_id, $problem_id, $resscore, $my_aid, $type, $userlanguage, $code, $time)
+    static private function updateUserTotalScore($contest_id, $problem_id, $resscore, $my_aid, $type, $userlanguage, $code, $time, $contestdb)
     {
-        $lastScore = null;
         $resscore = (int) $resscore;
         if ($type == 'OI') {
             $lastScore = Db::table('contestrank')
@@ -32,31 +32,26 @@ class Ojjudge
                 ->where('problemid', $problem_id)
                 ->where('userid', $my_aid)
                 ->where('isdel', 0)
+                ->where('submittime', '>=', $contestdb->begin)
+                ->where('submittime', '<=', $contestdb->end)
                 ->orderBy('id', 'desc')
                 ->first();
-        } else {
-            $lastScore = Db::table('contestrank')
-                ->where('contestid', $contest_id)
-                ->where('problemid', $problem_id)
-                ->where('userid', $my_aid)
-                ->where('isdel', 0)
-                ->orderBy('score', 'desc')
-                ->first();
+            if ($lastScore && $type == "OI") {
+                // 更新一道题目的分数
+                Db::table('contestrank')
+                    ->where('id', $lastScore->id)
+                    ->where('isdel', 0)
+                    ->update([
+                        'score' => $resscore,
+                        'code' => $code,
+                        'submittime' => date('Y-m-d H:i:s', $time),
+                        'language' => $userlanguage
+                    ]);
+                Contest::sendUpdateRankMQ($contest_id);
+                return;
+            }
         }
-        if ($lastScore && $type == "OI") {
-            // 更新一道题目的分数
-            Db::table('contestrank')
-                ->where('id', $lastScore->id)
-                ->where('isdel', 0)
-                ->update([
-                    'score' => $resscore,
-                    'code' => $code,
-                    'submittime' => date('Y-m-d H:i:s', $time),
-                    'language' => $userlanguage
-                ]);
-            Contest::sendUpdateRankMQ($contest_id);
-            return;
-        }
+
         //插入记录
         Db::table('contestrank')
             ->insert([
@@ -69,7 +64,6 @@ class Ojjudge
                 'language' => $userlanguage
             ]);
         Contest::sendUpdateRankMQ($contest_id);
-        return;
     }
 
     /**
@@ -712,7 +706,7 @@ class Ojjudge
                 // 代码记录
                 Ojjudge::updateCodeStatus($code_id, '正常运行', $maxtime, $maxmemory);
                 // 更新用户总得分，最后一次提交为准
-                Ojjudge::updateUserTotalScore($contest_id, $problem_id, $resscore, $my_aid, $type, $userlanguage, $code, $time);
+                Ojjudge::updateUserTotalScore($contest_id, $problem_id, $resscore, $my_aid, $type, $userlanguage, $code, $time, $contestdb);
                 return [
                     'code' => -1,
                     'result' => 'OI赛制！无反馈！仅以最后一次正常运行为准！',
@@ -795,7 +789,7 @@ class Ojjudge
                 $redis4->del('Contest' . $contest_id . 'problemdata' . $my_aid);
                 // 更新用户总得分
                 // 填100避免99.99等情况造成的分数不准
-                Ojjudge::updateUserTotalScore($contest_id, $problem_id, 100, $my_aid, $type, $userlanguage, $code, $time);
+                Ojjudge::updateUserTotalScore($contest_id, $problem_id, 100, $my_aid, $type, $userlanguage, $code, $time, $contestdb);
                 //一场竞赛该用户首次AK停止记录时间
                 if ($acnum == $pronum && $ac_list_len < $pronum) {
                     Base::addAkMoney($my_aid, $contestdb);
@@ -829,7 +823,7 @@ class Ojjudge
             } else {
                 //竞赛过程中没有通过全部测试点
                 // 更新用户总得分
-                Ojjudge::updateUserTotalScore($contest_id, $problem_id, $resscore, $my_aid, $type, $userlanguage, $code, $time);
+                Ojjudge::updateUserTotalScore($contest_id, $problem_id, $resscore, $my_aid, $type, $userlanguage, $code, $time, $contestdb);
                 Ojjudge::updateCodeStatus($code_id, '答案错误', $maxtime, $maxmemory);
                 if ($type == 'ACM') {
                     $msg = '答案错误！';
