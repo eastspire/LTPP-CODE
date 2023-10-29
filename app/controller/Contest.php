@@ -3,7 +3,7 @@
  * @Author: 18855190718 1491579574@qq.com
  * @Date: 2023-01-19 23:50:37
  * @LastEditors: wmzn-ltpp 1491579574@qq.com
- * @LastEditTime: 2023-10-18 22:10:48
+ * @LastEditTime: 2023-10-29 16:41:41
  * @FilePath: \LTPP-CODE\app\controller\Contest.php
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
@@ -2627,23 +2627,11 @@ class Contest
                         ->select('submittime', 'score')
                         ->orderBy('score', 'desc')
                         ->orderBy('id', 'asc')
-                        ->get();
+                        ->first();
                 }
                 if ($addtime) {
-                    $one_pro_score = 0;
-                    $firstactime = 0;
-                    if ($contest_db->type == "OI") {
-                        $firstactime = (int) strtotime($addtime->submittime);
-                        $one_pro_score = $addtime->score;
-                    } else {
-                        foreach ($addtime as &$t_add) {
-                            $firstactime = (int) strtotime($t_add->submittime);
-                            $one_pro_score = $t_add->score;
-                            if ($t_add->score == 100) {
-                                break;
-                            }
-                        }
-                    }
+                    $firstactime = (int) strtotime($addtime->submittime);
+                    $one_pro_score = $addtime->score;
                     $ftime = max(0, (int) ($firstactime - $begintime));
                     $ioi_total_time += max(0, $ftime);
                     $allscore += $one_pro_score;
@@ -2665,7 +2653,6 @@ class Contest
                             'score' => $one_pro_score
                         ];
                     }
-
                 } else {
                     $userResProList[] = [
                         'id' => $tp->problemid,
@@ -2681,7 +2668,6 @@ class Contest
             } else {
                 $ta['totaltime'] = max(0, $ioi_total_time);
             }
-
             $ta['res'] = $userResProList;
             $ta['acnum'] = '';
             $ta['allscore'] = $allscore;
