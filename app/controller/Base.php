@@ -901,7 +901,7 @@ class Base
                 ($lastchangetime != $releasetime ? '> 修改时间：' . $lastchangetime . "\n***\n" : '') .
                 '> 点赞数：' . $fabulous . "\n***\n" .
                 '> 收藏数：' . $collection . "\n***\n" .
-                '<div style="display:flex;justify-content:center;"><img src="' . $image . '" alt="" style="margin:0.6rem 1rem;"></div>' . "\n\n" .
+                '<div style="display:flex;justify-content:center;"><img src="' . $image . '" alt="" style="margin:0px 0px 8px 0px;"></div>' . "\n\n" .
                 $article;
             return response(Base::markdownToHTML($res), 200);
         } catch (Exception $e) {
