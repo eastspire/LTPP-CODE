@@ -61,34 +61,40 @@ class Video
                 ->where('userid', $user_id)
                 ->where('isdel', 0)
                 ->orderBy('id', 'desc')
-                ->paginate($limit, '*', 'page', $page)
-                ->items();
+                ->get();
             if (!$db) {
                 return [[], 0];
             }
-            $allnum = Db::table($db_name)
-                ->where('userid', $user_id)
-                ->where('isdel', 0)
-                ->count();
-            $res = Db::table('video')
-                ->where('id', $db[0]->videoid)
-                ->select(Video::$video_db_key)
-                ->first();
+            foreach ($db as &$tem) {
+                $tem_res = Db::table('video')
+                    ->where('id', $tem->videoid)
+                    ->where('isdouyin', 0)
+                    ->select(Video::$video_db_key)
+                    ->first();
+                if (!$tem_res) {
+                    continue;
+                }
+                ++$allnum;
+                if ($allnum == $page) {
+                    $res = $tem_res;
+                }
+            }
         } else {
             // 是搜索
-            $lovedb = Db::table($db_name)
+            $db = Db::table($db_name)
                 ->where('userid', $user_id)
                 ->where('isdel', 0)
                 ->select('videoid')
                 ->get();
-            if (!$lovedb) {
+            if (!$db) {
                 return [[], 0];
             }
-            foreach ($lovedb as &$tem) {
+            foreach ($db as &$tem) {
                 $oneVideo = Db::table('video')
                     ->where('id', $tem->videoid)
-                    ->where('name', 'like', "%" . $key . "%")
                     ->where('isdel', 0)
+                    ->where('isdouyin', 0)
+                    ->where('name', 'like', '%' . $key . '%')
                     ->orderBy('id', 'desc')
                     ->select(Video::$video_db_key)
                     ->first();
