@@ -458,6 +458,12 @@ video:focus {
   }
 }
 
+.markdown-body pre {
+  word-wrap: normal;
+  background-color: rgba(40, 44, 52, 0.88) !important;
+  padding: 1rem !important;
+}
+
 .video-bk {
   position: fixed;
   background-size: cover;
