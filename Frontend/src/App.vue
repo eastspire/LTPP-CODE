@@ -20,7 +20,7 @@ export default {
   name: "app",
   data() {
     return {
-      version: "1.4.2",
+      version: "1.5.2",
     };
   },
   beforeCreate() {

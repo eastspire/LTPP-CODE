@@ -21,7 +21,7 @@ class Version
      * 软件版本
      * @var string $version 软件版本
      */
-    static $version = '1.4.2';
+    static $version = '1.5.2';
 
     /**
      * 安装包路径
