@@ -124,7 +124,7 @@
                 font-size: 1.06rem;
                 font-weight: bold;
                 text-align: center;
-                color: #f8f9fa;
+                color: #ffffffe6;
               "
             >
               暂无评论

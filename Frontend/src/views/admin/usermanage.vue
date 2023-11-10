@@ -173,7 +173,7 @@
                       width: 4rem;
                       height: 2rem;
                       overflow: hidden;
-                      color: #f8f9fa;
+                      color: #ffffffe6;
                       font-weight: bold;
                     "
                   >

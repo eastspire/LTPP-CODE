@@ -776,7 +776,7 @@
                     style="
                       font-weight: bold;
                       font-size: 1.06rem;
-                      color: #f8f9fa;
+                      color: #ffffffe6;
                       color: #409eff;
                     "
                     >{{ scope.row.ip.substr(0, 20) }}</a

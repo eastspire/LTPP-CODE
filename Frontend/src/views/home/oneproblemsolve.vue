@@ -21,8 +21,8 @@
               margin: 0rem 1rem 2rem 1rem;
               padding-top: 1rem;
               padding-bottom: 1rem;
-              background-color: rgba(41, 50, 56, 0.28);
-              color: #f8f9fa;
+              background-color: rgba(41, 50, 56, 0.16);
+              color: #ffffffe6;
             "
           >
             题 解 社 区

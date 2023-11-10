@@ -522,7 +522,7 @@ video:focus {
   border-radius: 0;
   border: 0rem !important;
   border-color: rgba(0, 0, 0, 0) !important;
-  color: #f8f9fa !important;
+  color: #ffffffe6 !important;
   background-color: rgba(53, 61, 68, 0.6) !important;
 }
 
@@ -542,7 +542,7 @@ video:focus {
 
 .el-upload-dragger {
   background-color: rgba(41, 50, 56, 1) !important;
-  color: #f8f9fa !important;
+  color: #ffffffe6 !important;
   border-color: #c0c4cc !important;
 }
 
@@ -622,7 +622,7 @@ a:active {
 .sure {
   background-color: deepskyblue !important;
   border-width: 0 !important;
-  color: #f8f9fa !important;
+  color: #ffffffe6 !important;
 }
 
 .cancel {
@@ -648,11 +648,11 @@ a:active {
 }
 
 .available {
-  color: #f8f9fa !important;
+  color: #ffffffe6 !important;
 }
 
 .el-time-spinner__item {
-  color: #f8f9fa !important;
+  color: #ffffffe6 !important;
 }
 
 .v-note-show,
@@ -668,18 +668,18 @@ a:active {
 .fa-mavon-times {
   background-color: rgba(41, 50, 56, 1) !important;
   border-width: 0 !important;
-  color: #f8f9fa !important;
+  color: #ffffffe6 !important;
 }
 
 .add-image-link input {
   background-color: rgba(41, 50, 56, 1) !important;
   border-width: 0 !important;
-  color: #f8f9fa !important;
+  color: #ffffffe6 !important;
   border: none !important;
 }
 
 .markdown-body h3 {
-  color: #f8f9fa !important;
+  color: #ffffffe6 !important;
 }
 
 .el-picker-panel__link-btn {
@@ -705,7 +705,7 @@ a:active {
 
 .dropdown-item {
   background-color: rgba(30, 30, 30, 1) !important;
-  color: #f8f9fa !important;
+  color: #ffffffe6 !important;
 }
 
 .dropdown-item :hover {
@@ -728,7 +728,7 @@ a:active {
 
 .el-dialog__body {
   background-color: rgba(41, 50, 56, 1) !important;
-  color: #f8f9fa !important;
+  color: #ffffffe6 !important;
   border: 0 !important;
 }
 
@@ -739,7 +739,7 @@ a:active {
 }
 
 .el-dialog__title {
-  color: #f8f9fa !important;
+  color: #ffffffe6 !important;
 }
 
 .el-dialog__footer {
@@ -750,20 +750,20 @@ a:active {
 .el-select-dropdown__list,
 .el-select-dropdown {
   background-color: rgba(30, 30, 30, 1) !important;
-  color: #f8f9fa !important;
+  color: #ffffffe6 !important;
   border: none !important;
 }
 
 .el-select,
 .el-select--mini {
   background-color: Transparent !important;
-  color: #f8f9fa !important;
+  color: #ffffffe6 !important;
   border: none !important;
 }
 
 .el-select-dropdown__item {
   background-color: rgba(30, 30, 30, 1) !important;
-  color: #f8f9fa !important;
+  color: #ffffffe6 !important;
   margin-bottom: 0.6rem !important;
 }
 
@@ -789,7 +789,7 @@ a:active {
 .content-input,
 .auto-textarea-wrapper,
 .markdown-body {
-  color: #f8f9fa !important;
+  color: #ffffffe6 !important;
   background-color: rgba(0, 0, 0, 0) !important;
   border-color: rgba(0, 0, 0, 0) !important;
   border-width: 0rem !important;
@@ -798,7 +798,7 @@ a:active {
 .el-select,
 .el-input,
 .el-input__inner {
-  color: #f8f9fa !important;
+  color: #ffffffe6 !important;
   background-color: rgba(30, 30, 30, 1) !important;
   border-color: rgba(30, 30, 30, 1) !important;
   resize: none !important;
@@ -854,7 +854,7 @@ a:active {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3), 2px 0 5px rgba(0, 0, 0, 0.3),
     -2px 0 5px rgba(0, 0, 0, 0.3), 0 -2px 5px rgba(0, 0, 0, 0.3);
   font-size: 1rem !important;
-  color: #f8f9fa !important;
+  color: #ffffffe6 !important;
   font-weight: bold !important;
   -webkit-transition: all 0.3s ease !important;
   /* Safari and Chrome */

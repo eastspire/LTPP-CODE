@@ -1906,7 +1906,7 @@ export default {
   top: 50%;
   right: 2%;
   transform: translate(0%, -50%);
-  color: #f8f9fa;
+  color: #ffffffe6;
 }
 
 .user .online-name {
@@ -1969,7 +1969,7 @@ export default {
     rgb(76, 139, 255),
     rgb(32, 209, 254)
   );
-  color: #f8f9fa;
+  color: #ffffffe6;
 }
 
 .main_header p {
@@ -1995,7 +1995,7 @@ export default {
 
 .user_name {
   margin: 1rem;
-  color: #f8f9fa;
+  color: #ffffffe6;
   font-weight: bold;
   cursor: pointer;
 }

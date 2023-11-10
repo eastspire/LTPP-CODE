@@ -402,7 +402,7 @@ body {
     box-sizing: border-box;
 
     &:hover {
-      color: #f8f9fa;
+      color: #ffffffe6;
       text-decoration: none;
       background-color: rgba(248, 249, 250, 0.2);
       border-color: rgba(248, 249, 250, 0.3);

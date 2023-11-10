@@ -177,7 +177,7 @@
                   width: 4rem;
                   height: 2rem;
                   overflow: hidden;
-                  color: #f8f9fa;
+                  color: #ffffffe6;
                   font-weight: bold;
                 "
               >
@@ -233,7 +233,7 @@
                   margin: 0.26rem 0.6rem 0rem 0.6rem;
                   height: 2rem;
                   overflow: hidden;
-                  color: #f8f9fa;
+                  color: #ffffffe6;
                   font-weight: bold;
                   color: #e6a23c;
                 "

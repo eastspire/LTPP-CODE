@@ -9,7 +9,7 @@
         class="shadow"
         style="
           background-color: rgba(41, 50, 56, 0.28);
-          color: #f8f9fa;
+          color: #ffffffe6;
           border-width: 0rem;
           border-color: rgba(41, 50, 56, 0.28)
           min-height: auto;
@@ -90,7 +90,7 @@
               :editorBackground="prop.editorBackground"
               :xssOptions="whiteList"
               style="
-                color: #f8f9fa;
+                color: #ffffffe6;
                 min-height: 0rem;
                 height: auto;
                 border-width: 0rem;
@@ -534,7 +534,7 @@
                     class="my-span"
                     v-show="scope.row.res[index].firstAcTime != -1"
                     @dblclick="lookcode(scope.row.id, tempro.problemid)"
-                    style="font-size: 1rem; color: #f8f9fa"
+                    style="font-size: 1rem; color: #ffffffe6"
                   >
                     {{
                       scope.row.res[index].firstAcTime != -1
@@ -575,7 +575,7 @@
                     class="my-span"
                     v-show="scope.row.res[index].firstAcTime != -1"
                     @dblclick="lookcode(scope.row.id, tempro.problemid)"
-                    style="font-size: 1rem; color: #f8f9fa"
+                    style="font-size: 1rem; color: #ffffffe6"
                   >
                     {{
                       scope.row.res[index].firstAcTime != -1

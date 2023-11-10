@@ -101,7 +101,7 @@
             >上传头像</el-button
           >
 
-          <div style="color: #f8f9fa" slot="tip" class="el-upload__tip">
+          <div style="color: #ffffffe6" slot="tip" class="el-upload__tip">
             仅允许上传jpg/png/jpeg/gif文件
           </div>
         </el-upload>
@@ -362,7 +362,7 @@
             class="pulse-enter-active"
             >上传图片背景</el-button
           >
-          <div slot="tip" class="el-upload__tip" style="color: #f8f9fa">
+          <div slot="tip" class="el-upload__tip" style="color: #ffffffe6">
             仅允许上传jpg/png/jpeg/gif文件
           </div>
         </el-upload>
@@ -402,7 +402,7 @@
             class="pulse-enter-active"
             >上传视频背景</el-button
           >
-          <div slot="tip" class="el-upload__tip" style="color: #f8f9fa">
+          <div slot="tip" class="el-upload__tip" style="color: #ffffffe6">
             仅允许上传MP4文件
           </div>
         </el-upload>

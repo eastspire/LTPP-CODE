@@ -23,7 +23,7 @@
       class="shadow"
       style="
         background-color: rgba(41, 50, 56, 0.28);
-        color: #f8f9fa;
+        color: #ffffffe6;
         border-width: 0rem;
         border-color: rgba(41, 50, 56, 0.28)
         min-height: auto;
@@ -140,7 +140,7 @@
                   font-size: 1rem;
                   width: 10rem;
                   text-align: center;
-                  color: #f8f9fa;
+                  color: #ffffffe6;
                 "
                 >查看详情
               </el-button>

@@ -399,13 +399,13 @@ big-div::after {
 
 .bt:hover::before {
   animation: sun 8s infinite;
-  color: #f8f9fa;
+  color: #ffffffe6;
 }
 /* 鼠标经过产生的效果 */
 .bt:hover {
   /* 产生8秒的效果，sun是名称*/
   animation: sun 8s infinite;
-  color: #f8f9fa;
+  color: #ffffffe6;
 }
 /* 设置流光 */
 @keyframes sun {

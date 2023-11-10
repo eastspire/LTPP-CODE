@@ -141,7 +141,7 @@
                         float: left;
                         margin: 0.26rem 0.6rem 0rem 0.6rem;
                         height: 2rem;
-                        color: #f8f9fa;
+                        color: #ffffffe6;
                       "
                     >
                       {{ temtable.collection }}

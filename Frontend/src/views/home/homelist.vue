@@ -91,7 +91,11 @@
             :key="tem.index"
           >
             <pre
-              style="padding: 0.6rem 3.6rem; font-size: 1.06rem; color: #f8f9fa"
+              style="
+                padding: 0.6rem 3.6rem;
+                font-size: 1.06rem;
+                color: #ffffffe6;
+              "
               >{{ tem.hitokoto }}</pre
             >
             <pre
@@ -99,7 +103,7 @@
                 text-align: right;
                 font-size: 1.06rem;
                 padding: 0.6rem 3.6rem;
-                color: #f8f9fa;
+                color: #ffffffe6;
               "
               >{{ tem.from }}</pre
             >
@@ -171,7 +175,7 @@
               padding: 0.6rem 3.6rem;
               text-align: right;
               font-size: 1rem;
-              color: #f8f9fa;
+              color: #ffffffe6;
               background-color: rgba(0, 0, 0, 0);
               margin: 1rem 1rem;
             "
@@ -371,14 +375,14 @@ export default {
 @import "../../../public/md/markdown/github-markdown.min.css";
 /deep/.el-dialog__body {
   background-color: #293238;
-  color: #f8f9fa;
+  color: #ffffffe6;
 }
 /deep/.el-dialog__header {
   background-color: #293238;
   height: 0rem;
 }
 /deep/.el-dialog__title {
-  color: #f8f9fa;
+  color: #ffffffe6;
 }
 /deep/.el-dialog__footer {
   background-color: #293238;

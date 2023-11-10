@@ -1472,7 +1472,7 @@ export default {
 @import "../../../public/md/markdown/github-markdown.min.css";
 
 /deep/.el-textarea__inner {
-  color: #f8f9fa !important;
+  color: #ffffffe6 !important;
   background-color: rgba(30, 30, 30, 0.688) !important;
   border-color: rgba(30, 30, 30, 0.688) !important;
 }

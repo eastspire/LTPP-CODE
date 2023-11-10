@@ -4,7 +4,7 @@
       class="shadow"
       style="
         background-color: rgba(41, 50, 56, 0.28);
-        color: #f8f9fa;
+        color: #ffffffe6;
         border-width: 0rem;
         border-color: rgba(41, 50, 56, 0.28)
         min-height: auto;
@@ -14,7 +14,7 @@
       <div
         style="
           background-color: rgba(0, 0, 0, 0);
-          color: #f8f9fa;
+          color: #ffffffe6;
           border-width: 0rem;
           border-color: rgba(0, 0, 0, 0);
           height: auto;

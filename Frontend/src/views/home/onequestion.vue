@@ -14,7 +14,7 @@
         class="shadow"
         style="
           background-color: rgba(41, 50, 56, 0.28);
-          color: #f8f9fa;
+          color: #ffffffe6;
           border-width: 0rem;
           border-color: rgba(41, 50, 56, 0.28)
           min-height: auto;
@@ -1550,14 +1550,14 @@ export default {
 @import "../../../public/md/markdown/github-markdown.min.css";
 /deep/.el-dialog__body {
   background-color: #293238;
-  color: #f8f9fa;
+  color: #ffffffe6;
 }
 /deep/.el-dialog__header {
   background-color: #293238;
   height: 0rem;
 }
 /deep/.el-dialog__title {
-  color: #f8f9fa;
+  color: #ffffffe6;
 }
 /deep/.el-dialog__footer {
   background-color: #293238;
