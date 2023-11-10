@@ -4,10 +4,10 @@
       <div
         class="shadow"
         style="
-          background-color: rgba(41, 50, 56, 0.68);
-          color: rgb(248, 249, 250);
+          background-color: rgba(41, 50, 56, 0.28);
+          color: #f8f9fa;
           border-width: 0rem;
-          border-color: rgba(41, 50, 56, 0.68)
+          border-color: rgba(41, 50, 56, 0.28)
           height: auto;
           width: 100%;
         "
@@ -137,7 +137,7 @@
                   type="text"
                   aria-hidden="true"
                   class="op-icon fa"
-                  style="color: deepskyblue"
+                  style="color: deepskyblue !important"
                   title="发布"
                   @click="uparticle()"
                 >

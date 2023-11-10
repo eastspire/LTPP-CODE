@@ -3,10 +3,10 @@
     <div
       class="shadow"
       style="
-        background-color: rgba(41, 50, 56, 0.68);
+        background-color: rgba(41, 50, 56, 0.28);
         color: azure;
         border-width: 0rem;
-        border-color: rgba(41, 50, 56, 0.68)
+        border-color: rgba(41, 50, 56, 0.28)
         height: auto;
         width: 100%;
       "

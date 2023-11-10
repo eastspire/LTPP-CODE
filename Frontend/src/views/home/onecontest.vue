@@ -8,10 +8,10 @@
       <div
         class="shadow"
         style="
-          background-color: rgba(41, 50, 56, 0.68);
-          color: rgb(248, 249, 250);
+          background-color: rgba(41, 50, 56, 0.28);
+          color: #f8f9fa;
           border-width: 0rem;
-          border-color: rgba(41, 50, 56, 0.68)
+          border-color: rgba(41, 50, 56, 0.28)
           min-height: auto;
           width: 100%;
         "
@@ -90,7 +90,7 @@
               :editorBackground="prop.editorBackground"
               :xssOptions="whiteList"
               style="
-                color: rgb(248, 249, 250);
+                color: #f8f9fa;
                 min-height: 0rem;
                 height: auto;
                 border-width: 0rem;
@@ -534,7 +534,7 @@
                     class="my-span"
                     v-show="scope.row.res[index].firstAcTime != -1"
                     @dblclick="lookcode(scope.row.id, tempro.problemid)"
-                    style="font-size: 1rem; color: rgba(255, 255, 255, 0.8)"
+                    style="font-size: 1rem; color: #f8f9fa"
                   >
                     {{
                       scope.row.res[index].firstAcTime != -1
@@ -575,7 +575,7 @@
                     class="my-span"
                     v-show="scope.row.res[index].firstAcTime != -1"
                     @dblclick="lookcode(scope.row.id, tempro.problemid)"
-                    style="font-size: 1rem; color: rgba(255, 255, 255, 0.8)"
+                    style="font-size: 1rem; color: #f8f9fa"
                   >
                     {{
                       scope.row.res[index].firstAcTime != -1
@@ -1049,13 +1049,13 @@ export default {
     },
     cellStyle({ row, rowIndex }) {
       let styleRes = {
-        background: "rgba(26, 26, 26,0.68) !important",
+        background: "rgba(26, 26, 26, 0.46) !important",
         color: "chartreuse",
         height: "50px",
         padding: "0rem",
       };
       if (rowIndex % 2 != 0) {
-        styleRes.background = "rgba(41, 50, 56,0.68) !important";
+        styleRes.background = "rgba(41, 50, 56, 0.46) !important";
       }
       if (row.index < 4) {
         styleRes.color = "red";

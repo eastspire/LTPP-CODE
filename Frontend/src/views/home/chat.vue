@@ -260,7 +260,7 @@
                   type="text"
                   aria-hidden="true"
                   class="op-icon fa"
-                  style="color: deepskyblue"
+                  style="color: deepskyblue !important"
                   title="发送"
                   @click="postmessage()"
                 >
@@ -1761,7 +1761,7 @@ export default {
 
 /deep/.md,
 /deep/.markdown-body {
-  background-color: rgba(30, 30, 30, 0.56) !important;
+  background-color: rgba(30, 30, 30, 0.36) !important;
   width: fit-content !important;
   border-width: 0rem !important;
   height: auto !important;
@@ -1906,7 +1906,7 @@ export default {
   top: 50%;
   right: 2%;
   transform: translate(0%, -50%);
-  color: rgba(255, 255, 255, 0.9);
+  color: #f8f9fa;
 }
 
 .user .online-name {
@@ -1969,7 +1969,7 @@ export default {
     rgb(76, 139, 255),
     rgb(32, 209, 254)
   );
-  color: rgba(255, 255, 255, 0.9);
+  color: #f8f9fa;
 }
 
 .main_header p {
@@ -1989,13 +1989,13 @@ export default {
 
 .show_time span {
   padding: 0.4rem;
-  background-color: rgba(255, 255, 255, 0.4);
+  background-color: rgba(248, 249, 250, 0.4);
   border-radius: 0.6rem;
 }
 
 .user_name {
   margin: 1rem;
-  color: rgba(255, 255, 255, 1);
+  color: #f8f9fa;
   font-weight: bold;
   cursor: pointer;
 }

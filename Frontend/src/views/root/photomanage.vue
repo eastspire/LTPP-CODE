@@ -145,11 +145,11 @@ export default {
     },
     cellStyle({ rowIndex }) {
       let styleRes = {
-        background: "rgba(26, 26, 26,0.68) !important",
+        background: "rgba(26, 26, 26, 0.46) !important",
         color: "chartreuse",
       };
       if (rowIndex % 2 != 0) {
-        styleRes.background = "rgba(41, 50, 56,0.68) !important";
+        styleRes.background = "rgba(41, 50, 56, 0.46) !important";
       }
       return styleRes;
     },

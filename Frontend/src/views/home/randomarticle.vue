@@ -17,7 +17,7 @@
       v-show="loadfinish"
       class="shadow"
       style="
-        background-color: rgba(41, 50, 56, 0.68);
+        background-color: rgba(41, 50, 56, 0.28);
         margin-left: auto;
         margin-right: auto;
         padding: 0rem;
@@ -28,9 +28,9 @@
         <div
           style="
             background-color: rgba(0, 0, 0, 0);
-            color: rgb(248, 249, 250);
+            color: #f8f9fa;
             border-width: 0rem;
-            border-color: rgba(41, 50, 56, 0.68)
+            border-color: rgba(41, 50, 56, 0.28)
             height: auto;
             width: 100%;
           "

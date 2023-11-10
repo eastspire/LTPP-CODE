@@ -22,17 +22,17 @@
       v-show="loadfinish"
       class="shadow"
       style="
-        background-color: rgba(41, 50, 56, 0.68);
-        color: rgb(248, 249, 250);
+        background-color: rgba(41, 50, 56, 0.28);
+        color: #f8f9fa;
         border-width: 0rem;
-        border-color: rgba(41, 50, 56, 0.68)
+        border-color: rgba(41, 50, 56, 0.28)
         min-height: auto;
         width: 100%;
       "
     >
       <div
         style="
-          background-color: rgba(255, 255, 255, 0.2);
+          background-color: rgba(248, 249, 250, 0.2);
           color: azure;
           border-width: 0rem;
           height: auto;
@@ -140,7 +140,7 @@
                   font-size: 1rem;
                   width: 10rem;
                   text-align: center;
-                  color: rgba(255, 255, 255, 1);
+                  color: #f8f9fa;
                 "
                 >查看详情
               </el-button>

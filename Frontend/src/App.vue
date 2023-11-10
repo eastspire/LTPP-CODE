@@ -474,7 +474,7 @@ video:focus {
 }
 
 .el-progress-bar__outer {
-  background-color: rgba(255, 255, 255, 0.1) !important;
+  background-color: rgba(248, 249, 250, 0.1) !important;
 }
 
 .el-progress-bar__innerText {
@@ -504,7 +504,7 @@ video:focus {
 
 .el-menu-item:hover {
   color: deepskyblue !important;
-  background-color: rgba(0, 0, 0, 0.46) !important;
+  background-color: rgba(0, 0, 0, 0.286) !important;
   z-index: 1000006 !important;
 }
 
@@ -522,7 +522,7 @@ video:focus {
   border-radius: 0;
   border: 0rem !important;
   border-color: rgba(0, 0, 0, 0) !important;
-  color: rgba(255, 255, 255, 1) !important;
+  color: #f8f9fa !important;
   background-color: rgba(53, 61, 68, 0.6) !important;
 }
 
@@ -542,7 +542,7 @@ video:focus {
 
 .el-upload-dragger {
   background-color: rgba(41, 50, 56, 1) !important;
-  color: rgba(255, 255, 255, 1) !important;
+  color: #f8f9fa !important;
   border-color: #c0c4cc !important;
 }
 
@@ -622,7 +622,7 @@ a:active {
 .sure {
   background-color: deepskyblue !important;
   border-width: 0 !important;
-  color: rgba(255, 255, 255, 1) !important;
+  color: #f8f9fa !important;
 }
 
 .cancel {
@@ -644,15 +644,15 @@ a:active {
 
 .next-month,
 .prev-month {
-  color: rgba(255, 255, 255, 0.36) !important;
+  color: rgba(248, 249, 250, 0.36) !important;
 }
 
 .available {
-  color: rgb(255, 255, 255) !important;
+  color: #f8f9fa !important;
 }
 
 .el-time-spinner__item {
-  color: rgb(255, 255, 255) !important;
+  color: #f8f9fa !important;
 }
 
 .v-note-show,
@@ -668,18 +668,18 @@ a:active {
 .fa-mavon-times {
   background-color: rgba(41, 50, 56, 1) !important;
   border-width: 0 !important;
-  color: rgba(255, 255, 255, 1) !important;
+  color: #f8f9fa !important;
 }
 
 .add-image-link input {
   background-color: rgba(41, 50, 56, 1) !important;
   border-width: 0 !important;
-  color: rgba(255, 255, 255, 1) !important;
+  color: #f8f9fa !important;
   border: none !important;
 }
 
 .markdown-body h3 {
-  color: rgba(255, 255, 255, 1) !important;
+  color: #f8f9fa !important;
 }
 
 .el-picker-panel__link-btn {
@@ -705,7 +705,7 @@ a:active {
 
 .dropdown-item {
   background-color: rgba(30, 30, 30, 1) !important;
-  color: rgba(255, 255, 255, 1) !important;
+  color: #f8f9fa !important;
 }
 
 .dropdown-item :hover {
@@ -728,7 +728,7 @@ a:active {
 
 .el-dialog__body {
   background-color: rgba(41, 50, 56, 1) !important;
-  color: rgba(255, 255, 255, 1) !important;
+  color: #f8f9fa !important;
   border: 0 !important;
 }
 
@@ -739,7 +739,7 @@ a:active {
 }
 
 .el-dialog__title {
-  color: rgb(255, 255, 255) !important;
+  color: #f8f9fa !important;
 }
 
 .el-dialog__footer {
@@ -750,20 +750,20 @@ a:active {
 .el-select-dropdown__list,
 .el-select-dropdown {
   background-color: rgba(30, 30, 30, 1) !important;
-  color: rgba(255, 255, 255, 1) !important;
+  color: #f8f9fa !important;
   border: none !important;
 }
 
 .el-select,
 .el-select--mini {
   background-color: Transparent !important;
-  color: rgba(255, 255, 255, 1) !important;
+  color: #f8f9fa !important;
   border: none !important;
 }
 
 .el-select-dropdown__item {
   background-color: rgba(30, 30, 30, 1) !important;
-  color: rgba(255, 255, 255, 1) !important;
+  color: #f8f9fa !important;
   margin-bottom: 0.6rem !important;
 }
 
@@ -772,7 +772,7 @@ a:active {
 }
 
 .el-select-dropdown__item.hover {
-  background-color: rgba(255, 255, 255, 0.06) !important;
+  background-color: rgba(248, 249, 250, 0.06) !important;
   color: deepskyblue !important;
   font-weight: bold;
 }
@@ -789,7 +789,7 @@ a:active {
 .content-input,
 .auto-textarea-wrapper,
 .markdown-body {
-  color: rgba(255, 255, 255, 1) !important;
+  color: #f8f9fa !important;
   background-color: rgba(0, 0, 0, 0) !important;
   border-color: rgba(0, 0, 0, 0) !important;
   border-width: 0rem !important;
@@ -798,7 +798,7 @@ a:active {
 .el-select,
 .el-input,
 .el-input__inner {
-  color: rgba(255, 255, 255, 1) !important;
+  color: #f8f9fa !important;
   background-color: rgba(30, 30, 30, 1) !important;
   border-color: rgba(30, 30, 30, 1) !important;
   resize: none !important;
@@ -854,7 +854,7 @@ a:active {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3), 2px 0 5px rgba(0, 0, 0, 0.3),
     -2px 0 5px rgba(0, 0, 0, 0.3), 0 -2px 5px rgba(0, 0, 0, 0.3);
   font-size: 1rem !important;
-  color: rgb(255, 255, 255) !important;
+  color: #f8f9fa !important;
   font-weight: bold !important;
   -webkit-transition: all 0.3s ease !important;
   /* Safari and Chrome */
@@ -1109,7 +1109,7 @@ pre,
   width: 0rem;
   height: 0.36rem !important;
   border-radius: 3rem;
-  background-color: rgba(41, 50, 56, 0.36);
+  background-color: rgba(41, 50, 56, 0.28);
 }
 
 /* 滚动条上的按钮 (上下箭头). */
@@ -1129,17 +1129,17 @@ pre,
 /*  滚动条轨道. */
 ::-webkit-scrollbar-track {
   border-radius: 3rem;
-  background-color: rgba(41, 50, 56, 0.36);
+  background-color: rgba(41, 50, 56, 0.28);
 }
 
 /* 滚动条没有滑块的轨道部分 */
 ::-webkit-scrollbar-track-piece {
-  background-color: rgba(41, 50, 56, 0.36);
+  background-color: rgba(41, 50, 56, 0.28);
 }
 
 /* 当同时有垂直滚动条和水平滚动条时交汇的部分. */
 ::-webkit-scrollbar-corner {
-  background-color: rgba(41, 50, 56, 0.36);
+  background-color: rgba(41, 50, 56, 0.28);
   border-radius: 3rem;
 }
 

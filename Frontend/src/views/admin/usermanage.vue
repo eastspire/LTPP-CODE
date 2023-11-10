@@ -7,10 +7,10 @@
   <div @contextmenu.prevent="" style="margin-left: auto; margin-right: auto">
     <div
       style="
-        background-color: rgba(255, 255, 255, 0.2);
+        background-color: rgba(248, 249, 250, 0.2);
         color: azure;
         border-width: 0rem;
-        border-color: rgba(255, 255, 255, 0.2);
+        border-color: rgba(248, 249, 250, 0.2);
         height: auto;
         width: 100%;
       "
@@ -59,10 +59,10 @@
             "
             class="pulse-enter-active shadow"
             style="
-            background-color: rgba(41, 50, 56, 0.68);
+            background-color: rgba(41, 50, 56, 0.28);
             color: azure;
             border-width: 0rem;
-            border-color: rgba(41, 50, 56, 0.68)
+            border-color: rgba(41, 50, 56, 0.28)
 
             height: 8rem;
             overflow: hidden;
@@ -173,7 +173,7 @@
                       width: 4rem;
                       height: 2rem;
                       overflow: hidden;
-                      color: rgb(255, 255, 255);
+                      color: #f8f9fa;
                       font-weight: bold;
                     "
                   >

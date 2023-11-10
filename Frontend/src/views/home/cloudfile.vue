@@ -4,10 +4,10 @@
       <div
         class="shadow"
         :style="`
-          background-color: rgba(41, 50, 56, 0.68);
+          background-color: rgba(41, 50, 56, 0.28);
           color: azure;
           border-width: 0rem;
-          border-color: rgba(41, 50, 56, 0.68)
+          border-color: rgba(41, 50, 56, 0.28)
           height: auto;
           width: 100%;
           min-height:${$store.state.no_scroll_height}vh
@@ -700,8 +700,8 @@ export default {
       isseetip: true,
       iscloseFile: false,
       height: window.innerHeight + "px",
-      deepcolor: "rgba(26, 26, 26,0.68)",
-      notdeepcolor: "rgba(41, 50, 56,0.68)",
+      deepcolor: "rgba(26, 26, 26, 0.46)",
+      notdeepcolor: "rgba(41, 50, 56, 0.46)",
       file_percentage: 0,
       gitclass: [
         "folder",
@@ -1472,7 +1472,7 @@ export default {
 @import "../../../public/md/markdown/github-markdown.min.css";
 
 /deep/.el-textarea__inner {
-  color: rgba(255, 255, 255, 1) !important;
+  color: #f8f9fa !important;
   background-color: rgba(30, 30, 30, 0.688) !important;
   border-color: rgba(30, 30, 30, 0.688) !important;
 }

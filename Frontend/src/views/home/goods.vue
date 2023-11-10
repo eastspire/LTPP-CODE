@@ -12,10 +12,10 @@
     <div v-show="loadfinish" class="shadow">
       <div
         style="
-          background-color: rgba(255, 255, 255, 0.2);
+          background-color: rgba(248, 249, 250, 0.2);
           color: azure;
           border-width: 0rem;
-          border-color: rgba(41, 50, 56, 0.68)
+          border-color: rgba(41, 50, 56, 0.28)
           height: auto;
           width: 100%;
         "
@@ -360,12 +360,12 @@ export default {
      */
     cellStyle({ row, rowIndex }) {
       let styleRes = {
-        background: "rgba(26, 26, 26,0.68) !important",
+        background: "rgba(26, 26, 26, 0.46) !important",
         height: "3.6rem !important",
         color: "chartreuse",
       };
       if (rowIndex % 2 != 0) {
-        styleRes.background = "rgba(41, 50, 56,0.68) !important";
+        styleRes.background = "rgba(41, 50, 56, 0.46) !important";
       }
       if (row.has_buy) {
         styleRes.color = "chartreuse";

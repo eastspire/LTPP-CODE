@@ -17,7 +17,7 @@
     <div v-show="loadfinish">
       <div
         style="
-          background-color: rgba(255, 255, 255, 0.2);
+          background-color: rgba(248, 249, 250, 0.2);
           color: azure;
           border-width: 0rem;
           height: auto;
@@ -59,7 +59,7 @@
             >
               <div
                 style="
-                  background-color: rgba(41, 50, 56, 0.36);
+                  background-color: rgba(41, 50, 56, 0.28);
                   color: azure;
                   height: 22rem;
                   width: 100%;
@@ -102,7 +102,7 @@
                       <h3
                         style="
                           text-align: center;
-                          background-color: rgba(255, 255, 255, 0.46);
+                          background-color: rgba(248, 249, 250, 0.46);
                           margin: 1.2rem 0.6rem 0.6rem 0.6rem;
                           border-radius: 0.36rem;
                           padding: 0.6rem;
@@ -127,7 +127,7 @@
                       </h3>
                       <div
                         style="
-                          background-color: rgba(255, 255, 255, 0.46);
+                          background-color: rgba(248, 249, 250, 0.46);
                           margin: 0.6rem;
                           border-radius: 0.36rem;
                           color: rgba(0, 0, 0, 0.88);

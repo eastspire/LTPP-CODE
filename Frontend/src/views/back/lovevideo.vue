@@ -10,10 +10,10 @@
   >
     <div
       style="
-        background-color: rgba(255, 255, 255, 0.2);
+        background-color: rgba(248, 249, 250, 0.2);
         color: azure;
         border-width: 0rem;
-        border-color: rgba(255, 255, 255, 0.2);
+        border-color: rgba(248, 249, 250, 0.2);
         height: auto;
         width: 100%;
       "
@@ -46,7 +46,7 @@
                 font-size: 1.06rem;
                 text-align: left;
                 font-weight: bold;
-                color: rgba(255, 255, 255, 0.88);
+                color: rgba(248, 249, 250, 0.88);
               "
               >{{ onevideo.name }}</span
             >
@@ -57,9 +57,9 @@
             style="
               color: azure;
               backdrop-filter: blur(0.46rem);
-              background-color: rgba(41, 50, 56, 0.36);
+              background-color: rgba(41, 50, 56, 0.28);
               border-width: 0rem;
-              border-color: rgba(41, 50, 56, 0.68)
+              border-color: rgba(41, 50, 56, 0.28)
               height: auto;
               width: 100%;
               text-align: center;
@@ -163,7 +163,7 @@
                 font-size: 1.06rem;
                 font-weight: bold;
                 text-align: center;
-                color: rgba(255, 255, 255, 1);
+                color: #f8f9fa;
               "
             >
               暂无评论
@@ -886,7 +886,7 @@ export default {
   position: absolute;
   cursor: pointer;
   font-size: 2rem;
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(248, 249, 250, 0.6);
   top: 50%;
   left: 2%;
   transform: translateY(-50%);
@@ -896,7 +896,7 @@ export default {
   position: absolute;
   cursor: pointer;
   font-size: 2rem;
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(248, 249, 250, 0.6);
   top: 50%;
   right: 2%;
   transform: translateY(-50%);
@@ -916,7 +916,7 @@ export default {
   position: absolute;
   cursor: pointer;
   font-size: 2rem;
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(248, 249, 250, 0.6);
   top: 40%;
   right: 2%;
   transform: translateY(-50%);
@@ -936,7 +936,7 @@ export default {
   position: absolute;
   cursor: pointer;
   font-size: 2rem;
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(248, 249, 250, 0.6);
   top: 30%;
   right: 2%;
   transform: translateY(-50%);
@@ -946,7 +946,7 @@ export default {
   position: absolute;
   cursor: pointer;
   font-size: 2rem;
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(248, 249, 250, 0.6);
   top: 60%;
   right: 2%;
   transform: translateY(-50%);
@@ -956,7 +956,7 @@ export default {
   position: absolute;
   cursor: pointer;
   font-size: 2rem;
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(248, 249, 250, 0.6);
   top: 70%;
   right: 2%;
   transform: translateY(-50%);

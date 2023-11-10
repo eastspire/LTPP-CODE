@@ -47,7 +47,7 @@
             shortsentenceList.length > 0
           "
           style="
-            background-color: rgba(41, 50, 56, 0.68);
+            background-color: rgba(41, 50, 56, 0.28);
             color: azure;
             width: 100%;
           "
@@ -91,11 +91,7 @@
             :key="tem.index"
           >
             <pre
-              style="
-                padding: 0.6rem 3.6rem;
-                font-size: 1.06rem;
-                color: rgb(255, 255, 255);
-              "
+              style="padding: 0.6rem 3.6rem; font-size: 1.06rem; color: #f8f9fa"
               >{{ tem.hitokoto }}</pre
             >
             <pre
@@ -103,7 +99,7 @@
                 text-align: right;
                 font-size: 1.06rem;
                 padding: 0.6rem 3.6rem;
-                color: rgb(255, 255, 255);
+                color: #f8f9fa;
               "
               >{{ tem.from }}</pre
             >
@@ -124,7 +120,7 @@
           class="shadow"
           v-if="notice && notice != undefined && notice != null"
           style="
-            background-color: rgba(41, 50, 56, 0.68);
+            background-color: rgba(41, 50, 56, 0.28);
 
             color: azure;
             width: 100%;
@@ -175,7 +171,7 @@
               padding: 0.6rem 3.6rem;
               text-align: right;
               font-size: 1rem;
-              color: rgb(255, 255, 255);
+              color: #f8f9fa;
               background-color: rgba(0, 0, 0, 0);
               margin: 1rem 1rem;
             "
@@ -375,14 +371,14 @@ export default {
 @import "../../../public/md/markdown/github-markdown.min.css";
 /deep/.el-dialog__body {
   background-color: #293238;
-  color: rgba(255, 255, 255, 1);
+  color: #f8f9fa;
 }
 /deep/.el-dialog__header {
   background-color: #293238;
   height: 0rem;
 }
 /deep/.el-dialog__title {
-  color: rgb(255, 255, 255);
+  color: #f8f9fa;
 }
 /deep/.el-dialog__footer {
   background-color: #293238;

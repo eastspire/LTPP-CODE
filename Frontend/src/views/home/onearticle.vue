@@ -14,10 +14,10 @@
       <div
         class="shadow"
         style="
-          background-color: rgba(41, 50, 56, 0.68);
-          color: rgb(248, 249, 250);
+          background-color: rgba(41, 50, 56, 0.28);
+          color: #f8f9fa;
           border-width: 0rem;
-          border-color: rgba(41, 50, 56, 0.68)
+          border-color: rgba(41, 50, 56, 0.28);
           min-height: auto;
           width: 100%;
         "
@@ -28,7 +28,7 @@
             <div
               @dblclick="copyText(name, '标题', writer)"
               style="
-                color: rgba(255, 255, 255, 1);
+                color: #f8f9fa;
                 border-width: 0rem;
                 min-height: 3rem;
                 text-align: left;
@@ -175,7 +175,7 @@
                     type="text"
                     aria-hidden="true"
                     class="op-icon fa"
-                    style="color: deepskyblue"
+                    style="color: deepskyblue !important"
                     title="发表评论"
                     @click="
                       touserid = 0;
@@ -406,7 +406,7 @@
                           min-height: 0rem !important;
                           height: auto !important;
                           border-width: 0rem !important;
-                          background-color: rgba(0, 0, 0, 0.4) !important;
+                          background-color: rgba(0, 0, 0, 0.28) !important;
                           color: aliceblue !important;
                           padding: 1rem 0.6rem 0rem 0.6rem !important;
                         "
@@ -664,7 +664,7 @@
                       type="text"
                       aria-hidden="true"
                       class="op-icon fa"
-                      style="color: deepskyblue"
+                      style="color: deepskyblue !important"
                       title="回复评论"
                       @click="
                         addtousercomment();
@@ -1696,14 +1696,14 @@ export default {
 @import "../../../public/md/markdown/github-markdown.min.css";
 /deep/.el-dialog__body {
   background-color: #293238;
-  color: rgba(255, 255, 255, 1);
+  color: #f8f9fa;
 }
 /deep/.el-dialog__header {
   background-color: #293238;
   height: 0rem;
 }
 /deep/.el-dialog__title {
-  color: rgb(255, 255, 255);
+  color: #f8f9fa;
 }
 /deep/.el-dialog__footer {
   background-color: #293238;

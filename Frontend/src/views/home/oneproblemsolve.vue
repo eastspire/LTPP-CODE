@@ -21,8 +21,8 @@
               margin: 0rem 1rem 2rem 1rem;
               padding-top: 1rem;
               padding-bottom: 1rem;
-              background-color: rgba(41, 50, 56, 0.68);
-              color: rgb(248, 249, 250);
+              background-color: rgba(41, 50, 56, 0.28);
+              color: #f8f9fa;
             "
           >
             题 解 社 区
@@ -40,7 +40,7 @@
               >
                 <div
                   style="
-                    background-color: rgba(41, 50, 56, 0.36);
+                    background-color: rgba(41, 50, 56, 0.28);
                     color: azure;
                     height: 22rem;
                     width: 100%;
@@ -83,7 +83,7 @@
                         <h3
                           style="
                             text-align: center;
-                            background-color: rgba(255, 255, 255, 0.46);
+                            background-color: rgba(248, 249, 250, 0.46);
                             margin: 1.2rem 0.6rem 0.6rem 0.6rem;
                             border-radius: 0.36rem;
                             padding: 0.6rem;
@@ -108,7 +108,7 @@
                         </h3>
                         <div
                           style="
-                            background-color: rgba(255, 255, 255, 0.46);
+                            background-color: rgba(248, 249, 250, 0.46);
                             margin: 0.6rem;
                             border-radius: 0.36rem;
                             color: rgba(0, 0, 0, 0.88);

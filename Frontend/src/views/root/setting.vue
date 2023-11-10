@@ -9,10 +9,10 @@
     <div
       class="shadow"
       style="
-        background-color: rgba(41, 50, 56, 0.68);
+        background-color: rgba(41, 50, 56, 0.28);
         color: azure;
         border-width: 0rem;
-        border-color: rgba(41, 50, 56, 0.68)
+        border-color: rgba(41, 50, 56, 0.28)
         height: auto;
         width: 100%;
       "
@@ -776,7 +776,7 @@
                     style="
                       font-weight: bold;
                       font-size: 1.06rem;
-                      color: rgb(255, 255, 255);
+                      color: #f8f9fa;
                       color: #409eff;
                     "
                     >{{ scope.row.ip.substr(0, 20) }}</a
@@ -1053,7 +1053,7 @@ export default {
     },
     cellStyle({ row, rowIndex }) {
       let styleRes = {
-        background: "rgba(26, 26, 26,0.68) !important",
+        background: "rgba(26, 26, 26, 0.46) !important",
         height: "3.6rem !important",
         color: "chartreuse",
       };

@@ -49,7 +49,7 @@
             :collapse="true"
             active-text-color="rgb(0, 123, 255)"
             background-color="rgb(41, 50, 56)"
-            text-color="rgb(248, 249, 250)"
+            text-color="#f8f9fa"
             class="el-menu-demo no-select left_menu shadow"
             router
           >
@@ -231,7 +231,7 @@
             :collapse="true"
             active-text-color="rgb(0, 123, 255)"
             background-color="rgb(41, 50, 56)"
-            text-color="rgb(248, 249, 250)"
+            text-color="#f8f9fa"
             class="el-menu-demo no-select right_menu shadow"
             router
           >
@@ -1207,19 +1207,19 @@ export default {
 }
 
 ::v-deep .el-pagination.is-background .el-pager li {
-  color: rgb(255, 255, 255) !important;
+  color: #f8f9fa !important;
   background-color: rgba(30, 30, 30, 1) !important;
 }
 
 ::v-deep .el-icon-arrow-left:before,
 ::v-deep .el-icon-arrow-right:before {
-  color: rgb(255, 255, 255) !important;
+  color: #f8f9fa !important;
   background-color: rgba(30, 30, 30, 1) !important;
 }
 
 ::v-deep .el-pagination.is-background .el-pager li:not(.disabled).active {
   color: rgba(30, 30, 30, 1) !important;
-  background-color: rgb(255, 255, 255) !important;
+  background-color: #f8f9fa !important;
 }
 
 ::v-deep .el-switch__label {
@@ -1236,7 +1236,7 @@ export default {
 /deep/.el-carousel__arrow--right,
 /deep/.btn-prev,
 /deep/ .btn-next {
-  color: rgb(255, 255, 255) !important;
+  color: #f8f9fa !important;
   background-color: rgba(30, 30, 30, 1) !important;
 }
 
@@ -1248,7 +1248,7 @@ export default {
 
 /deep/.el-pagination__jump,
 /deep/.el-pagination__total {
-  color: rgba(255, 255, 255, 0.88) !important;
+  color: rgba(248, 249, 250, 0.88) !important;
   padding: 0rem 0.6rem !important;
 }
 
@@ -1284,7 +1284,7 @@ export default {
 
 /deep/.el-submenu__title:hover {
   color: deepskyblue !important;
-  background-color: rgba(0, 0, 0, 0.46) !important;
+  background-color: rgba(0, 0, 0, 0.286) !important;
 }
 
 /deep/.search {
@@ -1303,7 +1303,7 @@ export default {
 /deep/.transition,
 /deep/.v-right-item,
 /deep/.transition {
-  color: rgb(255, 255, 255) !important;
+  color: #f8f9fa !important;
   background-color: rgba(0, 0, 0, 0) !important;
   border-width: 0rem !important;
   padding: 0rem 0rem;
@@ -1316,8 +1316,18 @@ export default {
 /deep/.v-note-op,
 /deep/.content-input-wrapper,
 /deep/.v-note-edit.diletea-wrapper.scroll-style.transition {
-  color: rgb(255, 255, 255) !important;
+  color: #f8f9fa !important;
   background-color: rgba(0, 0, 0, 0) !important;
+}
+
+/deep/.op-icon {
+  color: #f8f9fa !important;
+  background-color: rgba(0, 0, 0, 0) !important;
+}
+
+/deep/.op-icon:hover {
+  color: rgb(0, 0, 0) !important;
+  background-color: #f8f9fa !important;
 }
 
 /deep/.v-show-content,
@@ -1333,7 +1343,7 @@ export default {
 /deep/.el-data-editor,
 /deep/.el-range-editor,
 /deep/.el-data-editor--datetimerange {
-  color: rgba(255, 255, 255, 1) !important;
+  color: #f8f9fa !important;
   background-color: rgba(0, 0, 0, 0) !important;
   border-width: 0rem !important;
 }
@@ -1354,13 +1364,13 @@ export default {
 }
 
 /deep/.el-pager {
-  color: rgba(255, 255, 255, 1) !important;
+  color: #f8f9fa !important;
   background-color: Transparent !important;
   border-width: 0rem !important;
 }
 
 /deep/.el-textarea__inner {
-  color: rgba(255, 255, 255, 1) !important;
+  color: #f8f9fa !important;
   background-color: rgba(30, 30, 30, 0.688) !important;
   border-color: rgba(30, 30, 30, 0.688) !important;
 }
@@ -1380,31 +1390,31 @@ export default {
 /deep/.el-button--default {
   padding: 0rem 1.6rem !important;
   background-color: rgba(0, 0, 0, 0.1) !important;
-  color: rgba(255, 255, 255, 1) !important;
+  color: #f8f9fa !important;
 }
 
 /deep/.el-input-group__append {
   background-color: rgba(0, 0, 0, 0.2) !important;
-  color: rgba(255, 255, 255, 1) !important;
+  color: #f8f9fa !important;
   border-width: 0rem !important;
 }
 
 /deep/.el-descriptions__body {
   background-color: rgba(30, 30, 30, 1) !important;
-  color: rgba(255, 255, 255, 1) !important;
+  color: #f8f9fa !important;
 }
 
 /deep/.el-descriptions-item__cell,
 /deep/.el-descriptions-item__label,
 /deep/.is-bordered-label {
   background-color: rgba(30, 30, 30, 1) !important;
-  color: rgba(255, 255, 255, 1) !important;
+  color: #f8f9fa !important;
 }
 
 /deep/.el-scrollbar__bar,
 /deep/.is-horizontal {
   background-color: rgba(0, 0, 0, 0) !important;
-  color: rgba(255, 255, 255, 1) !important;
+  color: #f8f9fa !important;
   height: 0rem !important;
   border: none !important;
 }

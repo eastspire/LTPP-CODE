@@ -12,10 +12,10 @@
     <div>
       <div
         style="
-          background-color: rgba(255, 255, 255, 0.2);
+          background-color: rgba(248, 249, 250, 0.2);
           color: azure;
           border-width: 0rem;
-          border-color: rgba(255, 255, 255, 0.2);
+          border-color: rgba(248, 249, 250, 0.2);
           height: auto;
           width: 100%;
         "
@@ -42,10 +42,10 @@
               @click="toload(temtable.id)"
               class="pulse-enter-active shadow"
               style="
-                background-color: rgba(41, 50, 56, 0.68);
+                background-color: rgba(41, 50, 56, 0.28);
                 color: azure;
                 border-width: 0rem;
-                border-color: rgba(41, 50, 56, 0.68);
+                border-color: rgba(41, 50, 56, 0.28);
                 height: 8rem;
                 overflow: hidden;
                 width: 100%;
@@ -141,7 +141,7 @@
                         float: left;
                         margin: 0.26rem 0.6rem 0rem 0.6rem;
                         height: 2rem;
-                        color: rgb(248, 249, 250);
+                        color: #f8f9fa;
                       "
                     >
                       {{ temtable.collection }}

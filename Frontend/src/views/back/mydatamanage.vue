@@ -7,10 +7,10 @@
     <div
       class="shadow"
       style="
-        background-color: rgba(41, 50, 56, 0.68);
+        background-color: rgba(41, 50, 56, 0.28);
         color: azure;
         border-width: 0rem;
-        border-color: rgba(41, 50, 56, 0.68)
+        border-color: rgba(41, 50, 56, 0.28)
         height: 6rem;
         width: 100%;
       "
@@ -47,10 +47,10 @@
     <div
       class="shadow"
       style="
-        background-color: rgba(41, 50, 56, 0.68);
+        background-color: rgba(41, 50, 56, 0.28);
         color: azure;
         border-width: 0rem;
-        border-color: rgba(41, 50, 56, 0.68)
+        border-color: rgba(41, 50, 56, 0.28)
         height: auto;
         width: 100%;
       "
@@ -101,11 +101,7 @@
             >上传头像</el-button
           >
 
-          <div
-            style="color: rgba(255, 255, 255, 0.8)"
-            slot="tip"
-            class="el-upload__tip"
-          >
+          <div style="color: #f8f9fa" slot="tip" class="el-upload__tip">
             仅允许上传jpg/png/jpeg/gif文件
           </div>
         </el-upload>
@@ -366,11 +362,7 @@
             class="pulse-enter-active"
             >上传图片背景</el-button
           >
-          <div
-            slot="tip"
-            class="el-upload__tip"
-            style="color: rgba(255, 255, 255, 0.8)"
-          >
+          <div slot="tip" class="el-upload__tip" style="color: #f8f9fa">
             仅允许上传jpg/png/jpeg/gif文件
           </div>
         </el-upload>
@@ -410,11 +402,7 @@
             class="pulse-enter-active"
             >上传视频背景</el-button
           >
-          <div
-            slot="tip"
-            class="el-upload__tip"
-            style="color: rgba(255, 255, 255, 0.8)"
-          >
+          <div slot="tip" class="el-upload__tip" style="color: #f8f9fa">
             仅允许上传MP4文件
           </div>
         </el-upload>

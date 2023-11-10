@@ -7,10 +7,10 @@
     <div
       class="shadow"
       style="
-        background-color: rgba(41, 50, 56, 0.68);
+        background-color: rgba(41, 50, 56, 0.28);
         color: azure;
         border-width: 0rem;
-        border-color: rgba(41, 50, 56, 0.68)
+        border-color: rgba(41, 50, 56, 0.28)
         height: auto;
         width: 100%;
       "
@@ -603,11 +603,11 @@ export default {
     cellStyle({ row, rowIndex }) {
       let acpoint = (row.ACpoint * 100).toFixed(0);
       let styleRes = {
-        background: "rgba(26, 26, 26,0.68) !important",
+        background: "rgba(26, 26, 26, 0.46) !important",
         color: "chartreuse",
       };
       if (rowIndex % 2 != 0) {
-        styleRes.background = "rgba(41, 50, 56,0.68) !important";
+        styleRes.background = "rgba(41, 50, 56, 0.46) !important";
       }
       if (acpoint <= 30) {
         /* 正确率低于30*/

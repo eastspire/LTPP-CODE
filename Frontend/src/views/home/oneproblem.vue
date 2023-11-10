@@ -7,10 +7,10 @@
     <div
       class="shadow"
       style="
-        background-color: rgba(41, 50, 56, 0.68);
-        color: rgb(248, 249, 250);
+        background-color: rgba(41, 50, 56, 0.28);
+        color: #f8f9fa;
         border-width: 0rem;
-        border-color: rgba(41, 50, 56, 0.68)
+        border-color: rgba(41, 50, 56, 0.28)
         min-height: auto;
         width: 100%;
       "
@@ -70,7 +70,7 @@
           :editorBackground="prop.editorBackground"
           :xssOptions="whiteList"
           style="
-            color: rgb(248, 249, 250);
+            color: #f8f9fa;
             min-height: 0rem;
             height: auto;
             border-width: 0rem;

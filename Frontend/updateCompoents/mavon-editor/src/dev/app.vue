@@ -390,9 +390,9 @@ body {
     font-size: 0.9rem;
     display: inline-block;
     margin-bottom: 1rem;
-    color: rgba(255, 255, 255, 0.7);
-    background-color: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255, 255, 255, 0.2);
+    color: rgba(248, 249, 250, 0.7);
+    background-color: rgba(248, 249, 250, 0.08);
+    border-color: rgba(248, 249, 250, 0.2);
     border-style: solid;
     border-width: 1px;
     border-radius: 0.3rem;
@@ -402,10 +402,10 @@ body {
     box-sizing: border-box;
 
     &:hover {
-      color: rgba(255, 255, 255, 0.8);
+      color: #f8f9fa;
       text-decoration: none;
-      background-color: rgba(255, 255, 255, 0.2);
-      border-color: rgba(255, 255, 255, 0.3);
+      background-color: rgba(248, 249, 250, 0.2);
+      border-color: rgba(248, 249, 250, 0.3);
     }
 
     @media only screen and (max-width: 768px) {
