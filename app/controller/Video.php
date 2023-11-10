@@ -68,6 +68,7 @@ class Video
             foreach ($db as &$tem) {
                 $tem_res = Db::table('video')
                     ->where('id', $tem->videoid)
+                    ->where('isdel', 0)
                     ->where('isdouyin', 0)
                     ->select(Video::$video_db_key)
                     ->first();
