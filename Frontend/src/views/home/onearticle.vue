@@ -31,7 +31,8 @@
                 color: rgba(255, 255, 255, 1);
                 border-width: 0rem;
                 min-height: 3rem;
-                text-align: center;
+                text-align: left;
+                margin-left: 1.38rem;
                 font-weight: bold;
                 font-size: 1.66rem;
                 overflow: hidden;

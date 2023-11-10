@@ -28,10 +28,9 @@
         <div
           style="
             background-color: rgba(0, 0, 0, 0);
-            color: azure;
+            color: rgb(248, 249, 250);
             border-width: 0rem;
             border-color: rgba(41, 50, 56, 0.68)
-
             height: auto;
             width: 100%;
           "
@@ -40,10 +39,10 @@
             <div style="height: 2rem"></div>
             <div
               style="
-                color: deepskyblue;
                 border-width: 0rem;
                 min-height: 3rem;
-                text-align: center;
+                text-align: left;
+                margin-left: 1.38rem;
                 font-weight: bold;
                 font-size: 1.66rem;
                 overflow: hidden;
@@ -51,9 +50,9 @@
             >
               {{ tableData.name }}
             </div>
-            <div style="height: 2rem"></div>
+            <div style="height: 1rem"></div>
             <div>
-              <div style="overflow: hidden">
+              <div style="overflow: hidden; margin: 0rem 1.38rem">
                 <img
                   class="animate"
                   :src="tableData.image"
