@@ -152,8 +152,9 @@ class Video
         }
         Base::insertToDb('video', [
             'name' => $up_name,
-            'url' => Base::$GLOBlinuxurl . '/' . Video::$video_root_path . $md5month . '/' . $name,
-            'tag' => $tag
+            'isdouyin' => 0,
+            'tag' => $tag,
+            'url' => Base::$GLOBlinuxurl . '/' . Video::$video_root_path . $md5month . '/' . $name
         ]);
         Base::deleteAllFile($file->getRealPath());
         return json(['code' => 1, 'msg' => '上传成功']);
@@ -175,10 +176,11 @@ class Video
         $tabledata = $request->post('tabledata');
         $data = [
             'name' => $tabledata['name'],
+            'isdouyin' => 0,
+            'tag' => $tabledata['tag'],
             'url' => $tabledata['url'],
             'fabulous' => 0,
-            'love' => 0,
-            'tag' => $tabledata['tag']
+            'love' => 0
         ];
         if ($tabledata['name'] == '' || $tabledata['url'] == '') {
             return json(['code' => -1, 'msg' => '信息不全']);
@@ -290,6 +292,7 @@ class Video
         $info = Db::table('video')
             ->where('name', 'like', '%' . $key . '%')
             ->where('isdel', 0)
+            ->where('isdouyin', 0)
             ->select(Video::$video_db_key)
             ->orderBy('id', 'desc')
             ->paginate($limit, '*', 'page', $page)
@@ -298,6 +301,7 @@ class Video
         $allnum = Db::table('video')
             ->where('name', 'like', '%' . $key . '%')
             ->where('isdel', 0)
+            ->where('isdouyin', 0)
             ->count();
         Base::dataToSafe($info);
         if ($info) {
@@ -334,12 +338,14 @@ class Video
         $limit = 1;
         $info = Db::table('video')
             ->where('isdel', 0)
+            ->where('isdouyin', 0)
             ->select(Video::$video_db_key)
             ->orderBy('id', 'desc')
             ->paginate($limit, '*', 'page', $page)
             ->items();
         $allnum = Db::table('video')
             ->where('isdel', 0)
+            ->where('isdouyin', 0)
             ->count();
         Base::dataToSafe($info);
         if ($info) {
@@ -659,6 +665,7 @@ class Video
         $videodb = Db::table('video')
             ->where('id', $video_id)
             ->where('isdel', 0)
+            ->where('isdouyin', 0)
             ->select(Video::$video_db_key)
             ->first();
         if (!$videodb) {
