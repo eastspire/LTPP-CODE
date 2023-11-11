@@ -47,6 +47,21 @@ class Base
     static $ak_msg = '恭喜您AK了';
 
     /**
+     * ChatGPT 信息路径
+     */
+    static $chat_gpt_file_name = 'ltpp_chat_gpt.json';
+
+    /**
+     * GPT Key在Redis中Key的名称
+     */
+    static $redis_chatgpt_json_key = 'chatgpt_json_key';
+
+    /**
+     * GPT API地址在Redis中Key的名称
+     */
+    static $chat_gpt_api_url_key = 'chatgpt_api_url';
+
+    /**
      * Redis密码
      */
     static $redis_password = 'SQS';
@@ -914,27 +929,33 @@ class Base
      * @param string $url 请求地址
      * @param array $header 请求头
      * @param array $body 请求体
+     * @param bool $body_type_is_json 请求体是否是json
      * @return string $res 响应数据
      */
-    static function sendRequest($url = '', $header = [], $body = [])
+    static function sendRequest($url = '', $header = [], $body = [], $body_type_is_json = false)
     {
         if (!$url) {
-            return null;
+            return '';
         }
+        $res = '';
         try {
-            $data_string = http_build_query($body);
+            if ($body_type_is_json) {
+                $data_string = json_encode($body);
+            } else {
+                $data_string = http_build_query($body);
+            }
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_POST, true);
             curl_setopt($ch, CURLOPT_TIMEOUT, 3600);
+            curl_setopt($ch, CURLOPT_ENCODING, 'UTF-8');
             curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_ENCODING, "UTF-8");
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+            curl_setopt($ch, CURLOPT_PROXY, 'http://172.17.0.1:7890');
             $res = curl_exec($ch);
         } catch (Exception $e) {
             Robot::sendChatToOneUserMsg(Base::getRootId(), '请求异常信息：' . "\n" . $e->getMessage());
-            return null;
         }
         return $res;
     }
@@ -984,7 +1005,6 @@ class Base
         }
         $zip->close();
     }
-
 
     /**
      * 判断路径是否存在（路径以/开头），不存在创建路径中的文件夹
@@ -2230,7 +2250,7 @@ class Base
      * @param string $file 文件路径
      * @param string $content 写入的内容
      */
-    static public function writeToFile($file, $content)
+    static public function writeToFile($file, $content = '')
     {
         Base::judgeCreatPath($file);
         while (1) {
@@ -3059,6 +3079,80 @@ class Base
             }
         }
         closedir($dir);
+    }
+
+    /**
+     * 获取GPT JSON对应配置
+     * @param string $key 读取key名称
+     * @return string|array $api_url|$key_list
+     */
+    static public function getChatGptJSON($key)
+    {
+        try {
+            if ($key != Base::$chat_gpt_api_url_key && $key != Base::$redis_chatgpt_json_key) {
+                return '';
+            }
+            $redis35 = Redis::connection('db35');
+            $cache_list = $redis35->get(Base::$redis_chatgpt_json_key);
+            if ($cache_list) {
+                return json_decode($cache_list, true)[$key];
+            }
+            // 存放路径
+            $path = Base::$LTPP_path . Base::$chat_gpt_file_name;
+            if (!file_exists($path)) {
+                Base::writeToFile($path, '{"' . Base::$chat_gpt_api_url_key . '":"","' . Base::$redis_chatgpt_json_key . '":[]}');
+                return [
+                    Base::$chat_gpt_api_url_key => '',
+                    Base::$redis_chatgpt_json_key => [],
+                ][$key];
+            }
+            // 读取Key数组
+            $json_str = file_get_contents($path);
+            $redis35->set(Base::$redis_chatgpt_json_key, $json_str);
+            $json = json_decode($json_str, true);
+            return $json[$key];
+        } catch (Exception $e) {
+            Robot::sendChatToOneUserMsg(Base::getRootId(), '获取GPT JSON对应配置出错：' . $e->getMessage());
+        }
+        return [
+            Base::$chat_gpt_api_url_key => '',
+            Base::$redis_chatgpt_json_key => [],
+        ][$key];
+    }
+
+    /**
+     * 获取GPT KEY LIST
+     * @return array key_list
+     */
+    static public function getChatGptKeyList()
+    {
+        try {
+            $key_list = Base::getChatGptJSON(Base::$redis_chatgpt_json_key);
+            if (!$key_list) {
+                return [];
+            }
+            return $key_list;
+        } catch (Exception $e) {
+            Robot::sendChatToOneUserMsg(Base::getRootId(), '获取GPT KEY LIST出错：' . $e->getMessage());
+        }
+        return [];
+    }
+
+    /**
+     * 获取GPT接口地址
+     */
+    static public function getChatGptUrl()
+    {
+        try {
+            $api_url = Base::getChatGptJSON(Base::$chat_gpt_api_url_key);
+            if (!$api_url) {
+                return '';
+            }
+            return $api_url;
+        } catch (Exception $e) {
+            Robot::sendChatToOneUserMsg(Base::getRootId(), '获取GPT接口地址出错：' . $e->getMessage());
+        }
+        return '';
     }
 }
 ;

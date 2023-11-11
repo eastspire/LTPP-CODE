@@ -2,7 +2,7 @@
  * @Author: 18855190718 1491579574@qq.com
  * @Date: 2023-01-12 12:38:58
  * @LastEditors: wmzn-ltpp 1491579574@qq.com
- * @LastEditTime: 2023-10-16 17:19:43
+ * @LastEditTime: 2023-11-11 20:54:38
  * @FilePath: \LTPP-CODE\README.md
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
@@ -15,10 +15,10 @@
 ### 端口
 - 1236（即时通讯系统注册，可忽略）
 - 3000（音乐|开启SSL）
+- 28787（ChatGPT）
 - 40025（邮箱系统）
 - 40080（直播推流前端访问地址）
 - 41935（直播推流）
-- 28787（ChatGPT）
 - 47272（即时通讯|开启SSL）
 - 48787（后端|开启SSL）
 
@@ -68,6 +68,7 @@
 | 32  |竞赛查重锁|
 | 33  |代码缓存|
 | 34  |代码结果缓存|
+| 35  |GPT缓存|
 
 ### 使用脚本一键安装
 > https://github.com/wmzn-ltpp/Install.git

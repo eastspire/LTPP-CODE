@@ -255,7 +255,25 @@ class Setting extends Image
             $redis = Redis::connection('db' . $i);
             $redis->flushdb();
         }
-        return json(['code' => 1, 'msg' => '缓存清空成功！']);
+        return json(['code' => 1, 'msg' => '缓存清理成功！']);
+    }
+
+    /**
+     * 清理ChatGPT JSON缓存
+     * @param Request $request 请求
+     * @return string $res json
+     */
+    public function deleteChatGptJsonRedis(Request $request)
+    {
+        $my_uid = JwtToken::getCurrentId();
+        $my_aid = Base::getIdByUid($my_uid);
+        $isroot = Base::judgeIsRoot($my_aid);
+        if (!$isroot) {
+            return json(['code' => -1, 'msg' => '无权限']);
+        }
+        $redis = Redis::connection('db35');
+        $redis->flushdb();
+        return json(['code' => 1, 'msg' => '缓存清理成功！']);
     }
 
     /**
@@ -279,7 +297,7 @@ class Setting extends Image
             $redis = Redis::connection('db' . $i);
             $redis->flushdb();
         }
-        return json(['code' => 1, 'msg' => '缓存清空成功！']);
+        return json(['code' => 1, 'msg' => '缓存清理成功！']);
     }
 
     /**

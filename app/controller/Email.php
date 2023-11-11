@@ -3,7 +3,7 @@
  * @Author: 18855190718 1491579574@qq.com
  * @Date: 2023-01-12 12:38:58
  * @LastEditors: wmzn-ltpp 1491579574@qq.com
- * @LastEditTime: 2023-10-18 22:56:17
+ * @LastEditTime: 2023-11-12 01:01:51
  * @FilePath: \LTPP-CODE\app\controller\Email.php
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
@@ -60,31 +60,14 @@ class Email extends Image
                 if (!$mail_url || !$mail_username) {
                     return;
                 }
-                if ($mail_password) {
-                    // 有密码走宝塔邮局
-                    Base::sendRequest($mail_url, ['Content-Type:application/x-www-form-urlencoded'], [
-                        'mail_from' => $mail_username,
-                        'password' => $mail_password,
-                        'mail_to' => $to,
-                        'subject' => $title,
-                        'content' => $content,
-                        'subtype' => 'html'
-                    ]);
-                    return;
-                }
-                // 无密码走邮件容器
-                $mail = new PHPMailer(true);
-                $mail->SMTPDebug = 0;
-                $mail->isSMTP();
-                $mail->Host = Base::getIp($mail_url);
-                $mail->SMTPAuth = false;
-                $mail->Port = Base::getPort($mail_url);
-                $mail->setFrom($mail_username, Base::$app_name);
-                $mail->addAddress($to);
-                $mail->isHTML(true);
-                $mail->Subject = $title;
-                $mail->Body = $content;
-                $mail->send();
+                Base::sendRequest($mail_url, ['Content-Type:application/x-www-form-urlencoded'], [
+                    'mail_from' => $mail_username,
+                    'password' => $mail_password,
+                    'mail_to' => $to,
+                    'subject' => $title,
+                    'content' => $content,
+                    'subtype' => 'html'
+                ]);
             }
         } catch (Exception $e) {
             Robot::sendChatToOneUserMsg(Base::getRootId(), '邮件异常信息：' . "\n" . $e->getMessage());

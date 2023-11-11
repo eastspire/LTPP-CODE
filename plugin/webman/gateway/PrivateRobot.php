@@ -2,8 +2,8 @@
 /*
  * @Author: 18855190718 1491579574@qq.com
  * @Date: 2023-01-14 18:26:54
- * @LastEditors: 18855190718 1491579574@qq.com
- * @LastEditTime: 2023-10-07 21:38:48
+ * @LastEditors: wmzn-ltpp 1491579574@qq.com
+ * @LastEditTime: 2023-11-12 01:00:02
  * @FilePath: \LTPP-CODE\plugin\webman\gateway\PrivateRobot.php
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
@@ -12,10 +12,12 @@
 
 namespace plugin\webman\gateway;
 
+use Exception;
 use app\controller\Ssh;
 use GatewayWorker\Lib\Gateway;
 use support\Db;
 use app\controller\Base;
+use app\controller\Robot;
 use support\Redis;
 use Webman\RedisQueue\Redis as RedisQueue;
 
@@ -27,14 +29,14 @@ class PrivateRobot
     static $gpt_err_msg = '机器人头疼！需要休息！';
 
     /**
+     * GPT API地址
+     */
+    static $gpt_api_url = 'http://127.0.0.1:28787';
+
+    /**
      * GPT 每个消息价格
      */
     static $one_msg_cost = 0.19;
-
-    /**
-     * GPT 接口
-     */
-    static $chatgpt_url = 'http://127.0.0.1:28787';
 
     /**
      * GPT上下文环境
@@ -716,45 +718,85 @@ class PrivateRobot
      */
     static public function gptSend($userid, $msg)
     {
-        if (!$userid || !$msg) {
-            return null;
-        }
-        $robot = Base::getRobotId();
-        $history = Db::table('privatechat')
-            ->orWhere(function ($query) use ($userid, $robot) {
-                $query
-                    ->where('post_user_id', $userid)
-                    ->where('get_user_id', $robot)
-                    ->where('isdel', 0);
-            })
-            ->orWhere(function ($query) use ($userid, $robot) {
-                $query
-                    ->where('post_user_id', $robot)
-                    ->where('get_user_id', $userid)
-                    ->where('isdel', 0);
-            })
-            ->select('id', 'post_user_id', 'get_user_id', 'msg')
-            ->orderBy('id', 'desc')
-            ->limit(PrivateChat::$gpt_chat_history_limit)
-            ->get();
-        $msg_list = [];
-        foreach ($history as &$t) {
-            if ($t->msg == PrivateChat::$gpt_err_msg) {
-                continue;
+        try {
+            if (!$userid || !$msg) {
+                return '';
             }
+            $user_data = Base::getUserData($userid);
+            if (!$user_data) {
+                return '';
+            }
+            $user_name = $user_data->name;
+            $robot = Base::getRobotId();
+            $time = date('Y-m-d H:i:s', time());
+            $history = Db::table('privatechat')
+                ->orWhere(function ($query) use ($userid, $robot) {
+                    $query
+                        ->where('post_user_id', $userid)
+                        ->where('get_user_id', $robot)
+                        ->where('isdel', 0);
+                })
+                ->orWhere(function ($query) use ($userid, $robot) {
+                    $query
+                        ->where('post_user_id', $robot)
+                        ->where('get_user_id', $userid)
+                        ->where('isdel', 0);
+                })
+                ->select('id', 'post_user_id', 'get_user_id', 'msg')
+                ->orderBy('id', 'desc')
+                ->limit(PrivateChat::$gpt_chat_history_limit)
+                ->get();
+            $msg_list = [];
+            foreach ($history as &$t) {
+                if ($t->msg == PrivateChat::$gpt_err_msg) {
+                    continue;
+                }
+                $msg_list[] = [
+                    'role' => $t->post_user_id == $userid && $t->get_user_id == $robot ? 'user' : 'system',
+                    'content' => $t->msg
+                ];
+            }
+            $msg_list = array_reverse($msg_list);
             $msg_list[] = [
-                'role' => $t->post_user_id == $userid && $t->get_user_id == $robot ? 'user' : 'system',
-                'content' => $t->msg
+                'role' => 'user',
+                'content' => $msg
             ];
+
+            $data = [
+                'model' => 'gpt-3.5-turbo',
+                'messages' => $msg_list,
+                'temperature' => 0.9,
+                'stream' => false,
+            ];
+
+            /**
+             * 私人代理
+             */
+            // $result = Base::sendRequest(PrivateRobot::$gpt_api_url, [], $data);
+            // Robot::sendChatToOneUserMsg(Base::getRootId(), '**' . $time . ' ' . $user_name . ' 调用GPT**' . "\n" . $result);
+            // return $result;
+
+            /**
+             * 官方API接口调用
+             */
+            $gpt_api_url = Base::getChatGptUrl();
+            $key_list = Base::getChatGptKeyList();
+            foreach ($key_list as &$api_key) {
+                $headers = [
+                    'Content-Type: application/json',
+                    'Authorization: Bearer ' . $api_key
+                ];
+                $result = Base::sendRequest($gpt_api_url, $headers, $data, true);
+                Robot::sendChatToOneUserMsg(Base::getRootId(), '**' . $time . ' ' . $user_name . ' 调用GPT**' . "\n" . $result);
+                $result = json_decode($result, true);
+                if (isset($result['choices']) && sizeof($result['choices']) > 0 && isset($result['choices'][0]['message']) && isset($result['choices'][0]['message']['content'])) {
+                    return $result['choices'][0]['message']['content'];
+                }
+            }
+        } catch (Exception $e) {
+            Robot::sendChatToOneUserMsg(Base::getRootId(), '调用GPT出错：' . $e->getMessage());
         }
-        $msg_list = array_reverse($msg_list);
-        $msg_list[] = [
-            'role' => 'user',
-            'content' => $msg
-        ];
-        $data = ['messages' => $msg_list];
-        $result = Base::sendRequest(PrivateRobot::$chatgpt_url, [], $data);
-        return $result;
+        return '';
     }
 
     /**

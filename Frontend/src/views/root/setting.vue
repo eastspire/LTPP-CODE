@@ -134,6 +134,23 @@
               margin: 1rem 0rem 1rem 0rem;
             "
           >
+            清理ChatGPT JSON缓存
+          </p>
+          <el-button
+            type="text"
+            class="pulse-enter-active"
+            style="font-size: 1.06rem; color: deeppink"
+            @click="deleteChatGptJsonRedis()"
+            >清理ChatGPT JSON缓存</el-button
+          >
+          <p
+            style="
+              font-size: 1.06rem;
+              text-align: left;
+              font-weight: bold;
+              margin: 1rem 0rem 1rem 0rem;
+            "
+          >
             清空服务器缓存（保留单点登录缓存）
           </p>
           <el-button
@@ -1193,6 +1210,37 @@ export default {
       const { data: res } = await this.$ajax({
         method: "post",
         url: "/Setting/updateImage",
+        portType: {
+          process: "8797",
+        },
+      }).catch((t) => {
+        this.$msg({
+          type: "error",
+          message: t,
+          duration: 1600,
+          offset: 80,
+        });
+      });
+      if (res.code == 1) {
+        this.$msg({
+          type: "success",
+          message: res.msg,
+          duration: 1600,
+          offset: 80,
+        });
+      } else {
+        this.$msg({
+          type: "error",
+          message: res.msg,
+          duration: 1600,
+          offset: 80,
+        });
+      }
+    },
+    async deleteChatGptJsonRedis() {
+      const { data: res } = await this.$ajax({
+        method: "post",
+        url: "/Setting/deleteChatGptJsonRedis",
         portType: {
           process: "8797",
         },
