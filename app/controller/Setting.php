@@ -348,7 +348,7 @@ class Setting extends Image
         $out = [];
         exec('pkill -9 node 2>&1', $out);
         $out = [];
-        exec('PORT=' . $port . ' /home/LTPP/Music/app.js > /home/LTPP/Music/music.log 2>&1 &', $out);
+        exec('PORT=' . $port . ' node /home/LTPP/Music/app.js > /home/LTPP/Music/music.log 2>&1 &', $out);
         $out = [];
         return json(['code' => 1, 'msg' => '重启成功！']);
     }
