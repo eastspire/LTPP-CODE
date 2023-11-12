@@ -259,24 +259,6 @@ class Setting extends Image
     }
 
     /**
-     * 清理ChatGPT JSON缓存
-     * @param Request $request 请求
-     * @return string $res json
-     */
-    public function deleteChatGptJsonRedis(Request $request)
-    {
-        $my_uid = JwtToken::getCurrentId();
-        $my_aid = Base::getIdByUid($my_uid);
-        $isroot = Base::judgeIsRoot($my_aid);
-        if (!$isroot) {
-            return json(['code' => -1, 'msg' => '无权限']);
-        }
-        $redis = Redis::connection('db35');
-        $redis->flushdb();
-        return json(['code' => 1, 'msg' => '缓存清理成功！']);
-    }
-
-    /**
      * 清空除了用户单点登录之外的redis缓存
      * @param Request $request 请求
      * @return string $res json
@@ -431,6 +413,26 @@ class Setting extends Image
                     ->update(['useqqmail' => $data['useqqmail']]);
                 $redis5->del('useqqmail');
                 $redis5->set('useqqmail', $data['useqqmail']);
+            }
+
+            if ($data['chatgpt_api_url'] != $redis5->get('chatgpt_api_url')) {
+                Db::table('setting')
+                    ->where('id', $db->id)
+                    ->where('isdel', 0)
+                    ->lockForUpdate()
+                    ->update(['chatgpt_api_url' => $data['chatgpt_api_url']]);
+                $redis5->del(Base::$chat_gpt_api_url_key);
+                $redis5->set(Base::$chat_gpt_api_url_key, $data['chatgpt_api_url']);
+            }
+
+            if ($data['chatgpt_keys'] != $redis5->get('chatgpt_keys')) {
+                Db::table('setting')
+                    ->where('id', $db->id)
+                    ->where('isdel', 0)
+                    ->lockForUpdate()
+                    ->update(['chatgpt_keys' => $data['chatgpt_keys']]);
+                $redis5->del(Base::$chatgpt_keys_key);
+                $redis5->set(Base::$chatgpt_keys_key, $data['chatgpt_keys']);
             }
 
             if ($data['idemaxtime'] != $redis5->get('idemaxtime')) {

@@ -47,17 +47,12 @@ class Base
     static $ak_msg = '恭喜您AK了';
 
     /**
-     * ChatGPT 信息路径
+     * GPT Key在MySQL&&Redis中Key的名称
      */
-    static $chat_gpt_file_name = 'ltpp_chat_gpt.json';
+    static $chatgpt_keys_key = 'chatgpt_keys';
 
     /**
-     * GPT Key在Redis中Key的名称
-     */
-    static $redis_chatgpt_json_key = 'chatgpt_json_key';
-
-    /**
-     * GPT API地址在Redis中Key的名称
+     * GPT API地址在MySQL&&Redis中Key的名称
      */
     static $chat_gpt_api_url_key = 'chatgpt_api_url';
 
@@ -3082,56 +3077,15 @@ class Base
     }
 
     /**
-     * 获取GPT JSON对应配置
-     * @param string $key 读取key名称
-     * @return string|array $api_url|$key_list
-     */
-    static public function getChatGptJSON($key)
-    {
-        try {
-            if ($key != Base::$chat_gpt_api_url_key && $key != Base::$redis_chatgpt_json_key) {
-                return '';
-            }
-            $redis35 = Redis::connection('db35');
-            $cache_list = $redis35->get(Base::$redis_chatgpt_json_key);
-            if ($cache_list) {
-                return json_decode($cache_list, true)[$key];
-            }
-            // 存放路径
-            $path = Base::$LTPP_path . Base::$chat_gpt_file_name;
-            if (!file_exists($path)) {
-                Base::writeToFile($path, '{"' . Base::$chat_gpt_api_url_key . '":"","' . Base::$redis_chatgpt_json_key . '":[]}');
-                return [
-                    Base::$chat_gpt_api_url_key => '',
-                    Base::$redis_chatgpt_json_key => [],
-                ][$key];
-            }
-            // 读取Key数组
-            $json_str = file_get_contents($path);
-            $redis35->set(Base::$redis_chatgpt_json_key, $json_str);
-            $json = json_decode($json_str, true);
-            return $json[$key];
-        } catch (Exception $e) {
-            Robot::sendChatToOneUserMsg(Base::getRootId(), '获取GPT JSON对应配置出错：' . $e->getMessage());
-        }
-        return [
-            Base::$chat_gpt_api_url_key => '',
-            Base::$redis_chatgpt_json_key => [],
-        ][$key];
-    }
-
-    /**
      * 获取GPT KEY LIST
      * @return array key_list
      */
     static public function getChatGptKeyList()
     {
         try {
-            $key_list = Base::getChatGptJSON(Base::$redis_chatgpt_json_key);
-            if (!$key_list) {
-                return [];
-            }
-            return $key_list;
+            $list_str = Base::getSettingKeyData('chatgpt_keys');
+            $list = preg_split("/[\s]+/", $list_str);
+            return $list;
         } catch (Exception $e) {
             Robot::sendChatToOneUserMsg(Base::getRootId(), '获取GPT KEY LIST出错：' . $e->getMessage());
         }
@@ -3144,11 +3098,8 @@ class Base
     static public function getChatGptUrl()
     {
         try {
-            $api_url = Base::getChatGptJSON(Base::$chat_gpt_api_url_key);
-            if (!$api_url) {
-                return '';
-            }
-            return $api_url;
+            $url = Base::getSettingKeyData('chatgpt_api_url');
+            return $url;
         } catch (Exception $e) {
             Robot::sendChatToOneUserMsg(Base::getRootId(), '获取GPT接口地址出错：' . $e->getMessage());
         }

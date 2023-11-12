@@ -126,23 +126,7 @@
             inactive-color="#ff4949"
           >
           </el-switch>
-          <p
-            style="
-              font-size: 1.06rem;
-              text-align: left;
-              font-weight: bold;
-              margin: 1rem 0rem 1rem 0rem;
-            "
-          >
-            清理ChatGPT JSON缓存
-          </p>
-          <el-button
-            type="text"
-            class="pulse-enter-active"
-            style="font-size: 1.06rem; color: deeppink"
-            @click="deleteChatGptJsonRedis()"
-            >清理ChatGPT JSON缓存</el-button
-          >
+
           <p
             style="
               font-size: 1.06rem;
@@ -733,6 +717,61 @@
               >更新</el-button
             >
           </el-input>
+
+          <p
+            style="
+              font-size: 1.06rem;
+              text-align: left;
+              font-weight: bold;
+              margin: 1rem 0rem 1rem 0rem;
+            "
+          >
+            ChatGPT API接口地址
+          </p>
+
+          <el-input
+            type="password"
+            show-password
+            style="font-size: 1.06rem"
+            placeholder="请输入ChatGPT API接口地址"
+            v-model.lazy="resdata.chatgpt_api_url"
+            @keyup.enter.native="updatesetting()"
+          >
+            <el-button
+              slot="append"
+              icon="el-icon-upload"
+              @click="updatesetting()"
+              >更新</el-button
+            >
+          </el-input>
+
+          <p
+            style="
+              font-size: 1.06rem;
+              text-align: left;
+              font-weight: bold;
+              margin: 1rem 0rem 1rem 0rem;
+            "
+          >
+            ChatGPT KEYS（使用换行/空格进行分隔）
+          </p>
+
+          <el-input
+            type="password"
+            show-password
+            style="font-size: 1.06rem"
+            placeholder="请输入ChatGPT KEYS（使用换行/空格进行分隔）"
+            v-model.lazy="resdata.chatgpt_keys"
+            @keyup.enter.native="updatesetting()"
+          >
+            <el-button
+              slot="append"
+              icon="el-icon-upload"
+              @click="updatesetting()"
+              >更新</el-button
+            >
+          </el-input>
+
           <p
             style="
               font-size: 1.06rem;
@@ -1210,37 +1249,6 @@ export default {
       const { data: res } = await this.$ajax({
         method: "post",
         url: "/Setting/updateImage",
-        portType: {
-          process: "8797",
-        },
-      }).catch((t) => {
-        this.$msg({
-          type: "error",
-          message: t,
-          duration: 1600,
-          offset: 80,
-        });
-      });
-      if (res.code == 1) {
-        this.$msg({
-          type: "success",
-          message: res.msg,
-          duration: 1600,
-          offset: 80,
-        });
-      } else {
-        this.$msg({
-          type: "error",
-          message: res.msg,
-          duration: 1600,
-          offset: 80,
-        });
-      }
-    },
-    async deleteChatGptJsonRedis() {
-      const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Setting/deleteChatGptJsonRedis",
         portType: {
           process: "8797",
         },

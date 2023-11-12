@@ -68,7 +68,6 @@
 | 32  |竞赛查重锁|
 | 33  |代码缓存|
 | 34  |代码结果缓存|
-| 35  |GPT缓存|
 
 ### 使用脚本一键安装
 > https://github.com/wmzn-ltpp/Install.git

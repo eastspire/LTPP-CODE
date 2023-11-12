@@ -36,7 +36,7 @@ class PrivateRobot
     /**
      * GPT 每个消息价格
      */
-    static $one_msg_cost = 0.19;
+    static $one_msg_cost = 0.09;
 
     /**
      * GPT上下文环境
@@ -787,7 +787,7 @@ class PrivateRobot
                     'Authorization: Bearer ' . $api_key
                 ];
                 $result = Base::sendRequest($gpt_api_url, $headers, $data, true);
-                Robot::sendChatToOneUserMsg(Base::getRootId(), '**' . $time . ' ' . $user_name . ' 调用GPT**' . "\n" . $result);
+                Robot::sendChatToOneUserMsg(Base::getRootId(), '**' . $time . ' ' . $user_name . ' 调用GPT结果**' . "\n```json\n" . $result . "\n```");
                 $result = json_decode($result, true);
                 if (isset($result['choices']) && sizeof($result['choices']) > 0 && isset($result['choices'][0]['message']) && isset($result['choices'][0]['message']['content'])) {
                     return $result['choices'][0]['message']['content'];
