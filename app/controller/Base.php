@@ -3083,7 +3083,7 @@ class Base
     static public function getChatGptKeyList()
     {
         try {
-            $list_str = Base::getSettingKeyData('chatgpt_keys');
+            $list_str = Base::getSettingKeyData('chatgpt_keys') ?? '';
             $list = preg_split("/[\s]+/", $list_str);
             return $list;
         } catch (Exception $e) {
@@ -3098,7 +3098,7 @@ class Base
     static public function getChatGptUrl()
     {
         try {
-            $url = Base::getSettingKeyData('chatgpt_api_url');
+            $url = Base::getSettingKeyData('chatgpt_api_url') ?? '';
             return $url;
         } catch (Exception $e) {
             Robot::sendChatToOneUserMsg(Base::getRootId(), '获取GPT接口地址出错：' . $e->getMessage());
