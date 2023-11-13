@@ -783,6 +783,7 @@ class Ojjudge
                 //题目AC数目总量加一
                 Db::table('oj')
                     ->where('id', $problem_id)
+                    ->where('isdel', 0)
                     ->increment('ACNum', 1);
                 Base::updateOjDataRedis($problem_id);
                 //清空竞赛题目缓存（用户通过题目高亮，缓存会有影响，所以要清除）
