@@ -110,7 +110,6 @@ class Photo
         return json(['code' => 1, 'data' => $photo, 'allnum' => $allnum, 'msg' => '成功获取到 ' . $allnum . ' 张图片']);
     }
 
-
     /**
      * 递归获取所有文件
      *
@@ -125,7 +124,7 @@ class Photo
         $path = realpath($path) . '/';
         $substart = $substart ? $substart : strlen($path);
         if (!is_dir($path)) {
-            return;
+            return [];
         }
         if ($handle = opendir($path)) {
             while (false !== ($file = readdir($handle))) {
