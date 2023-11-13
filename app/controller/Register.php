@@ -98,7 +98,6 @@ class Register extends Email
         $my_aid = Base::insertToDb('user', $data);
         Base::updateUserDataRedis($my_aid);
         if ($my_aid) {
-            Robot::sendChatToOneUserMsg(Base::getRootId(), '【' . $now . '】用户【' . $name . '】注册成功');
             $offline = (int) Base::getSettingKeyData('offline');
             if ($offline == 0) {
                 $Zcontent = '您的账号：';
@@ -143,6 +142,8 @@ LTPP在线开发平台许可协议\n
                     'title' => 'LTPP账号注册成功',
                     'content' => $content
                 ]);
+                Robot::sendChatToOneUserMsg($my_aid, '## LTPP账号注册成功' . "\n" . $content);
+                Robot::sendChatToOneUserMsg(Base::getRootId(), '**【' . $now . '】** 用户 **【' . $name . '】** 注册成功');
             }
             return json(['code' => 1, 'msg' => '账号注册成功']);
         }

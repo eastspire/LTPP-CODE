@@ -3,7 +3,7 @@
  * @Author: SQS 1491579574@qq.com
  * @Date: 2023-06-02 11:58:18
  * @LastEditors: wmzn-ltpp 1491579574@qq.com
- * @LastEditTime: 2023-10-14 14:54:34
+ * @LastEditTime: 2023-11-13 14:38:46
  * @FilePath: \LTPP-CODE\app\queue\redis\BuySsh.php
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
@@ -171,11 +171,11 @@ class BuySsh implements Consumer
                 $redis22->del($key);
                 $msg = '购买失败！请重试！';
                 Robot::sendChatToOneUserMsg($my_aid, '#### ' . $title . "\n" . $msg);
-                Robot::sendChatToOneUserMsg(Base::getRootId(), '【' . $now . '】用户【' . $my_data->name . '】购买LTPP-SSH失败' . "\n" . $msg);
+                Robot::sendChatToOneUserMsg(Base::getRootId(), '**【' . $now . '】** 用户 **【' . $my_data->name . '】** 购买LTPP-SSH失败' . "\n" . $msg);
                 return;
             }
 
-            Robot::sendChatToOneUserMsg(Base::getRootId(), '【' . $now . '】用户【' . $my_data->name . '】购买LTPP-SSH成功' . "\n" . json_encode($data));
+            Robot::sendChatToOneUserMsg(Base::getRootId(), '**【' . $now . '】** 用户 **【' . $my_data->name . '】** 购买LTPP-SSH成功' . "\n" . json_encode($data));
 
             $res = Db::table('user')
                 ->where('id', $my_aid)

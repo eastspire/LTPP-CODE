@@ -142,8 +142,7 @@ class Login
             ->where('isdel', 0)
             ->update(['lastlogin' => $now]);
         Base::updateUserDataRedis($my_aid);
-        Robot::sendChatToOneUserMsg(Base::getRootId(), '【' . $now . '】用户【' . $name . '】于【' . $loc . '】登录成功');
-
+        Robot::sendChatToOneUserMsg(Base::getRootId(), '**【' . $now . '】** 用户 **【' . $name . '】** 于 **【' . $loc . '】** 登录成功');
         if ($user_db->grade == 2) {
             return json([
                 'code' => 2,
