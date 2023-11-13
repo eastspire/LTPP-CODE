@@ -3,7 +3,7 @@
  * @Author: 18855190718 1491579574@qq.com
  * @Date: 2023-01-14 18:26:54
  * @LastEditors: wmzn-ltpp 1491579574@qq.com
- * @LastEditTime: 2023-11-13 14:50:45
+ * @LastEditTime: 2023-11-13 14:57:16
  * @FilePath: \LTPP-CODE\plugin\webman\gateway\PrivateRobot.php
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
@@ -236,11 +236,11 @@ class PrivateRobot
             ->select('id', 'problemName', 'Time', 'Memory', 'ACNum', 'ALLSubmitNum')
             ->first();
         if (!$problem_db) {
-            return '题目【' . $problem_name . '】不存在！';
+            return '题目 **【' . $problem_name . '】** 不存在！';
         }
         $problem_id = $problem_db->id;
         if (!$problem_id) {
-            return '题目【' . $problem_name . '】不存在！';
+            return '题目 **【' . $problem_name . '】** 不存在！';
         }
         $redis4 = Redis::connection('db4');
         $contest_list = Db::table('contestrank')
@@ -264,7 +264,7 @@ class PrivateRobot
             $testfileout = glob($alltestpath . '*.ans');
         }
         if (sizeof($testfilein) <= 0 || sizeof($testfileout) <= 0) {
-            return '题目【' . $problem_name . '】无测试样例！';
+            return '题目 **【' . $problem_name . '】** 无测试样例！';
         }
         foreach ($contest_list as &$contest_id) {
             $contest_db = Db::table('contest')
@@ -547,7 +547,7 @@ class PrivateRobot
                     ]);
                 }
                 $user_db = Base::getUserData($user_id);
-                $msg = '用户【' . ($user_db->name ?? '') . '】在竞赛【' . $contest_db->name . '】中的赛题【' . $problem_db->problemName . '】中得' . $resscore . '分';
+                $msg = '用户 **【' . ($user_db->name ?? '') . '】** 在竞赛 **【' . $contest_db->name . '】** 中的赛题 **【' . $problem_db->problemName . '】** 中得 **' . $resscore . '** 分';
                 $now = date('Y-m-d H:i:s', time());
                 $msg_id = Base::insertToDb(
                     'privatechat',
@@ -582,7 +582,7 @@ class PrivateRobot
                 $redis4->del('Contest' . $contest_id . 'problemdata' . $tem);
             }
 
-            $msg = '提醒：竞赛【' . $contest_db->name . '】重新计算排名任务已下达！';
+            $msg = '提醒：竞赛 **【' . $contest_db->name . '】** 重新计算排名任务已下达！';
 
             $msg_id = Base::insertToDb(
                 'privatechat',
@@ -606,7 +606,7 @@ class PrivateRobot
             ]));
             ChatBase::updateNoLookNum(ChatBase::$type_private_chat_name, $robot_db->id, $my_aid);
         }
-        return '题目【' . $problem_name . '】所在竞赛均重判结束！';
+        return '题目 **【' . $problem_name . '】** 所在竞赛均重判结束！';
     }
 
     /**
