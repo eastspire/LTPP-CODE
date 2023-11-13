@@ -146,7 +146,6 @@ class User
             Db::table('user')
                 ->where('id', $my_aid)
                 ->where('isdel', 0)
-                ->lockForUpdate()
                 ->update(['isusemusic' => 0]);
             Base::updateUserDataRedis($my_aid);
             return json(['code' => 1, 'msg' => '音乐关闭成功']);
@@ -155,7 +154,6 @@ class User
         Db::table('user')
             ->where('id', $my_aid)
             ->where('isdel', 0)
-            ->lockForUpdate()
             ->update(['isusemusic' => 1]);
         Base::updateUserDataRedis($my_aid);
         return json(['code' => 1, 'msg' => '音乐开启成功']);

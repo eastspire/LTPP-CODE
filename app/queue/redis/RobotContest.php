@@ -3,7 +3,7 @@
  * @Author: SQS 1491579574@qq.com
  * @Date: 2023-06-02 11:58:18
  * @LastEditors: wmzn-ltpp 1491579574@qq.com
- * @LastEditTime: 2023-10-18 22:06:52
+ * @LastEditTime: 2023-11-13 13:39:25
  * @FilePath: \LTPP-CODE\app\queue\redis\RobotContest.php
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
@@ -226,7 +226,6 @@ class RobotContest implements Consumer
             Db::table('user')
                 ->where('id', $my_id)
                 ->where('isdel', 0)
-                ->lockForUpdate()
                 ->increment('acnum', 1);
             $has = Db::table('solveproblem')
                 ->where('userid', $my_id)
@@ -302,7 +301,6 @@ class RobotContest implements Consumer
             Db::table('user')
                 ->where('id', $my_id)
                 ->where('isdel', 0)
-                ->lockForUpdate()
                 ->increment('acnum', 1);
             $has = Db::table('solveproblem')
                 ->where('userid', $my_id)

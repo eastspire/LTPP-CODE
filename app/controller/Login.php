@@ -84,8 +84,8 @@ class Login
         }
 
         $user = [
-            'id' => Base::getChatUserUidById($user_db->id),
             // 这里必须是一个全局抽象唯一id
+            'id' => Base::getChatUserUidById($user_db->id),
         ];
 
         $authorization = JwtToken::generateToken($user)['access_token'];
