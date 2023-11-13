@@ -143,7 +143,7 @@ class Contest
      * @param int $contest_id 竞赛ID
      * @return string $res true|false
      */
-    static public function frontendJudgeIsMyContest(Request $request)
+    public function frontendJudgeIsMyContest(Request $request)
     {
         $my_uid = JwtToken::getCurrentId();
         $my_aid = Base::getIdByUid($my_uid);

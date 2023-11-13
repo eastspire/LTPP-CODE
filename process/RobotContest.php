@@ -2,8 +2,8 @@
 /*
  * @Author: 18855190718 1491579574@qq.com
  * @Date: 2023-10-09 00:01:51
- * @LastEditors: 18855190718 1491579574@qq.com
- * @LastEditTime: 2023-10-10 12:30:05
+ * @LastEditors: wmzn-ltpp 1491579574@qq.com
+ * @LastEditTime: 2023-11-13 18:36:49
  * @FilePath: \LTPP-CODE\process\RobotContest.php
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
@@ -28,19 +28,24 @@ class RobotContest
 
     /**
      * 获取进行中的比赛列表
-     * @return \Illuminate\Support\Collection $db
+     * @return {*} $db
      */
     private function getRunningContestList()
     {
-        $now = date('Y-m-d H:i:s', time());
-        $db = Db::table('contest')
-            ->where('begin', '<=', $now)
-            ->where('end', '>=', $now)
-            ->where('isdel', 0)
-            ->orderBy('id', 'desc')
-            ->select('id', 'begin', 'end')
-            ->get();
-        return $db;
+        try {
+            $now = date('Y-m-d H:i:s', time());
+            $db = Db::table('contest')
+                ->where('begin', '<=', $now)
+                ->where('end', '>=', $now)
+                ->where('isdel', 0)
+                ->orderBy('id', 'desc')
+                ->select('id', 'begin', 'end')
+                ->get();
+            return $db;
+        } catch (Exception $e) {
+            Robot::sendChatToOneUserMsg(Base::getRootId(), '定时任务进程 **【RobotContest】** 运行错误：' . $e->getMessage());
+        }
+        return [];
     }
 
     public function onWorkerStart()
@@ -70,7 +75,7 @@ class RobotContest
                 RobotContest::$lock = false;
             } catch (Exception $e) {
                 RobotContest::$lock = false;
-                Robot::sendChatToOneUserMsg(Base::getRootId(), '定时任务进程【RobotContest】运行错误：' . $e->getMessage());
+                Robot::sendChatToOneUserMsg(Base::getRootId(), '定时任务进程 **【RobotContest】** 运行错误：' . $e->getMessage());
             }
         });
     }

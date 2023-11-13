@@ -15,6 +15,7 @@ namespace process;
 use Workerman\Crontab\Crontab;
 use app\controller\Robot;
 use app\controller\Base;
+use Exception;
 
 class Chatfile extends Robot
 {
@@ -65,36 +66,28 @@ class Chatfile extends Robot
     {
         // 每天凌晨一点执行一次
         new Crontab('00 1 * * *', function () {
-            if (!file_exists('/LTPP')) {
-                mkdir('/LTPP', 0666, true);
-            }
-            if (!file_exists('/home/LTPP/public')) {
-                mkdir('/home/LTPP/public', 0666, true);
-            }
-            if (!file_exists(Base::$LTPP_public_static_path . '')) {
-                mkdir(Base::$LTPP_public_static_path . '', 0666, true);
-            }
-            if (!file_exists(Base::$LTPP_public_static_path . '/chatfile')) {
-                mkdir(Base::$LTPP_public_static_path . '/chatfile', 0666, true);
-            }
-            Chatfile::$delete_arr = [];
-            // 开始更新文件
-            $this->dfs(Base::$LTPP_public_static_path . '/chatfile');
-
-            $now = date('Y-m-d H:i:s', time());
-            $msg = '';
-            if (empty(Chatfile::$delete_arr)) {
-                $msg = '系统于北京时间' . $now . '删除' . sizeof(Chatfile::$delete_arr) . '个过期的群聊文件' . "\n";
-            } else {
-                $msg = '系统于北京时间' . $now . '删除' . sizeof(Chatfile::$delete_arr) . '个过期的群聊文件，详情如下：' . "\n";
-                foreach (Chatfile::$delete_arr as &$tem) {
-                    $msg .= '文件名：' . $tem->name . "\n";
-                    $msg .= '该文件上传时间：' . $tem->time . "\n\n";
+            try {
+                Base::judgeCreatPath(Base::$LTPP_public_static_path . '/chatfile', 0666);
+                Chatfile::$delete_arr = [];
+                // 开始更新文件
+                $this->dfs(Base::$LTPP_public_static_path . '/chatfile');
+                $now = date('Y-m-d H:i:s', time());
+                $msg = '';
+                if (empty(Chatfile::$delete_arr)) {
+                    $msg = '系统于北京时间' . $now . '删除' . sizeof(Chatfile::$delete_arr) . '个过期的群聊文件' . "\n";
+                } else {
+                    $msg = '系统于北京时间' . $now . '删除' . sizeof(Chatfile::$delete_arr) . '个过期的群聊文件，详情如下：' . "\n";
+                    foreach (Chatfile::$delete_arr as &$tem) {
+                        $msg .= '文件名：' . $tem['name'] . "\n";
+                        $msg .= '该文件上传时间：' . $tem['time'] . "\n\n";
+                    }
                 }
+                $root_id = Base::getRootId();
+                // 发送通知
+                Robot::sendChatToOneUserMsg($root_id, $msg);
+            } catch (Exception $e) {
+                Robot::sendChatToOneUserMsg(Base::getRootId(), '定时任务进程 **【Chatfile】** 运行错误：' . $e->getMessage());
             }
-            $root_id = Base::getRootId();
-            // 发送通知
-            Robot::sendChatToOneUserMsg($root_id, $msg);
         });
     }
 }

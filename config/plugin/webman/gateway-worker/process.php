@@ -18,7 +18,7 @@ return [
     'gateway' => [
         'handler' => Gateway::class,
         'listen' => 'websocket://0.0.0.0:47272',
-        'count' => cpu_count() > 8 ? 8 : cpu_count(),
+        'count' => (cpu_count() > 8 ? 8 : cpu_count()) * 4,
         'constructor' => [
             'config' => [
                 'lanIp' => '127.0.0.1',

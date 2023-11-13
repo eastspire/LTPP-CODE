@@ -37,11 +37,27 @@ class AuthCheckTest extends Robot implements MiddlewareInterface
     ];
 
     /**
-     * 私有方法
+     * 禁止访问的方法
      */
     static $danger_func = [
         'contestIdGetRankEcharts',
-        'contestIdGetRank'
+        'contestIdGetRank',
+        'creatFile',
+        'sendUpdateRankMQ',
+        'contestIdGetRank',
+        'judgeLimitIsSafe',
+        'mailto',
+        'randImage',
+        'judgeIsMyProblem',
+        'run',
+        'sendChatToOneUserMsgAndEmail',
+        'sendChatToOneUserMsg',
+        'judgeHasBuy',
+        'buy',
+        'sendLogin',
+        'judgeHasJudgeContest',
+        'updateNoLookNum',
+        'judgeIsMyContest'
     ];
 
     /**
@@ -63,11 +79,6 @@ class AuthCheckTest extends Robot implements MiddlewareInterface
         'plugin\webman\gateway\PrivateRobot',
     ];
 
-    /**
-     * 内网IP
-     */
-    static $safe_ip = '127.0.0.1';
-
     public function process(Request $request, callable $handler): Response
     {
         //判断是否需要鉴权
@@ -83,6 +94,7 @@ class AuthCheckTest extends Robot implements MiddlewareInterface
                 return response(Base::notFoundPage(), 404);
             }
         }
+
         foreach (AuthCheckTest::$danger_path as &$tem) {
             if ($request->controller === $tem) {
                 return response(Base::notFoundPage(), 404);
@@ -123,27 +135,24 @@ class AuthCheckTest extends Robot implements MiddlewareInterface
             return $handler($request);
         }
 
-        if ($loc != AuthCheckTest::$safe_ip) {
-            // 不是内网记录频率
-            if ($redis0->get('BlackIP' . $loc) || $redis0->get('BlackID' . $my_aid)) {
+        if ($redis0->get('BlackIP' . $loc) || $redis0->get('BlackID' . $my_aid)) {
+            return \json(['code' => 500, 'msg' => '您已被拉黑！请联系管理员解除黑名单！']);
+        } else {
+            $black_aid_db = Db::table('blackip')
+                ->where('user_id', $my_aid)
+                ->where('isdel', 0)
+                ->exists();
+            if ($black_aid_db) {
+                $redis0->set('BlackID' . $my_aid, 1);
                 return \json(['code' => 500, 'msg' => '您已被拉黑！请联系管理员解除黑名单！']);
-            } else {
-                $black_aid_db = Db::table('blackip')
-                    ->where('user_id', $my_aid)
-                    ->where('isdel', 0)
-                    ->exists();
-                if ($black_aid_db) {
-                    $redis0->set('BlackID' . $my_aid, 1);
-                    return \json(['code' => 500, 'msg' => '您已被拉黑！请联系管理员解除黑名单！']);
-                }
-                $black_ip_db = Db::table('blackip')
-                    ->where('ip', $loc)
-                    ->where('isdel', 0)
-                    ->exists();
-                if ($black_ip_db) {
-                    $redis0->set('BlackIP' . $loc, 1);
-                    return \json(['code' => 500, 'msg' => '您已被拉黑！请联系管理员解除黑名单！']);
-                }
+            }
+            $black_ip_db = Db::table('blackip')
+                ->where('ip', $loc)
+                ->where('isdel', 0)
+                ->exists();
+            if ($black_ip_db) {
+                $redis0->set('BlackIP' . $loc, 1);
+                return \json(['code' => 500, 'msg' => '您已被拉黑！请联系管理员解除黑名单！']);
             }
         }
 

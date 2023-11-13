@@ -5,6 +5,7 @@ namespace process;
 use app\controller\Robot;
 use Workerman\Crontab\Crontab;
 use app\controller\Base;
+use Exception;
 
 class Gitcode extends Robot
 {
@@ -31,21 +32,16 @@ class Gitcode extends Robot
     {
         // 每天凌晨一点执行一次
         new Crontab('00 1 * * *', function () {
-            if (!file_exists('/LTPP')) {
-                mkdir('/LTPP', 0666, true);
+            try {
+                Base::judgeCreatPath(Base::$LTPP_public_static_path, 0666);
+                $this->dfs(Base::$LTPP_public_static_path . '');
+                $msg = 'static文件夹下全部文件的权限已更新！';
+                $root_id = Base::getRootId();
+                // 发送通知
+                Robot::sendChatToOneUserMsg($root_id, $msg);
+            } catch (Exception $e) {
+                Robot::sendChatToOneUserMsg(Base::getRootId(), '定时任务进程 **【Gitcode】** 运行错误：' . $e->getMessage());
             }
-            if (!file_exists('/home/LTPP/public')) {
-                mkdir('/home/LTPP/public', 0666, true);
-            }
-            if (!file_exists(Base::$LTPP_public_static_path . '')) {
-                mkdir(Base::$LTPP_public_static_path . '', 0666, true);
-            }
-            $this->dfs(Base::$LTPP_public_static_path . '');
-
-            $msg = 'static文件夹下全部文件的权限已更新！';
-            $root_id = Base::getRootId();
-            // 发送通知
-            Robot::sendChatToOneUserMsg($root_id, $msg);
         });
     }
 }

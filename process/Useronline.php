@@ -12,9 +12,11 @@
 
 namespace process;
 
+use app\controller\Robot;
 use app\controller\Base;
 use Workerman\Crontab\Crontab;
 use support\Db;
+use Exception;
 
 class Useronline
 {
@@ -22,18 +24,22 @@ class Useronline
     {
         // 每15分钟执行一次，注意这里省略了秒位
         new Crontab('*/15 * * * *', function () {
-            $limittime = 900;
-            $db = Db::table('user')
-                ->pluck('id')
-                ->toArray();
-            foreach ($db as &$tem) {
-                if ($tem) {
-                    $last = Db::table('user')->where('id', $tem)->select('lastlogin')->first();
-                    if ($last && time() - strtotime($last->lastlogin) >= $limittime) {
-                        Db::table('user')->where('id', $tem)->update(['online' => 0]);
-                        Base::updateUserDataRedis($tem);
+            try {
+                $limittime = 900;
+                $db = Db::table('user')
+                    ->pluck('id')
+                    ->toArray();
+                foreach ($db as &$tem) {
+                    if ($tem) {
+                        $last = Db::table('user')->where('id', $tem)->select('lastlogin')->first();
+                        if ($last && time() - strtotime($last->lastlogin) >= $limittime) {
+                            Db::table('user')->where('id', $tem)->update(['online' => 0]);
+                            Base::updateUserDataRedis($tem);
+                        }
                     }
                 }
+            } catch (Exception $e) {
+                Robot::sendChatToOneUserMsg(Base::getRootId(), '定时任务进程 **【Useronline】** 运行错误：' . $e->getMessage());
             }
         });
     }

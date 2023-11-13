@@ -59,8 +59,7 @@ class ContestRank
             } catch (Exception $e) {
                 ContestRank::$lock = false;
                 // 发送通知
-                $msg = 'ContestRank进程异常:' . $e->getMessage();
-                Robot::sendChatToOneUserMsg(Base::getRootId(), $msg);
+                Robot::sendChatToOneUserMsg(Base::getRootId(), '定时任务进程 **【ContestRank】** 运行错误：' . $e->getMessage());
             }
         });
     }
