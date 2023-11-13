@@ -36,15 +36,8 @@ class Handler extends ExceptionHandler
 
     public function render(Request $request, Throwable $exception): Response
     {
-        // Apidoc异常处理响应
-        if ($exception instanceof \hg\apidoc\exception\HttpException) {
-            return response(json_encode([
-                "code" => $exception->getCode(),
-                "message" => $exception->getMessage(),
-            ], JSON_UNESCAPED_UNICODE), $exception->getStatusCode());
-        }
-
-        if (($exception instanceof BusinessException) && ($response = $exception->render($request))) {
+        if(($exception instanceof BusinessException) && ($response = $exception->render($request)))
+        {
             return $response;
         }
 

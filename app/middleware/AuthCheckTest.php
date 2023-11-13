@@ -8,6 +8,7 @@ use Webman\Http\Response;
 use Webman\Http\Request;
 use Tinywan\Jwt\JwtToken;
 use support\Db;
+use Exception;
 use support\Redis;
 use app\controller\Base;
 
@@ -99,8 +100,12 @@ class AuthCheckTest extends Robot implements MiddlewareInterface
         if (!isset($header['key']) || empty($header['key'])) {
             return json(['code' => 500, 'msg' => '登录信息错误！请重新登录！']);
         }
-
-        $my_uid = JwtToken::getCurrentId();
+        $my_uid = '';
+        try {
+            $my_uid = JwtToken::getCurrentId();
+        } catch (Exception $e) {
+            return \json(['code' => 500, 'msg' => '您已下线！请重新登录！']);
+        }
         $my_aid = Base::getIdByUid($my_uid);
         $redis0 = Redis::connection('db0');
         $redis14 = Redis::connection('db14');

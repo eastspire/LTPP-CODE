@@ -7,7 +7,7 @@
 [![Daily Downloads](http://poser.pugx.org/tinywan/jwt/d/daily)](https://packagist.org/packages/tinywan/jwt)
 [![PHP Version Require](http://poser.pugx.org/tinywan/jwt/require/php)](https://packagist.org/packages/tinywan/jwt)
 
-Json web token (JWT), 是为了在网络应用环境间传递声明而执行的一种基于JSON的开放标准（(RFC 7519).该token被设计为紧凑且安全的，特别适用于分布式站点的单点登录（SSO）场景。
+Json web token (JWT), 是为了在网络应用环境间传递声明而执行的一种基于JSON的开放标准（(RFC 7519)，该token被设计为紧凑且安全的，特别适用于分布式站点的单点登录（SSO）场景。
 
 JWT的声明一般被用来在身份提供者和服务提供者间传递被认证的用户身份信息，以便于从资源服务器获取资源，也可以增加一些额外的其它业务逻辑所必须的声明信息，该token也可直接被用于认证，也可被加密。
 
@@ -21,7 +21,7 @@ JWT的声明一般被用来在身份提供者和服务提供者间传递被认�
 2. 认证服务器验证用户名和口令后，以服务器端生成JWT Token，这个token的生成过程如下：
   	- 认证服务器还会生成一个 Secret Key（密钥）
  	- 对JWT Header和JWT Payload分别求Base64。在Payload可能包括了用户的抽象ID和的过期时间。
-  	- 用密钥对JWT签名 `HMAC-SHA256(SecertKey, Base64UrlEncode(JWT-Header)+'.'+Base64UrlEncode(JWT-Payload))`	
+  	- 用密钥对JWT签名 `HMAC-SHA256(SecretKey, Base64UrlEncode(JWT-Header)+'.'+Base64UrlEncode(JWT-Payload))`	
 3. 然后把 `base64(header).base64(payload).signature` 作为 JWT token返回客户端。
 4. 客户端使用JWT Token向应用服务器发送相关的请求。这个JWT Token就像一个临时用户权证一样。
 
@@ -64,7 +64,7 @@ var_dump(json_encode($token));
 |token_type| string |Token 类型 | Bearer |
 |expires_in| int |凭证有效时间，单位：秒 | 36000 |
 |access_token| string |访问凭证 | XXXXXXXXXXXXXXXXXXXX|
-|refresh_token| string | 刷新凭证（访问凭证过期使用 ） | XXXXXXXXXXXXXXXXXXX|
+|refresh_token| string | 刷新凭证（访问凭证过期使用 ） | XXXXXXXXXXXXXXXXXXXX|
 
 ## 支持函数列表
 
@@ -102,6 +102,18 @@ $exp = Tinywan\Jwt\JwtToken::getTokenExp();
 ```php
 'is_single_device' => true,
 ```
+
+单设备登录支持定义客户端 `client` 字段，自定义客户端单点登录（默认为`WEB`，即网页端），如：`MOBILE`、`APP`、`WECHAT`、`WEB`、`ADMIN`、`API`、`OTHER`等等
+```php
+$user = [
+    'id'  => 2022,
+    'name'  => 'Tinywan',
+    'client' => 'MOBILE',
+];
+$token = Tinywan\Jwt\JwtToken::generateToken($user);
+var_dump(json_encode($token));
+```
+
 > 7、获取当前用户信息（模型）
 
 ```php
@@ -137,6 +149,27 @@ return \support\Db::table('resty_user')
 $res = Tinywan\Jwt\JwtToken::clear();
 ```
 只有配置项 `is_single_device`为`true` 才会生效
+
+> 9、自定义终端`client`
+
+```php
+// 生成WEB令牌
+$user = [
+    'id'  => 2022,
+    'name'  => 'Tinywan',
+    'client' => JwtToken::TOKEN_CLIENT_WEB
+];
+$token = JwtToken::generateToken($user);
+
+// 生成移动端令牌
+$user = [
+    'id'  => 2022,
+    'name'  => 'Tinywan',
+    'client' => JwtToken::TOKEN_CLIENT_MOBILE
+];
+$token = JwtToken::generateToken($user);
+```
+> 默认是`WEB`端
 
 ## 签名算法
 

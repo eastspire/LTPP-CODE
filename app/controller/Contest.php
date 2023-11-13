@@ -3,7 +3,7 @@
  * @Author: 18855190718 1491579574@qq.com
  * @Date: 2023-01-19 23:50:37
  * @LastEditors: wmzn-ltpp 1491579574@qq.com
- * @LastEditTime: 2023-10-29 16:41:41
+ * @LastEditTime: 2023-11-13 14:03:25
  * @FilePath: \LTPP-CODE\app\controller\Contest.php
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
@@ -1152,11 +1152,6 @@ class Contest
      */
     public function getContestRank(Request $request)
     {
-        //x轴时间分成几块
-        $div = 20;
-        //竞赛id
-        $my_uid = JwtToken::getCurrentId();
-        $my_aid = Base::getIdByUid($my_uid);
         $contest_uid = $request->post('contest_id');
         $contest_id = Base::getIdByUid($contest_uid);
         $redis4 = Redis::connection('db4');
@@ -1167,229 +1162,38 @@ class Contest
         if ($contest_db->type == 'OI') {
             return json(['code' => -1, 'peopledata' => [], 'timedata' => [], 'data' => [], 'msg' => 'OI赛制无法查看可视化排名!']);
         }
-        //判断竞赛是否结束
-        $begintime = strtotime($contest_db->begin);
-        $endtime = strtotime($contest_db->end);
-        $ismy = Contest::judgeIsMyContest($contest_id, $my_aid);
-
         //缓存存在读取缓存
         if (
             $redis4->get('ContestRank' . $contest_id . 'peopledata') &&
             $redis4->get('ContestRank' . $contest_id . 'timedata') &&
             $redis4->get('ContestRank' . $contest_id . 'echartsrank')
         ) {
-            // 竞赛未结束，普通用户无法查看排名
-            if ($endtime >= time() && !$ismy && $contest_db->type == 'OI') {
-                $begintime = $contest_db->begin;
-                //x轴右端点取当前时间和结束时间最小的一个
-                $endtime = date('Y-m-d H:i:s', min(strtotime($contest_db->end), time()));
-                $numbegintime = strtotime($begintime);
-                $numendtime = strtotime($endtime);
-                $timearray = array();
-                //x轴分$div段
-                $smalltime = ($numendtime - $numbegintime) / $div;
-                //全场竞赛全程时间x轴坐标数组（时间戳）
-                for ($i = $numbegintime; $i <= $numendtime; ) {
-                    $timearray[] = date('Y-m-d H:i:s', (int) $i);
-                    $i += $smalltime;
-                }
-                //确保时间数组最后是当前时间和结束时间较小那个，不会产生小于这两者的情况，便于后面计算不会漏算
-                $timearray[$div] = min($contest_db->end, date('Y-m-d H:i:s', (int) time()));
-                return json(['code' => 1, 'peopledata' => json_decode($redis4->get('ContestRank' . $contest_id . 'peopledata') ?? '', true), 'timedata' => $timearray, 'data' => [], 'msg' => '竞赛结束才能查看封榜排名！']);
-            }
             $redispeo = json_decode($redis4->get('ContestRank' . $contest_id . 'peopledata') ?? '', true);
             $redistime = json_decode($redis4->get('ContestRank' . $contest_id . 'timedata') ?? '', true);
             $redisdata = json_decode($redis4->get('ContestRank' . $contest_id . 'echartsrank') ?? '', true);
             return json(['code' => 1, 'peopledata' => $redispeo, 'timedata' => $redistime, 'data' => $redisdata, 'msg' => '统计信息完成！']);
         }
-        //排名锁存在则返回
-        $lockoneecharts = 'contestranklockecharts' . $contest_id;
-        //加锁
-        $lock_res = $redis4->setNx($lockoneecharts, 1);
-        if (!$lock_res) {
-            return json(['code' => 1, 'peopledata' => [], 'timedata' => [], 'data' => [], 'msg' => '信息计算中！']);
-        }
-
-        //参与人员id名单
-        $joinpeople = Db::table('joincontest')
-            ->where('contestid', $contest_id)
-            ->select('userid')
-            ->distinct()
-            ->get();
-        $arr_joinpeople = $joinpeople->toArray();
-        if (sizeof($arr_joinpeople) > 40) {
-            $redis4->set('ContestRank' . $contest_id . 'peopledata', json_encode([]));
-            $redis4->set('ContestRank' . $contest_id . 'timedata', json_encode([]));
-            $redis4->set('ContestRank' . $contest_id . 'echartsrank', json_encode([]));
-            // 解锁
-            $redis4->del($lockoneecharts);
-            return json(['code' => 1, 'peopledata' => [], 'timedata' => [], 'data' => [], 'msg' => '参赛人数较多，不显示Echarts排名！']);
-        }
-        //参赛人员名称名单
-        $respeople = array();
-        $resdata = array();
-        foreach ($joinpeople as &$tem) {
-            $temdb = Base::getUserData($tem->userid);
-            if ($temdb) {
-                $respeople[] = $temdb->name;
-            }
-        }
-
-        //竞赛时间
-        $begintime = $contest_db->begin;
-        //x轴右端点取当前时间和结束时间最小的一个
-        $endtime = date('Y-m-d H:i:s', min(strtotime($contest_db->end), time()));
-        $numbegintime = strtotime($begintime);
-        $numendtime = strtotime($endtime);
-        $timearray = array();
-        //x轴分$div段
-        $smalltime = ($numendtime - $numbegintime) / $div;
-
-        //全场竞赛全程时间x轴坐标数组（时间戳）
-        for ($i = $numbegintime; $i <= $numendtime; ) {
-            $timearray[] = $i;
-            $i += $smalltime;
-        }
-        //确保时间数组最后是当前时间和结束时间较小那个，不会产生小于这两者的情况，便于后面计算不会漏算
-        $timearray[$div] = min(strtotime($contest_db->end), time());
-
-        //竞赛未开始
-        if ($numbegintime > time()) {
-            $endtime = date('Y-m-d H:i:s', strtotime($contest_db->end));
-            $numendtime = strtotime($endtime);
-            $smalltime = ($numendtime - $numbegintime) / $div;
-            //时间x轴坐标数组（格式化）
-            $restimedata = array();
-            for ($i = $numbegintime; $i <= $numendtime; ) {
-                $temtime = date('Y-m-d H:i:s', $i);
-                $restimedata[] = $temtime;
-                $i += $smalltime;
-            }
-            $resdata = array();
-            foreach ($joinpeople as &$people) {
-                $temdata = array();
-                for ($i = 0; $i < $div; $i++) {
-                    $temdata[] = 0;
-                }
-                $resdata[] = $temdata;
-            }
-
-            //竞赛未开始存入缓存
-            Base::dataToSafe($respeople);
-            Base::dataToSafe($restimedata);
-            Base::dataToSafe($resdata);
-            $redis4->set('ContestRank' . $contest_id . 'peopledata', json_encode($respeople));
-            $redis4->set('ContestRank' . $contest_id . 'timedata', json_encode($restimedata));
-            $redis4->set('ContestRank' . $contest_id . 'echartsrank', json_encode($resdata));
-            // 解锁
-            $redis4->del($lockoneecharts);
-            return json(['peopledata' => $respeople, 'timedata' => $restimedata, 'data' => $resdata, 'msg' => '竞赛未开始！']);
-        }
-
-        //没有用户提交代码初始化
-        //时间x轴坐标数组（格式化）
-        $restimedata = array();
-        for ($i = $numbegintime; $i <= $numendtime; ) {
-            $temtime = date('Y-m-d H:i:s', (int) $i);
-            $restimedata[] = $temtime;
-            $i += $smalltime;
-        }
-        // 竞赛题目
-        $problem_list = Db::table('contestproblem')
-            ->where('contestid', $contest_id)
-            ->where('isdel', 0)
-            ->select('problemid')
-            ->distinct()
-            ->get()
-            ->toArray();
-        $problem_list_len = sizeof($problem_list);
-        $resdata = array();
-        //用户各个时间段内AC的数目
-        //按照用户顺序得到AC数组
-        foreach ($joinpeople as &$people) {
-            $temarray = array();
-            for ($i = 0; $i <= $div; ++$i) {
-                $temarray[] = 0;
-            }
-            //本次竞赛所有提交记录
-            $allusersubmit = Db::table('contestrank')
-                ->where('contestid', $contest_id)
-                ->where('userid', $people->userid)
-                ->where('score', 100)
-                ->where('submittime', '>=', $contest_db->begin)
-                ->where('submittime', '<=', $contest_db->end)
-                ->where('isdel', 0)
-                ->select('submittime', 'problemid')
-                ->get();
-            $proobj = new stdClass;
-            $arr_allusersubmit = $allusersubmit->toArray();
-            $sublen = sizeof($arr_allusersubmit);
-            for ($i = 0; $i < $sublen; ++$i) {
-                $proid = $arr_allusersubmit[$i]->problemid;
-                if (!isset($proobj->$proid) || $proobj->$proid != 1) {
-                    $proobj->$proid = 1;
-                    $problem_delete = true;
-                    for ($j = 0; $j < $problem_list_len; ++$j) {
-                        $tem_pro_id = $problem_list[$j]->problemid;
-                        if ($tem_pro_id == $proid) {
-                            $problem_delete = false;
-                            break;
-                        }
-                    }
-                    // 题目在竞赛中删除了
-                    if ($problem_delete) {
-                        continue;
-                    }
-                    //用户提交时间
-                    $thismaxtime = strtotime($arr_allusersubmit[$i]->submittime);
-                    //从1开始，位置零表示刚开始，不用遍历
-                    for ($j = 1; $j <= $div; ++$j) {
-                        //提交时间在该时间段内且状态为AC，AC数加一
-                        if ($thismaxtime <= $timearray[$j]) {
-                            ++$temarray[$j];
-                        }
-                    }
-                }
-            }
-            //存入二维数组
-            $resdata[] = $temarray;
-        }
-        $restimedata = array();
-        //时间x轴坐标数组（格式化）
-        for ($i = $numbegintime; $i <= $numendtime; ) {
-            $temtime = date('Y-m-d H:i:s', (int) $i);
-            $restimedata[] = $temtime;
-            $i += $smalltime;
-        }
-        //保证前端展示时间数组右边界是当前时间和结束时间较小者
-        $restimedata[$div] = date('Y-m-d H:i:s', min(strtotime($contest_db->end), time()));
-
-        //排名存入缓存
-        Base::dataToSafe($respeople);
-        Base::dataToSafe($restimedata);
-        Base::dataToSafe($resdata);
-        $redis4->set('ContestRank' . $contest_id . 'peopledata', json_encode($respeople));
-        $redis4->set('ContestRank' . $contest_id . 'timedata', json_encode($restimedata));
-        $redis4->set('ContestRank' . $contest_id . 'echartsrank', json_encode($resdata));
-        $redis4->del($lockoneecharts);
-        return json(['peopledata' => $respeople, 'timedata' => $restimedata, 'data' => $resdata, 'msg' => '加载成功']);
+        // 下达计算任务
+        Contest::sendUpdateRankMQ($contest_id);
+        return json(['code' => 1, 'peopledata' => [], 'timedata' => [], 'data' => [], 'msg' => '信息计算中！']);
     }
 
     /**
      * 计算Echarts实时排名
      * @param Request $request 请求
+     * @param bool $is_redis_queue 是否来自消息队列
      * @return void
      */
-    static public function contestIdGetRankEcharts($contest_id = 0)
+    static public function contestIdGetRankEcharts($contest_id = 0, $is_redis_queue = false)
     {
         //x轴时间分成几块
         $div = 20;
         //竞赛id
         $redis4 = Redis::connection('db4');
         $contest_db = Base::getContestData($contest_id);
-        if (!$contest_db) {
+        if (!$contest_db || $contest_db->type == 'OI') {
             return;
-        }
+        }      
         //判断竞赛是否结束
         $begintime = strtotime($contest_db->begin);
         $endtime = strtotime($contest_db->end);
@@ -1668,6 +1472,7 @@ class Contest
         $redis30->del(Base::$redis_contest_code_list_key_name . $contest_id);
         $redis32 = Redis::connection('db32');
         $redis32->del($contest_id);
+        Contest::sendUpdateRankMQ($contest_id);
         return json(['code' => 1, 'msg' => '该竞赛缓存清理完成！']);
     }
 

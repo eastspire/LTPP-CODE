@@ -2,8 +2,8 @@
 /*
  * @Author: SQS 1491579574@qq.com
  * @Date: 2023-06-02 11:58:18
- * @LastEditors: 18855190718 1491579574@qq.com
- * @LastEditTime: 2023-08-22 18:30:18
+ * @LastEditors: wmzn-ltpp 1491579574@qq.com
+ * @LastEditTime: 2023-11-13 14:19:38
  * @FilePath: \LTPP-CODE\app\queue\redis\ContestRank.php
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
@@ -25,8 +25,8 @@ class ContestRank implements Consumer
     {
         try {
             $contest_id = $data['contest_id'] ?? 0;
+            Contest::contestIdGetRankEcharts($contest_id, true);
             Contest::contestIdGetRank($contest_id, true);
-            Contest::contestIdGetRankEcharts($contest_id);
         } catch (Exception $e) {
             return;
         }

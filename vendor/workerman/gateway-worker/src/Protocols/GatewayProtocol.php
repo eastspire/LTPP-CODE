@@ -79,6 +79,9 @@ class GatewayProtocol
     // 根据uid获取绑定的clientid
     const CMD_GET_CLIENT_ID_BY_UID = 15;
 
+    // 批量获取uid列表批量获取绑定的clientid
+    const CMD_BATCH_GET_CLIENT_ID_BY_UID = 16;
+
     // 加入组
     const CMD_JOIN_GROUP = 20;
 
@@ -201,14 +204,20 @@ class GatewayProtocol
             if ($data['flag'] & self::FLAG_BODY_IS_SCALAR) {
                 $data['body'] = substr($buffer, self::HEAD_LEN + $data['ext_len']);
             } else {
-                $data['body'] = unserialize(substr($buffer, self::HEAD_LEN + $data['ext_len']));
+                // 防止反序列化成类实例
+                try {
+                    $data['body'] = unserialize(substr($buffer, self::HEAD_LEN + $data['ext_len']), ['allowed_classes' => false]);
+                } catch (\Throwable $e) {}
             }
         } else {
             $data['ext_data'] = '';
             if ($data['flag'] & self::FLAG_BODY_IS_SCALAR) {
                 $data['body'] = substr($buffer, self::HEAD_LEN);
             } else {
-                $data['body'] = unserialize(substr($buffer, self::HEAD_LEN));
+                // 防止反序列化成类实例
+                try {
+                    $data['body'] = unserialize(substr($buffer, self::HEAD_LEN), ['allowed_classes' => false]);
+                } catch (\Throwable $e) {}
             }
         }
         return $data;
