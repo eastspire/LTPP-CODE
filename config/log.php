@@ -2,8 +2,8 @@
 /*
  * @Author: SQS 1491579574@qq.com
  * @Date: 2023-05-23 21:28:12
- * @LastEditors: 18855190718 1491579574@qq.com
- * @LastEditTime: 2023-09-15 15:46:42
+ * @LastEditors: wmzn-ltpp 1491579574@qq.com
+ * @LastEditTime: 2023-11-13 13:45:27
  * @FilePath: \LTPP-CODE\config\log.php
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
@@ -29,8 +29,7 @@ return [
                 'class' => Monolog\Handler\RotatingFileHandler::class,
                 'constructor' => [
                     runtime_path() . '/logs/LTPP.log',
-                    366,
-                        //$maxFiles
+                    366, //$maxFiles
                     Monolog\Logger::DEBUG,
                 ],
                 'formatter' => [
