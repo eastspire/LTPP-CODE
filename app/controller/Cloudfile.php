@@ -5,8 +5,6 @@ namespace app\controller;
 use Exception;
 use support\Request;
 use Tinywan\Jwt\JwtToken;
-use support\Db;
-use support\Redis;
 
 class Cloudfile
 {
@@ -246,7 +244,7 @@ class Cloudfile
      * 创建用户文件夹
      * @param string $path 文件路径
      */
-    protected function creatFile($path)
+    static public function creatFile($path)
     {
         Base::judgeCreatPath($path);
         $helptext = fopen($path . '/' . Base::Base64Encode('README') . '.txt', "w");
@@ -505,19 +503,9 @@ class Cloudfile
      */
     protected function getAllFileSizeLimit()
     {
-        $redis5 = Redis::connection('db5');
-        $usercloudfilememory = 50;
-        if ($redis5->get('usercloudfilememory')) {
-            $usercloudfilememory = $redis5->get('usercloudfilememory');
-        } else {
-            $usercloudfilememory = Db::table('setting')
-                ->orderBy('id', 'desc')
-                ->first();
-            if (!$usercloudfilememory) {
-                return 50;
-            }
-            $usercloudfilememory = $usercloudfilememory->usercloudfilememory;
-            $redis5->set('usercloudfilememory', $usercloudfilememory);
+        $usercloudfilememory = Base::getSettingKeyData('usercloudfilememory');
+        if (!$usercloudfilememory) {
+            $usercloudfilememory = 50;
         }
         // 换算成字节
         $usercloudfilememory = $usercloudfilememory * 1024 * 1024;
@@ -636,7 +624,7 @@ class Cloudfile
                 $name = md5($my_aid . time());
                 if ($this->dfs($path) == 0) {
                     //路径下无文件，为了确保可以压缩，新建一个文件
-                    $this->creatfile($path);
+                    Cloudfile::creatFile($path);
                 }
                 $tempath = '/tmp/' . $my_uid . '/' . md5(time());
                 Base::judgeCreatPath($tempath);
@@ -714,7 +702,7 @@ class Cloudfile
             } else {
                 mkdir($path, 0666, true);
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return json(['code' => -1, 'msg' => '创建失败！']);
         }
         return json(['code' => 1, 'msg' => '创建成功！']);

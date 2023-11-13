@@ -96,8 +96,12 @@ class Register extends Email
             return json(['code' => -3, 'msg' => '验证码错误！30秒后可再次尝试！']);
         }
         $my_aid = Base::insertToDb('user', $data);
-        Base::updateUserDataRedis($my_aid);
         if ($my_aid) {
+            Base::updateUserDataRedis($my_aid);
+            // 云盘创建README文件
+            $my_uid = Base::getUidById($my_aid);
+            $readme_file_path = Base::$LTPP_public_path . Cloudfile::$cloudfile_root_path . $my_uid;
+            Cloudfile::creatFile($readme_file_path);
             $offline = (int) Base::getSettingKeyData('offline');
             if ($offline == 0) {
                 $Zcontent = '您的账号：';
