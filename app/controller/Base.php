@@ -2685,7 +2685,7 @@ class Base
             ->where('id', $my_aid)
             ->increment('money', Base::$ac_money);
         Base::updateUserDataRedis($my_aid);
-        Robot::sendChatToOneUserMsg($my_aid, '恭喜您使用' . $userlanguage . '编程语言AC【' . $problem_name . '】，奖励您' . Base::$ac_money . '个学虫币！（北京时间：' . date('Y-m-d H:i:s', time()) . '）');
+        Robot::sendChatToOneUserMsg($my_aid, '恭喜您使用' . $userlanguage . '编程语言AC **【' . $problem_name . '】** ，奖励您 **' . Base::$ac_money . '** 个学虫币！（北京时间： **' . date('Y-m-d H:i:s', time()) . '** ）');
     }
 
     /**
@@ -2704,12 +2704,13 @@ class Base
             ->increment('money', Base::$ak_money);
         Base::updateUserDataRedis($my_aid);
         $title = 'LTPP竞赛AK通知';
-        $content = '恭喜您在LTPP平台的【' . $contestdb->name . '】中AK，给予' . Base::$ak_money . '学虫币奖励（北京时间：' . date('Y-m-d H:i:s', time()) . '）';
-        Robot::sendChatToOneUserMsgAndEmail($my_aid, $content);
+        $content_robot = '恭喜您在LTPP平台的 **【' . $contestdb->name . '】** 中AK，给予 **' . Base::$ak_money . '** 学虫币奖励（北京时间： **' . date('Y-m-d H:i:s', time()) . '** ）';
+        $content_email = '恭喜您在LTPP平台的【' . $contestdb->name . '】中AK，给予' . Base::$ak_money . '学虫币奖励（北京时间：' . date('Y-m-d H:i:s', time()) . '）';
+        Robot::sendChatToOneUserMsg($my_aid, $content_robot);
         RedisQueue::send(Base::$redis_queue_send_mail_name, [
             'to' => $my->email,
             'title' => $title,
-            'content' => $content
+            'content' => $content_email
         ]);
     }
 
