@@ -3,7 +3,7 @@
  * @Author: SQS 1491579574@qq.com
  * @Date: 2023-06-02 11:58:18
  * @LastEditors: wmzn-ltpp 1491579574@qq.com
- * @LastEditTime: 2023-11-13 13:39:25
+ * @LastEditTime: 2023-11-14 07:25:10
  * @FilePath: \LTPP-CODE\app\queue\redis\RobotContest.php
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
@@ -412,7 +412,6 @@ class RobotContest implements Consumer
             }
             RobotContest::$lock = true;
             $now = date('Y-m-d H:i:s', time());
-            $this_contest_is_end = false;
             $one_contest_id = $data['contest_id'] ?? 0;
             $redis27 = Redis::connection('db27');
             if (\app\queue\redis\RobotContest::judgeHasJudgeContest($redis27, $one_contest_id)) {
