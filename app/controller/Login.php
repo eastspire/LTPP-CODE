@@ -85,7 +85,8 @@ class Login
 
         $user = [
             // 这里必须是一个全局抽象唯一id
-            'id' => Base::getChatUserUidById($user_db->id),
+            // 因为即时通讯列表用户ID要使用一致算法加密，所以得用Base::getChatUserUidById
+            'id' => Base::getChatUserUidById($user_db->id)
         ];
 
         $authorization = JwtToken::generateToken($user)['access_token'];

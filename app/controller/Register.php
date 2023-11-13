@@ -99,7 +99,7 @@ class Register extends Email
         if ($my_aid) {
             Base::updateUserDataRedis($my_aid);
             // 云盘创建README文件
-            $my_uid = Base::getUidById($my_aid);
+            $my_uid = Base::getChatUserUidById($my_aid);
             $readme_file_path = Base::$LTPP_public_path . Cloudfile::$cloudfile_root_path . $my_uid;
             Cloudfile::creatFile($readme_file_path);
             $offline = (int) Base::getSettingKeyData('offline');
