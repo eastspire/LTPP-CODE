@@ -3,7 +3,7 @@
  * @Author: 18855190718 1491579574@qq.com
  * @Date: 2023-01-19 23:50:37
  * @LastEditors: wmzn-ltpp 1491579574@qq.com
- * @LastEditTime: 2023-11-13 14:03:25
+ * @LastEditTime: 2023-11-13 17:12:28
  * @FilePath: \LTPP-CODE\app\controller\Contest.php
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
@@ -1193,7 +1193,7 @@ class Contest
         $contest_db = Base::getContestData($contest_id);
         if (!$contest_db || $contest_db->type == 'OI') {
             return;
-        }      
+        }
         //判断竞赛是否结束
         $begintime = strtotime($contest_db->begin);
         $endtime = strtotime($contest_db->end);
@@ -1915,12 +1915,13 @@ class Contest
             $begintime = strtotime($contest_db->begin);
             $endtime = strtotime($contest_db->end);
             $js = Base::getJs('rank');
-            // OI赛制
-            if ($contest_db->type == 'OI' && time() <= $endtime) {
-                return '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><title>LTPP【' . $contest_db->name . '】竞赛排名</title><style>' . $msg_css . '</style><script>' . $js . '</script></head><body><h1>OI赛制竞赛结束可查看排名</h1></body></html>';
-            }
+            // 未开始
             if (time() < $begintime) {
                 return '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><title>LTPP【' . $contest_db->name . '】竞赛排名</title><style>' . $msg_css . '</style><script>' . $js . '</script></head><body><h1>竞赛开始可查看排名</h1></body></html>';
+            }
+            // OI赛制
+            if ($contest_db->type == 'OI' && time() <= $endtime && !$is_redis_queue) {
+                return '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><title>LTPP【' . $contest_db->name . '】竞赛排名</title><style>' . $msg_css . '</style><script>' . $js . '</script></head><body><h1>OI赛制竞赛结束可查看排名</h1></body></html>';
             }
             $redis4 = Redis::connection('db4');
             $key = 'Contest' . $contest_id . 'HtmlRank';
@@ -1980,6 +1981,12 @@ class Contest
             $pro_index = 1;
             $problems_len = sizeof($problems);
             $rank_css = Base::getCss('table');
+            $js = Base::getJs('rank');
+            $endtime = strtotime($contest_db->end);
+            // OI赛制HTML排名竞赛未结束不显示
+            if ($contest_db->type == 'OI' && time() <= $endtime) {
+                return '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><title>LTPP【' . $contest_db->name . '】竞赛排名</title><style>' . $rank_css . '</style><script>' . $js . '</script></head><body><h1>OI赛制竞赛结束可查看排名</h1></body></html>';
+            }
             if ($contest_db->type == 'ACM' || $contest_db->type == 'SQS') {
                 $table_title = '<th>排名</th><th>用户</th><th>总AC数</th><th>总用时</th>';
                 foreach ($problems as &$tem) {
@@ -2029,7 +2036,6 @@ class Contest
                     $table_body = '<tr>' . $table_body . '</tr>';
                 }
             }
-            $js = Base::getJs('rank');
             $html = '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><title>LTPP【' . $contest_db->name . '】竞赛排名</title><style>' . $rank_css . '</style><script>' . $js . '</script></head><body><table class="CONTEST"><tr><th class="CONTEST-NAME" colspan="' . ($problems_len + 4) . '">LTPP【' . $contest_db->name . '】实时竞赛排名</th></tr>' . $table_title . $table_body . '</body></html>';
         } catch (Exception $e) {
             return $html;
