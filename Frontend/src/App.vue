@@ -20,7 +20,7 @@ export default {
   name: "app",
   data() {
     return {
-      version: '1.6.2',
+      version: "1.6.2",
     };
   },
   beforeCreate() {
@@ -413,18 +413,6 @@ video:focus {
     -30vmax -10vmax, 50vmax 50vmax;
 
   animation: 4s defaultbkmove linear infinite;
-}
-
-.default-bk::after {
-  content: "";
-  display: block;
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
 }
 
 @keyframes defaultbkmove {
