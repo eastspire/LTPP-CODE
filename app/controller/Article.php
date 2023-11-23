@@ -330,6 +330,7 @@ class Article extends Image
                 ->where('collection', '>', 0)
                 ->lockForUpdate()
                 ->decrement('collection', 1);
+            Base::updateArticleDataRedis($article_id);
             return \json(['code' => 1, 'msg' => '取消收藏成功']);
         }
         return \json(['code' => 0, 'msg' => "您没有收藏该文章，无法取消收藏"]);
@@ -647,7 +648,8 @@ class Article extends Image
         if ($tem == "") {
             $tabledata['image'] = Image::randimage();
         }
-        Base::insertToDb('article', $tabledata);
+        $article_id = Base::insertToDb('article', $tabledata);
+        Base::updateArticleDataRedis($article_id);
         return json(['code' => 1, 'msg' => '发布成功']);
     }
 
@@ -836,6 +838,7 @@ class Article extends Image
                 ->where('id', $article_id)
                 ->lockForUpdate()
                 ->increment('fabulous', 1);
+            Base::updateArticleDataRedis($article_id);
             return \json(['code' => 1, 'msg' => '点赞成功']);
         }
         return \json(['code' => '-1', 'msg' => '点赞失败']);
@@ -914,8 +917,8 @@ class Article extends Image
                     'fanuserid' => 0,
                     'time' => date('Y-m-d H:i:s', time())
                 ]);
-
             }
+            Base::updateArticleDataRedis($article_id);
             return \json(['code' => 1, 'msg' => '收藏成功']);
         }
 
