@@ -714,7 +714,7 @@ class PrivateRobot
             Base::updateUserDataRedis($userid);
             $user_data = Base::getUserData($userid);
             $money = rtrim(rtrim($user_data->money, '0'), '.');
-            $res_msg = "\n\n" . '(本次提问花费：' . PrivateRobot::$one_msg_cost . '元，当前账户余额：' . $money . '学虫币)';
+            $res_msg = "\n\n" . '(本次提问花费：' . PrivateRobot::$one_msg_cost . '学虫币，当前账户余额：' . $money . '学虫币)';
         }
         return $res_msg;
     }
