@@ -404,10 +404,9 @@ class User
 
     /**
      * 更新在线
-     * @param Request $request 请求
      * @return void $res json
      */
-    public function trueOnline(Request $request)
+    public function trueOnline()
     {
         $my_uid = JwtToken::getCurrentId();
         $my_aid = Base::getIdByUid($my_uid);
@@ -420,10 +419,9 @@ class User
 
     /**
      * 更新离线
-     * @param Request $request 请求
      * @return void $res json
      */
-    public function falseOnline(Request $request)
+    public function falseOnline()
     {
         $my_uid = JwtToken::getCurrentId();
         $my_aid = Base::getIdByUid($my_uid);
@@ -1629,5 +1627,4 @@ class User
         Base::dataToSafe($res);
         return \json(['code' => 1, 'data' => $res]);
     }
-}
-;
+};
