@@ -3,7 +3,7 @@
  * @Author: SQS 1491579574@qq.com
  * @Date: 2023-06-02 11:58:18
  * @LastEditors: wmzn-ltpp 1491579574@qq.com
- * @LastEditTime: 2023-12-02 21:52:43
+ * @LastEditTime: 2023-12-02 22:39:06
  * @FilePath: \LTPP-CODE\app\queue\redis\RobotContest.php
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
@@ -82,11 +82,11 @@ class RobotContest implements Consumer
      * 获取CodeHistory代码ID
      * @param int $contest_begin
      * @param int $problem_id
-     * @param int $page
+     * @param int $page 分页的页码（从1开始）
      * @param int $my_id
      * @return int $contestrank_id
      */
-    private function getCodeFromCodeHistory($contest_begin, $problem_id = 0, $page = 1, $my_id = 0)
+    private function getCodeFromCodeHistory($contest_begin = null, $problem_id = 0, $page = 1, $my_id = 0)
     {
         if (!$contest_begin || !$problem_id || !$my_id) {
             return 0;
@@ -102,7 +102,7 @@ class RobotContest implements Consumer
                 ->count();
             if ($all) {
                 if ($page > $all) {
-                    $page = ($page % $all) + 1;
+                    $page = $page % $all;
                 }
                 $db = Db::table('codehistory')
                     ->where('problemid', $problem_id)
@@ -126,7 +126,7 @@ class RobotContest implements Consumer
             ->count();
         if ($all) {
             if ($page > $all) {
-                $page = ($page % $all) + 1;
+                $page = $page % $all;
             }
             $db = Db::table('codehistory')
                 ->where('problemid', $problem_id)
@@ -151,7 +151,7 @@ class RobotContest implements Consumer
         $contestrank_db = null;
         if ($all) {
             if ($page > $all) {
-                $page = ($page % $all) + 1;
+                $page = $page % $all;
             }
             $contestrank_db = Db::table('codehistory')
                 ->where('isdel', 0)

@@ -3,7 +3,7 @@
  * @Author: SQS 1491579574@qq.com
  * @Date: 2023-06-02 11:58:18
  * @LastEditors: wmzn-ltpp 1491579574@qq.com
- * @LastEditTime: 2023-10-16 19:50:05
+ * @LastEditTime: 2023-12-02 22:31:21
  * @FilePath: \LTPP-CODE\app\queue\redis\WebcodeRun.php
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
@@ -39,7 +39,6 @@ class WebcodeRun implements Consumer
             Base::saveCodeJson($code_id, $json);
         } catch (Exception $e) {
             Robot::sendChatToOneUserMsg(Base::getRootId(), 'WebcodeRun消息队列运行出错:' . $e->getMessage());
-            return;
         }
     }
 }

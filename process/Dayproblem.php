@@ -28,6 +28,7 @@ class Dayproblem extends Robot
             try {
                 $db = Db::table('oj')
                     ->where('isdel', 0)
+                    ->select('id')
                     ->inRandomOrder()
                     ->pluck('id');
                 $total = Db::table('oj')
@@ -85,6 +86,7 @@ class Dayproblem extends Robot
             try {
                 $db = Db::table('oj')
                     ->where('isdel', 0)
+                    ->select('id')
                     ->inRandomOrder()
                     ->pluck('id');
                 $total = Db::table('oj')

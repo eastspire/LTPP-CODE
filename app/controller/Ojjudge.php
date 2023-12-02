@@ -122,7 +122,6 @@ class Ojjudge
         $msg,
         &$db,
         $type,
-        &$redis4,
         &$my_aid,
         &$problem_id,
         &$time,
@@ -444,7 +443,7 @@ class Ojjudge
         $compiler_res_json = Base::compiler($userlanguage, $code, $filepath, $runcodefilepath);
 
         if (!isset($compiler_res_json['code']) || $compiler_res_json['code'] != 1) {
-            Ojjudge::updateCodeStatus($code_id, '运行出错', 0, 0);
+            Ojjudge::updateCodeStatus($code_id, '编译出错', 0, 0);
             return $compiler_res_json;
         }
 
@@ -608,11 +607,11 @@ class Ojjudge
                 }
                 switch ($status) {
                     case Base::$judge_code_tle:
-                        return Ojjudge::error($code_id, $filepath, $testin, 'TLE', $db, $type, $redis4, $my_aid, $problem_id, $time, $maxtime, $maxmemory, $code, $userlanguage, $contest_id, $begintime, $endtime);
+                        return Ojjudge::error($code_id, $filepath, $testin, 'TLE', $db, $type, $my_aid, $problem_id, $time, $maxtime, $maxmemory, $code, $userlanguage, $contest_id, $begintime, $endtime);
                     case Base::$judge_code_mle:
-                        return Ojjudge::error($code_id, $filepath, $testin, 'MLE', $db, $type, $redis4, $my_aid, $problem_id, $time, $maxtime, $maxmemory, $code, $userlanguage, $contest_id, $begintime, $endtime);
+                        return Ojjudge::error($code_id, $filepath, $testin, 'MLE', $db, $type, $my_aid, $problem_id, $time, $maxtime, $maxmemory, $code, $userlanguage, $contest_id, $begintime, $endtime);
                     case Base::$judge_code_re:
-                        return Ojjudge::error($code_id, $filepath, $testin, 'RE', $db, $type, $redis4, $my_aid, $problem_id, $time, $maxtime, $maxmemory, $code, $userlanguage, $contest_id, $begintime, $endtime);
+                        return Ojjudge::error($code_id, $filepath, $testin, 'RE', $db, $type, $my_aid, $problem_id, $time, $maxtime, $maxmemory, $code, $userlanguage, $contest_id, $begintime, $endtime);
                     default:
                         break;
                 }
