@@ -1522,23 +1522,19 @@ class User
         if (!isset($user_uid) || empty($user_uid)) {
             return \json(['code' => -1, 'msg' => '查询失败']);
         }
-        $info = Db::table('user')
-            ->where('id', $user_id)
-            ->where('isdel', 0)
-            ->select(User::$bk_user_db_key)
-            ->first();
+        $info = Base::getUserData($user_id);
         if (!$info) {
             return \json(['code' => -1, 'msg' => '用户不存在']);
         }
         $isroot = Base::judgeIsRoot($my_aid);
-        unset($user_data->isdel);
-        unset($user_data->bkimage);
-        unset($user_data->bkvideo);
-        unset($user_data->isusemusic);
+        unset($info->isdel);
+        unset($info->bkimage);
+        unset($info->bkvideo);
+        unset($info->isusemusic);
         if (!$isroot) {
-            unset($user_data->musiclovelistid);
-            unset($user_data->musicuid);
-            unset($user_data->password);
+            unset($info->musiclovelistid);
+            unset($info->musicuid);
+            unset($info->password);
             $info->password = '******';
             $info->grade = '******';
             $info->email = '******';
