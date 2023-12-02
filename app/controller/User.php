@@ -1450,7 +1450,7 @@ class User
         $info = Db::table('user')
             ->where('isdel', 0)
             ->select(User::$user_db_key)
-            ->orderBy('id', 'desc')
+            ->orderBy('id', 'asc')
             ->select(User::$user_db_key)
             ->paginate($limit, '*', 'page', $page)
             ->items();
@@ -1488,6 +1488,7 @@ class User
         $info = Db::table('user')
             ->where('name', 'like', '%' . $key . '%')
             ->where('isdel', 0)
+            ->orderBy('id', 'asc')
             ->select(User::$user_db_key)
             ->paginate($limit, '*', 'page', $page)
             ->items();
