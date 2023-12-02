@@ -83,11 +83,11 @@ class RobotContest implements Consumer
      * 获取CodeHistory代码ID
      * @param int $problem_id
      * @param int $page
-     * @param int $my_id
      * @param int $contest_begin
+     * @param int $my_id
      * @return int $contestrank_id
      */
-    private function getCodeFromCodeHistory($problem_id = 0, $page = 1, $my_id = 0, $contest_begin)
+    private function getCodeFromCodeHistory($problem_id = 0, $page = 1, $contest_begin, $my_id = 0)
     {
         $can_total_score = (rand(0, 100) % 10 <= 3);
         $order_by = rand(0, 1) ? 'asc' : 'desc';
@@ -353,7 +353,7 @@ class RobotContest implements Consumer
                         }
                         if (rand(0, 1)) {
                             // 从代码历史查询记录，没有记录会自带生成一个记录
-                            $code_id = $this->getCodeFromCodeHistory($one_problem_id, $one_person_index + 1, $one_person_id, $contest_db->begin);
+                            $code_id = $this->getCodeFromCodeHistory($one_problem_id, $one_person_index + 1, $contest_db->begin, $one_person_id);
                             $this->addCodeFromCodeHistory($one_contest_id, $code_id, $one_person_id);
                             Contest::sendUpdateRankMQ($one_contest_id);
                         }
