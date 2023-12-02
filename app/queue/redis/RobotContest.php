@@ -336,7 +336,7 @@ class RobotContest implements Consumer
             $problem_length = max(1, sizeof($problem_list));
 
             // 提交用户数目
-            $people_length = max(1, (int)ceil($contest_run_time_seconds / $problem_length));
+            $people_length = max(1, (int)ceil($contest_run_time_seconds / ($problem_length * $submit_times)));
             // 每题最少休眠秒数，注意向上取整
             $one_sleep_min_time = (int) ceil($contest_run_time_seconds / ($people_length * $problem_length * $submit_times * $problem_length));
             // 每题休眠秒数，呈梯度上升
