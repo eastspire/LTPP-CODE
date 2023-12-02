@@ -834,7 +834,7 @@ class User
     }
 
     /**
-     * 加载用户列表
+     * 后台加载用户列表
      * @param Request $request 请求
      * @return string $res json
      */
@@ -847,7 +847,7 @@ class User
             ->where('isdel', 0)
             ->select(User::$user_db_key)
             ->orderBy('grade', 'desc')
-            ->orderBy('id', 'desc')
+            ->orderBy('id', 'asc')
             ->paginate($limit, '*', 'page', $page)
             ->items();
         $allnum = Db::table('user')
@@ -1435,7 +1435,7 @@ class User
     }
 
     /**
-     * 全部用户
+     * 公开全站用户列表
      * @param Request $request 请求
      * @return string $res json
      */
@@ -1450,8 +1450,7 @@ class User
         $info = Db::table('user')
             ->where('isdel', 0)
             ->select(User::$user_db_key)
-            ->orderBy('online', 'desc')
-            ->orderBy('fans', 'desc')
+            ->orderBy('id', 'desc')
             ->select(User::$user_db_key)
             ->paginate($limit, '*', 'page', $page)
             ->items();
