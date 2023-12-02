@@ -1473,7 +1473,8 @@ class Base
             strripos($dir, '/video/') === false &&
             strripos($dir, '/homephoto/') === false &&
             strripos($dir, '/contest/') === false &&
-            strripos($dir, '/contestcode/') === false
+            strripos($dir, '/contestcode/') === false &&
+            strripos($dir, Base::$LTPP_logs_path) === false
         ) {
             return false;
         }
@@ -2800,6 +2801,7 @@ class Base
             exec('cp -f /home/LTPP/InstallMust/JudgeServer/judge ' . Base::$judge_install_path . ' 2>&1', $out);
             Base::chmodFile('/JudgeServer', 0555);
             if (!empty($out)) {
+                $res = '';
                 foreach ($out as $tem) {
                     $res .= $tem . "\n";
                 }
@@ -3106,5 +3108,4 @@ class Base
         }
         return '';
     }
-}
-;
+};
