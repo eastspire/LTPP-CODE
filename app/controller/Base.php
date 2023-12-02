@@ -746,7 +746,7 @@ class Base
      * LTPP日志文件夹绝对路径
      * @var string $LTPP_logs_path LTPP日志文件夹绝对路径
      */
-    static $LTPP_logs_path = '/home/LTPP/logs/';
+    static $LTPP_logs_path = '/home/LTPP/logs/logs/';
 
     /**
      * LTPP公开文件夹绝对路径
