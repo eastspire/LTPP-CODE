@@ -3,7 +3,7 @@
  * @Author: 18855190718 1491579574@qq.com
  * @Date: 2023-04-07 19:48:54
  * @LastEditors: wmzn-ltpp 1491579574@qq.com
- * @LastEditTime: 2023-11-13 18:00:12
+ * @LastEditTime: 2023-12-02 23:42:40
  * @FilePath: \LTPP-CODE\config\server.php
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
@@ -33,7 +33,7 @@ return [
     'group' => '',
     'reusePort' => false,
     'event_loop' => '',
-    'stop_timeout' => 2,
+    'stop_timeout' => 1,
     'pid_file' => runtime_path() . '/LTPP.pid',
     'status_file' => runtime_path() . '/LTPP.status',
     'stdout_file' => runtime_path() . '/logs/stdout.log',

@@ -31,6 +31,6 @@ return [
     'default_timezone' => 'Asia/Shanghai',
     'request_class' => Request::class,
     'public_path' => app\controller\Base::$LTPP_public_path,
-    'runtime_path' => app\controller\Base::$LTPP_logs_path,
+    'runtime_path' => app\controller\Base::$LTPP_runtime_path,
     'controller_suffix' => '',
 ];
