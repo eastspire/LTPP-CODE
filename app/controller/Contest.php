@@ -1242,7 +1242,7 @@ class Contest
         $smalltime = ($numendtime - $numbegintime) / $div;
 
         //全场竞赛全程时间x轴坐标数组（时间戳）
-        for ($i = $numbegintime; $i <= $numendtime; ) {
+        for ($i = $numbegintime; $i <= $numendtime;) {
             $timearray[] = $i;
             $i += $smalltime;
         }
@@ -1256,7 +1256,7 @@ class Contest
             $smalltime = ($numendtime - $numbegintime) / $div;
             //时间x轴坐标数组（格式化）
             $restimedata = array();
-            for ($i = $numbegintime; $i <= $numendtime; ) {
+            for ($i = $numbegintime; $i <= $numendtime;) {
                 $temtime = date('Y-m-d H:i:s', $i);
                 $restimedata[] = $temtime;
                 $i += $smalltime;
@@ -1285,7 +1285,7 @@ class Contest
         //没有用户提交代码初始化
         //时间x轴坐标数组（格式化）
         $restimedata = array();
-        for ($i = $numbegintime; $i <= $numendtime; ) {
+        for ($i = $numbegintime; $i <= $numendtime;) {
             $temtime = date('Y-m-d H:i:s', (int) $i);
             $restimedata[] = $temtime;
             $i += $smalltime;
@@ -1352,7 +1352,7 @@ class Contest
         }
         $restimedata = array();
         //时间x轴坐标数组（格式化）
-        for ($i = $numbegintime; $i <= $numendtime; ) {
+        for ($i = $numbegintime; $i <= $numendtime;) {
             $temtime = date('Y-m-d H:i:s', (int) $i);
             $restimedata[] = $temtime;
             $i += $smalltime;
@@ -1830,7 +1830,6 @@ class Contest
         $url = Base::$GLOBlinuxurl . '/' . $path . $file_name;
         $redis32->del($contest_id);
         return json(['code' => 1, 'url' => $url, 'msg' => '查重完成']);
-
     }
 
     /**
@@ -2131,11 +2130,7 @@ class Contest
             ->get();
         $problemIndex = [];
         foreach ($prolist as &$tem) {
-            $problem_db = Db::table('oj')
-                ->where('id', $tem->problemid)
-                ->where('isdel', 0)
-                ->select('problemName')
-                ->first();
+            $problem_db = Base::getOjData($tem->problemid);
             if (!$problem_db) {
                 continue;
             }
@@ -2373,11 +2368,7 @@ class Contest
             ->get();
         $problemIndex = [];
         foreach ($prolist as &$tem) {
-            $problem_db = Db::table('oj')
-                ->where('id', $tem->problemid)
-                ->where('isdel', 0)
-                ->select('problemName')
-                ->first();
+            $problem_db = Base::getOjData($tem->problemid);
             if (!$problem_db) {
                 continue;
             }
