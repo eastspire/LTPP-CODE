@@ -3,7 +3,7 @@
  * @Author: SQS 1491579574@qq.com
  * @Date: 2023-06-02 11:58:18
  * @LastEditors: wmzn-ltpp 1491579574@qq.com
- * @LastEditTime: 2023-12-02 21:24:27
+ * @LastEditTime: 2023-12-02 21:52:43
  * @FilePath: \LTPP-CODE\app\queue\redis\RobotContest.php
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
@@ -69,8 +69,7 @@ class RobotContest implements Consumer
                 ->where('id', $one_person)
                 ->where('email', $robot_email)
                 ->where('isdel', 0)
-                ->select('email')
-                ->first();
+                ->exists();
             if ($user) {
                 $res[] = $one_person;
                 --$num;
@@ -81,14 +80,17 @@ class RobotContest implements Consumer
 
     /**
      * 获取CodeHistory代码ID
+     * @param int $contest_begin
      * @param int $problem_id
      * @param int $page
-     * @param int $contest_begin
      * @param int $my_id
      * @return int $contestrank_id
      */
-    private function getCodeFromCodeHistory($problem_id = 0, $page = 1, $contest_begin, $my_id = 0)
+    private function getCodeFromCodeHistory($contest_begin, $problem_id = 0, $page = 1, $my_id = 0)
     {
+        if (!$contest_begin || !$problem_id || !$my_id) {
+            return 0;
+        }
         $can_total_score = (rand(0, 100) % 10 <= 3);
         $order_by = rand(0, 1) ? 'asc' : 'desc';
         if ($can_total_score) {
@@ -109,9 +111,10 @@ class RobotContest implements Consumer
                     ->where('isdel', 0)
                     ->select('id')
                     ->orderBy('id', $order_by)
-                    ->first();
+                    ->paginate(1, '*', 'page', $page)
+                    ->items();
                 if ($db) {
-                    return $db->id;
+                    return $db[0]->id;
                 }
             }
         }
@@ -132,9 +135,10 @@ class RobotContest implements Consumer
                 ->where('isdel', 0)
                 ->select('id')
                 ->orderBy('id', $order_by)
-                ->first();
+                ->paginate(1, '*', 'page', $page)
+                ->items();
             if ($db) {
-                return $db->id;
+                return $db[0]->id;
             }
         }
 
@@ -153,9 +157,10 @@ class RobotContest implements Consumer
                 ->where('isdel', 0)
                 ->orderBy('id', $order_by)
                 ->select('code', 'contestid', 'language')
-                ->first();
+                ->paginate(1, '*', 'page', $page)
+                ->items();
             if ($contestrank_db) {
-                $language = $contestrank_db->language;
+                $language = $contestrank_db[0]->language;
             }
         }
         $id = Db::table('codehistory')
@@ -167,8 +172,8 @@ class RobotContest implements Consumer
                 'time' => $now,
                 'usetime' => rand(10, 100),
                 'usememory' => rand(10, 100),
-                'code' => $contestrank_db ? $contestrank_db->code : '',
-                'contestid' => $contestrank_db ? $contestrank_db->contestid : 0,
+                'code' => $contestrank_db ? $contestrank_db[0]->code : '',
+                'contestid' => $contestrank_db ? $contestrank_db[0]->contestid : 0,
             ]);
         return $id;
     }
@@ -353,7 +358,7 @@ class RobotContest implements Consumer
                         }
                         if (rand(0, 1)) {
                             // 从代码历史查询记录，没有记录会自带生成一个记录
-                            $code_id = $this->getCodeFromCodeHistory($one_problem_id, $one_person_index + 1, $contest_db->begin, $one_person_id);
+                            $code_id = $this->getCodeFromCodeHistory($contest_db->begin, $one_problem_id, $one_person_index + 1,  $one_person_id);
                             $this->addCodeFromCodeHistory($one_contest_id, $code_id, $one_person_id);
                             Contest::sendUpdateRankMQ($one_contest_id);
                         }
