@@ -367,7 +367,7 @@ class RobotContest implements Consumer
                             Contest::sendUpdateRankMQ($one_contest_id);
                         }
                         // 休眠毫秒数
-                        usleep($one_sleep_time_list[$one_problem_index] * 1000);
+                        usleep(ceil($one_sleep_time_list[$one_problem_index] * 1000));
                     }
                     if ($this_contest_is_end) {
                         break;
