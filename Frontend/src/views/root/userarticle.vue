@@ -314,7 +314,9 @@ export default {
       this.scrolllock = false;
     },
     async getlist() {
-      if (this.scrolllock) return;
+      if (this.scrolllock) {
+        return;
+      }
       const { data: res } = await this.$ajax({
         method: "post",
         url: "/Article/loadAllArticleList",
@@ -378,6 +380,7 @@ export default {
     },
 
     search() {
+      this.scrolllock = false;
       if (this.key == "" || this.key == null || this.key == undefined) {
         this.issearch = false;
         this.getlist();

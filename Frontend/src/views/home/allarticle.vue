@@ -285,6 +285,7 @@ export default {
 
     search() {
       this.loadfinish = false;
+      this.scrolllock = false;
       if (this.key == "" || this.key == null || this.key == undefined) {
         this.issearch = false;
         this.getlist();
