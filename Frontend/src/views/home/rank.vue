@@ -19,11 +19,18 @@
           >
             <el-table-column label="排名" width="80" align="center">
               <template slot-scope="scope">
-                <span
-                  style="font-weight: bold; font-size: 1.06rem"
-                  class="my-span"
-                  >{{ scope.row.index }}</span
+                <el-tooltip
+                  class="item;"
+                  effect="dark"
+                  :content="'排名：' + scope.row.index"
+                  placement="right"
                 >
+                  <span
+                    style="font-weight: bold; font-size: 1.06rem"
+                    class="my-span"
+                    >{{ scope.row.index }}</span
+                  >
+                </el-tooltip>
               </template>
             </el-table-column>
             <el-table-column label="用户名" width="220" align="center">
