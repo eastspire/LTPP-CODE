@@ -277,20 +277,21 @@
               </el-tag>
             </p>
           </div>
-          <div style="height: 1.6rem"></div>
-          <div style="margin-left: 0.66rem; margin-right: 0.66rem">
+          <div
+            v-show="
+              resuserrank.length > 0 &&
+              isbegin &&
+              isshow &&
+              isjoin &&
+              (isacm ||
+                is_my_contest ||
+                issqs ||
+                isioi ||
+                (isoi && show_oi_rank))
+            "
+            style="margin: 1rem 0.66rem"
+          >
             <el-alert
-              v-show="
-                resuserrank.length > 0 &&
-                isbegin &&
-                isshow &&
-                isjoin &&
-                (isacm ||
-                  is_my_contest ||
-                  issqs ||
-                  isioi ||
-                  (isoi && show_oi_rank))
-              "
               title="我的排名："
               type="success"
               effect="dark"
@@ -300,8 +301,6 @@
             >
             </el-alert>
           </div>
-          <div style="height: 1.6rem"></div>
-
           <div
             v-show="
               resuserrank.length > 0 &&
