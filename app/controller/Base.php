@@ -78,6 +78,7 @@ class Base
 
     /**
      * 竞赛机器人比赛开始后多久开始做题（单位：秒）
+     * @var int $robot_contest_start_after_begin_seconds
      */
     static $robot_contest_start_after_begin_seconds = 60;
 

@@ -319,7 +319,7 @@ class RobotContest implements Consumer
             // 加锁，防止机器人重复执行一场竞赛
             $this->addJudgeContest($redis27, $one_contest_id);
             // 机器人先等待，不可立马答题
-            $after_begin_sleep_seconds = Base::$robot_contest_start_after_begin_seconds - $start_seconds;
+            $after_begin_sleep_seconds = ceil(Base::$robot_contest_start_after_begin_seconds - $start_seconds);
             if ($after_begin_sleep_seconds > 0) {
                 sleep($after_begin_sleep_seconds);
             }
