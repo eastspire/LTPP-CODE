@@ -77,6 +77,11 @@ class Base
     static $no_more_msg = '到底啦！没有更多了！';
 
     /**
+     * 竞赛机器人比赛开始后多久开始做题（单位：秒）
+     */
+    static $robot_contest_start_after_begin_secons = 60;
+
+    /**
      * 判题机路径
      */
     static $judgepath = '/JudgeServer/judge';

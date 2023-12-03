@@ -3,7 +3,7 @@
  * @Author: SQS 1491579574@qq.com
  * @Date: 2023-06-02 11:58:18
  * @LastEditors: wmzn-ltpp 1491579574@qq.com
- * @LastEditTime: 2023-12-02 22:39:06
+ * @LastEditTime: 2023-12-03 22:05:26
  * @FilePath: \LTPP-CODE\app\queue\redis\RobotContest.php
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
@@ -45,12 +45,11 @@ class RobotContest implements Consumer
     }
 
     /**
-     * 获取参赛的机器人
+     * 获取参赛的机器人列表
      * @param int $contest_id
-     * @param int $num
      * @return array $res
      */
-    private function getPeopleList($contest_id = 0, $num = 0)
+    private function getPeopleList($contest_id = 0)
     {
         $res = [];
         $robot_email = Base::getRobotEmail();
@@ -59,12 +58,8 @@ class RobotContest implements Consumer
             ->where('isdel', 0)
             ->select('userid')
             ->distinct()
-            ->inRandomOrder()
             ->pluck('userid');
         foreach ($db as &$one_person) {
-            if ($num <= 0) {
-                return $res;
-            }
             $user = Db::table('user')
                 ->where('id', $one_person)
                 ->where('email', $robot_email)
@@ -72,7 +67,6 @@ class RobotContest implements Consumer
                 ->exists();
             if ($user) {
                 $res[] = $one_person;
-                --$num;
             }
         }
         return $res;
@@ -320,34 +314,44 @@ class RobotContest implements Consumer
             if (\app\queue\redis\RobotContest::judgeHasJudgeContest($redis27, $one_contest_id)) {
                 return;
             }
+            // 加锁，防止机器人重复执行一场竞赛
             $this->addJudgeContest($redis27, $one_contest_id);
             $contest_db = Base::getContestData($one_contest_id);
+            if (time() < strtotime($contest_db->begin)) {
+                // 竞赛未开始
+                return;
+            }
+            // 机器人先等待，不可立马答题
+            sleep(Base::$robot_contest_start_after_begin_secons);
             $problem_list = $this->getProblemList($one_contest_id);
+            // 题目数目
+            $problem_length = sizeof($problem_list);
+            if ($problem_length <= 0) {
+                return;
+            }
             $this_contest_is_end = false;
-            $submit_times = rand(4, 8);
-
+            // 提交次数
+            $submit_times = rand(2, 4);
             // 竞赛持续秒数
             $contest_run_time_seconds = strtotime($contest_db->end) - time();
             if ($contest_run_time_seconds < 0 || $contest_run_time_seconds > Base::$robot_contest_can_join_limit_contest_time) {
                 // 竞赛结束 或者 距离竞赛结束时间过长 不进行提交
                 return;
             }
-            // 题目数目
-            $problem_length = max(1, sizeof($problem_list));
-
             // 提交用户数目
-            $people_length = max(1, (int)ceil($contest_run_time_seconds / ($problem_length * $submit_times)));
-            // 每题最少休眠秒数，注意向上取整
-            $one_sleep_min_time = (int) ceil($contest_run_time_seconds / ($people_length * $problem_length * $submit_times * $problem_length));
-            // 每题休眠秒数，呈梯度上升
+            $people_list = $this->getPeopleList($one_contest_id);
+            $people_length = sizeof($people_list);
+            if ($people_length <= 0) {
+                return;
+            }
+            // 每题最少休眠豪秒数，注意向上取整
+            $one_sleep_min_time = $contest_run_time_seconds / ($people_length * $submit_times * $problem_length);
+            // 每题休眠豪秒数，呈梯度上升
             $one_sleep_time_list = [];
             for ($i = 1; $i <= $problem_length; ++$i) {
                 $one_sleep_time_list[] = $one_sleep_min_time * $i;
             }
-
             for ($i = 0; $i < $submit_times; ++$i) {
-                // 获取机器人列表
-                $people_list = $this->getPeopleList($one_contest_id, $people_length);
                 foreach ($problem_list as $one_problem_index => &$one_problem_id) {
                     foreach ($people_list as $one_person_index => &$one_person_id) {
                         // 先枚举用户
@@ -362,7 +366,8 @@ class RobotContest implements Consumer
                             $this->addCodeFromCodeHistory($one_contest_id, $code_id, $one_person_id);
                             Contest::sendUpdateRankMQ($one_contest_id);
                         }
-                        sleep($one_sleep_time_list[$one_problem_index]);
+                        // 休眠毫秒数
+                        usleep($one_sleep_time_list[$one_problem_index] * 1000);
                     }
                     if ($this_contest_is_end) {
                         break;
@@ -378,4 +383,4 @@ class RobotContest implements Consumer
             RobotContest::$lock = false;
         }
     }
-}
+};
