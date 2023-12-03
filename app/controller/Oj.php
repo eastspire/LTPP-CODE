@@ -249,6 +249,7 @@ class Oj
                         ->where('public', 1)
                         ->where('isdel', 0);
                 })
+                ->select(oj::$oj_list_db_key)
                 ->orderBy('id', 'asc')
                 ->paginate($limit, '*', 'page', $page)
                 ->items();
@@ -400,7 +401,6 @@ class Oj
                 return json(['code' => 1, 'data' => $data, 'msg' => '题目加载成功']);
             }
             return \json(['code' => -1, 'data' => [], 'msg' => '信息错误']);
-
         }
         $data = null;
         $data = Base::getOjData($problem_id);
@@ -549,6 +549,7 @@ class Oj
                         ->where('public', 1)
                         ->where('isdel', 0);
                 })
+                ->select(oj::$oj_list_db_key)
                 ->orderBy('id', 'asc')
                 ->paginate($limit, '*', 'page', $page)
                 ->items();
@@ -776,5 +777,4 @@ class Oj
         Base::make_zip_file_for_folder($tmp, $path); //调用方法，对要打包的根目录进行操作，并将ZipArchive的对象传递给方法
         return response('')->download($tmp);
     }
-}
-;
+};

@@ -1025,5 +1025,4 @@ class Article extends Image
         Base::dataToSafe($info);
         return json(['code' => 1, 'data' => $info]);
     }
-}
-;
+};
