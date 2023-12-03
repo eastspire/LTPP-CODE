@@ -349,7 +349,7 @@ class RobotContest implements Consumer
             // 每题休眠豪秒数，呈梯度上升
             $one_sleep_time_list = [];
             for ($i = 1; $i <= $problem_length; ++$i) {
-                $one_sleep_time_list[] = $one_sleep_min_time * $i;
+                $one_sleep_time_list[] = rand(0, 1) ? $one_sleep_min_time  : $one_sleep_min_time * $i;
             }
             for ($i = 0; $i < $submit_times; ++$i) {
                 foreach ($problem_list as $one_problem_index => &$one_problem_id) {
