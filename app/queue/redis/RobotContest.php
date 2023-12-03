@@ -3,7 +3,7 @@
  * @Author: SQS 1491579574@qq.com
  * @Date: 2023-06-02 11:58:18
  * @LastEditors: wmzn-ltpp 1491579574@qq.com
- * @LastEditTime: 2023-12-03 22:05:26
+ * @LastEditTime: 2023-12-03 22:47:17
  * @FilePath: \LTPP-CODE\app\queue\redis\RobotContest.php
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
@@ -24,8 +24,6 @@ class RobotContest implements Consumer
 {
     // 要消费的队列名
     public $queue = 'robot_contest';
-
-    static $lock = false;
 
     /**
      * 获取赛题
@@ -304,25 +302,27 @@ class RobotContest implements Consumer
     public function consume($data)
     {
         try {
-            if (RobotContest::$lock) {
-                return;
-            }
-            RobotContest::$lock = true;
             $now = date('Y-m-d H:i:s', time());
             $one_contest_id = $data['contest_id'] ?? 0;
             $redis27 = Redis::connection('db27');
+            // 判断是否加锁，防止机器人重复执行一场竞赛
             if (\app\queue\redis\RobotContest::judgeHasJudgeContest($redis27, $one_contest_id)) {
+                return;
+            }
+            $contest_db = Base::getContestData($one_contest_id);
+            // 竞赛已开始秒数
+            $start_seconds = time() - strtotime($contest_db->begin);
+            if ($start_seconds < 0) {
+                // 竞赛未开始
                 return;
             }
             // 加锁，防止机器人重复执行一场竞赛
             $this->addJudgeContest($redis27, $one_contest_id);
-            $contest_db = Base::getContestData($one_contest_id);
-            if (time() < strtotime($contest_db->begin)) {
-                // 竞赛未开始
-                return;
-            }
             // 机器人先等待，不可立马答题
-            sleep(Base::$robot_contest_start_after_begin_secons);
+            $after_begin_sleep_seconds = Base::$robot_contest_start_after_begin_seconds - $start_seconds;
+            if ($after_begin_sleep_seconds > 0) {
+                sleep($after_begin_sleep_seconds);
+            }
             $problem_list = $this->getProblemList($one_contest_id);
             // 题目数目
             $problem_length = sizeof($problem_list);
@@ -332,7 +332,7 @@ class RobotContest implements Consumer
             $this_contest_is_end = false;
             // 提交次数
             $submit_times = rand(2, 4);
-            // 竞赛持续秒数
+            // 竞赛距离结束剩余的秒数
             $contest_run_time_seconds = strtotime($contest_db->end) - time();
             if ($contest_run_time_seconds < 0 || $contest_run_time_seconds > Base::$robot_contest_can_join_limit_contest_time) {
                 // 竞赛结束 或者 距离竞赛结束时间过长 不进行提交
@@ -377,10 +377,8 @@ class RobotContest implements Consumer
                     break;
                 }
             }
-            RobotContest::$lock = false;
         } catch (Exception $e) {
             Robot::sendChatToOneUserMsg(Base::getRootId(), '消息队列【RobotContest】运行出错：' . $e->getMessage());
-            RobotContest::$lock = false;
         }
     }
 };
