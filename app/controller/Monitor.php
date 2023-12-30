@@ -3,7 +3,7 @@
  * @Author: 18855190718 1491579574@qq.com
  * @Date: 2023-01-12 12:38:58
  * @LastEditors: wmzn-ltpp 1491579574@qq.com
- * @LastEditTime: 2023-12-30 13:36:03
+ * @LastEditTime: 2023-12-30 15:45:03
  * @FilePath: \LTPP-CODE\app\controller\Monitor.php
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
@@ -49,28 +49,29 @@ class Monitor
             $begin = (int) ($time[0] / 1000);
             $end = (int) ($time[1] / 1000);
         }
+        $page = $request->post('page');
         $limit = $request->post('limit');
-        Base::judgeLimitIsSafe($limit);
+        Base::judgePageLimitIsSafe($page, $limit);
         $page_last_uid = $request->post('id');
         $search_func_key = $request->post('key');
         $page_last_id = Base::getIdByUid($page_last_uid);
-        Base::judgeLimitIsSafe($limit);
         $begin = date('Y-m-d H:i:s', (int) $begin);
         $end = date('Y-m-d H:i:s', (int) $end);
         if ($page_last_id) {
             if ($search_func_key) {
                 $data = Db::table('monitor')
                     ->where('isdel', 0)
-                    ->where('id', '<', $page_last_id)
+                    ->where('id', '<=', $page_last_id)
                     ->where('function', 'like', '%' . $search_func_key . '%')
                     ->where('time', '>=', $begin)
                     ->where('time', '<=', $end)
                     ->orderBy('id', 'desc')
                     ->limit($limit)
-                    ->get();
+                    ->paginate($limit, '*', 'page', $page)
+                    ->items();
                 $allnum = Db::table('monitor')
                     ->where('isdel', 0)
-                    ->where('id', '<', $page_last_id)
+                    ->where('id', '<=', $page_last_id)
                     ->where('function', 'like', '%' . $search_func_key . '%')
                     ->where('time', '>=', $begin)
                     ->where('time', '<=', $end)
@@ -78,15 +79,16 @@ class Monitor
             } else {
                 $data = Db::table('monitor')
                     ->where('isdel', 0)
-                    ->where('id', '<', $page_last_id)
+                    ->where('id', '<=', $page_last_id)
                     ->where('time', '>=', $begin)
                     ->where('time', '<=', $end)
                     ->orderBy('id', 'desc')
                     ->limit($limit)
-                    ->get();
+                    ->paginate($limit, '*', 'page', $page)
+                    ->items();
                 $allnum = Db::table('monitor')
                     ->where('isdel', 0)
-                    ->where('id', '<', $page_last_id)
+                    ->where('id', '<=', $page_last_id)
                     ->where('time', '>=', $begin)
                     ->where('time', '<=', $end)
                     ->count();
@@ -100,7 +102,8 @@ class Monitor
                     ->where('function', 'like', '%' . $search_func_key . '%')
                     ->orderBy('id', 'desc')
                     ->limit($limit)
-                    ->get();
+                    ->paginate($limit, '*', 'page', $page)
+                    ->items();
                 $allnum = Db::table('monitor')
                     ->where('isdel', 0)
                     ->where('time', '>=', $begin)
@@ -114,7 +117,8 @@ class Monitor
                     ->where('time', '<=', $end)
                     ->orderBy('id', 'desc')
                     ->limit($limit)
-                    ->get();
+                    ->paginate($limit, '*', 'page', $page)
+                    ->items();
                 $allnum = Db::table('monitor')
                     ->where('isdel', 0)
                     ->where('time', '>=', $begin)

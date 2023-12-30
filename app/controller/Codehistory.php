@@ -351,5 +351,4 @@ class Codehistory
         Base::dataToSafe($db);
         return json(['code' => 1, 'msg' => '加载完成', 'data' => $db, 'allnum' => $total]);
     }
-}
-;
+};

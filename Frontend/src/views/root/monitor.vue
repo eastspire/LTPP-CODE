@@ -139,6 +139,7 @@
 </template>
 
 <script>
+import urlencode from "../../../updateCompoents/urlencode";
 export default {
   name: "monitor",
   async activated() {
@@ -167,6 +168,7 @@ export default {
       lastkey: "",
       key: "",
       time: [],
+      last_id: "",
     };
   },
   methods: {
@@ -216,10 +218,11 @@ export default {
           process: "8797",
         },
         data: {
-          id: this.monitorList.length ? this.monitorList[0].id : 0,
+          id: this.last_id,
           key: this.key,
           time: this.time,
           limit: this.limit,
+          page: this.page,
         },
       }).catch((t) => {
         this.$msg({
@@ -229,6 +232,9 @@ export default {
           offset: 80,
         });
       });
+      if (!this.monitorList?.length) {
+        this.last_id = res.data?.length ? res.data[0].id : "";
+      }
       this.total = res.allnum;
       this.monitorList = res.data;
     },
@@ -242,10 +248,11 @@ export default {
           process: "8797",
         },
         data: {
-          id: this.monitorList.length ? this.monitorList[0].id : 0,
+          id: this.last_id,
           key: this.key,
           time: this.time,
           limit: this.limit,
+          page: this.page,
         },
       }).catch((t) => {
         this.$msg({
@@ -255,6 +262,9 @@ export default {
           offset: 80,
         });
       });
+      if (!this.monitorList?.length) {
+        this.last_id = res.data?.length ? res.data[0].id : "";
+      }
       this.monitorList = res.data;
       this.total = res.allnum;
     },
@@ -265,7 +275,9 @@ export default {
         this.getlist();
         return;
       }
+      this.monitorList = [];
       if (this.lastkey != this.key) {
+        this.last_id = "";
         this.page = 1;
       }
       this.issearch = true;
