@@ -2,9 +2,9 @@
 /*
  * @Author: 18855190718 1491579574@qq.com
  * @Date: 2023-01-12 12:38:58
- * @LastEditors: 18855190718 1491579574@qq.com
- * @LastEditTime: 2023-03-13 11:49:28
- * @FilePath: \LTPP\app\controller\Scorerank.php
+ * @LastEditors: wmzn-ltpp 1491579574@qq.com
+ * @LastEditTime: 2023-12-30 14:33:14
+ * @FilePath: \LTPP-CODE\app\controller\Scorerank.php
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
  * Copyright (c) 2023 by 18855190718 1491579574@qq.com, All Rights Reserved. 
@@ -23,7 +23,6 @@ class Scorerank
     static $rank_db_key = [
         'id',
         'name',
-        'online',
         'acnum',
         'fans',
         'lastlogin',
@@ -56,8 +55,8 @@ class Scorerank
         $allnum = Db::table('user')
             ->where('isdel', 0)
             ->count();
+        Base::userOnline($info);
         Base::dataToSafe($res);
         return json(['data' => $res, 'allnum' => $allnum]);
     }
-}
-;
+};

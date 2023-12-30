@@ -6,6 +6,7 @@ use Exception;
 use support\Db;
 use support\Redis;
 use Tinywan\Jwt\JwtToken;
+use GatewayWorker\Lib\Gateway;
 use Webman\RedisQueue\Redis as RedisQueue;
 
 class Base
@@ -2061,7 +2062,6 @@ class Base
             'headimage' => 'https://q1.qlogo.cn/headimg_dl?dst_uin=' . Base::$robot_email . '&spec=640',
             'fans' => 0,
             'follow' => 0,
-            'online' => 0,
             'grade' => 1,
             'email' => Base::$robot_email
         ];
@@ -3124,5 +3124,27 @@ class Base
             Robot::sendChatToOneUserMsg(Base::getRootId(), '获取GPT接口地址出错：' . $e->getMessage());
         }
         return '';
+    }
+
+    /**
+     * 添加用户在线状态
+     */
+    static public function userOnline(&$user, $is_list = true)
+    {
+        if ($is_list) {
+            foreach ($user as &$tem) {
+                if (Gateway::isUidOnline($tem->id) || $tem->name == '机器人') {
+                    $tem->online = 1;
+                } else {
+                    $tem->online = 0;
+                }
+            }
+        } else {
+            if (Gateway::isUidOnline($user->id) || $user->name == '机器人') {
+                $user->online = 1;
+            } else {
+                $user->online = 0;
+            }
+        }
     }
 };

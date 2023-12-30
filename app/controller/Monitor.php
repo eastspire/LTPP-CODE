@@ -43,11 +43,12 @@ class Monitor
             return json(['code' => -1, 'msg' => '权限不足', 'data' => []]);
         }
         $time = $request->post('time');
-        if (!$time || sizeof($time) < 2) {
-            $time = [0, time()];
+        $begin = 0;
+        $end = time();
+        if ($time && is_array($time) && sizeof($time) == 2) {
+            $begin = (int) ($time[0] / 1000);
+            $end = (int) ($time[1] / 1000);
         }
-        $begin = (int) ($time[0] / 1000);
-        $end = (int) ($time[1] / 1000);
         $limit = $request->post('limit');
         Base::judgeLimitIsSafe($limit);
         $page_last_uid = $request->post('id');
@@ -67,7 +68,7 @@ class Monitor
                     ->orderBy('id', 'desc')
                     ->limit($limit)
                     ->get();
-                $count = Db::table('monitor')
+                $allnum = Db::table('monitor')
                     ->where('isdel', 0)
                     ->where('id', '<', $page_last_id)
                     ->where('function', 'like', '%' . $search_func_key . '%')
@@ -83,7 +84,7 @@ class Monitor
                     ->orderBy('id', 'desc')
                     ->limit($limit)
                     ->get();
-                $count = Db::table('monitor')
+                $allnum = Db::table('monitor')
                     ->where('isdel', 0)
                     ->where('id', '<', $page_last_id)
                     ->where('time', '>=', $begin)
@@ -100,7 +101,7 @@ class Monitor
                     ->orderBy('id', 'desc')
                     ->limit($limit)
                     ->get();
-                $count = Db::table('monitor')
+                $allnum = Db::table('monitor')
                     ->where('isdel', 0)
                     ->where('time', '>=', $begin)
                     ->where('time', '<=', $end)
@@ -114,7 +115,7 @@ class Monitor
                     ->orderBy('id', 'desc')
                     ->limit($limit)
                     ->get();
-                $count = Db::table('monitor')
+                $allnum = Db::table('monitor')
                     ->where('isdel', 0)
                     ->where('time', '>=', $begin)
                     ->where('time', '<=', $end)
@@ -123,15 +124,16 @@ class Monitor
         }
         $res = [];
         foreach ($data as &$tem) {
-            $user_data = Base::getUserData($tem['userid']);
+            $user_data = Base::getUserData($tem->userid);
             if (!$user_data) {
                 continue;
             }
-            $tem['name'] = $user_data['name'];
-            $tem['grade'] = $user_data['grade'];
+            $tem->name = $user_data->name;
+            $tem->grade = $user_data->grade;
+            $tem->user_aid = $tem->userid;
             $res[] = $tem;
         }
         Base::dataToSafe($res);
-        return json(['code' => 1, 'msg' => '监控获取成功', 'data' => $res, 'count' => $count]);
+        return json(['code' => 1, 'msg' => '监控获取成功', 'data' => $res, 'allnum' => $allnum]);
     }
 };

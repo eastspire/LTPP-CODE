@@ -49,6 +49,7 @@ import chat from '../views/home/chat.vue';
 import updateonearticle from "../views/back/updateonearticle.vue";
 import oneproblemmanage from "../views/admin/oneproblemmanage.vue";
 import videomanage from "../views/root/videomanage.vue";
+import monitor from "../views/root/monitor.vue";
 import noticemanage from "../views/root/noticemanage.vue";
 import goodsmanage from "../views/root/goodsmanage.vue";
 import photomanage from "../views/root/photomanage.vue";
@@ -319,6 +320,17 @@ const routes = [{
                 keepAlive: true,
                 index: 2,
 
+            }
+        },
+        {
+            path: '/monitor',
+            name: 'monitor',
+            component: () =>
+                import('../views/root/monitor.vue'),
+            meta: {
+                title: '监控管理',
+                keepAlive: true,
+                index: 2,
             }
         },
         {

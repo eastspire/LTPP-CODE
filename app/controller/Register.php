@@ -73,7 +73,6 @@ class Register extends Email
             'headimage' => 'https://q1.qlogo.cn/headimg_dl?dst_uin=' . $email . '&spec=640',
             'fans' => 0,
             'follow' => 0,
-            'online' => 0,
             'grade' => 1,
             'email' => $email,
             'school' => $request->post("school") ?? '无',
@@ -153,5 +152,4 @@ LTPP在线开发平台许可协议\n
         }
         return json(['code' => 0, 'msg' => '账号注册失败']);
     }
-}
-;
+};

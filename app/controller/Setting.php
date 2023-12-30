@@ -56,7 +56,6 @@ class Setting extends Image
             'headimage' => 'https://q1.qlogo.cn/headimg_dl?dst_uin=' . $email . '&spec=640',
             'fans' => 0,
             'follow' => 0,
-            'online' => 0,
             'grade' => 1,
             'email' => $email,
             'isdel' => 0

@@ -37,9 +37,6 @@ return [
     //         ]
     //     ]
     // ],
-    'Useronline' => [
-        'handler' => process\Useronline::class
-    ],
     'Chatfile' => [
         'handler' => process\Chatfile::class
     ],

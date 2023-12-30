@@ -380,17 +380,6 @@
                     >
                   </template>
                 </el-menu-item>
-                <el-menu-item
-                  index="/videomanage"
-                  v-if="$store.state.root && $store.state.my_name === 'root'"
-                  ><template slot="title">
-                    <i
-                      class="el-icon-video-camera-solid"
-                      style="font-size: 1.06rem"
-                      >视频管理</i
-                    >
-                  </template>
-                </el-menu-item>
               </el-submenu>
               <el-submenu
                 index="6"
@@ -402,6 +391,17 @@
                     >后台管理</i
                   >
                 </template>
+                <el-menu-item
+                  index="/monitor"
+                  v-if="$store.state.root && $store.state.my_name === 'root'"
+                  ><template slot="title">
+                    <i
+                      class="el-icon-video-camera-solid"
+                      style="font-size: 1.06rem"
+                      >监控管理</i
+                    >
+                  </template>
+                </el-menu-item>
                 <el-menu-item
                   index="/usermanage"
                   v-if="$store.state.root || $store.state.admin"
@@ -451,6 +451,17 @@
                   <template slot="title">
                     <i class="el-icon-s-ticket" style="font-size: 1.06rem"
                       >商品管理</i
+                    >
+                  </template>
+                </el-menu-item>
+                <el-menu-item
+                  index="/videomanage"
+                  v-if="$store.state.root && $store.state.my_name === 'root'"
+                  ><template slot="title">
+                    <i
+                      class="el-icon-video-camera-solid"
+                      style="font-size: 1.06rem"
+                      >视频管理</i
                     >
                   </template>
                 </el-menu-item>

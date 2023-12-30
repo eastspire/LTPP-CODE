@@ -2,7 +2,7 @@
  * @Author: 18855190718 1491579574@qq.com
  * @Date: 2023-01-12 12:38:58
  * @LastEditors: wmzn-ltpp 1491579574@qq.com
- * @LastEditTime: 2023-10-17 11:08:54
+ * @LastEditTime: 2023-12-30 14:18:48
  * @FilePath: \LTPP-CODE\Frontend\src\plugins\axios.js
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
@@ -77,7 +77,7 @@ _axios.interceptors.request.use(
 _axios.interceptors.response.use(
     function (response) {
         if (response && response.data && response.data.code && response.data.code == 500) {
-            Vue.prototype.logoutRemove(true);
+            // Vue.prototype.logoutRemove(true);
         }
         return response;
     },

@@ -11,25 +11,14 @@ use support\Redis;
 
 class User
 {
-    static $user_db_key = [
+    static $user_list_db_key = [
         'id',
         'name',
-        'online',
         'acnum',
         'fans',
-        'registertime',
-        'lastlogin',
         'sex',
         'headimage',
         'follow',
-        'mysay',
-        'email',
-        'student_number',
-        'enrollment_year',
-        'school',
-        'college',
-        'subject',
-        'class'
     ];
 
     static $video_bk_root_path = 'static/background/video/';
@@ -40,7 +29,6 @@ class User
     static $bk_user_db_key = [
         'id',
         'name',
-        'online',
         'acnum',
         'grade',
         'fans',
@@ -191,11 +179,10 @@ class User
         $my_uid = JwtToken::getCurrentId();
         $my_aid = Base::getIdByUid($my_uid);
         $now = time();
-        //10分钟内有心跳记录，认定在线
+
         Db::table('user')
             ->where('id', $my_aid)
             ->update([
-                'online' => 1,
                 'lastlogin' => date('Y-m-d H:i:s', $now)
             ]);
         Base::updateUserDataRedis($my_aid);
@@ -410,10 +397,13 @@ class User
     {
         $my_uid = JwtToken::getCurrentId();
         $my_aid = Base::getIdByUid($my_uid);
+        $now = time();
+
         Db::table('user')
             ->where('id', $my_aid)
-            ->where('isdel', 0)
-            ->update(['online' => 1]);
+            ->update([
+                'lastlogin' => date('Y-m-d H:i:s', $now)
+            ]);
         Base::updateUserDataRedis($my_aid);
     }
 
@@ -425,10 +415,13 @@ class User
     {
         $my_uid = JwtToken::getCurrentId();
         $my_aid = Base::getIdByUid($my_uid);
+        $now = time();
+
         Db::table('user')
             ->where('id', $my_aid)
-            ->where('isdel', 0)
-            ->update(['online' => 0]);
+            ->update([
+                'lastlogin' => date('Y-m-d H:i:s', $now)
+            ]);
         Base::updateUserDataRedis($my_aid);
     }
 
@@ -448,11 +441,6 @@ class User
         $user_aid = Base::getIdByUid($user_uid);
         $redis14 = Redis::connection('db14');
         $redis14->del($user_aid . 'login');
-        Db::table('user')
-            ->where('id', $user_aid)
-            ->where('isdel', 0)
-            ->update(['online' => 0]);
-        Base::updateUserDataRedis($my_aid);
         return json(['code' => 1, 'msg' => '强制下线成功！']);
     }
 
@@ -507,7 +495,7 @@ class User
                     ->where('id', $tem->followid)
                     ->where('name', 'like', '%' . $key . '%')
                     ->where('isdel', 0)
-                    ->select(User::$user_db_key)
+                    ->select(User::$user_list_db_key)
                     ->first();
                 if ($dbfollow) {
                     $arr_follow[] = $dbfollow;
@@ -537,7 +525,7 @@ class User
                     ->where('id', $tem->userid)
                     ->where('name', 'like', '%' . $key . '%')
                     ->where('isdel', 0)
-                    ->select(User::$user_db_key)
+                    ->select(User::$user_list_db_key)
                     ->first();
                 if ($dbfans) {
                     $arr_fans[] = $dbfans;
@@ -845,7 +833,7 @@ class User
         Base::judgePageLimitIsSafe($page, $limit);
         $info = Db::table('user')
             ->where('isdel', 0)
-            ->select(User::$user_db_key)
+            ->select(User::$user_list_db_key)
             ->orderBy('grade', 'desc')
             ->orderBy('id', 'asc')
             ->paginate($limit, '*', 'page', $page)
@@ -853,6 +841,7 @@ class User
         $allnum = Db::table('user')
             ->where('isdel', 0)
             ->count();
+        Base::userOnline($info);
         Base::dataToSafe($info);
         if ($info) {
             return json(['code' => 1, 'data' => $info, 'allnum' => $allnum, 'msg' => '加载用户列表成功']);
@@ -915,7 +904,6 @@ class User
         $data['lastlogin'] = date('Y-m-d H:i:s', time());
         $data['fans'] = 0;
         $data['follow'] = 0;
-        $data['online'] = 0;
         $data['password'] = Base::passwordEncryption($data['password']);
         $res_id = Base::insertToDb('user', $data);
         Base::updateUserDataRedis($res_id);
@@ -1449,9 +1437,8 @@ class User
         Base::judgePageLimitIsSafe($page, $limit);
         $info = Db::table('user')
             ->where('isdel', 0)
-            ->select(User::$user_db_key)
+            ->select(User::$user_list_db_key)
             ->orderBy('id', 'asc')
-            ->select(User::$user_db_key)
             ->paginate($limit, '*', 'page', $page)
             ->items();
         $allnum = Db::table('user')
@@ -1489,21 +1476,13 @@ class User
             ->where('name', 'like', '%' . $key . '%')
             ->where('isdel', 0)
             ->orderBy('id', 'asc')
-            ->select(User::$user_db_key)
+            ->select(User::$user_list_db_key)
             ->paginate($limit, '*', 'page', $page)
             ->items();
-
         $allnum = Db::table('user')
             ->where('name', 'like', '%' . $key . '%')
             ->where('isdel', 0)
             ->count();
-        $isroot = Base::judgeIsRoot($my_aid);
-        if (!$isroot) {
-            foreach ($info as &$tem) {
-                unset($tem->grade);
-                $tem->email = '保密信息';
-            }
-        }
         Base::dataToSafe($info);
         return json(['code' => 1, 'data' => $info, 'allnum' => $allnum, 'msg' => "查找到 $allnum 个用户"]);
     }
@@ -1541,7 +1520,9 @@ class User
             $info->money = '******';
         } else {
             $info->password = '';
+            $info->user_aid = $info->id;
         }
+        Base::userOnline($info, false);
         Base::dataToSafe($info);
         if ($info) {
             return json(['code' => 1, 'data' => $info, 'msg' => '用户信息加载成功']);
