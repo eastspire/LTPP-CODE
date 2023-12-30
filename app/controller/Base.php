@@ -133,6 +133,11 @@ class Base
     static $redis_queue_contest_rank = 'contest_rank';
 
     /**
+     * 监控队列名称
+     */
+    static $redis_queue_monitor = 'monitor';
+
+    /**
      * 竞赛代码缓存key索引所在竞赛索引
      */
     static $redis_contest_code_list_key_name = 'ContestCodeListKey';

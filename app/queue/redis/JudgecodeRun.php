@@ -3,7 +3,7 @@
  * @Author: SQS 1491579574@qq.com
  * @Date: 2023-06-02 11:58:18
  * @LastEditors: wmzn-ltpp 1491579574@qq.com
- * @LastEditTime: 2023-10-16 19:50:18
+ * @LastEditTime: 2023-12-30 11:21:05
  * @FilePath: \LTPP-CODE\app\queue\redis\JudgecodeRun.php
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
@@ -45,8 +45,9 @@ class JudgecodeRun implements Consumer
             $json = Ojjudge::run($my_aid, $code_id, $code, $userlanguage, $problem_id, $contest_id);
             Base::saveCodeJson($code_id, $json);
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsg(Base::getRootId(), 'JudgecodeRun消息队列运行出错:' . $e->getMessage());
-            return;
+            $title = 'JudgecodeRun消息队列异常';
+            $content = $e->getMessage();
+            Robot::sendChatToOneUserMsg(Base::getRootId(), '#### ' . $title . "\n" . $content);
         }
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 use \app\controller\Base;
 
 return [
@@ -12,9 +13,9 @@ return [
             // key 前缀
             'prefix' => '',
             // 消费失败后，重试次数
-            'max_attempts' => 8,
+            'max_attempts' => 36,
             // 重试间隔，单位秒
-            'retry_seconds' => 6,
+            'retry_seconds' => 1,
         ]
     ],
 ];

@@ -3,7 +3,7 @@
  * @Author: SQS 1491579574@qq.com
  * @Date: 2023-06-02 11:58:18
  * @LastEditors: wmzn-ltpp 1491579574@qq.com
- * @LastEditTime: 2023-10-16 10:10:39
+ * @LastEditTime: 2023-12-30 11:24:07
  * @FilePath: \LTPP-CODE\app\queue\redis\UpdateOj.php
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
@@ -13,6 +13,7 @@
 namespace app\queue\redis;
 
 use app\controller\Base;
+use app\controller\Robot;
 use Exception;
 use support\Db;
 use Webman\RedisQueue\Consumer;
@@ -36,7 +37,9 @@ class UpdateOj implements Consumer
                 ->update($problem_data);
             Base::updateOjDataRedis($problem_id);
         } catch (Exception $e) {
-            return;
+            $title = 'UpdateOj消息队列异常';
+            $content = $e->getMessage();
+            Robot::sendChatToOneUserMsg(Base::getRootId(), '#### ' . $title . "\n" . $content);
         }
     }
 }

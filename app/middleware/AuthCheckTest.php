@@ -11,6 +11,7 @@ use support\Db;
 use Exception;
 use support\Redis;
 use app\controller\Base;
+use Webman\RedisQueue\Redis as RedisQueue;
 
 class AuthCheckTest extends Robot implements MiddlewareInterface
 {
@@ -81,6 +82,19 @@ class AuthCheckTest extends Robot implements MiddlewareInterface
 
     public function process(Request $request, callable $handler): Response
     {
+        $my_uid = '';
+        $is_logout = false;
+        try {
+            $my_uid = JwtToken::getCurrentId();
+        } catch (Exception $e) {
+            $is_logout = true;
+        }
+        // 监控
+        RedisQueue::send(Base::$redis_queue_monitor, [
+            'path' => $request->controller,
+            'function' => $request->action,
+            'user_uid' => $my_uid,
+        ]);
         //判断是否需要鉴权
         $func = $request->action;
         foreach (AuthCheckTest::$safe_func as &$tem) {
@@ -112,10 +126,7 @@ class AuthCheckTest extends Robot implements MiddlewareInterface
         if (!isset($header['key']) || empty($header['key'])) {
             return json(['code' => 500, 'msg' => '登录信息错误！请重新登录！']);
         }
-        $my_uid = '';
-        try {
-            $my_uid = JwtToken::getCurrentId();
-        } catch (Exception $e) {
+        if ($is_logout) {
             return \json(['code' => 500, 'msg' => '您已下线！请重新登录！']);
         }
         $my_aid = Base::getIdByUid($my_uid);

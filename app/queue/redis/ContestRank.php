@@ -3,7 +3,7 @@
  * @Author: SQS 1491579574@qq.com
  * @Date: 2023-06-02 11:58:18
  * @LastEditors: wmzn-ltpp 1491579574@qq.com
- * @LastEditTime: 2023-11-13 14:19:38
+ * @LastEditTime: 2023-12-30 11:20:54
  * @FilePath: \LTPP-CODE\app\queue\redis\ContestRank.php
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
@@ -14,6 +14,8 @@ namespace app\queue\redis;
 
 use Exception;
 use Webman\RedisQueue\Consumer;
+use app\controller\Base;
+use app\controller\Robot;
 use app\controller\Contest;
 
 class ContestRank implements Consumer
@@ -29,7 +31,9 @@ class ContestRank implements Consumer
             Contest::contestIdGetRankEcharts($contest_id, true);
             Contest::contestIdGetRank($contest_id, true);
         } catch (Exception $e) {
-            return;
+            $title = 'ContestRank消息队列异常';
+            $content = $e->getMessage();
+            Robot::sendChatToOneUserMsg(Base::getRootId(), '#### ' . $title . "\n" . $content);          
         }
     }
 }

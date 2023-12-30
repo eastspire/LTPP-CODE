@@ -38,7 +38,9 @@ class WebcodeRun implements Consumer
             $json = Webcode::run($my_aid, $code_id, $code, $userlanguage, $testin);
             Base::saveCodeJson($code_id, $json);
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsg(Base::getRootId(), 'WebcodeRun消息队列运行出错:' . $e->getMessage());
+            $title = 'WebcodeRun消息队列异常';
+            $content = $e->getMessage();
+            Robot::sendChatToOneUserMsg(Base::getRootId(), '#### ' . $title . "\n" . $content);
         }
     }
 }

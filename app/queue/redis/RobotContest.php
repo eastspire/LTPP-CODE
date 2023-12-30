@@ -3,7 +3,7 @@
  * @Author: SQS 1491579574@qq.com
  * @Date: 2023-06-02 11:58:18
  * @LastEditors: wmzn-ltpp 1491579574@qq.com
- * @LastEditTime: 2023-12-03 22:47:17
+ * @LastEditTime: 2023-12-30 11:22:00
  * @FilePath: \LTPP-CODE\app\queue\redis\RobotContest.php
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
@@ -378,7 +378,9 @@ class RobotContest implements Consumer
                 }
             }
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsg(Base::getRootId(), '消息队列【RobotContest】运行出错：' . $e->getMessage());
+            $title = 'RobotContest消息队列异常';
+            $content = $e->getMessage();
+            Robot::sendChatToOneUserMsg(Base::getRootId(), '#### ' . $title . "\n" . $content);
         }
     }
 };
