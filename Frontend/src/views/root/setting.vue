@@ -780,16 +780,16 @@
               margin: 1rem 0rem 1rem 0rem;
             "
           >
-            竞赛默认内容描述
+            竞赛默认开始时间（当天零点开始的秒数）
           </p>
 
           <el-input
-            type="textarea"
-            autosize
+            type="password"
+            show-password
             style="font-size: 1.06rem"
-            placeholder="请输入竞赛默认内容描述"
-            v-model.lazy="resdata.default_contest_content"
-            @blur="updatesetting()"
+            placeholder="请输入竞赛默认开始时间（当天零点开始的秒数）	"
+            v-model.lazy="resdata.default_contest_begin_time"
+            @keyup.enter.native="updatesetting()"
           >
             <el-button
               slot="append"
@@ -816,33 +816,6 @@
             style="font-size: 1.06rem"
             placeholder="请输入竞赛默认持续时间（单位秒）"
             v-model.lazy="resdata.default_contest_duration"
-            @keyup.enter.native="updatesetting()"
-          >
-            <el-button
-              slot="append"
-              icon="el-icon-upload"
-              @click="updatesetting()"
-              >更新</el-button
-            >
-          </el-input>
-
-          <p
-            style="
-              font-size: 1.06rem;
-              text-align: left;
-              font-weight: bold;
-              margin: 1rem 0rem 1rem 0rem;
-            "
-          >
-            竞赛默认开始时间（当天零点开始的秒数）
-          </p>
-
-          <el-input
-            type="password"
-            show-password
-            style="font-size: 1.06rem"
-            placeholder="请输入竞赛默认开始时间（当天零点开始的秒数）	"
-            v-model.lazy="resdata.default_contest_begin_time"
             @keyup.enter.native="updatesetting()"
           >
             <el-button
@@ -925,6 +898,33 @@
             placeholder="请输入竞赛默认最大参赛人数"
             v-model.lazy="resdata.default_contest_max_people_num"
             @keyup.enter.native="updatesetting()"
+          >
+            <el-button
+              slot="append"
+              icon="el-icon-upload"
+              @click="updatesetting()"
+              >更新</el-button
+            >
+          </el-input>
+
+          <p
+            style="
+              font-size: 1.06rem;
+              text-align: left;
+              font-weight: bold;
+              margin: 1rem 0rem 1rem 0rem;
+            "
+          >
+            竞赛默认内容描述
+          </p>
+
+          <el-input
+            type="textarea"
+            autosize
+            style="font-size: 1.06rem"
+            placeholder="请输入竞赛默认内容描述"
+            v-model.lazy="resdata.default_contest_content"
+            @blur="updatesetting()"
           >
             <el-button
               slot="append"
