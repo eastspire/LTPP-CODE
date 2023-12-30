@@ -248,7 +248,9 @@
     <div style="height: 3.4rem"></div>
     <!-- 对话框 -->
     <el-dialog
-      title="更新用户"
+      :title="`更新用户${
+        userdata.user_aid ? '【用户ID:' + userdata.user_aid + '】' : ''
+      }`"
       :visible.sync="dialogFormVisible"
       class="Mdialog"
       :width="($store.state.max_width / $store.state.now_width) * 100 + '%'"
@@ -877,6 +879,7 @@ export default {
     },
 
     async passdata(id) {
+      this.userdata = {};
       const { data: res } = await this.$ajax({
         method: "post",
         url: "/User/lookUserData",

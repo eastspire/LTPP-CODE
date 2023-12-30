@@ -375,7 +375,7 @@
                       "
                       >（评论时间：{{ temcomment.time }}）</el-button
                     >
-                    <div style="clear: both; height: 0.6rem"></div>
+                    <div style="clear: both; height: 0.56rem"></div>
                     <div
                       class="markdown-body"
                       @dblclick="
@@ -408,7 +408,6 @@
                           border-width: 0rem !important;
                           background-color: rgba(0, 0, 0, 0.28) !important;
                           color: aliceblue !important;
-                          padding: 1rem 0.6rem 0rem 0.6rem !important;
                         "
                       ></mavon-editor>
                     </div>
@@ -526,7 +525,7 @@
                           "
                           >（评论时间：{{ temtousercomment.time }}）
                         </el-button>
-                        <div style="clear: both; height: 0.6rem"></div>
+                        <div style="clear: both; height: 0.56rem"></div>
                         <div
                           class="markdown-body"
                           @dblclick="
@@ -564,7 +563,6 @@
 
                               border-width: 0rem !important;
                               color: aliceblue !important;
-                              padding: 1rem 0.6rem 0rem 0.6rem !important;
                             "
                           ></mavon-editor>
                         </div>
@@ -599,10 +597,8 @@
                           ></el-button>
                         </div>
                       </div>
-                      <div></div>
                     </div>
                   </div>
-                  <div style="height: 1rem"></div>
                 </div>
               </div>
             </div>

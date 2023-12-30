@@ -3133,14 +3133,14 @@ class Base
     {
         if ($is_list) {
             foreach ($user as &$tem) {
-                if (Gateway::isUidOnline($tem->id) || $tem->name == '机器人') {
+                if ((isset($tem->id) && Gateway::isUidOnline($tem->id)) || (isset($tem->name) &&  $tem->name == '机器人')) {
                     $tem->online = 1;
                 } else {
                     $tem->online = 0;
                 }
             }
         } else {
-            if (Gateway::isUidOnline($user->id) || $user->name == '机器人') {
+            if ((isset($user->id) && Gateway::isUidOnline($user->id)) || (isset($user->name) && $user->name == '机器人')) {
                 $user->online = 1;
             } else {
                 $user->online = 0;

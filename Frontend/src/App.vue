@@ -150,7 +150,7 @@ export default {
 };
 </script>
 
-<style>
+<style lang="less">
 * {
   padding: 0;
   /*清除元素的内边距*/
@@ -787,6 +787,17 @@ a:active {
   background-color: rgba(0, 0, 0, 0) !important;
   border-color: rgba(0, 0, 0, 0) !important;
   border-width: 0rem !important;
+  p {
+    margin: 0px !important;
+  }
+  .v-note-img-wrapper {
+    background-color: transparent !important;
+  }
+}
+
+.el-descriptions__title {
+  color: #ffffffe6;
+  font-size: 0.88rem;
 }
 
 .el-select,

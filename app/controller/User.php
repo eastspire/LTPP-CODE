@@ -507,11 +507,6 @@ class User
             for ($i = $limit * ($page - 1); $i < $limit * $page && $i < $allnum; ++$i) {
                 $res_follow[] = $arr_follow[$i];
             }
-            if (!$isroot) {
-                foreach ($res_follow as &$tem) {
-                    $tem->email = '保密信息';
-                }
-            }
         } else if ($do == 'fans') {
             $fans = Db::table('followfans')
                 ->where('followid', $id)
@@ -535,11 +530,6 @@ class User
             $allnum = sizeof($arr_fans);
             for ($i = $limit * ($page - 1); $i < $limit * $page && $i < $allnum; ++$i) {
                 $res_fans[] = $arr_fans[$i];
-            }
-            if (!$isroot) {
-                foreach ($res_fans as &$tem) {
-                    $tem->email = '保密信息';
-                }
             }
         }
 
@@ -1446,12 +1436,7 @@ class User
             ->count();
 
         $isroot = Base::judgeIsRoot($my_aid);
-
-        if (!$isroot) {
-            foreach ($info as &$tem) {
-                $tem->email = '保密信息';
-            }
-        }
+        Base::userOnline($info);
         Base::dataToSafe($info);
         return json(['code' => 1, 'data' => $info, 'allnum' => $allnum, 'msg' => "共有 $allnum 个用户"]);
     }
@@ -1463,8 +1448,6 @@ class User
      */
     public function findUser(Request $request)
     {
-        $my_uid = JwtToken::getCurrentId();
-        $my_aid = Base::getIdByUid($my_uid);
         $key = $request->post('key');
         if (!isset($key) || empty($key)) {
             return \json(['code' => -1, 'msg' => '查询失败']);

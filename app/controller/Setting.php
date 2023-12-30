@@ -378,7 +378,6 @@ class Setting extends Image
                 Db::table('setting')
                     ->where('id', $db->id)
                     ->where('isdel', 0)
-                    ->lockForUpdate()
                     ->update(['default_contest_content' => $data['default_contest_content']]);
                 $redis5->del('default_contest_content');
                 $redis5->set('default_contest_content', $data['default_contest_content']);
@@ -391,7 +390,6 @@ class Setting extends Image
                 Db::table('setting')
                     ->where('id', $db->id)
                     ->where('isdel', 0)
-                    ->lockForUpdate()
                     ->update(['default_contest_duration' => $data['default_contest_duration']]);
                 $redis5->del('default_contest_duration');
                 $redis5->set('default_contest_duration', $data['default_contest_duration']);
@@ -404,7 +402,6 @@ class Setting extends Image
                 Db::table('setting')
                     ->where('id', $db->id)
                     ->where('isdel', 0)
-                    ->lockForUpdate()
                     ->update(['default_contest_begin_time' => $data['default_contest_begin_time']]);
                 $redis5->del('default_contest_begin_time');
                 $redis5->set('default_contest_begin_time', $data['default_contest_begin_time']);
@@ -417,7 +414,6 @@ class Setting extends Image
                 Db::table('setting')
                     ->where('id', $db->id)
                     ->where('isdel', 0)
-                    ->lockForUpdate()
                     ->update(['default_contest_problem_num' => $data['default_contest_problem_num']]);
                 $redis5->del('default_contest_problem_num');
                 $redis5->set('default_contest_problem_num', $data['default_contest_problem_num']);
@@ -433,7 +429,6 @@ class Setting extends Image
                 Db::table('setting')
                     ->where('id', $db->id)
                     ->where('isdel', 0)
-                    ->lockForUpdate()
                     ->update(['default_contest_min_people_num' => $data['default_contest_min_people_num']]);
                 $redis5->del('default_contest_min_people_num');
                 $redis5->set('default_contest_min_people_num', $data['default_contest_min_people_num']);
@@ -449,7 +444,6 @@ class Setting extends Image
                 Db::table('setting')
                     ->where('id', $db->id)
                     ->where('isdel', 0)
-                    ->lockForUpdate()
                     ->update(['default_contest_max_people_num' => $data['default_contest_max_people_num']]);
                 $redis5->del('default_contest_max_people_num');
                 $redis5->set('default_contest_max_people_num', $data['default_contest_max_people_num']);
@@ -462,7 +456,6 @@ class Setting extends Image
                 Db::table('setting')
                     ->where('id', $db->id)
                     ->where('isdel', 0)
-                    ->lockForUpdate()
                     ->update(['usercloudfilememory' => $data['usercloudfilememory']]);
                 $redis5->del('usercloudfilememory');
                 $redis5->set('usercloudfilememory', $data['usercloudfilememory']);
@@ -476,7 +469,6 @@ class Setting extends Image
                 Db::table('setting')
                     ->where('id', $db->id)
                     ->where('isdel', 0)
-                    ->lockForUpdate()
                     ->update(['offline' => $data['offline']]);
                 $redis5->del('offline');
                 $redis5->set('offline', $data['offline']);
@@ -490,7 +482,6 @@ class Setting extends Image
                 Db::table('setting')
                     ->where('id', $db->id)
                     ->where('isdel', 0)
-                    ->lockForUpdate()
                     ->update(['useqqmail' => $data['useqqmail']]);
                 $redis5->del('useqqmail');
                 $redis5->set('useqqmail', $data['useqqmail']);
@@ -500,7 +491,6 @@ class Setting extends Image
                 Db::table('setting')
                     ->where('id', $db->id)
                     ->where('isdel', 0)
-                    ->lockForUpdate()
                     ->update(['chatgpt_api_url' => $data['chatgpt_api_url']]);
                 $redis5->del(Base::$chat_gpt_api_url_key);
                 $redis5->set(Base::$chat_gpt_api_url_key, $data['chatgpt_api_url']);
@@ -510,7 +500,6 @@ class Setting extends Image
                 Db::table('setting')
                     ->where('id', $db->id)
                     ->where('isdel', 0)
-                    ->lockForUpdate()
                     ->update(['chatgpt_keys' => $data['chatgpt_keys']]);
                 $redis5->del(Base::$chatgpt_keys_key);
                 $redis5->set(Base::$chatgpt_keys_key, $data['chatgpt_keys']);
@@ -523,7 +512,6 @@ class Setting extends Image
                 Db::table('setting')
                     ->where('id', $db->id)
                     ->where('isdel', 0)
-                    ->lockForUpdate()
                     ->update(['idemaxtime' => $data['idemaxtime']]);
                 $redis5->del('idemaxtime');
                 $redis5->set('idemaxtime', $data['idemaxtime']);
@@ -536,7 +524,6 @@ class Setting extends Image
                 Db::table('setting')
                     ->where('id', $db->id)
                     ->where('isdel', 0)
-                    ->lockForUpdate()
                     ->update(['idemaxmemory' => $data['idemaxmemory']]);
                 $redis5->del('idemaxmemory');
                 $redis5->set('idemaxmemory', $data['idemaxmemory']);
@@ -546,7 +533,6 @@ class Setting extends Image
                 Db::table('setting')
                     ->where('id', $db->id)
                     ->where('isdel', 0)
-                    ->lockForUpdate()
                     ->update(['GLOBfronturl' => $data['GLOBfronturl']]);
                 $redis5->del('GLOBfronturl');
                 $redis5->set('GLOBfronturl', $data['GLOBfronturl']);
@@ -556,7 +542,6 @@ class Setting extends Image
                 Db::table('setting')
                     ->where('id', $db->id)
                     ->where('isdel', 0)
-                    ->lockForUpdate()
                     ->update(['ssh_back_url' => $data['ssh_back_url']]);
                 $redis5->del('ssh_back_url');
                 $redis5->set('ssh_back_url', $data['ssh_back_url']);
@@ -566,7 +551,6 @@ class Setting extends Image
                 Db::table('setting')
                     ->where('id', $db->id)
                     ->where('isdel', 0)
-                    ->lockForUpdate()
                     ->update(['mysmtpurl' => $data['mysmtpurl']]);
                 $redis5->del('mysmtpurl');
                 $redis5->set('mysmtpurl', $data['mysmtpurl']);
@@ -576,7 +560,6 @@ class Setting extends Image
                 Db::table('setting')
                     ->where('id', $db->id)
                     ->where('isdel', 0)
-                    ->lockForUpdate()
                     ->update(['mysmtpname' => $data['mysmtpname']]);
                 $redis5->del('mysmtpname');
                 $redis5->set('mysmtpname', $data['mysmtpname']);
@@ -586,7 +569,6 @@ class Setting extends Image
                 Db::table('setting')
                     ->where('id', $db->id)
                     ->where('isdel', 0)
-                    ->lockForUpdate()
                     ->update(['mysmtppassword' => $data['mysmtppassword']]);
                 $redis5->del('mysmtppassword');
                 $redis5->set('mysmtppassword', $data['mysmtppassword']);
@@ -596,7 +578,6 @@ class Setting extends Image
                 Db::table('setting')
                     ->where('id', $db->id)
                     ->where('isdel', 0)
-                    ->lockForUpdate()
                     ->update(['musicbkurl' => $data['musicbkurl']]);
                 $redis5->del('musicbkurl');
                 $redis5->set('musicbkurl', $data['musicbkurl']);
@@ -607,7 +588,6 @@ class Setting extends Image
                 Db::table('setting')
                     ->where('id', $db->id)
                     ->where('isdel', 0)
-                    ->lockForUpdate()
                     ->update(['classurl' => $data['classurl']]);
                 $redis5->del('classurl');
                 $redis5->set('classurl', $data['classurl']);
@@ -617,7 +597,6 @@ class Setting extends Image
                 Db::table('setting')
                     ->where('id', $db->id)
                     ->where('isdel', 0)
-                    ->lockForUpdate()
                     ->update([
                         'GLOBlinuxurl' => $data['GLOBlinuxurl'],
                     ]);
@@ -628,7 +607,6 @@ class Setting extends Image
                 Db::table('setting')
                     ->where('id', $db->id)
                     ->where('isdel', 0)
-                    ->lockForUpdate()
                     ->update([
                         'socketurl' => $data['socketurl']
                     ]);
@@ -642,7 +620,6 @@ class Setting extends Image
                 Db::table('setting')
                     ->where('id', $db->id)
                     ->where('isdel', 0)
-                    ->lockForUpdate()
                     ->update(['GLOBiplimit' => $data['GLOBiplimit']]);
                 $redis5->del('GLOBiplimit');
                 $redis5->set('GLOBiplimit', $data['GLOBiplimit']);
@@ -654,7 +631,6 @@ class Setting extends Image
                 Db::table('setting')
                     ->where('id', $db->id)
                     ->where('isdel', 0)
-                    ->lockForUpdate()
                     ->update(['GLOBiplimitTime' => $data['GLOBiplimitTime']]);
                 $redis5->del('GLOBiplimitTime');
                 $redis5->set('GLOBiplimitTime', $data['GLOBiplimitTime']);
@@ -666,7 +642,6 @@ class Setting extends Image
                 Db::table('setting')
                     ->where('id', $db->id)
                     ->where('isdel', 0)
-                    ->lockForUpdate()
                     ->update(['GLOBipblack' => $data['GLOBipblack']]);
                 $redis5->del('GLOBipblack');
                 $redis5->set('GLOBipblack', $data['GLOBipblack']);
@@ -678,7 +653,6 @@ class Setting extends Image
                 Db::table('setting')
                     ->where('id', $db->id)
                     ->where('isdel', 0)
-                    ->lockForUpdate()
                     ->update(['canregister' => $data['canregister']]);
                 $redis5->del('canregister');
                 $redis5->set('canregister', $data['canregister']);
@@ -690,7 +664,6 @@ class Setting extends Image
                 Db::table('setting')
                     ->where('id', $db->id)
                     ->where('isdel', 0)
-                    ->lockForUpdate()
                     ->update(['canlogin' => $data['canlogin']]);
                 $redis5->del('canlogin');
                 $redis5->set('canlogin', $data['canlogin']);
@@ -702,7 +675,6 @@ class Setting extends Image
                 Db::table('setting')
                     ->where('id', $db->id)
                     ->where('isdel', 0)
-                    ->lockForUpdate()
                     ->update(['useemail' => $data['useemail']]);
                 $redis5->del('useemail');
                 $redis5->set('useemail', $data['useemail']);
@@ -711,7 +683,6 @@ class Setting extends Image
                 Db::table('setting')
                     ->where('id', $db->id)
                     ->where('isdel', 0)
-                    ->lockForUpdate()
                     ->update(['smtp' => $data['smtp']]);
                 $redis5->del('smtp');
                 $redis5->set('smtp', $data['smtp']);
@@ -720,7 +691,6 @@ class Setting extends Image
                 Db::table('setting')
                     ->where('id', $db->id)
                     ->where('isdel', 0)
-                    ->lockForUpdate()
                     ->update(['smtpkey' => $data['smtpkey']]);
                 $redis5->del('smtpkey');
                 $redis5->set('smtpkey', $data['smtpkey']);
