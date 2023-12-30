@@ -3,7 +3,7 @@
  * @Author: 18855190718 1491579574@qq.com
  * @Date: 2023-01-19 23:50:37
  * @LastEditors: wmzn-ltpp 1491579574@qq.com
- * @LastEditTime: 2023-11-13 17:12:28
+ * @LastEditTime: 2023-12-30 13:04:18
  * @FilePath: \LTPP-CODE\app\controller\Contest.php
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
@@ -53,6 +53,11 @@ class Contest
         '~',
         '-'
     ];
+
+    /**
+     * @var array $contest_type_list 竞赛赛制类型列表
+     */
+    static $contest_type_list = ['ACM', 'IOI', 'OI', 'SQS'];
 
     /**
      * @var array $db_get_limit 排名条数限制
@@ -770,14 +775,9 @@ class Contest
                 ->toArray();
             $sum = sizeof($userdb);
             $insert_user = [];
-            $has_join = new stdClass();
             $cnt_i = 0;
             foreach ($userdb as &$tem) {
-                if (isset($has_join->$tem) && $has_join->$tem == 1) {
-                    continue;
-                }
                 ++$cnt_i;
-                $has_join->$tem = 1;
                 $insert_user[] = [
                     'userid' => $tem,
                     'contestid' => $res_id,

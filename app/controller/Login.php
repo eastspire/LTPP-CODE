@@ -7,7 +7,6 @@ use support\Redis;
 use support\Request;
 use Tinywan\Jwt\JwtToken;
 
-
 class Login
 {
     /**
@@ -44,22 +43,10 @@ class Login
             return json(['code' => -1, 'msg' => '账号不存在', 'name' => $name]);
         }
 
-        $redis5 = Redis::connection('db5');
-
         if ($name != 'root' && $user_db->grade != 3) {
-            if ($redis5->get('canlogin')) {
-                if ($redis5->get('canlogin') != 1) {
-                    return \json(['code' => -1, 'msg' => 'root关闭了登录通道！请联系root用户开放登录通道！']);
-                }
-            } else {
-                $setting = Db::table('setting')
-                    ->orderBy('id', 'desc')
-                    ->select('canlogin')
-                    ->first();
-                $redis5->set('canlogin', $setting->canlogin);
-                if ($setting->canlogin != 1) {
-                    return \json(['code' => -1, 'msg' => 'root关闭了登录通道！请联系root用户开放登录通道！']);
-                }
+            $canlogin = Base::getSettingKeyData('canlogin');
+            if ($canlogin != 1) {
+                return \json(['code' => -1, 'msg' => 'root关闭了登录通道！请联系root用户开放登录通道！']);
             }
         }
         $judge_pwd = md5(md5($password));
@@ -90,21 +77,9 @@ class Login
         ];
 
         $authorization = JwtToken::generateToken($user)['access_token'];
-
-        if ($redis5->get('useemail')) {
-            if ($redis5->get('useemail') == 1) {
-                Verification::sendlogin($request, $name, $user_db->email);
-            }
-        } else {
-            $setting = Db::table('setting')
-                ->where('isdel', 0)
-                ->select('useemail')
-                ->orderBy('id', 'desc')
-                ->first();
-            $redis5->set('useemail', $setting->useemail);
-            if ($setting->useemail == 1) {
-                Verification::sendlogin($request, $name, $user_db->email);
-            }
+        $useemail = Base::getSettingKeyData('useemail');
+        if ($useemail == 1) {
+            Verification::sendlogin($request, $name, $user_db->email);
         }
 
         $redis14 = Redis::connection('db14');
@@ -171,5 +146,4 @@ class Login
             'key' => $onekey
         ]);
     }
-}
-;
+};
