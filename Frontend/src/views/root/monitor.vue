@@ -18,7 +18,7 @@
       <div class="search shadow">
         <el-input
           style="font-size: 1.06rem"
-          placeholder="请输入关键字"
+          placeholder="请输入待查询的方法名"
           v-model.lazy="key"
           @keyup.enter.native="search()"
           ><el-button slot="append" icon="el-icon-search" @click="search()"
@@ -27,7 +27,28 @@
         >
       </div>
     </div>
-
+    <div
+      style="
+        color: rgb(255, 255, 255) !important;
+        background-color: rgb(30, 30, 30);
+        text-align: center;
+      "
+    >
+      <el-date-picker
+        @change="
+          last_id = '';
+          monitorList = [];
+          search();
+        "
+        v-model.lazy="time"
+        value-format="timestamp"
+        type="datetimerange"
+        range-separator="至"
+        start-placeholder="开始时间"
+        end-placeholder="结束时间"
+      >
+      </el-date-picker>
+    </div>
     <div style="color: azure; height: auto; width: 100%">
       <div style="height: 1rem"></div>
       <div>
