@@ -3,7 +3,7 @@
  * @Author: 18855190718 1491579574@qq.com
  * @Date: 2023-02-28 22:41:18
  * @LastEditors: wmzn-ltpp 1491579574@qq.com
- * @LastEditTime: 2023-12-30 13:08:19
+ * @LastEditTime: 2023-12-30 13:31:26
  * @FilePath: \LTPP-CODE\process\CreatContest.php
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
@@ -161,8 +161,8 @@ class CreatContest
 
     public function onWorkerStart()
     {
-        // 每15分钟执行一次，注意这里省略了秒位
-        new Crontab('*/15 * * * *', function () {
+        // 每天的0点执行，注意这里省略了秒位'00 0 * * *'
+        new Crontab('00 0 * * *', function () {
             try {
                 $pro_list = $this->getProblemList();
                 $user_list = $this->getUserList();
@@ -170,7 +170,7 @@ class CreatContest
                 //插入竞赛信息
                 foreach (Contest::$contest_type_list as &$type) {
                     $contest_title = $type . '赛制竞赛';
-                    $contest_content = $this->getContent($$contest_title);
+                    $contest_content = $this->getContent($contest_title);
                     $res_id = $this->addContest($contest_title, $contest_content, $time_list, $user_list, $type);
                     $this->addProblem($res_id, $pro_list);
                     $this->addUser($res_id, $user_list);

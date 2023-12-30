@@ -374,6 +374,88 @@ class Setting extends Image
             ->first();
         if ($db) {
             $redis5 = Redis::connection('db5');
+
+            if ($data['default_contest_content'] != $redis5->get('default_contest_content')) {
+                Db::table('setting')
+                    ->where('id', $db->id)
+                    ->where('isdel', 0)
+                    ->lockForUpdate()
+                    ->update(['default_contest_content' => $data['default_contest_content']]);
+                $redis5->del('default_contest_content');
+                $redis5->set('default_contest_content', $data['default_contest_content']);
+            }
+
+            if ($data['default_contest_duration'] != $redis5->get('default_contest_duration')) {
+                if (!is_numeric($data['default_contest_duration'])) {
+                    return json(['code' => -1, 'msg' => '类型错误！请填写数字！']);
+                }
+                Db::table('setting')
+                    ->where('id', $db->id)
+                    ->where('isdel', 0)
+                    ->lockForUpdate()
+                    ->update(['default_contest_duration' => $data['default_contest_duration']]);
+                $redis5->del('default_contest_duration');
+                $redis5->set('default_contest_duration', $data['default_contest_duration']);
+            }
+
+            if ($data['default_contest_begin_time'] != $redis5->get('default_contest_begin_time')) {
+                if (!is_numeric($data['default_contest_begin_time'])) {
+                    return json(['code' => -1, 'msg' => '类型错误！请填写数字！']);
+                }
+                Db::table('setting')
+                    ->where('id', $db->id)
+                    ->where('isdel', 0)
+                    ->lockForUpdate()
+                    ->update(['default_contest_begin_time' => $data['default_contest_begin_time']]);
+                $redis5->del('default_contest_begin_time');
+                $redis5->set('default_contest_begin_time', $data['default_contest_begin_time']);
+            }
+
+            if ($data['default_contest_problem_num'] != $redis5->get('default_contest_problem_num')) {
+                if (!is_numeric($data['default_contest_problem_num'])) {
+                    return json(['code' => -1, 'msg' => '类型错误！请填写数字！']);
+                }
+                Db::table('setting')
+                    ->where('id', $db->id)
+                    ->where('isdel', 0)
+                    ->lockForUpdate()
+                    ->update(['default_contest_problem_num' => $data['default_contest_problem_num']]);
+                $redis5->del('default_contest_problem_num');
+                $redis5->set('default_contest_problem_num', $data['default_contest_problem_num']);
+            }
+
+            if ($data['default_contest_min_people_num'] != $redis5->get('default_contest_min_people_num')) {
+                if (!is_numeric($data['default_contest_min_people_num']) || !is_numeric($data['default_contest_max_people_num'])) {
+                    return json(['code' => -1, 'msg' => '类型错误！请填写数字！']);
+                }
+                if ($data['default_contest_min_people_num'] > $data['default_contest_max_people_num']) {
+                    return json(['code' => -1, 'msg' => '数据错误！竞赛默认最小参赛人数不能大于竞赛默认最大参赛人数！']);
+                }
+                Db::table('setting')
+                    ->where('id', $db->id)
+                    ->where('isdel', 0)
+                    ->lockForUpdate()
+                    ->update(['default_contest_min_people_num' => $data['default_contest_min_people_num']]);
+                $redis5->del('default_contest_min_people_num');
+                $redis5->set('default_contest_min_people_num', $data['default_contest_min_people_num']);
+            }
+
+            if ($data['default_contest_max_people_num'] != $redis5->get('default_contest_max_people_num')) {
+                if (!is_numeric($data['default_contest_min_people_num']) || !is_numeric($data['default_contest_max_people_num'])) {
+                    return json(['code' => -1, 'msg' => '类型错误！请填写数字！']);
+                }
+                if ($data['default_contest_min_people_num'] > $data['default_contest_max_people_num']) {
+                    return json(['code' => -1, 'msg' => '数据错误！竞赛默认最小参赛人数不能大于竞赛默认最大参赛人数！']);
+                }
+                Db::table('setting')
+                    ->where('id', $db->id)
+                    ->where('isdel', 0)
+                    ->lockForUpdate()
+                    ->update(['default_contest_max_people_num' => $data['default_contest_max_people_num']]);
+                $redis5->del('default_contest_max_people_num');
+                $redis5->set('default_contest_max_people_num', $data['default_contest_max_people_num']);
+            }
+
             if ($data['usercloudfilememory'] != $redis5->get('usercloudfilememory')) {
                 if (!is_numeric($data['usercloudfilememory'])) {
                     return json(['code' => -1, 'msg' => '类型错误！请填写数字！']);
@@ -905,6 +987,4 @@ class Setting extends Image
         }
         return json(['data' => $res]);
     }
-
-
 }

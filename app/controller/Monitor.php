@@ -3,7 +3,7 @@
  * @Author: 18855190718 1491579574@qq.com
  * @Date: 2023-01-12 12:38:58
  * @LastEditors: wmzn-ltpp 1491579574@qq.com
- * @LastEditTime: 2023-12-30 11:58:02
+ * @LastEditTime: 2023-12-30 13:36:03
  * @FilePath: \LTPP-CODE\app\controller\Monitor.php
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
@@ -51,38 +51,75 @@ class Monitor
         $limit = $request->post('limit');
         Base::judgeLimitIsSafe($limit);
         $page_last_uid = $request->post('id');
+        $search_func_key = $request->post('key');
         $page_last_id = Base::getIdByUid($page_last_uid);
         Base::judgeLimitIsSafe($limit);
         $begin = date('Y-m-d H:i:s', (int) $begin);
         $end = date('Y-m-d H:i:s', (int) $end);
         if ($page_last_id) {
-            $data = Db::table('monitor')
-                ->where('isdel', 0)
-                ->where('id', '<', $page_last_id)
-                ->where('time', '>=', $begin)
-                ->where('time', '<=', $end)
-                ->orderBy('id', 'desc')
-                ->limit($limit)
-                ->get();
-            $count = Db::table('monitor')
-                ->where('isdel', 0)
-                ->where('id', '<', $$page_last_id)
-                ->where('time', '>=', $begin)
-                ->where('time', '<=', $end)
-                ->count();
+            if ($search_func_key) {
+                $data = Db::table('monitor')
+                    ->where('isdel', 0)
+                    ->where('id', '<', $page_last_id)
+                    ->where('function', 'like', '%' . $search_func_key . '%')
+                    ->where('time', '>=', $begin)
+                    ->where('time', '<=', $end)
+                    ->orderBy('id', 'desc')
+                    ->limit($limit)
+                    ->get();
+                $count = Db::table('monitor')
+                    ->where('isdel', 0)
+                    ->where('id', '<', $page_last_id)
+                    ->where('function', 'like', '%' . $search_func_key . '%')
+                    ->where('time', '>=', $begin)
+                    ->where('time', '<=', $end)
+                    ->count();
+            } else {
+                $data = Db::table('monitor')
+                    ->where('isdel', 0)
+                    ->where('id', '<', $page_last_id)
+                    ->where('time', '>=', $begin)
+                    ->where('time', '<=', $end)
+                    ->orderBy('id', 'desc')
+                    ->limit($limit)
+                    ->get();
+                $count = Db::table('monitor')
+                    ->where('isdel', 0)
+                    ->where('id', '<', $page_last_id)
+                    ->where('time', '>=', $begin)
+                    ->where('time', '<=', $end)
+                    ->count();
+            }
         } else {
-            $data = Db::table('monitor')
-                ->where('isdel', 0)
-                ->where('time', '>=', $begin)
-                ->where('time', '<=', $end)
-                ->orderBy('id', 'desc')
-                ->limit($limit)
-                ->get();
-            $count = Db::table('monitor')
-                ->where('isdel', 0)
-                ->where('time', '>=', $begin)
-                ->where('time', '<=', $end)
-                ->count();
+            if ($search_func_key) {
+                $data = Db::table('monitor')
+                    ->where('isdel', 0)
+                    ->where('time', '>=', $begin)
+                    ->where('time', '<=', $end)
+                    ->where('function', 'like', '%' . $search_func_key . '%')
+                    ->orderBy('id', 'desc')
+                    ->limit($limit)
+                    ->get();
+                $count = Db::table('monitor')
+                    ->where('isdel', 0)
+                    ->where('time', '>=', $begin)
+                    ->where('time', '<=', $end)
+                    ->where('function', 'like', '%' . $search_func_key . '%')
+                    ->count();
+            } else {
+                $data = Db::table('monitor')
+                    ->where('isdel', 0)
+                    ->where('time', '>=', $begin)
+                    ->where('time', '<=', $end)
+                    ->orderBy('id', 'desc')
+                    ->limit($limit)
+                    ->get();
+                $count = Db::table('monitor')
+                    ->where('isdel', 0)
+                    ->where('time', '>=', $begin)
+                    ->where('time', '<=', $end)
+                    ->count();
+            }
         }
         $res = [];
         foreach ($data as &$tem) {

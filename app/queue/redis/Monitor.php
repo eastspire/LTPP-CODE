@@ -3,7 +3,7 @@
  * @Author: SQS 1491579574@qq.com
  * @Date: 2023-06-02 11:58:18
  * @LastEditors: wmzn-ltpp 1491579574@qq.com
- * @LastEditTime: 2023-12-30 11:21:34
+ * @LastEditTime: 2023-12-30 13:30:51
  * @FilePath: \LTPP-CODE\app\queue\redis\Monitor.php
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
@@ -31,7 +31,7 @@ class Monitor implements Consumer
             $user_id = Base::getIdByUid($data['user_uid'] ?? '');
             Base::insertToDb('monitor', [
                 'path' => $path,
-                'function' => $$function,
+                'function' => $function,
                 'userid' => $user_id
             ]);
         } catch (Exception $e) {
