@@ -367,7 +367,7 @@ class Contest
             ->increment('allpeople', 1);
         if ($res) {
             Contest::sendUpdateRankMQ($contest_id);
-            Base::updateContestData($contest_id);
+            Base::updateContestDataRedis($contest_id);
             return json(['code' => 1, 'msg' => '报名成功']);
         }
         return json(['code' => -1, 'msg' => '报名失败，请重新尝试！']);
@@ -720,7 +720,7 @@ class Contest
         //插入竞赛信息
         $res_id = Base::insertToDb('contest', $data);
         // 缓存竞赛
-        Base::updateContestData($res_id);
+        Base::updateContestDataRedis($res_id);
 
         $problemdata = $request->post('problemdata');
         foreach ($problemdata as &$tem) {
@@ -820,7 +820,7 @@ class Contest
             Base::dataToSafe($proary);
             $redis4->set('Contest' . $res_id . 'problemdata' . $tem->userid, json_encode($proary));
         }
-        Base::updateContestData($res_id);
+        Base::updateContestDataRedis($res_id);
         return json(['code' => 1, 'msg' => '竞赛添加成功']);
     }
 
@@ -932,7 +932,7 @@ class Contest
         $redis4->del('Contest' . $contest_id . 'resarray');
         $redis4->del('Contest' . $contest_id . 'problemIndex');
         $redis4->del('Contest' . $contest_id . 'HtmlRank');
-        Base::updateContestData($contest_id);
+        Base::updateContestDataRedis($contest_id);
         return json(['code' => 1, 'msg' => '竞赛更新成功']);
     }
 
@@ -990,7 +990,7 @@ class Contest
             ->where('contestid', $contest_id)
             ->where('isdel', 0)
             ->update(['isdel' => 1]);
-        Base::updateContestData($contest_id);
+        Base::updateContestDataRedis($contest_id);
 
         // 删除机器人完成竞赛缓存
         $redis27 = Redis::connection('db27');
@@ -1442,7 +1442,7 @@ class Contest
         foreach ($user as &$tem) {
             $redis4->del('Contest' . $contest_id . 'problemdata' . $tem);
         }
-        Base::updateContestData($contest_id);
+        Base::updateContestDataRedis($contest_id);
         // 删除机器人完成竞赛缓存
         $redis27 = Redis::connection('db27');
         $key = Base::$robot_contest_redis_front . $contest_id;

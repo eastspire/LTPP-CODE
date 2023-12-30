@@ -368,5 +368,4 @@ class Chatfile
         }
         return json(['code' => 1, 'data' => $percentage]);
     }
-}
-;
+};

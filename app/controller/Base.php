@@ -2611,7 +2611,7 @@ class Base
      * 根据ID更新竞赛缓存信息
      * @param int $contest_id
      */
-    static public function updateContestData($contest_id)
+    static public function updateContestDataRedis($contest_id)
     {
         if (!is_numeric($contest_id)) {
             return;

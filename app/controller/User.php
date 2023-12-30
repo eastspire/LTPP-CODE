@@ -1206,7 +1206,6 @@ class User
         } else {
             unset($data['password']);
         }
-
         $UpdataBlogandCommentName = Db::table('user')
             ->where('id', $data['id'])
             ->where('isdel', 0)
@@ -1215,26 +1214,55 @@ class User
         if (!$UpdataBlogandCommentName) {
             return \json(['code' => -1, 'msg' => '用户不存在']);
         }
-
         if ($UpdataBlogandCommentName->name != $data['name']) {
-            //说明用户名更改
-            //更新对应文章的作者名称
+            // 更新对应文章的作者名称
             Db::table('article')
                 ->where('writerid', $data['id'])
                 ->where('isdel', 0)
                 ->update(['writer' => $data['name']]);
-        }
-        if ($UpdataBlogandCommentName->name != $data['name']) {
-            // 更新评论用户名
+            // 更新文章评论用户名
             Db::table('articlecomment')
                 ->where('userid', $data['id'])
                 ->where('isdel', 0)
                 ->update(['username' => $data['name']]);
-
             Db::table('articlecomment')
                 ->where('touserid', $data['id'])
                 ->where('isdel', 0)
                 ->update(['tousername' => $data['name']]);
+            // 更新竞赛创建者用户名
+            Db::table('contest')
+                ->where('createrid', $data['id'])
+                ->where('isdel', 0)
+                ->update(['creater' => $data['name']]);
+            // 更新视频评论用户名
+            Db::table('videocomment')
+                ->where('userid', $data['id'])
+                ->where('isdel', 0)
+                ->update(['username' => $data['name']]);
+            Db::table('videocomment')
+                ->where('touserid', $data['id'])
+                ->where('isdel', 0)
+                ->update(['tousername' => $data['name']]);
+            $contest_list = Db::table('contest')
+                ->where('createrid', $data['id'])
+                ->where('isdel', 0)
+                ->select('id')
+                ->get();
+            foreach ($contest_list as &$contest) {
+                Base::updateContestDataRedis($contest->id);
+            }
+            $article_list = Db::table('article')
+                ->where('writerid', $data['id'])
+                ->where('isdel', 0)
+                ->select('id')
+                ->get();
+            foreach ($article_list as &$article) {
+                Base::updateArticleDataRedis($article->id);
+            }
+        }
+
+        if (isset($data['user_aid'])) {
+            unset($data['user_aid']);
         }
 
         $info = Db::table('user')
@@ -1345,24 +1373,50 @@ class User
         }
 
         if ($UpdataBlogandCommentName->name != $data['name']) {
-            //说明用户名更改
-            //更新对应文章的作者名称
+            // 更新对应文章的作者名称
             Db::table('article')
                 ->where('writerid', $my_aid)
                 ->where('isdel', 0)
                 ->update(['writer' => $data['name']]);
-        }
-        if ($UpdataBlogandCommentName->name != $data['name']) {
-            // 更新评论用户名
+            // 更新文章评论用户名
             Db::table('articlecomment')
                 ->where('userid', $my_aid)
                 ->where('isdel', 0)
                 ->update(['username' => $data['name']]);
-
             Db::table('articlecomment')
                 ->where('touserid', $my_aid)
                 ->where('isdel', 0)
                 ->update(['tousername' => $data['name']]);
+            // 更新竞赛创建者用户名
+            Db::table('contest')
+                ->where('createrid', $my_aid)
+                ->where('isdel', 0)
+                ->update(['creater' => $data['name']]);
+            // 更新视频评论用户名
+            Db::table('videocomment')
+                ->where('userid', $my_aid)
+                ->where('isdel', 0)
+                ->update(['username' => $data['name']]);
+            Db::table('videocomment')
+                ->where('touserid', $my_aid)
+                ->where('isdel', 0)
+                ->update(['tousername' => $data['name']]);
+            $contest_list = Db::table('contest')
+                ->where('createrid', $my_aid)
+                ->where('isdel', 0)
+                ->select('id')
+                ->get();
+            foreach ($contest_list as &$contest) {
+                Base::updateContestDataRedis($contest->id);
+            }
+            $article_list = Db::table('article')
+                ->where('writerid', $my_aid)
+                ->where('isdel', 0)
+                ->select('id')
+                ->get();
+            foreach ($article_list as &$article) {
+                Base::updateArticleDataRedis($article->id);
+            }
         }
         $info = false;
         if ($password != '' && $password) {

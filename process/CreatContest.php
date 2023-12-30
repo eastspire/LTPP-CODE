@@ -111,7 +111,7 @@ class CreatContest
             'createrid' => Base::getRootId(),
         ]);
         // 缓存竞赛
-        Base::updateContestData($res_id);
+        Base::updateContestDataRedis($res_id);
         return $res_id;
     }
 
