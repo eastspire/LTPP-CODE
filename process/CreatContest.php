@@ -3,7 +3,7 @@
  * @Author: 18855190718 1491579574@qq.com
  * @Date: 2023-02-28 22:41:18
  * @LastEditors: wmzn-ltpp 1491579574@qq.com
- * @LastEditTime: 2023-12-30 13:31:26
+ * @LastEditTime: 2023-12-30 23:35:06
  * @FilePath: \LTPP-CODE\process\CreatContest.php
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
@@ -97,6 +97,11 @@ class CreatContest
 
     /**
      * 插入竞赛
+     * @param string $contest_title
+     * @param string $contest_content
+     * @param array $time_list
+     * @param array $user_list
+     * @param string $type
      */
     private function addContest($contest_title, $contest_content, $time_list, $user_list, $type)
     {
@@ -117,6 +122,8 @@ class CreatContest
 
     /**
      * 插入问题
+     * @param int $contest_id
+     * @param array $pro_list
      */
     private function addProblem($contest_id, $pro_list)
     {
@@ -135,10 +142,16 @@ class CreatContest
             }
         }
         if (!empty($insert_pro_list)) {
-            Db::table('contestproblem')->insert($insert_pro_list);
+            Db::table('contestproblem')
+                ->insert($insert_pro_list);
         }
     }
 
+    /**
+     * 插入参赛用户
+     * @param int $contest_id
+     * @param array $user_list
+     */
     private function addUser($contest_id, $user_list)
     {
         $cnt_i = 0;
@@ -150,12 +163,14 @@ class CreatContest
                 'totaltime' => 0,
             ];
             if ($cnt_i % 1000 == 0 && !empty($insert_user)) {
-                Db::table('joincontest')->insert($insert_user);
+                Db::table('joincontest')
+                    ->insert($insert_user);
                 $insert_user = [];
             }
         }
         if (!empty($insert_user)) {
-            Db::table('joincontest')->insert($insert_user);
+            Db::table('joincontest')
+                ->insert($insert_user);
         }
     }
 
@@ -167,7 +182,6 @@ class CreatContest
                 $pro_list = $this->getProblemList();
                 $user_list = $this->getUserList();
                 $time_list = $this->getTimeList();
-                //插入竞赛信息
                 foreach (Contest::$contest_type_list as &$type) {
                     $contest_title = $type . '赛制竞赛';
                     $contest_content = $this->getContent($contest_title);
