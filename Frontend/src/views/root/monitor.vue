@@ -272,6 +272,7 @@ export default {
     search() {
       if (this.key == "" || this.key == null || this.key == undefined) {
         this.issearch = false;
+        this.last_id = "";
         this.getlist();
         return;
       }
