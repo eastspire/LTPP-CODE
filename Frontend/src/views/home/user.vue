@@ -286,11 +286,6 @@ export default {
   async created() {
     this.page = 1;
     this.limit = 50;
-    let tem_list = [];
-    for (let i = 0; i < this.limit; ++i) {
-      tem_list.push(this.$SqsGlobal.user_list_data);
-    }
-    this.tableData = tem_list;
     this.issearch = true;
     this.showone = false;
     await this.looklist();
@@ -311,7 +306,16 @@ export default {
     };
   },
   methods: {
+    initData() {
+      this.tableData = [];
+      let tem_list = [];
+      for (let i = 0; i < this.limit; ++i) {
+        tem_list.push(this.$SqsGlobal.user_list_data);
+      }
+      this.tableData = tem_list;
+    },
     async looklist() {
+      this.initData();
       const { data: res } = await this.$ajax({
         url: "/User/userList",
         method: "post",
@@ -365,6 +369,7 @@ export default {
       }
     },
     async searchuser() {
+      this.initData();
       if (!this.key) {
         this.issearch = false;
         this.looklist();

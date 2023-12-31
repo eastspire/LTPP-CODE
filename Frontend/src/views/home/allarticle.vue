@@ -50,7 +50,10 @@
           >
             <div
               @click="toOneArticle(temtable.id)"
-              style="cursor: pointer"
+              style="
+                cursor: pointer;
+                background-color: rgba(248, 249, 250, 0.2);
+              "
               class="shadow"
             >
               <div
