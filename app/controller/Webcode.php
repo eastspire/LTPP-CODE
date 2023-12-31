@@ -76,9 +76,7 @@ class Webcode
         }
         $json = Base::getCodeJson($code_id);
         if ($json) {
-            if (Base::codeStatusIsFinish($json['status'])) {
-                Base::deleteCodeCache($my_aid, $code_id);
-            }
+            Base::deleteCodeCache($my_aid, $code_id);
             return json($json);
         }
         // 这里code得是0，状态只能从缓存读取信息
