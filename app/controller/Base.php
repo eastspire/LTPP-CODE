@@ -270,6 +270,13 @@ class Base
     static $judge_code_re = 4;
 
     /**
+     * 需要删除的key 
+     */
+    static $to_safe_delete_key = [
+        'isdel' => true
+    ];
+
+    /**
      * 需要加密的key
      */
     static $to_safe_key = [
@@ -2254,6 +2261,11 @@ class Base
             return;
         }
         foreach ($data as $key => &$t_data) {
+            if (!is_array($t_data) && !is_object($t_data) && isset(Base::$to_safe_delete_key[$key])) {
+                // 删除不需要显示的字段
+                unset($data[$key]);
+                continue;
+            }
             if (isset(Base::$to_safe_key[$key])) {
                 $t_data = $is_chat_or_rank ? Base::getChatUserUidById($t_data) : Base::getUidById($t_data);
             }

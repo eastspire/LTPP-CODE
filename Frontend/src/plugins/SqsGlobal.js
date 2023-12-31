@@ -186,7 +186,6 @@ const question_list_data = {
 };
 const monitor_list_data = {
     "id": "",
-    "isdel": 0,
     "time": "加载中",
     "path": "加载中",
     "function": "加载中",
@@ -233,7 +232,6 @@ const video_list_data = {
 // 商品列表数据模板
 const goods_list_data = {
     "id": "",
-    "isdel": 0,
     "name": "加载中",
     "money": "加载中",
     "path": "加载中",

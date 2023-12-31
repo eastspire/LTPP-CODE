@@ -389,10 +389,13 @@ class Contest
         if ($isroot) {
             $db = Db::table('contest')
                 ->where('isdel', 0)
+                ->select(Contest::$contest_list_db_key)
                 ->orderBy('id', 'desc')
                 ->paginate($limit, '*', 'page', $page)
                 ->items();
-            $allnum = Db::table('contest')->count();
+            $allnum = Db::table('contest')
+                ->where('isdel', 0)
+                ->count();
         } else {
             $db = Db::table('contest')
                 ->where('isdel', 0)
@@ -400,7 +403,10 @@ class Contest
                 ->orderBy('id', 'desc')
                 ->paginate($limit, '*', 'page', $page)
                 ->items();
-            $allnum = Db::table('contest')->where('createrid', $my_aid)->count();
+            $allnum = Db::table('contest')
+                ->where('createrid', $my_aid)
+                ->where('isdel', 0)
+                ->count();
         }
         Base::dataToSafe($db);
         if ($db) {

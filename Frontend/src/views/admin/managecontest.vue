@@ -201,16 +201,10 @@ export default {
     this.isseetip = false;
   },
   created() {
-    this.contestlist = [];
     this.isseetip = true;
     this.issearch = false; //判断是否搜索，从而进行分页查找
     this.page = 1;
     this.limit = 50;
-    let tem_list = [];
-    for (let i = 0; i < this.limit; ++i) {
-      tem_list.push(this.$SqsGlobal.oj_contest_list_data);
-    }
-    this.contestlist = tem_list;
   },
   data() {
     return {
@@ -226,6 +220,14 @@ export default {
     };
   },
   methods: {
+    initData() {
+      this.contestlist = [];
+      let tem_list = [];
+      for (let i = 0; i < this.limit; ++i) {
+        tem_list.push(this.$SqsGlobal.oj_contest_list_data);
+      }
+      this.contestlist = tem_list;
+    },
     // 表体字体颜色设置
     /***
      * row为某一行的除操作外的全部数据
@@ -295,6 +297,7 @@ export default {
     },
     //获取竞赛列表
     async getlist() {
+      this.initData();
       const { data: res } = await this.$ajax({
         method: "post",
         url: "/Contest/backGetContestList",
@@ -319,6 +322,7 @@ export default {
     //搜索
     async keysearch() {
       this.lastkey = this.key;
+      this.initData();
       const { data: res } = await this.$ajax({
         method: "post",
         url: "/Contest/backSearchContest",

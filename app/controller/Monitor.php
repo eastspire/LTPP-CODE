@@ -67,6 +67,7 @@ class Monitor
                     ->where('time', '<=', $end)
                     ->orderBy('id', 'desc')
                     ->limit($limit)
+                    ->select(Monitor::$monitor_db_key)
                     ->paginate($limit, '*', 'page', $page)
                     ->items();
                 $allnum = Db::table('monitor')

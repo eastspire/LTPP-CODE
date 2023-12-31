@@ -491,6 +491,7 @@ class Goods
         if ($isroot) {
             $res = Db::table('goods')
                 ->where('isdel', 0)
+                ->select(Goods::$goods_db_list_key)
                 ->paginate($limit, '*', 'page', $page)
                 ->items();
             $allnum = Db::table('goods')
@@ -588,5 +589,4 @@ class Goods
         Base::dataToSafe($res);
         return json(['code' => 1, 'data' => $res, 'allnum' => $allnum]);
     }
-
 }
