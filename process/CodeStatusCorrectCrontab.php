@@ -3,7 +3,7 @@
  * @Author: 18855190718 1491579574@qq.com
  * @Date: 2023-01-12 12:38:58
  * @LastEditors: wmzn-ltpp 1491579574@qq.com
- * @LastEditTime: 2023-12-31 12:25:29
+ * @LastEditTime: 2023-12-31 12:55:19
  * @FilePath: \LTPP-CODE\process\CodeStatusCorrectCrontab.php
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
@@ -43,7 +43,7 @@ class CodeStatusCorrectCrontab
                             ->where('time', '<=', date('Y-m-d H:i:s', $time))
                             ->where('isdel', 0);
                     })
-                    ->select('id', 'userid', 'code', 'language')
+                    ->select('id', 'userid', 'code', 'language', 'time')
                     ->get();
                 foreach ($db as &$tem) {
                     // 发送给消息队列
@@ -54,7 +54,7 @@ class CodeStatusCorrectCrontab
                         'userlanguage' => $tem->language,
                         'testin' => ''
                     ]);
-                    Robot::sendChatToOneUserMsg(Base::getRootId(), '定时任务进程 **【CodeStatusCorrectCrontab】** 运行日志：ID为'.$tem->id.'的代码已提交，等待重新运行！' ));
+                    Robot::sendChatToOneUserMsg(Base::getRootId(), '定时任务进程 **【CodeStatusCorrectCrontab】** 运行日志：【ID】为' . $tem->id . '，【提交时间】为' . $tem->time . '【提交者用户ID】为' . $tem->userid . '的代码已提交，正在等待重新运行！');
                 }
             } catch (Exception $e) {
                 Robot::sendChatToOneUserMsg(Base::getRootId(), '定时任务进程 **【CodeStatusCorrectCrontab】** 运行错误：' . $e->getMessage());
