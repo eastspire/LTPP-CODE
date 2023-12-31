@@ -2263,7 +2263,7 @@ class Base
         foreach ($data as $key => &$t_data) {
             if (!is_array($t_data) && !is_object($t_data) && isset(Base::$to_safe_delete_key[$key])) {
                 // 删除不需要显示的字段
-                unset($data[$key]);
+                unset($data->$key);
                 continue;
             }
             if (isset(Base::$to_safe_key[$key])) {
