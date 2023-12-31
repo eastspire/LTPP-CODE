@@ -35,7 +35,10 @@
             >
               <div
                 @click="toOneArticle(temtable.id)"
-                style="cursor: pointer"
+                style="
+                  cursor: pointer;
+                  background-color: rgba(248, 249, 250, 0.2);
+                "
                 class="shadow"
               >
                 <div
@@ -61,6 +64,7 @@
                     >
                       <!-- img才生效图片裁剪适应，el-image不生效 -->
                       <img
+                        v-if="temtable.image && reg.test(temtable.image)"
                         class="animate"
                         style="width: 100%; height: 100%; object-fit: cover"
                         title=""
@@ -216,6 +220,8 @@ export default {
     this.limit = 10;
     window.addEventListener("scroll", this.scrollBottom);
     this.page = 1;
+    this.isinit = false;
+    this.initData();
     await this.lookarticle();
     this.$nextTick(() => {
       this.totop();
@@ -223,6 +229,7 @@ export default {
   },
   deactivated() {
     this.isseetip = false;
+    this.isinit = false;
     this.userarticle = [];
     this.disabledscroll = false;
     this.page = 1;
@@ -230,12 +237,15 @@ export default {
   },
   destroyed() {
     this.isseetip = false;
+    this.isinit = false;
     this.userarticle = [];
     this.page = 1;
     window.addEventListener("scroll", this.scrollBottom);
   },
   data() {
     return {
+      isinit: false,
+      reg: /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\*\+,;=.]+$/,
       limit: 10,
       disabledscroll: false,
       isseetip: true,
@@ -250,6 +260,14 @@ export default {
     };
   },
   methods: {
+    initData() {
+      this.userarticle = [];
+      let tem_list = [];
+      for (let i = 0; i < this.limit; ++i) {
+        tem_list.push(this.$SqsGlobal.article_list_data);
+      }
+      this.userarticle = tem_list;
+    },
     async scrollBottom() {
       if (this.disabledscroll) {
         return;
@@ -304,49 +322,13 @@ export default {
       if (!(scrollTop + windowHeight >= scrollHeight - 1 && scrollTop >= 100)) {
         return;
       }
-
       this.disabledscroll = true;
-      this.page++;
-      const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Article/problemSolveArticleList",
-        portType: {
-          process: "8792",
-        },
-        data: {
-          problem_id: this.problemid,
-          limit: this.limit,
-          page: this.page,
-        },
-      }).catch((t) => {
-        this.$msg({
-          type: "error",
-          message: t,
-          duration: 1600,
-          offset: 80,
-        });
-      });
-      if (res.data.length <= 0) {
-        this.$msg({
-          type: "success",
-          message: "没有更多了！",
-          duration: 1600,
-          offset: 80,
-        });
-        return;
-      }
-      if (this.page > 2) {
-        this.userarticle.splice(0, this.limit);
-      }
-      res.data.forEach((tem) => {
-        this.userarticle.push(tem);
-      });
-      window.scrollTo(0, document.body.clientHeight / 2);
+      this.lookarticle();
     },
     toback() {
       this.$router.go(-1);
     },
-    toonearticle(id) {
+    toOneArticle(id) {
       id &&
         this.$router.push({
           path: "/onearticle",
@@ -366,7 +348,7 @@ export default {
         data: {
           problem_id: this.problemid,
           limit: this.limit,
-          page: this.page,
+          page: this.page++,
         },
       }).catch((t) => {
         this.$msg({
@@ -375,6 +357,8 @@ export default {
           duration: 1600,
           offset: 80,
         });
+        this.page--;
+        this.isinit = true;
       });
       if (res.code != 1) {
         this.$msg({
@@ -405,9 +389,13 @@ export default {
       } else if (res.data && res.data.length <= 0) {
         this.noshowfoot = false;
       } else {
+        if (!this.isinit) {
+          this.userarticle = [];
+        }
         this.noshowfoot = true;
         this.userarticle.push(...res.data);
       }
+      this.isinit = true;
     },
   },
 };
