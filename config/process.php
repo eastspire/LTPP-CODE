@@ -37,6 +37,9 @@ return [
     //         ]
     //     ]
     // ],
+    'CreatContest' => [
+        'CreatContest' => process\CreatContest::class,
+    ],
     'Chatfile' => [
         'handler' => process\Chatfile::class
     ],
