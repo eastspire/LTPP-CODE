@@ -76,6 +76,9 @@ class Webcode
         }
         $json = Base::getCodeJson($code_id);
         if ($json) {
+            if (Base::codeStatusIsFinish($json['status'])) {
+                Base::deleteCodeCache($my_aid, $code_id);
+            }
             return json($json);
         }
         // 这里code得是0，状态只能从缓存读取信息
@@ -99,30 +102,6 @@ class Webcode
             'code_id' => $code_id,
             'code_data' => $code_data
         ]);
-    }
-
-    /**
-     * 删除代码缓存
-     */
-    public function deleteCode(Request $request)
-    {
-        $my_uid = JwtToken::getCurrentId();
-        $my_aid = Base::getIdByUid($my_uid);
-        if (!$my_aid) {
-            return 0;
-        }
-        $code_uid = $request->post('code_id');
-        $code_id = Base::getIdByUid($code_uid);
-        $code_db = Base::getCodeData($code_id);
-        if (
-            !$code_db ||
-            $code_db->userid != $my_aid ||
-            $code_db->status == Base::$code_up_waiting
-        ) {
-            return 0;
-        }
-        Base::deleteCodeJson($code_id);
-        return 1;
     }
 
     /**

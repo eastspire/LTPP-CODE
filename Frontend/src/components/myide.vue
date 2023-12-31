@@ -2,7 +2,7 @@
  * @Author: 18855190718 1491579574@qq.com
  * @Date: 2023-08-07 22:11:28
  * @LastEditors: wmzn-ltpp 1491579574@qq.com
- * @LastEditTime: 2023-10-16 19:55:03
+ * @LastEditTime: 2023-12-31 09:37:58
  * @FilePath: \LTPP-CODE\Frontend\src\components\myide.vue
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
@@ -575,7 +575,6 @@ export default {
         clearInterval(this.up_timer);
         this.up_timer = null;
       } catch (err) {}
-      this.deleteCode(code_id);
       this.isup = false;
       this.istest = false;
       this.usetime = res.usetime;
@@ -638,18 +637,6 @@ export default {
         });
       }
     },
-    async deleteCode(code_id) {
-      this.$ajax({
-        method: "post",
-        url: "/Webcode/deleteCode",
-        portType: {
-          process: "8791",
-        },
-        data: {
-          code_id: code_id,
-        },
-      }).catch(() => {});
-    },
     async submitQueryOne(code_id) {
       if (!this.editor || !code_id) {
         return;
@@ -688,7 +675,6 @@ export default {
         clearInterval(this.up_timer);
         this.up_timer = null;
       } catch (err) {}
-      this.deleteCode(code_id);
       this.isup = false;
       this.istest = false;
       this.usetime = res.usetime;

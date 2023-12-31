@@ -3,7 +3,7 @@
  * @Author: 18855190718 1491579574@qq.com
  * @Date: 2023-01-12 12:38:58
  * @LastEditors: wmzn-ltpp 1491579574@qq.com
- * @LastEditTime: 2023-12-31 08:20:45
+ * @LastEditTime: 2023-12-31 08:51:43
  * @FilePath: \LTPP-CODE\process\Dayproblem.php
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
@@ -44,7 +44,8 @@ class Dayproblem extends Robot
             ->where('isdel', 0)
             ->select('id')
             ->inRandomOrder()
-            ->pluck('id');
+            ->pluck('id')
+            ->toArray();
         $total = Db::table('oj')
             ->where('isdel', 0)
             ->count();

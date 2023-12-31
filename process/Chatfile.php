@@ -2,9 +2,9 @@
 /*
  * @Author: 18855190718 1491579574@qq.com
  * @Date: 2023-01-26 15:44:00
- * @LastEditors: 18855190718 1491579574@qq.com
- * @LastEditTime: 2023-03-13 17:36:52
- * @FilePath: \LTPP\process\Chatfile.php
+ * @LastEditors: wmzn-ltpp 1491579574@qq.com
+ * @LastEditTime: 2023-12-31 09:36:39
+ * @FilePath: \LTPP-CODE\process\Chatfile.php
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
  * Copyright (c) 2023 by 18855190718 1491579574@qq.com, All Rights Reserved. 
@@ -17,7 +17,7 @@ use app\controller\Robot;
 use app\controller\Base;
 use Exception;
 
-class Chatfile extends Robot
+class Chatfile
 {
     /**
      * @var $time_out_delete 文件存储最长时间（单位：天）

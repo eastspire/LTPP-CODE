@@ -37,6 +37,9 @@ return [
     //         ]
     //     ]
     // ],
+    'Webcode' => [
+        'Webcode' => process\Webcode::class,
+    ],
     'CreatContest' => [
         'CreatContest' => process\CreatContest::class,
     ],

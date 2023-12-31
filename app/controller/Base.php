@@ -291,6 +291,24 @@ class Base
     ];
 
     /**
+     * 可识别的语言
+     */
+
+    static $oj_judge_language = [
+        'C',
+        'C++',
+        'Java',
+        'Python3',
+        'Go',
+        'PHP',
+        'JavaScript',
+        'Rust',
+        'TypeScript',
+        'C#',
+        'Ruby'
+    ];
+
+    /**
      * 语言转markdown可识别的语言
      */
 
@@ -3146,5 +3164,35 @@ class Base
                 $user->online = 0;
             }
         }
+    }
+
+    /**
+     * 删除代码缓存
+     * @param int $my_aid
+     * @param int $code_id
+     */
+    static  public function deleteCodeCache($my_aid, $code_id)
+    {
+        if (!$my_aid || $code_id) {
+            return;
+        }
+        $code_db = Base::getCodeData($code_id);
+        if (
+            !$code_db ||
+            $code_db->userid != $my_aid ||
+            !Base::codeStatusIsFinish($code_db->status)
+        ) {
+            return;
+        }
+        Base::deleteCodeJson($code_id);
+    }
+
+    /**
+     * 判断代码状态是否已完成
+     * @param string $status
+     */
+    static public function codeStatusIsFinish($status)
+    {
+        return $status && $status != Base::$code_up_waiting && $status != Base::$code_up_running;
     }
 };

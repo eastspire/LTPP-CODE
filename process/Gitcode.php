@@ -7,7 +7,7 @@ use Workerman\Crontab\Crontab;
 use app\controller\Base;
 use Exception;
 
-class Gitcode extends Robot
+class Gitcode
 {
     protected function dfs($path)
     {
