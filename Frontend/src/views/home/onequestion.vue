@@ -3,13 +3,14 @@
     @contextmenu.prevent=""
     style="margin-left: auto; margin-right: auto"
     class="no-select"
-    v-loading.fullscreen.lock="!loadfinish"
-    element-loading-text="拼命加载中"
-    element-loading-spinner="el-icon-loading"
-    element-loading-background="rgba(0, 0, 0, 0.8)"
   >
     <div style="height: 1rem"></div>
-    <div v-show="loadfinish">
+    <div
+      v-loading.lock="!loadfinish"
+      element-loading-text="拼命加载中"
+      element-loading-spinner="el-icon-loading"
+      element-loading-background="rgba(41, 50, 56, 0.28)"
+    >
       <div
         class="shadow"
         style="

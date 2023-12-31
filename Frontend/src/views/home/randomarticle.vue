@@ -7,10 +7,10 @@
     @contextmenu.prevent=""
     class="no-select"
     style="margin-left: auto; margin-right: auto"
-    v-loading.fullscreen.lock="!loadfinish"
+    v-loading.lock="!loadfinish"
     element-loading-text="拼命加载中"
     element-loading-spinner="el-icon-loading"
-    element-loading-background="rgba(0, 0, 0, 0.8)"
+    element-loading-background="rgba(41, 50, 56, 0.28)"
   >
     <div style="height: 1rem"></div>
     <div
