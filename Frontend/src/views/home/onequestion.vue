@@ -78,7 +78,6 @@
                 color: #ebeef5;
                 min-height: 0rem;
                 height: auto;
-
                 border-width: 0rem;
               "
             >
@@ -354,7 +353,6 @@
                           border-width: 0rem !important;
                           background-color: rgba(0, 0, 0, 0.28) !important;
                           color: aliceblue !important;
-                          padding: 1rem 0.6rem 0rem 0.6rem !important;
                         "
                       ></mavon-editor>
                     </div>
@@ -509,7 +507,6 @@
                               height: auto !important;
                               border-width: 0rem !important;
                               color: aliceblue !important;
-                              padding: 1rem 0.6rem 0rem 0.6rem !important;
                             "
                           ></mavon-editor>
                         </div>
@@ -584,12 +581,7 @@
                 :previewBackground="prop.previewBackground"
                 :editorBackground="prop.editorBackground"
                 :xssOptions="whiteList"
-                style="
-                  min-height: 16rem;
-                  height: auto;
-
-                  border-width: 0rem;
-                "
+                style="min-height: 16rem; height: auto; border-width: 0rem"
               >
                 <!-- 引用视频链接的自定义按钮 -->
                 <template v-slot:left-toolbar-after>

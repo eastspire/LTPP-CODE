@@ -172,16 +172,15 @@
           </div>
           <pre
             style="
-              padding: 0.6rem 3.6rem;
+              padding: 0.6rem 2.6rem;
               text-align: right;
               font-size: 1rem;
               color: #ffffffe6;
               background-color: rgba(0, 0, 0, 0);
-              margin: 1rem 1rem;
             "
             >{{ notice.time }}</pre
           >
-          <div style="height: 3.4rem; clear: both"></div>
+          <div style="clear: both"></div>
           <el-pagination
             v-show="allnum"
             background

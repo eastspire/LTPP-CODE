@@ -560,7 +560,6 @@
                               background-color: rgba(0, 0, 0, 0.3) !important;
                               min-height: 0rem !important;
                               height: auto !important;
-
                               border-width: 0rem !important;
                               color: aliceblue !important;
                             "
