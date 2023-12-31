@@ -1271,7 +1271,7 @@ export default {
     },
     cellStyle({ row, rowIndex }) {
       let styleRes = {
-        background: "rgba(26, 26, 26, 0.46) !important",
+        background: "rgba(41, 50, 56, 0.16) !important",
         height: "3.6rem !important",
         color: "chartreuse",
       };

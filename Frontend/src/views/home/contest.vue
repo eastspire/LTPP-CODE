@@ -223,12 +223,12 @@ export default {
       let endtime = Date.parse(row.end);
       let now = Date.parse(new Date());
       let styleRes = {
-        background: "rgba(26, 26, 26, 0.46) !important",
+        background: "rgba(41, 50, 56, 0.16) !important",
         height: "3.6rem !important",
         color: "chartreuse",
       };
       if (rowIndex % 2 != 0) {
-        styleRes.background = "rgba(41, 50, 56, 0.46) !important";
+        styleRes.background = "rgba(26, 26, 26, 0.06) !important";
       }
       // 状态列字体颜色
       if (endtime <= now) {

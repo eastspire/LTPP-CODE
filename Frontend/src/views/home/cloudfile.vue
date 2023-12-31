@@ -700,8 +700,8 @@ export default {
       isseetip: true,
       iscloseFile: false,
       height: window.innerHeight + "px",
-      deepcolor: "rgba(26, 26, 26, 0.46)",
-      notdeepcolor: "rgba(41, 50, 56, 0.46)",
+      deepcolor: "rgba(41, 50, 56, 0.16)",
+      notdeepcolor: "rgba(26, 26, 26, 0.06)",
       file_percentage: 0,
       gitclass: [
         "folder",
