@@ -117,6 +117,7 @@ class Webcode
         $check_safe_json = Base::judgeCodeSafe($code, $userlanguage);
         if (!isset($check_safe_json['code']) || $check_safe_json['code'] != 1) {
             Robot::sendChatToOneUserMsg(Base::getRootId(), '定时任务进程 **【Webcode】** 用户代码校验未通过：' . json($check_safe_json));
+            return;
         }
         $code_id = Base::insertToDb('codehistory', [
             'userid' => $my_aid,
@@ -138,8 +139,6 @@ class Webcode
                 'userlanguage' => $userlanguage,
                 'testin' => $testin
             ]);
-            // 删除缓存
-            Base::deleteCodeCache($my_aid, $code_id);
         }
     }
 

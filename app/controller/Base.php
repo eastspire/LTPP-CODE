@@ -175,6 +175,11 @@ class Base
     static $redis_timeout = 3600;
 
     /**
+     * 服务器代码结果缓存信息过期时间（单位：秒）
+     */
+    static $redis_code_run_res_timeout = 60;
+
+    /**
      * 服务器地址
      */
     static $GLOBlinuxurl = 'http://127.0.0.1:8787';
@@ -1269,7 +1274,7 @@ class Base
     {
         $redis34 = Redis::connection('db34');
         $key = 'CodeJson' . $code_id;
-        $redis34->setEx($key, Base::$redis_timeout, json_encode($json));
+        $redis34->setEx($key, Base::$redis_code_run_res_timeout, json_encode($json));
     }
 
     /**
