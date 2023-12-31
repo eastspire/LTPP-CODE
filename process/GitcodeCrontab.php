@@ -7,7 +7,7 @@ use Workerman\Crontab\Crontab;
 use app\controller\Base;
 use Exception;
 
-class Gitcode
+class GitcodeCrontab
 {
     protected function dfs($path)
     {

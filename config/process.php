@@ -1,4 +1,14 @@
 <?php
+/*
+ * @Author: wmzn-ltpp 1491579574@qq.com
+ * @Date: 2023-08-07 18:43:59
+ * @LastEditors: wmzn-ltpp 1491579574@qq.com
+ * @LastEditTime: 2023-12-31 10:40:40
+ * @FilePath: \LTPP-CODE\config\process.php
+ * @Description: Email:1491579574@qq.com
+ * QQ:1491579574
+ * Copyright (c) 2023 by SQS, All Rights Reserved. 
+ */
 
 /**
  * This file is part of webman.
@@ -14,6 +24,27 @@
  */
 
 return [
+    'WebcodeCrontab' => [
+        'Webcode' => process\WebcodeCrontab::class,
+    ],
+    'CreatContestCrontab' => [
+        'CreatContest' => process\CreatContestCrontab::class,
+    ],
+    'ChatfileCrontab' => [
+        'handler' => process\ChatfileCrontab::class
+    ],
+    'DayproblemCrontab' => [
+        'handler' => process\DayproblemCrontab::class
+    ],
+    'GitcodeCrontab' => [
+        'handler' => process\GitcodeCrontab::class
+    ],
+    'RobotContestCrontab' => [
+        'handler' => process\RobotContestCrontab::class
+    ],
+    'ContestRankCrontab' => [
+        'handler' => process\ContestRankCrontab::class
+    ],
     // File update detection and automatic reload
     // 'monitor' => [
     //     'handler' => process\Monitor::class,
@@ -35,207 +66,6 @@ return [
     //             'htm',
     //             'env'
     //         ]
-    //     ]
-    // ],
-    'Webcode' => [
-        'Webcode' => process\Webcode::class,
-    ],
-    'CreatContest' => [
-        'CreatContest' => process\CreatContest::class,
-    ],
-    'Chatfile' => [
-        'handler' => process\Chatfile::class
-    ],
-    'Dayproblem' => [
-        'handler' => process\Dayproblem::class
-    ],
-    'Gitcode' => [
-        'handler' => process\Gitcode::class
-    ],
-    'RobotContest' => [
-        'handler' => process\RobotContest::class
-    ],
-    'ContestRank' => [
-        'handler' => process\ContestRank::class
-    ],
-    // 'EchartsRank' => [
-    //     'handler' => \Webman\App::class,
-    //     'listen' => 'http://0.0.0.0:48788',
-    //     'count' => cpu_count() > 8 ? 8 : cpu_count(),
-    //     // 进程数
-    //     'constructor' => [
-    //         'request_class' => \support\Request::class,
-    //         // request类设置
-    //         'logger' => \support\Log::channel('default'),
-    //         // 日志实例
-    //         'app_path' => app_path(),
-    //         // app目录位置
-    //         'public_path' => public_path() // public目录位置
-    //     ]
-    // ],
-    // 'Rank' => [
-    //     'handler' => \Webman\App::class,
-    //     'listen' => 'http://0.0.0.0:48789',
-    //     'count' => cpu_count() > 8 ? 8 : cpu_count(),
-    //     // 进程数
-    //     'constructor' => [
-    //         'request_class' => \support\Request::class,
-    //         // request类设置
-    //         'logger' => \support\Log::channel('default'),
-    //         // 日志实例
-    //         'app_path' => app_path(),
-    //         // app目录位置
-    //         'public_path' => public_path() // public目录位置
-    //     ]
-    // ],
-    // 'OnlineJudge' => [
-    //     'handler' => \Webman\App::class,
-    //     'listen' => 'http://0.0.0.0:48790',
-    //     'count' => cpu_count() > 8 ? 8 : cpu_count(),
-    //     // 进程数
-    //     'constructor' => [
-    //         'request_class' => \support\Request::class,
-    //         // request类设置
-    //         'logger' => \support\Log::channel('default'),
-    //         // 日志实例
-    //         'app_path' => app_path(),
-    //         // app目录位置
-    //         'public_path' => public_path() // public目录位置
-    //     ]
-    // ],
-    // 'OnlineTest' => [
-    //     'handler' => \Webman\App::class,
-    //     'listen' => 'http://0.0.0.0:48791',
-    //     'count' => cpu_count() > 8 ? 8 : cpu_count(),
-    //     // 进程数
-    //     'constructor' => [
-    //         'request_class' => \support\Request::class,
-    //         // request类设置
-    //         'logger' => \support\Log::channel('default'),
-    //         // 日志实例
-    //         'app_path' => app_path(),
-    //         // app目录位置
-    //         'public_path' => public_path() // public目录位置
-    //     ]
-    // ],
-    // 'ArticleAndQuestion' => [
-    //     'handler' => \Webman\App::class,
-    //     'listen' => 'http://0.0.0.0:48792',
-    //     'count' => cpu_count() > 8 ? 8 : cpu_count(),
-    //     // 进程数
-    //     'constructor' => [
-    //         'request_class' => \support\Request::class,
-    //         // request类设置
-    //         'logger' => \support\Log::channel('default'),
-    //         // 日志实例
-    //         'app_path' => app_path(),
-    //         // app目录位置
-    //         'public_path' => public_path() // public目录位置
-    //     ]
-    // ],
-    // 'UserAndQuestion' => [
-    //     'handler' => \Webman\App::class,
-    //     'listen' => 'http://0.0.0.0:48793',
-    //     'count' => cpu_count() > 8 ? 8 : cpu_count(),
-    //     // 进程数
-    //     'constructor' => [
-    //         'request_class' => \support\Request::class,
-    //         // request类设置
-    //         'logger' => \support\Log::channel('default'),
-    //         // 日志实例
-    //         'app_path' => app_path(),
-    //         // app目录位置
-    //         'public_path' => public_path() // public目录位置
-    //     ]
-    // ],
-    // 'Problem' => [
-    //     'handler' => \Webman\App::class,
-    //     'listen' => 'http://0.0.0.0:48794',
-    //     'count' => cpu_count() > 8 ? 8 : cpu_count(),
-    //     // 进程数
-    //     'constructor' => [
-    //         'request_class' => \support\Request::class,
-    //         // request类设置
-    //         'logger' => \support\Log::channel('default'),
-    //         // 日志实例
-    //         'app_path' => app_path(),
-    //         // app目录位置
-    //         'public_path' => public_path() // public目录位置
-    //     ]
-    // ],
-    // 'CodeHistory' => [
-    //     'handler' => \Webman\App::class,
-    //     'listen' => 'http://0.0.0.0:48795',
-    //     'count' => cpu_count() > 8 ? 8 : cpu_count(),
-    //     // 进程数
-    //     'constructor' => [
-    //         'request_class' => \support\Request::class,
-    //         // request类设置
-    //         'logger' => \support\Log::channel('default'),
-    //         // 日志实例
-    //         'app_path' => app_path(),
-    //         // app目录位置
-    //         'public_path' => public_path() // public目录位置
-    //     ]
-    // ],
-    // 'Contest' => [
-    //     'handler' => \Webman\App::class,
-    //     'listen' => 'http://0.0.0.0:48796',
-    //     'count' => cpu_count() > 8 ? 8 : cpu_count(),
-    //     // 进程数
-    //     'constructor' => [
-    //         'request_class' => \support\Request::class,
-    //         // request类设置
-    //         'logger' => \support\Log::channel('default'),
-    //         // 日志实例
-    //         'app_path' => app_path(),
-    //         // app目录位置
-    //         'public_path' => public_path() // public目录位置
-    //     ]
-    // ],
-    // 'Setting' => [
-    //     'handler' => \Webman\App::class,
-    //     'listen' => 'http://0.0.0.0:48797',
-    //     'count' => cpu_count() > 8 ? 8 : cpu_count(),
-    //     // 进程数
-    //     'constructor' => [
-    //         'request_class' => \support\Request::class,
-    //         // request类设置
-    //         'logger' => \support\Log::channel('default'),
-    //         // 日志实例
-    //         'app_path' => app_path(),
-    //         // app目录位置
-    //         'public_path' => public_path() // public目录位置
-    //     ]
-    // ],
-    // 'Comment' => [
-    //     'handler' => \Webman\App::class,
-    //     'listen' => 'http://0.0.0.0:48798',
-    //     'count' => cpu_count() > 8 ? 8 : cpu_count(),
-    //     // 进程数
-    //     'constructor' => [
-    //         'request_class' => \support\Request::class,
-    //         // request类设置
-    //         'logger' => \support\Log::channel('default'),
-    //         // 日志实例
-    //         'app_path' => app_path(),
-    //         // app目录位置
-    //         'public_path' => public_path() // public目录位置
-    //     ]
-    // ],
-    // 'Login' => [
-    //     'handler' => \Webman\App::class,
-    //     'listen' => 'http://0.0.0.0:48799',
-    //     'count' => cpu_count() > 8 ? 8 : cpu_count(),
-    //     // 进程数
-    //     'constructor' => [
-    //         'request_class' => \support\Request::class,
-    //         // request类设置
-    //         'logger' => \support\Log::channel('default'),
-    //         // 日志实例
-    //         'app_path' => app_path(),
-    //         // app目录位置
-    //         'public_path' => public_path() // public目录位置
     //     ]
     // ],
     // 'Register' => [

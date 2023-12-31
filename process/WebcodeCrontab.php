@@ -10,7 +10,7 @@ use Exception;
 use support\Db;
 use Webman\RedisQueue\Redis as RedisQueue;
 
-class Webcode
+class WebcodeCrontab
 {
     static $user_list = [];
 
@@ -23,10 +23,10 @@ class Webcode
      */
     private function getUserList()
     {
-        Webcode::$user_list = Db::table('user')
+        WebcodeCrontab::$user_list = Db::table('user')
             ->where('email', Base::$robot_email)
             ->where('isdel', 0)
-            ->limit(Webcode::$user_num)
+            ->limit(WebcodeCrontab::$user_num)
             ->pluck('id')
             ->toArray();
     }
@@ -36,13 +36,13 @@ class Webcode
      */
     private function getOneUser()
     {
-        if (!Webcode::$user_list || !is_array(Webcode::$user_list) || !sizeof(Webcode::$user_list)) {
+        if (!WebcodeCrontab::$user_list || !is_array(WebcodeCrontab::$user_list) || !sizeof(WebcodeCrontab::$user_list)) {
             $this->getUserList();
         }
-        if (Webcode::$user_idx < 0 || Webcode::$user_idx >= sizeof(Webcode::$user_list)) {
-            Webcode::$user_idx = 0;
+        if (WebcodeCrontab::$user_idx < 0 || WebcodeCrontab::$user_idx >= sizeof(WebcodeCrontab::$user_list)) {
+            WebcodeCrontab::$user_idx = 0;
         }
-        return Webcode::$user_list[Webcode::$user_idx];
+        return WebcodeCrontab::$user_list[WebcodeCrontab::$user_idx];
     }
 
     /**

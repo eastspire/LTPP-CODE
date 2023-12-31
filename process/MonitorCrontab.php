@@ -22,7 +22,7 @@ use Workerman\Worker;
  * Class FileMonitor
  * @package process
  */
-class Monitor
+class MonitorCrontab
 {
     /**
      * @var array

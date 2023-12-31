@@ -19,7 +19,7 @@ use app\controller\Base;
 use support\Db;
 use Exception;
 
-class Dayproblem extends Robot
+class DayproblemCrontab
 {
     private function sendNotice()
     {

@@ -19,7 +19,7 @@ use Workerman\Crontab\Crontab;
 use support\Db;
 use Exception;
 
-class CreatContest
+class CreatContestCrontab
 {
     /**
      * 获取题目

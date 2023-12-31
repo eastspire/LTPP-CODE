@@ -9,6 +9,7 @@
  * QQ:1491579574
  * Copyright (c) 2023 by SQS, All Rights Reserved. 
  */
+
 namespace process;
 
 use app\controller\Base;
@@ -18,14 +19,8 @@ use support\Db;
 use Workerman\Crontab\Crontab;
 use Webman\RedisQueue\Redis as RedisQueue;
 
-class RobotContest
+class RobotContestCrontab
 {
-
-    /**
-     * 锁
-     */
-    static $lock = false;
-
     /**
      * 获取进行中的比赛列表
      * @return {*} $db
@@ -53,10 +48,6 @@ class RobotContest
         // 每一分钟执行一次
         new Crontab('0 */1 * * * *', function () {
             try {
-                if (RobotContest::$lock) {
-                    return;
-                }
-                RobotContest::$lock = true;
                 $contest_list = $this->getRunningContestList();
                 $redis27 = \support\Redis::connection('db27');
                 foreach ($contest_list as &$one_contest) {
@@ -72,9 +63,7 @@ class RobotContest
                         'contest_id' => $one_contest->id,
                     ]);
                 }
-                RobotContest::$lock = false;
             } catch (Exception $e) {
-                RobotContest::$lock = false;
                 Robot::sendChatToOneUserMsg(Base::getRootId(), '定时任务进程 **【RobotContest】** 运行错误：' . $e->getMessage());
             }
         });

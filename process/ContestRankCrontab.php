@@ -1,4 +1,15 @@
 <?php
+/*
+ * @Author: wmzn-ltpp 1491579574@qq.com
+ * @Date: 2023-08-07 18:43:59
+ * @LastEditors: wmzn-ltpp 1491579574@qq.com
+ * @LastEditTime: 2023-12-31 10:33:30
+ * @FilePath: \LTPP-CODE\process\ContestRankCrontab.php
+ * @Description: Email:1491579574@qq.com
+ * QQ:1491579574
+ * Copyright (c) 2023 by SQS, All Rights Reserved. 
+ */
+
 namespace process;
 
 use app\controller\Base;
@@ -11,10 +22,8 @@ use support\Redis;
 use Workerman\Crontab\Crontab;
 use Webman\RedisQueue\Redis as RedisQueue;
 
-class ContestRank
+class ContestRankCrontab
 {
-    static $lock = false;
-
     static $times = 0;
 
     static $limit = 60;
@@ -24,13 +33,9 @@ class ContestRank
         // 每一秒钟执行一次
         new Crontab('*/1 * * * * *', function () {
             try {
-                if (ContestRank::$lock) {
-                    return;
+                if (ContestRankCrontab::$times > ContestRankCrontab::$limit) {
+                    ContestRankCrontab::$times = 0;
                 }
-                if (ContestRank::$times > ContestRank::$limit) {
-                    ContestRank::$times = 0;
-                }
-                ContestRank::$lock = true;
                 $redis24 = Redis::connection('db24');
                 $arr = $redis24->lrange(Contest::$redis_array_name, 0, -1);
                 $redis24->del(Contest::$redis_array_name);
@@ -44,7 +49,7 @@ class ContestRank
                     RedisQueue::send(Base::$redis_queue_contest_rank, ['contest_id' => $key]);
                 }
                 $obj = null;
-                if (ContestRank::$times % ContestRank::$limit == 0) {
+                if (ContestRankCrontab::$times % ContestRankCrontab::$limit == 0) {
                     $contest_list = Db::table('contest')
                         ->where('isdel', 0)
                         ->pluck('id')
@@ -54,10 +59,8 @@ class ContestRank
                         RedisQueue::send(Base::$redis_queue_contest_rank, ['contest_id' => $contest_id]);
                     }
                 }
-                ContestRank::$times++;
-                ContestRank::$lock = false;
+                ContestRankCrontab::$times++;
             } catch (Exception $e) {
-                ContestRank::$lock = false;
                 // 发送通知
                 Robot::sendChatToOneUserMsg(Base::getRootId(), '定时任务进程 **【ContestRank】** 运行错误：' . $e->getMessage());
             }

@@ -3,8 +3,8 @@
  * @Author: 18855190718 1491579574@qq.com
  * @Date: 2023-01-26 15:44:00
  * @LastEditors: wmzn-ltpp 1491579574@qq.com
- * @LastEditTime: 2023-12-31 09:36:39
- * @FilePath: \LTPP-CODE\process\Chatfile.php
+ * @LastEditTime: 2023-12-31 10:43:22
+ * @FilePath: \LTPP-CODE\process\ChatfileCrontab.php
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
  * Copyright (c) 2023 by 18855190718 1491579574@qq.com, All Rights Reserved. 
@@ -17,7 +17,7 @@ use app\controller\Robot;
 use app\controller\Base;
 use Exception;
 
-class Chatfile
+class ChatfileCrontab
 {
     /**
      * @var $time_out_delete 文件存储最长时间（单位：天）
@@ -43,7 +43,7 @@ class Chatfile
                 $last_time = filemtime($tempath);
                 $time = time();
 
-                if ($time - $last_time > Chatfile::$time_out_delete) {
+                if ($time - $last_time > ChatfileCrontab::$time_out_delete) {
                     @unlink($tempath);
                     $name = '';
                     for ($i = strlen($tempath) - 1; $i >= 0; --$i) {
@@ -53,7 +53,7 @@ class Chatfile
                         $name .= $tempath[$i];
                     }
                     $name = strrev($name);
-                    Chatfile::$delete_arr[] = [
+                    ChatfileCrontab::$delete_arr[] = [
                         'name' => $name,
                         'time' => $last_time
                     ];
@@ -68,16 +68,16 @@ class Chatfile
         new Crontab('00 1 * * *', function () {
             try {
                 Base::judgeCreatPath(Base::$LTPP_public_static_path . '/chatfile', 0666);
-                Chatfile::$delete_arr = [];
+                ChatfileCrontab::$delete_arr = [];
                 // 开始更新文件
                 $this->dfs(Base::$LTPP_public_static_path . '/chatfile');
                 $now = date('Y-m-d H:i:s', time());
                 $msg = '';
-                if (empty(Chatfile::$delete_arr)) {
-                    $msg = '系统于北京时间' . $now . '删除' . sizeof(Chatfile::$delete_arr) . '个过期的群聊文件' . "\n";
+                if (empty(ChatfileCrontab::$delete_arr)) {
+                    $msg = '系统于北京时间' . $now . '删除' . sizeof(ChatfileCrontab::$delete_arr) . '个过期的群聊文件' . "\n";
                 } else {
-                    $msg = '系统于北京时间' . $now . '删除' . sizeof(Chatfile::$delete_arr) . '个过期的群聊文件，详情如下：' . "\n";
-                    foreach (Chatfile::$delete_arr as &$tem) {
+                    $msg = '系统于北京时间' . $now . '删除' . sizeof(ChatfileCrontab::$delete_arr) . '个过期的群聊文件，详情如下：' . "\n";
+                    foreach (ChatfileCrontab::$delete_arr as &$tem) {
                         $msg .= '文件名：' . $tem['name'] . "\n";
                         $msg .= '该文件上传时间：' . $tem['time'] . "\n\n";
                     }
