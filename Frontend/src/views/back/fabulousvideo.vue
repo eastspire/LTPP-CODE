@@ -37,7 +37,7 @@
       </div>
     </div>
     <div style="height: 1rem"></div>
-    <div v-show="total > 0">
+    <div>
       <div>
         <div>
           <div class="my-span-parent">
@@ -54,13 +54,19 @@
           </div>
           <div style="height: 0.5rem"></div>
           <div
+            v-loading.lock="
+              !onevideo.url || !reg.test(onevideo.url) || total <= 0
+            "
+            element-loading-text="拼命加载中"
+            element-loading-spinner="el-icon-loading"
+            element-loading-background="rgba(41, 50, 56, 0.28)"
+            class="shadow"
             style="
               color: azure;
               backdrop-filter: blur(0.46rem);
               background-color: rgba(41, 50, 56, 0.28);
               border-width: 0rem;
               border-color: rgba(41, 50, 56, 0.28)
-
               height: auto;
               width: 100%;
               text-align: center;
@@ -429,6 +435,7 @@ export default {
   },
   data() {
     return {
+      reg: /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\*\+,;=.]+$/,
       drawer_size: "460px",
       comment_load_all_finish: false,
       lock: false,
@@ -802,6 +809,14 @@ export default {
       });
       this.onevideo = res.data;
       this.total = res.allnum;
+      if (!this.total || res?.code != 1) {
+        this.$msg({
+          type: "error",
+          message: res?.msg,
+          duration: 1600,
+          offset: 80,
+        });
+      }
     },
     async pageChange(isInc = true) {
       this.commentLock = true;

@@ -49,16 +49,17 @@
             style="width: 31.33333%; float: left; padding: 1%"
           >
             <div
+              v-loading.lock="!temtable || !temtable.id"
+              element-loading-text="拼命加载中"
+              element-loading-spinner="el-icon-loading"
+              element-loading-background="rgba(41, 50, 56, 0.06)"
               @click="toOneArticle(temtable.id)"
-              style="
-                cursor: pointer;
-                background-color: rgba(248, 249, 250, 0.2);
-              "
+              style="cursor: pointer"
               class="shadow"
             >
               <div
                 style="
-                  background-color: rgba(41, 50, 56, 0.28);
+                  background-color: rgba(41, 50, 56, 0.06);
                   color: azure;
                   height: 22rem;
                   width: 100%;
@@ -81,12 +82,7 @@
                     <img
                       v-if="temtable.image && reg.test(temtable.image)"
                       class="animate"
-                      style="
-                        width: 100%;
-                        height: 100%;
-                        object-fit: cover;
-                        background-color: rgba(255, 255, 255, 0.66);
-                      "
+                      style="width: 100%; height: 100%; object-fit: cover"
                       title=""
                       alt=""
                       :src="temtable.image"

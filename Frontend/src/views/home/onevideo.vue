@@ -25,6 +25,10 @@
         </div>
         <div style="height: 0.5rem"></div>
         <div
+          v-loading.lock="!onevideo.url || !reg.test(onevideo.url)"
+          element-loading-text="拼命加载中"
+          element-loading-spinner="el-icon-loading"
+          element-loading-background="rgba(41, 50, 56, 0.28)"
           class="shadow"
           style="
             color: azure;
@@ -376,6 +380,7 @@ export default {
   },
   data() {
     return {
+      reg: /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\*\+,;=.]+$/,
       drawer_size: "460px",
       comment_load_all_finish: false,
       isSeeComment: false,

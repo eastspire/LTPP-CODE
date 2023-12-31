@@ -47,7 +47,7 @@
             shortsentenceList.length > 0
           "
           style="
-            background-color: rgba(41, 50, 56, 0.28);
+            background-color: rgba(41, 50, 56, 0.06);
             color: azure;
             width: 100%;
           "
@@ -124,8 +124,7 @@
           class="shadow"
           v-if="notice && notice != undefined && notice != null"
           style="
-            background-color: rgba(41, 50, 56, 0.28);
-
+            background-color: rgba(41, 50, 56, 0.06);
             color: azure;
             width: 100%;
             text-align: center;

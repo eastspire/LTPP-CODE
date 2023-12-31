@@ -34,16 +34,17 @@
               style="width: 31.33333%; float: left; padding: 1%"
             >
               <div
+                v-loading.lock="!temtable || !temtable.id"
+                element-loading-text="拼命加载中"
+                element-loading-spinner="el-icon-loading"
+                element-loading-background="rgba(41, 50, 56, 0.06)"
                 @click="toOneArticle(temtable.id)"
-                style="
-                  cursor: pointer;
-                  background-color: rgba(248, 249, 250, 0.2);
-                "
+                style="cursor: pointer"
                 class="shadow"
               >
                 <div
                   style="
-                    background-color: rgba(41, 50, 56, 0.28);
+                    background-color: rgba(41, 50, 56, 0.06);
                     color: azure;
                     height: 22rem;
                     width: 100%;
