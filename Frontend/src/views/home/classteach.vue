@@ -15,7 +15,7 @@
                 background-color: rgba(0, 0, 0, 0.2);
                 color: azure;
                 border-width: 0rem;
-                border-color: rgba(41, 50, 56, 0.28);
+                border-color: rgba(41, 50, 56, 0.06);
               "
             >
               <div class="search shadow">

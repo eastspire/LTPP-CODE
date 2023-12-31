@@ -1295,7 +1295,7 @@ export default {
 
 /deep/.el-submenu__title:hover {
   color: deepskyblue !important;
-  background-color: rgba(0, 0, 0, 0.286) !important;
+  background-color: rgba(41, 50, 56, 0.166) !important;
 }
 
 /deep/.search {

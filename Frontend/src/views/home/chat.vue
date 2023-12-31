@@ -1761,7 +1761,7 @@ export default {
 
 /deep/.md,
 /deep/.markdown-body {
-  background-color: rgba(30, 30, 30, 0.36) !important;
+  background-color: rgba(41, 50, 56, 0.06) !important;
   width: fit-content !important;
   border-width: 0rem !important;
   height: auto !important;
@@ -1879,11 +1879,11 @@ export default {
 
 .user {
   border-width: 0rem;
-  background-color: rgba(30, 30, 30, 0.36);
+  background-color: rgba(41, 50, 56, 0.06);
 }
 
 .user div {
-  border: 2px solid rgba(0, 0, 0, 0.16);
+  border: 2px solid rgba(41, 50, 56, 0.06);
   position: relative;
 }
 

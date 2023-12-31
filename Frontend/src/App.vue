@@ -344,8 +344,8 @@ can-select {
 }
 
 .shadow {
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3), 2px 0 5px rgba(0, 0, 0, 0.3),
-    -2px 0 5px rgba(0, 0, 0, 0.3), 0 -2px 5px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 5px rgba(41, 50, 56, 0.16), 2px 0 5px rgba(41, 50, 56, 0.16),
+    -2px 0 5px rgba(41, 50, 56, 0.16), 0 -2px 5px rgba(41, 50, 56, 0.16);
 }
 
 video:focus {
@@ -498,7 +498,7 @@ video:focus {
 
 .el-menu-item:hover {
   color: deepskyblue !important;
-  background-color: rgba(0, 0, 0, 0.286) !important;
+  background-color: rgba(41, 50, 56, 0.166) !important;
   z-index: 1000006 !important;
 }
 
@@ -856,8 +856,8 @@ a:active {
   max-width: 60% !important;
   background: rgb(41, 50, 56) !important;
   border: rgb(41, 50, 56) !important;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3), 2px 0 5px rgba(0, 0, 0, 0.3),
-    -2px 0 5px rgba(0, 0, 0, 0.3), 0 -2px 5px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 5px rgba(41, 50, 56, 0.16), 2px 0 5px rgba(41, 50, 56, 0.16),
+    -2px 0 5px rgba(41, 50, 56, 0.16), 0 -2px 5px rgba(41, 50, 56, 0.16);
   font-size: 1rem !important;
   color: #ffffffe6 !important;
   font-weight: bold !important;
@@ -1114,7 +1114,7 @@ pre,
   width: 0rem;
   height: 0.36rem !important;
   border-radius: 3rem;
-  background-color: rgba(41, 50, 56, 0.28);
+  background-color: rgba(41, 50, 56, 0.06);
 }
 
 /* 滚动条上的按钮 (上下箭头). */
@@ -1134,17 +1134,17 @@ pre,
 /*  滚动条轨道. */
 ::-webkit-scrollbar-track {
   border-radius: 3rem;
-  background-color: rgba(41, 50, 56, 0.28);
+  background-color: rgba(41, 50, 56, 0.06);
 }
 
 /* 滚动条没有滑块的轨道部分 */
 ::-webkit-scrollbar-track-piece {
-  background-color: rgba(41, 50, 56, 0.28);
+  background-color: rgba(41, 50, 56, 0.06);
 }
 
 /* 当同时有垂直滚动条和水平滚动条时交汇的部分. */
 ::-webkit-scrollbar-corner {
-  background-color: rgba(41, 50, 56, 0.28);
+  background-color: rgba(41, 50, 56, 0.06);
   border-radius: 3rem;
 }
 

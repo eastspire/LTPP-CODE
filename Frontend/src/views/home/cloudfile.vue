@@ -4,10 +4,10 @@
       <div
         class="shadow"
         :style="`
-          background-color: rgba(41, 50, 56, 0.28);
+          background-color: rgba(41, 50, 56, 0.06);
           color: azure;
           border-width: 0rem;
-          border-color: rgba(41, 50, 56, 0.28)
+          border-color: rgba(41, 50, 56, 0.06)
           height: auto;
           width: 100%;
           min-height:${$store.state.no_scroll_height}vh

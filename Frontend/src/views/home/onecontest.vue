@@ -8,10 +8,10 @@
       <div
         class="shadow"
         style="
-          background-color: rgba(41, 50, 56, 0.28);
+          background-color: rgba(41, 50, 56, 0.06);
           color: #ffffffe6;
           border-width: 0rem;
-          border-color: rgba(41, 50, 56, 0.28)
+          border-color: rgba(41, 50, 56, 0.06)
           min-height: auto;
           width: 100%;
         "
@@ -1878,8 +1878,8 @@ export default {
 @import "../../../public/md/markdown/github-markdown.min.css";
 
 .el-button {
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3), 2px 0 5px rgba(0, 0, 0, 0.3),
-    -2px 0 5px rgba(0, 0, 0, 0.3), 0 -2px 5px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 5px rgba(41, 50, 56, 0.16), 2px 0 5px rgba(41, 50, 56, 0.16),
+    -2px 0 5px rgba(41, 50, 56, 0.16), 0 -2px 5px rgba(41, 50, 56, 0.16);
   padding: 0.6rem 1rem !important;
   background-color: #002a4c !important;
 }

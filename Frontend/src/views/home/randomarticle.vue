@@ -10,14 +10,14 @@
     v-loading.lock="!loadfinish"
     element-loading-text="拼命加载中"
     element-loading-spinner="el-icon-loading"
-    element-loading-background="rgba(41, 50, 56, 0.28)"
+    element-loading-background="rgba(41, 50, 56, 0.06)"
   >
     <div style="height: 1rem"></div>
     <div
       v-show="loadfinish"
       class="shadow"
       style="
-        background-color: rgba(41, 50, 56, 0.28);
+        background-color: rgba(41, 50, 56, 0.06);
         margin-left: auto;
         margin-right: auto;
         padding: 0rem;
@@ -30,7 +30,7 @@
             background-color: rgba(0, 0, 0, 0);
             color: #ffffffe6;
             border-width: 0rem;
-            border-color: rgba(41, 50, 56, 0.28)
+            border-color: rgba(41, 50, 56, 0.06)
             height: auto;
             width: 100%;
           "
