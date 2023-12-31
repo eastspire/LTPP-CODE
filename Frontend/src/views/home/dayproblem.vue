@@ -180,16 +180,10 @@ export default {
     }
   },
   async created() {
-    this.problemList = [];
     this.isseetip = true;
     this.page = 1;
     this.limit = 50;
     this.total = 0;
-    let tem_list = [];
-    for (let i = 0; i < this.limit; ++i) {
-      tem_list.push(this.$SqsGlobal.oj_problem_list_data);
-    }
-    this.problemList = tem_list;
     await this.getlist();
   },
 
@@ -209,6 +203,14 @@ export default {
     };
   },
   methods: {
+    initData() {
+      this.problemList = [];
+      let tem_list = [];
+      for (let i = 0; i < this.limit; ++i) {
+        tem_list.push(this.$SqsGlobal.oj_problem_list_data);
+      }
+      this.problemList = tem_list;
+    },
     // 表体字体颜色设置
     /***
      * row为某一行的除操作外的全部数据
@@ -235,8 +237,8 @@ export default {
         return styleRes;
       }
     },
-
     async getlist() {
+      this.initData();
       const { data: res } = await this.$ajax({
         method: "post",
         url: "/Dayproblem/getDayproblemList",

@@ -256,10 +256,7 @@ class Codehistory
             ->count();
 
         foreach ($code_db as &$tem) {
-            $user_db = Db::table('user')
-                ->where('id', $tem->userid)
-                ->select('name')
-                ->first();
+            $user_db = Base::getUserData($tem->userid);
             if ($user_db) {
                 $tem->user = $user_db->name;
             }
@@ -337,11 +334,7 @@ class Codehistory
             $db[] = $tem;
         }
         foreach ($db as &$tem) {
-            $temdb = Db::table('user')
-                ->where('id', $tem->userid)
-                ->where('isdel', 0)
-                ->select('name')
-                ->first();
+            $temdb = Base::getUserData($tem->userid);
             if ($temdb) {
                 $tem->user = $temdb->name;
             } else {

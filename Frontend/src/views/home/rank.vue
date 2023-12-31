@@ -143,17 +143,10 @@ export default {
     }
   },
   async created() {
-    this.tableData = [];
     this.total = 0;
     this.isseetip = true;
     this.page = 1;
     this.limit = 50;
-    let tem_list = [];
-    for (let i = 0; i < this.limit; ++i) {
-      tem_list.push(this.$SqsGlobal.user_rank_list_data);
-    }
-    this.tableData = tem_list;
-
     this.issearch = false;
     await this.getlist();
   },
@@ -168,6 +161,14 @@ export default {
     };
   },
   methods: {
+    initData() {
+      this.tableData = [];
+      let tem_list = [];
+      for (let i = 0; i < this.limit; ++i) {
+        tem_list.push(this.$SqsGlobal.user_rank_list_data);
+      }
+      this.tableData = tem_list;
+    },
     cellStyle({ row, rowIndex }) {
       let styleRes = {
         background: "rgba(26, 26, 26, 0.46) !important",
@@ -195,6 +196,7 @@ export default {
         });
     },
     async getlist() {
+      this.initData();
       const { data: res } = await this.$ajax({
         method: "post",
         url: "/Scorerank/getRankList",
