@@ -232,9 +232,17 @@ const video_list_data = {
 
 // 商品列表数据模板
 const goods_list_data = {
-    id: "",
-    name: "加载中",
-    money: "加载中"
+    "id": "",
+    "isdel": 0,
+    "name": "加载中",
+    "money": "加载中",
+    "path": "加载中",
+    "type": "加载中",
+    "size": "加载中",
+    "times": "加载中",
+    "blurb": "加载中",
+    "time": "加载中",
+    "has_buy": true
 };
 // 用户列表数据模板
 const user_list_data =

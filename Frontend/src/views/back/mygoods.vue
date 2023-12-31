@@ -71,12 +71,12 @@
                   </el-tooltip>
                 </template>
               </el-table-column>
-              <el-table-column label="价格" width="160" align="center">
+              <el-table-column label="价格(学虫币)" width="160" align="center">
                 <template slot-scope="scope">
                   <el-tooltip
                     class="item"
                     effect="dark"
-                    :content="'价格：' + scope.row.money + ' 学虫币'"
+                    :content="'价格：' + scope.row.money"
                     placement="right"
                   >
                     <span
@@ -87,7 +87,7 @@
                         color: deeppink;
                       "
                     >
-                      {{ scope.row.money + " 学虫币" }}
+                      {{ scope.row.money }}
                     </span>
                   </el-tooltip>
                 </template>
@@ -146,7 +146,12 @@
                       class="my-span"
                       style="font-weight: bold; font-size: 1.06rem; color: red"
                     >
-                      {{ scope.row.times + " 次" }}
+                      {{
+                        !isNaN(parseFloat(scope.row.times)) &&
+                        isFinite(scope.row.times)
+                          ? scope.row.times + "次"
+                          : scope.row.times
+                      }}
                     </span>
                   </el-tooltip>
                 </template>
@@ -228,7 +233,7 @@
         <el-descriptions-item labelStyle="font-size:1.06rem;">
           <template slot="label">
             <i class="el-icon-s-custom"></i>
-            价格（单位：学虫币）
+            价格（学虫币）
           </template>
           <el-input
             disabled
