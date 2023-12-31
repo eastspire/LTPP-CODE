@@ -2,7 +2,7 @@
  * @Author: 18855190718 1491579574@qq.com
  * @Date: 2023-03-17 09:42:16
  * @LastEditors: wmzn-ltpp 1491579574@qq.com
- * @LastEditTime: 2023-12-31 19:57:32
+ * @LastEditTime: 2023-12-31 20:57:13
  * @FilePath: \LTPP-CODE\Frontend\src\views\back\myquestion.vue
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
@@ -50,7 +50,8 @@
               slot="append"
               icon="el-icon-search"
               @click="
-                data_list = [];
+                isinit = false;
+                initData();
                 lock = false;
                 search();
               "
@@ -125,8 +126,13 @@
               </mavon-editor>
               <div style="height: 0.6rem"></div>
               <p style="font-size: 1rem; color: deeppink">
-                累计回答：{{ tem.answer_num }}次
+                {{
+                  !isNaN(parseFloat(tem.answer_num)) && isFinite(tem.answer_num)
+                    ? "累计回答：" + tem.answer_num + "次"
+                    : tem.answer_num
+                }}
               </p>
+              <div style="height: 0.6rem"></div>
               <el-button
                 type="success"
                 size="mini"

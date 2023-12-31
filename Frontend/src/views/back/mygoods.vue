@@ -319,7 +319,6 @@ export default {
     this.issearch = false; //判断是否搜索，从而进行分页查找
     this.page = 1;
     this.limit = 50;
-    this.initData();
   },
   async activated() {
     this.isseetip = true;
@@ -508,6 +507,7 @@ export default {
     },
     //获取商品列表
     async getlist() {
+      this.initData();
       const { data: res } = await this.$ajax({
         method: "post",
         url: "/Goods/getListMyBuyGoods",
@@ -572,6 +572,7 @@ export default {
     //搜索
     async keysearch() {
       this.lastkey = this.key;
+      this.initData();
       const { data: res } = await this.$ajax({
         method: "post",
         url: "/Goods/keySearchMyBuyGoods",
@@ -605,7 +606,6 @@ export default {
     },
     //搜索预处理
     search() {
-      this.initData();
       if (this.key == "" || this.key == null || this.key == undefined) {
         this.issearch = false;
         this.getlist();

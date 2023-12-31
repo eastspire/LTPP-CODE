@@ -815,14 +815,12 @@ export default {
     });
     window.addEventListener("scroll", this.addlist);
   },
-
   deactivated() {
     this.comment = [];
     this.islock = true;
     this.isseetip = false;
     window.removeEventListener("scroll", this.addlist);
   },
-
   destroyed() {
     this.comment = [];
     this.islock = true;

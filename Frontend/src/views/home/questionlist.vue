@@ -1,8 +1,8 @@
 <!--
  * @Author: 18855190718 1491579574@qq.com
  * @Date: 2023-03-17 09:42:16
- * @LastEditors: 18855190718 1491579574@qq.com
- * @LastEditTime: 2023-08-22 09:15:05
+ * @LastEditors: wmzn-ltpp 1491579574@qq.com
+ * @LastEditTime: 2023-12-31 20:53:58
  * @FilePath: \LTPP-CODE\Frontend\src\views\home\questionlist.vue
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
@@ -13,13 +13,8 @@
     @contextmenu.prevent=""
     class="no-select"
     style="margin-left: auto; margin-right: auto"
-    v-loading.fullscreen.lock="!loadfinish"
-    element-loading-text="拼命加载中"
-    element-loading-spinner="el-icon-loading"
-    element-loading-background="rgba(0, 0, 0, 0.8)"
   >
     <div
-      v-show="loadfinish"
       class="shadow"
       style="
         background-color: rgba(41, 50, 56, 0.28);
@@ -45,7 +40,8 @@
             placeholder="请输入需要搜索的问题"
             v-model.lazy="key"
             @keyup.enter.native="
-              data_list = [];
+              isinit = false;
+              initData();
               lock = false;
               search();
             "
@@ -54,7 +50,8 @@
               slot="append"
               icon="el-icon-search"
               @click="
-                data_list = [];
+                isinit = false;
+                initData();
                 lock = false;
                 search();
               "
@@ -129,8 +126,13 @@
               </mavon-editor>
               <div style="height: 0.6rem"></div>
               <p style="font-size: 1rem; color: deeppink">
-                累计回答：{{ tem.answer_num }}次
+                {{
+                  !isNaN(parseFloat(tem.answer_num)) && isFinite(tem.answer_num)
+                    ? "累计回答：" + tem.answer_num + "次"
+                    : tem.answer_num
+                }}
               </p>
+              <div style="height: 0.6rem"></div>
               <el-button
                 type="success"
                 size="mini"
@@ -155,13 +157,14 @@
 
 <script>
 import urlencode from "../../../updateCompoents/urlencode";
+const limit = 50;
 
 export default {
   name: "questionlist",
   data() {
     return {
       lock: false,
-      loadfinish: false,
+      isinit: false,
       key: "",
       whiteList: false,
       data_list: [],
@@ -201,7 +204,8 @@ export default {
     };
   },
   created() {
-    this.loadfinish = false;
+    this.lock = false;
+    this.initData();
     this.getList();
   },
   activated() {
@@ -217,6 +221,13 @@ export default {
     window.removeEventListener("scroll", this.addlist);
   },
   methods: {
+    initData() {
+      let tem_list = [];
+      for (let i = 0; i < limit; ++i) {
+        tem_list.push(this.$SqsGlobal.question_list_data);
+      }
+      this.data_list = tem_list;
+    },
     async addlist() {
       if (this.lock) {
         return;
@@ -275,7 +286,6 @@ export default {
             : 0,
         },
       }).catch((t) => {
-        this.loadfinish = true;
         setTimeout(() => {
           this.lock = false;
         }, 360);
@@ -285,9 +295,13 @@ export default {
           duration: 1600,
           offset: 80,
         });
+        this.isinit = true;
         return;
       });
       if (res.code == 1) {
+        if (!this.isinit) {
+          this.data_list = res.data;
+        }
         this.data_list.push(...res.data);
         if (res.data && !res.data?.length) {
           this.$msg({
@@ -298,17 +312,16 @@ export default {
           });
         }
       }
-      this.loadfinish = true;
       setTimeout(() => {
         this.lock = false;
       }, 360);
+      this.isinit = true;
     },
     async search() {
       if (this.lock) {
         return;
       }
       this.lock = true;
-      this.loadfinish = false;
       const { data: res } = await this.$ajax({
         method: "post",
         url: "/Question/searchList",
@@ -322,7 +335,6 @@ export default {
             : 0,
         },
       }).catch((t) => {
-        this.loadfinish = true;
         setTimeout(() => {
           this.lock = false;
         }, 360);
@@ -332,10 +344,13 @@ export default {
           duration: 1600,
           offset: 80,
         });
+        this.isinit = true;
         return;
       });
-      this.loadfinish = true;
       if (res.code == 1) {
+        if (!this.isinit) {
+          this.data_list = res.data;
+        }
         this.data_list.push(...res.data);
         if (res.data && !res.data?.length) {
           this.$msg({
@@ -346,10 +361,10 @@ export default {
           });
         }
       }
-
       setTimeout(() => {
         this.lock = false;
       }, 360);
+      this.isinit = true;
     },
   },
   computed: {

@@ -5,12 +5,8 @@
   <div
     @contextmenu.prevent=""
     style="margin-left: auto; margin-right: auto; min-height: 50rem"
-    v-loading.fullscreen.lock="!loadfinish || !finish"
-    element-loading-text="拼命加载中"
-    element-loading-spinner="el-icon-loading"
-    element-loading-background="rgba(0, 0, 0, 0.8)"
   >
-    <div v-show="loadfinish">
+    <div>
       <div>
         <div v-show="finish">
           <div>
@@ -124,16 +120,12 @@ export default {
       dplayer: null,
       classurl: "",
       websocket: null,
-      loadfinish: false,
     };
   },
   async activated() {
-    this.loadfinish = false;
     this.classurl = window.sessionStorage.getItem("classurl");
     if (!this.classurl) {
       this.getclassurl();
-    } else {
-      this.loadfinish = true;
     }
     this.timer = setInterval(() => {
       if (!this.classurl) {
@@ -155,7 +147,6 @@ export default {
             },
           });
         } catch (err) {}
-        this.loadfinish = true;
         clearInterval(this.timer);
         this.timer = null;
       }
@@ -280,7 +271,6 @@ export default {
           process: "8797",
         },
       }).catch((t) => {
-        this.loadfinish = true;
         this.finish = 1;
         this.$msg({
           type: "error",
@@ -289,7 +279,6 @@ export default {
           offset: 80,
         });
       });
-      this.loadfinish = true;
       this.finish = 1;
       if (res.code == 1) {
         this.classurl = res.classurl;

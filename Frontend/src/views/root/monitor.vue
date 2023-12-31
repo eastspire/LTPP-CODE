@@ -4,10 +4,6 @@
     @contextmenu.prevent=""
     style="margin-left: auto; margin-right: auto"
     class="no-select shadow"
-    v-loading.fullscreen.lock="!loadfinish"
-    element-loading-text="拼命加载中"
-    element-loading-spinner="el-icon-loading"
-    element-loading-background="rgba(0, 0, 0, 0.8)"
   >
     <div
       style="
@@ -171,7 +167,6 @@ export default {
     this.issearch = false; //判断是否搜索，从而进行分页查找
     this.page = 1;
     this.limit = 50;
-    this.monitorList = [];
     if (this.total != 0) {
       if (this.issearch) {
         await this.keysearch();
@@ -186,7 +181,6 @@ export default {
   data() {
     return {
       issearch: false,
-      loadfinish: false,
       monitorList: [],
       total: 0,
       page: 1,
@@ -198,6 +192,14 @@ export default {
     };
   },
   methods: {
+    initData() {
+      this.monitorList = [];
+      let tem_list = [];
+      for (let i = 0; i < this.limit; ++i) {
+        tem_list.push(this.$SqsGlobal.monitor_list_data);
+      }
+      this.monitorList = tem_list;
+    },
     touserpage(id) {
       id &&
         this.$router.push({
@@ -237,7 +239,7 @@ export default {
     },
     //获取监控列表
     async getlist() {
-      this.loadfinish = false;
+      this.initData();
       const { data: res } = await this.$ajax({
         method: "post",
         url: "/monitor/getData",
@@ -258,10 +260,8 @@ export default {
           duration: 1600,
           offset: 80,
         });
-        this.loadfinish = true;
         return;
       });
-      this.loadfinish = true;
       if (!this.monitorList?.length) {
         this.last_id = res.data?.length ? res.data[0].id : "";
       }
@@ -271,7 +271,7 @@ export default {
     //搜索
     async keysearch() {
       this.lastkey = this.key;
-      this.loadfinish = false;
+      this.initData();
       const { data: res } = await this.$ajax({
         method: "post",
         url: "/monitor/getData",
@@ -292,10 +292,8 @@ export default {
           duration: 1600,
           offset: 80,
         });
-        this.loadfinish = true;
         return;
       });
-      this.loadfinish = true;
       if (!this.monitorList?.length) {
         this.last_id = res.data?.length ? res.data[0].id : "";
       }

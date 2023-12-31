@@ -4,12 +4,8 @@
     @contextmenu.prevent=""
     class="no-select"
     style="margin-left: auto; margin-right: auto"
-    v-loading.fullscreen.lock="!loadfinish"
-    element-loading-text="拼命加载中"
-    element-loading-spinner="el-icon-loading"
-    element-loading-background="rgba(0, 0, 0, 0.8)"
   >
-    <div v-show="loadfinish" class="shadow">
+    <div class="shadow">
       <div
         style="
           background-color: rgba(248, 249, 250, 0.2);
@@ -197,17 +193,10 @@ import urlencode from "../../../updateCompoents/urlencode";
 export default {
   name: "oj",
   async created() {
-    this.problemList = [];
     this.isseetip = true;
-    this.loadfinish = false;
     this.issearch = false; //判断是否搜索，从而进行分页查找
     this.page = 1;
     this.limit = 50;
-    let tem_list = [];
-    for (let i = 0; i < this.limit; ++i) {
-      tem_list.push(this.$SqsGlobal.oj_problem_list_data);
-    }
-    this.problemList = tem_list;
     await this.getlist();
   },
   activated() {
@@ -226,7 +215,6 @@ export default {
     return {
       lastkey: "",
       isseetip: true,
-      loadfinish: false,
       issearch: false,
       problemList: [],
       problemId: 0,
@@ -241,6 +229,14 @@ export default {
     };
   },
   methods: {
+    initData() {
+      this.problemList = [];
+      let tem_list = [];
+      for (let i = 0; i < this.limit; ++i) {
+        tem_list.push(this.$SqsGlobal.oj_problem_list_data);
+      }
+      this.problemList = tem_list;
+    },
     // 表体字体颜色设置
     /***
      * row为某一行的除操作外的全部数据
@@ -299,6 +295,7 @@ export default {
     },
     //获取题目列表
     async getlist() {
+      this.initData();
       const { data: res } = await this.$ajax({
         method: "post",
         url: "/Oj/getProblemList",
@@ -310,7 +307,6 @@ export default {
           limit: this.limit,
         },
       }).catch((t) => {
-        this.loadfinish = true;
         this.$msg({
           type: "error",
           message: t,
@@ -318,14 +314,13 @@ export default {
           offset: 80,
         });
       });
-      this.loadfinish = true;
       this.total = res.allnum;
       this.problemList = res.data;
     },
     //搜索
     async keysearch() {
-      this.loadfinish = false;
       this.lastkey = this.key;
+      this.initData();
       const { data: res } = await this.$ajax({
         method: "post",
         url: "/Oj/searchProblem",
@@ -338,7 +333,6 @@ export default {
           limit: this.limit,
         },
       }).catch((t) => {
-        this.loadfinish = true;
         this.$msg({
           type: "error",
           message: t,
@@ -346,7 +340,6 @@ export default {
           offset: 80,
         });
       });
-      this.loadfinish = true;
       this.problemList = res.data;
       this.total = res.allnum;
     },

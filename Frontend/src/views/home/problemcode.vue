@@ -4,13 +4,9 @@
     @contextmenu.prevent=""
     class="no-select"
     style="margin-left: auto; margin-right: auto"
-    v-loading.fullscreen.lock="!loadfinish"
-    element-loading-text="拼命加载中"
-    element-loading-spinner="el-icon-loading"
-    element-loading-background="rgba(0, 0, 0, 0.8)"
   >
     <div class="shadow">
-      <div v-show="loadfinish">
+      <div>
         <div
           style="
             background-color: rgba(248, 249, 250, 0.2);
@@ -234,7 +230,6 @@ export default {
     ShowCode,
   },
   activated() {
-    this.loadfinish = false;
     this.isseetip = true;
     if (this.total) {
       this.search();
@@ -266,11 +261,6 @@ export default {
     this.page = 1;
     this.limit = 50;
     this.total = 0;
-    let tem_list = [];
-    for (let i = 0; i < this.limit; ++i) {
-      tem_list.push(this.$SqsGlobal.codehistory_data);
-    }
-    this.tableData = tem_list;
     this.isseecode = false;
   },
 
@@ -278,7 +268,6 @@ export default {
     return {
       lastkey: "",
       isseetip: true,
-      loadfinish: false,
       issearch: false,
       problemid: 0,
       usertheme: "monokai",
@@ -293,6 +282,14 @@ export default {
     };
   },
   methods: {
+    initData() {
+      this.tableData = [];
+      let tem_list = [];
+      for (let i = 0; i < this.limit; ++i) {
+        tem_list.push(this.$SqsGlobal.codehistory_data);
+      }
+      this.tableData = tem_list;
+    },
     touserpage(id) {
       id &&
         this.$router.push({
@@ -354,8 +351,8 @@ export default {
 
     //搜索
     async keysearch() {
+      this.initData();
       this.lastkey = this.key;
-      this.loadfinish = false;
       const { data: res } = await this.$ajax({
         method: "post",
         url: "/Codehistory/searchOneProblemCodeList",
@@ -369,7 +366,6 @@ export default {
           limit: this.limit,
         },
       }).catch((t) => {
-        this.loadfinish = true;
         this.$msg({
           type: "error",
           message: t,
@@ -377,7 +373,6 @@ export default {
           offset: 80,
         });
       });
-      this.loadfinish = true;
       this.tableData = res.data;
       this.total = res.allnum;
     },
@@ -423,6 +418,7 @@ export default {
       this.isseecode = true;
     },
     async getlist() {
+      this.initData();
       const { data: res } = await this.$ajax({
         method: "post",
         url: "/Codehistory/getOneProblemCodelist",
@@ -435,7 +431,6 @@ export default {
           limit: this.limit,
         },
       }).catch((t) => {
-        this.loadfinish = true;
         this.$msg({
           type: "error",
           message: t,
@@ -445,7 +440,6 @@ export default {
       });
       this.tableData = res.data;
       this.total = res.total;
-      this.loadfinish = true;
       if (res.total == 0) {
         this.$msg({
           type: "success",

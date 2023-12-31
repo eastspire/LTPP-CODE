@@ -184,6 +184,17 @@ const question_list_data = {
     "writer": "加载中",
     "headimage": ""
 };
+const monitor_list_data = {
+    "id": "",
+    "isdel": 0,
+    "time": "加载中",
+    "path": "加载中",
+    "function": "加载中",
+    "userid": "加载中",
+    "name": "加载中",
+    "grade": "加载中",
+    "user_aid": "加载中"
+};
 // OJ题库列表数据模板
 const oj_problem_list_data = {
     id: "",
@@ -318,5 +329,6 @@ export default {
     goods_list_data,
     max_video_retry_times,
     video_list_data,
-    question_list_data
+    question_list_data,
+    monitor_list_data
 };
