@@ -202,6 +202,12 @@ export default {
     this.isseetip = true;
     this.istobottom = false;
     this.disabledscroll = false;
+    this.allcodelist = [];
+    let tem_list = [];
+    for (let i = 0; i < this.limit; ++i) {
+      tem_list.push(this.$SqsGlobal.codehistory_data);
+    }
+    this.allcodelist = tem_list;
     this.getlist();
     this.scrolltimer = setInterval(() => {
       this.disabledscroll = false;
@@ -210,14 +216,8 @@ export default {
   },
   async created() {
     this.isseecode = false;
-    this.allcodelist = [];
     this.isseetip = true;
     this.limit = 50;
-    let tem_list = [];
-    for (let i = 0; i < this.limit; ++i) {
-      tem_list.push(this.$SqsGlobal.codehistory_data);
-    }
-    this.allcodelist = tem_list;
   },
   mounted() {
     // 切换页面时滚动条自动滚动到顶部

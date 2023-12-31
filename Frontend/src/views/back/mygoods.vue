@@ -4,12 +4,8 @@
     @contextmenu.prevent=""
     class="no-select"
     style="margin-left: auto; margin-right: auto"
-    v-loading.fullscreen.lock="!loadfinish"
-    element-loading-text="拼命加载中"
-    element-loading-spinner="el-icon-loading"
-    element-loading-background="rgba(0, 0, 0, 0.8)"
   >
-    <div v-show="loadfinish" class="shadow">
+    <div class="shadow">
       <div
         style="
           background-color: rgba(248, 249, 250, 0.2);
@@ -320,17 +316,10 @@
 export default {
   name: "mygoods",
   async created() {
-    this.goodsList = [];
-    this.loadfinish = false;
     this.issearch = false; //判断是否搜索，从而进行分页查找
     this.page = 1;
     this.limit = 50;
-    let tem_list = [];
-    for (let i = 0; i < this.limit; ++i) {
-      tem_list.push(this.$SqsGlobal.goods_list_data);
-    }
-    this.goodsList = tem_list;
-    await this.getlist();
+    this.initData();
   },
   async activated() {
     this.isseetip = true;
@@ -356,7 +345,6 @@ export default {
       isseetip: false,
       see_dialog: false,
       lastkey: "",
-      loadfinish: false,
       issearch: false,
       goodsList: [],
       limit: 50,
@@ -367,6 +355,14 @@ export default {
     };
   },
   methods: {
+    initData() {
+      this.goodsList = [];
+      let tem_list = [];
+      for (let i = 0; i < this.limit; ++i) {
+        tem_list.push(this.$SqsGlobal.goods_list_data);
+      }
+      this.goodsList = tem_list;
+    },
     // 表体字体颜色设置
     /***
      * row为某一行的除操作外的全部数据
@@ -512,7 +508,6 @@ export default {
     },
     //获取商品列表
     async getlist() {
-      this.loadfinish = false;
       const { data: res } = await this.$ajax({
         method: "post",
         url: "/Goods/getListMyBuyGoods",
@@ -524,7 +519,6 @@ export default {
           limit: this.limit,
         },
       }).catch((t) => {
-        this.loadfinish = true;
         this.$msg({
           type: "error",
           message: t,
@@ -532,7 +526,6 @@ export default {
           offset: 80,
         });
       });
-      this.loadfinish = true;
       if (res.code == 1) {
         this.total = res.allnum;
         this.goodsList = res.data;
@@ -578,7 +571,6 @@ export default {
     },
     //搜索
     async keysearch() {
-      this.loadfinish = false;
       this.lastkey = this.key;
       const { data: res } = await this.$ajax({
         method: "post",
@@ -592,7 +584,6 @@ export default {
           limit: this.limit,
         },
       }).catch((t) => {
-        this.loadfinish = true;
         this.$msg({
           type: "error",
           message: t,
@@ -600,7 +591,6 @@ export default {
           offset: 80,
         });
       });
-      this.loadfinish = true;
       if (res.code == 1) {
         this.goodsList = res.data;
         this.total = res.allnum;
@@ -615,6 +605,7 @@ export default {
     },
     //搜索预处理
     search() {
+      this.initData();
       if (this.key == "" || this.key == null || this.key == undefined) {
         this.issearch = false;
         this.getlist();

@@ -350,7 +350,7 @@
               >
                 <template slot="title">
                   <i class="el-icon-menu" style="font-size: 1.06rem"
-                    >首页管理</i
+                    >系统管理</i
                   >
                 </template>
                 <el-menu-item
@@ -380,17 +380,6 @@
                     >
                   </template>
                 </el-menu-item>
-              </el-submenu>
-              <el-submenu
-                index="6"
-                class="no-select"
-                v-if="$store.state.root || $store.state.admin"
-              >
-                <template slot="title">
-                  <i class="el-icon-menu" style="font-size: 1.06rem"
-                    >后台管理</i
-                  >
-                </template>
                 <el-menu-item
                   index="/monitor"
                   v-if="$store.state.root && $store.state.my_name === 'root'"
@@ -402,6 +391,18 @@
                     >
                   </template>
                 </el-menu-item>
+              </el-submenu>
+              <el-submenu
+                index="6"
+                class="no-select"
+                v-if="$store.state.root || $store.state.admin"
+              >
+                <template slot="title">
+                  <i class="el-icon-menu" style="font-size: 1.06rem"
+                    >后台管理</i
+                  >
+                </template>
+
                 <el-menu-item
                   index="/usermanage"
                   v-if="$store.state.root || $store.state.admin"
@@ -1118,8 +1119,7 @@ export default {
       }
     },
     onRouteChanged() {
-      let that = this;
-      that.activeIndex = that.$route.path;
+      this.activeIndex = this.$route.path;
     },
     sendheart() {
       this.$ajax({

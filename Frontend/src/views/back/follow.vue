@@ -402,7 +402,6 @@ export default {
       tem_list.push(this.$SqsGlobal.user_list_data);
     }
     this.tableData = tem_list;
-    await this.getlist();
   },
 
   methods: {

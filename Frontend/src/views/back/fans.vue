@@ -405,7 +405,6 @@ export default {
     this.tableData = tem_list;
     this.issearch = false;
     this.showone = false;
-    await this.getlist(); //需要触发的函数
   },
 
   methods: {

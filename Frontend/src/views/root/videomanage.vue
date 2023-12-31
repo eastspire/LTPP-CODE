@@ -325,6 +325,13 @@ import urlencode from "../../../updateCompoents/urlencode";
 
 export default {
   name: "videomanage",
+  created() {
+    let tem_list = [];
+    for (let i = 0; i < this.limit; ++i) {
+      tem_list.push(this.$SqsGlobal.video_list_data);
+    }
+    this.videoList = tem_list;
+  },
   async activated() {
     this.issearch = false; //判断是否搜索，从而进行分页查找
     this.head = {
@@ -339,7 +346,6 @@ export default {
     }
     this.page = 1;
     this.limit = 50;
-    this.videoList = [];
     if (this.total != 0) {
       if (this.issearch) {
         await this.search();

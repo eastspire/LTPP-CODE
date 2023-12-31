@@ -215,9 +215,9 @@ export default {
     } else {
       this.linuxurl += "/static/homephoto/";
     }
-    await this.getphotolist();
-    await this.getshortsentencelist();
-    await this.getNotice();
+    this.getphotolist();
+    this.getshortsentencelist();
+    this.getNotice();
   },
   computed: {
     prop() {

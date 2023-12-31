@@ -200,7 +200,7 @@ export default {
   destroyed() {
     this.isseetip = false;
   },
-  async created() {
+  created() {
     this.contestlist = [];
     this.isseetip = true;
     this.issearch = false; //判断是否搜索，从而进行分页查找
@@ -211,7 +211,6 @@ export default {
       tem_list.push(this.$SqsGlobal.oj_contest_list_data);
     }
     this.contestlist = tem_list;
-    await this.getlist();
   },
   data() {
     return {

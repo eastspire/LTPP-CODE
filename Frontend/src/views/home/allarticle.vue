@@ -9,12 +9,8 @@
     @contextmenu.prevent=""
     class="no-select"
     style="margin-left: auto; margin-right: auto"
-    v-loading.fullscreen.lock="!loadfinish"
-    element-loading-text="拼命加载中"
-    element-loading-spinner="el-icon-loading"
-    element-loading-background="rgba(0, 0, 0, 0.8)"
   >
-    <div v-show="loadfinish">
+    <div>
       <div
         style="
           background-color: rgba(248, 249, 250, 0.2);
@@ -80,8 +76,14 @@
                   >
                     <!-- img才生效图片裁剪适应，el-image不生效 -->
                     <img
+                      v-if="temtable.image && reg.test(temtable.image)"
                       class="animate"
-                      style="width: 100%; height: 100%; object-fit: cover"
+                      style="
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover;
+                        background-color: rgba(255, 255, 255, 0.66);
+                      "
                       title=""
                       alt=""
                       :src="temtable.image"
@@ -220,25 +222,26 @@ export default {
     window.removeEventListener("scroll", this.addlist);
   },
   async created() {
-    this.loadfinish = false;
     this.isseetip = true;
     this.limit = 18;
     this.islock = false;
     this.issearch = false;
     this.disabledscroll = false;
-    let tem_list = [];
-    for (let i = 0; i < this.limit; ++i) {
-      tem_list.push(this.$SqsGlobal.article_list_data);
-    }
-    this.tableData = tem_list;
+    this.initData();
     await this.getlist();
-    this.loadfinish = true;
     this.$nextTick(() => {
       this.totop();
     });
   },
 
   methods: {
+    initData() {
+      let tem_list = [];
+      for (let i = 0; i < this.limit; ++i) {
+        tem_list.push(this.$SqsGlobal.article_list_data);
+      }
+      this.tableData = tem_list;
+    },
     tableRowClassName({ row, rowIndex }) {
       if (rowIndex === 1) {
         return "warning-row";
@@ -269,7 +272,6 @@ export default {
         },
       }).catch((t) => {
         this.disabledscroll = false;
-        this.loadfinish = true;
         this.scrolllock = false;
         this.$msg({
           type: "error",
@@ -280,21 +282,18 @@ export default {
       });
       this.tableData = res.data;
       this.scrolllock = false;
-      this.loadfinish = true;
     },
 
     search() {
-      this.loadfinish = false;
+      this.initData();
       this.scrolllock = false;
       if (this.key == "" || this.key == null || this.key == undefined) {
         this.issearch = false;
         this.getlist();
-        this.loadfinish = true;
         return;
       }
       this.issearch = true;
       this.keysearch();
-      this.loadfinish = true;
     },
 
     async addlist() {
@@ -379,7 +378,6 @@ export default {
           key: this.key,
         },
       }).catch((t) => {
-        this.loadfinish = true;
         this.disabledscroll = false;
         this.scrolllock = false;
         this.$msg({
@@ -433,7 +431,6 @@ export default {
         },
       }).catch((t) => {
         this.disabledscroll = false;
-        this.loadfinish = true;
         this.scrolllock = false;
         this.$msg({
           type: "error",
@@ -444,7 +441,6 @@ export default {
       });
       this.tableData = res.data;
       this.scrolllock = false;
-      this.loadfinish = true;
     },
     toOneArticle(id) {
       id &&
@@ -470,6 +466,7 @@ export default {
   },
   data() {
     return {
+      reg: /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\*\+,;=.]+$/,
       istobottom: false,
       scrolllock: false,
       limit: 18,
@@ -478,7 +475,6 @@ export default {
       ialock: false,
       lastkey: "",
       isseetip: true,
-      loadfinish: false,
       onetext: {},
       daymonth: new Date(),
       top: 0,

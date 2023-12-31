@@ -4,12 +4,8 @@
     @contextmenu.prevent=""
     class="no-select"
     style="margin-left: auto; margin-right: auto"
-    v-loading.fullscreen.lock="!loadfinish"
-    element-loading-text="拼命加载中"
-    element-loading-spinner="el-icon-loading"
-    element-loading-background="rgba(0, 0, 0, 0.8)"
   >
-    <div v-show="loadfinish" class="shadow">
+    <div class="shadow">
       <div
         class="shadow"
         style="
@@ -530,7 +526,6 @@ export default {
   name: "goodsmanage",
   async created() {
     this.goodsList = [];
-    this.loadfinish = false;
     this.issearch = false; //判断是否搜索，从而进行分页查找
     this.page = 1;
     this.limit = 50;
@@ -540,7 +535,6 @@ export default {
     }
     this.goodsList = tem_list;
     await this.getlinuxurl();
-    await this.getlist();
   },
   async activated() {
     this.isseetip = true;
@@ -577,7 +571,6 @@ export default {
       see_update_dialog: false,
       see_more_add_dialog: false,
       lastkey: "",
-      loadfinish: false,
       issearch: false,
       goodsList: [],
       goodsId: 0,
@@ -767,7 +760,6 @@ export default {
     },
     //获取商品列表
     async getlist() {
-      this.loadfinish = false;
       const { data: res } = await this.$ajax({
         method: "post",
         url: "/Goods/getList",
@@ -779,7 +771,6 @@ export default {
           limit: this.limit,
         },
       }).catch((t) => {
-        this.loadfinish = true;
         this.$msg({
           type: "error",
           message: t,
@@ -787,7 +778,6 @@ export default {
           offset: 80,
         });
       });
-      this.loadfinish = true;
       if (res.code == 1) {
         this.total = res.allnum;
         this.goodsList = res.data;
@@ -923,7 +913,6 @@ export default {
     },
     //搜索
     async keysearch() {
-      this.loadfinish = false;
       this.lastkey = this.key;
       const { data: res } = await this.$ajax({
         method: "post",
@@ -937,7 +926,6 @@ export default {
           limit: this.limit,
         },
       }).catch((t) => {
-        this.loadfinish = true;
         this.$msg({
           type: "error",
           message: t,
@@ -945,7 +933,6 @@ export default {
           offset: 80,
         });
       });
-      this.loadfinish = true;
       if (res.code == 1) {
         this.goodsList = res.data;
         this.total = res.allnum;

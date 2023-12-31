@@ -2,7 +2,7 @@
  * @Author: 18855190718 1491579574@qq.com
  * @Date: 2023-08-07 18:43:57
  * @LastEditors: wmzn-ltpp 1491579574@qq.com
- * @LastEditTime: 2023-11-13 20:23:04
+ * @LastEditTime: 2023-12-31 19:48:33
  * @FilePath: \LTPP-CODE\Frontend\src\plugins\SqsGlobal.js
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
@@ -167,13 +167,22 @@ const article_list_data = {
     id: "",
     name: "加载中",
     article: "加载中",
-    image: "加载中",
+    image: "",
     writerid: "",
     writer: "加载中",
     fabulous: "加载中",
     collection: "加载中",
     releasetime: "加载中",
     lastchangetime: "加载中"
+};
+const question_list_data = {
+    "id": "",
+    "name": "加载中",
+    "userid": "",
+    "time": "加载中",
+    "answer_num": "加载中",
+    "writer": "加载中",
+    "headimage": ""
 };
 // OJ题库列表数据模板
 const oj_problem_list_data = {
@@ -200,6 +209,16 @@ const oj_contest_list_data = {
     type: "加载中",
     createrid: "",
 };
+
+const video_list_data = {
+    fabulous: 0,
+    id: "",
+    love: 0,
+    name: '加载中',
+    tag: '加载中',
+    url: '加载中',
+}
+
 // 商品列表数据模板
 const goods_list_data = {
     id: "",
@@ -297,5 +316,7 @@ export default {
     short_sentence_list,
     // 商品数据模板
     goods_list_data,
-    max_video_retry_times
+    max_video_retry_times,
+    video_list_data,
+    question_list_data
 };

@@ -230,7 +230,6 @@ export default {
       tem_list.push(this.$SqsGlobal.oj_problem_list_data);
     }
     this.problemList = tem_list;
-    await this.getlist();
   },
   async activated() {
     this.isseetip = true;

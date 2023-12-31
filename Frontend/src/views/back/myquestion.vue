@@ -1,8 +1,8 @@
 <!--
  * @Author: 18855190718 1491579574@qq.com
  * @Date: 2023-03-17 09:42:16
- * @LastEditors: 18855190718 1491579574@qq.com
- * @LastEditTime: 2023-08-22 10:33:47
+ * @LastEditors: wmzn-ltpp 1491579574@qq.com
+ * @LastEditTime: 2023-12-31 19:57:32
  * @FilePath: \LTPP-CODE\Frontend\src\views\back\myquestion.vue
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
@@ -13,13 +13,8 @@
     @contextmenu.prevent=""
     class="no-select"
     style="margin-left: auto; margin-right: auto"
-    v-loading.fullscreen.lock="!loadfinish"
-    element-loading-text="拼命加载中"
-    element-loading-spinner="el-icon-loading"
-    element-loading-background="rgba(0, 0, 0, 0.8)"
   >
     <div
-      v-show="loadfinish"
       class="shadow"
       style="
         background-color: rgba(41, 50, 56, 0.28);
@@ -45,7 +40,8 @@
             placeholder="请输入需要搜索的问题"
             v-model.lazy="key"
             @keyup.enter.native="
-              data_list = [];
+              isinit = false;
+              initData();
               lock = false;
               search();
             "
@@ -155,13 +151,14 @@
 
 <script>
 import urlencode from "../../../updateCompoents/urlencode";
+const limit = 50;
 
 export default {
   name: "myquestion",
   data() {
     return {
+      isinit: false,
       lock: false,
-      loadfinish: true,
       key: "",
       whiteList: false,
       data_list: [],
@@ -201,8 +198,8 @@ export default {
     };
   },
   async created() {
-    this.loadfinish = false;
     this.lock = false;
+    this.initData();
     await this.getList();
     window.addEventListener("scroll", this.addlist);
   },
@@ -220,6 +217,13 @@ export default {
   },
 
   methods: {
+    initData() {
+      let tem_list = [];
+      for (let i = 0; i < limit; ++i) {
+        tem_list.push(this.$SqsGlobal.question_list_data);
+      }
+      this.data_list = tem_list;
+    },
     async addlist() {
       if (this.lock) {
         return;
@@ -278,7 +282,6 @@ export default {
             : 0,
         },
       }).catch((t) => {
-        this.loadfinish = true;
         setTimeout(() => {
           this.lock = false;
         }, 360);
@@ -288,10 +291,13 @@ export default {
           duration: 1600,
           offset: 80,
         });
+        this.isinit = true;
         return;
       });
-      this.loadfinish = true;
       if (res.code == 1) {
+        if (!this.isinit) {
+          this.data_list = [];
+        }
         this.data_list.push(...res.data);
         if (res.data && !res.data?.length) {
           this.$msg({
@@ -306,13 +312,13 @@ export default {
       setTimeout(() => {
         this.lock = false;
       }, 360);
+      this.isinit = true;
     },
     async search() {
       if (this.lock) {
         return;
       }
       this.lock = true;
-      this.loadfinish = false;
       const { data: res } = await this.$ajax({
         method: "post",
         url: "/Question/searchMyQuestionList",
@@ -326,7 +332,6 @@ export default {
             : 0,
         },
       }).catch((t) => {
-        this.loadfinish = true;
         setTimeout(() => {
           this.lock = false;
         }, 360);
@@ -336,10 +341,13 @@ export default {
           duration: 1600,
           offset: 80,
         });
+        this.isinit = true;
         return;
       });
-      this.loadfinish = true;
       if (res.code == 1) {
+        if (!this.isinit) {
+          this.data_list = [];
+        }
         this.data_list.push(...res.data);
         if (res.data && !res.data?.length) {
           this.$msg({
@@ -353,6 +361,7 @@ export default {
       setTimeout(() => {
         this.lock = false;
       }, 360);
+      this.isinit = true;
     },
   },
   computed: {

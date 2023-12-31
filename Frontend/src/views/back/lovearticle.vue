@@ -187,7 +187,7 @@ export default {
       await this.getlist();
     }
   },
-  async created() {
+  created() {
     this.page = 1;
     this.limit = 50;
     this.showone = false;
@@ -198,9 +198,7 @@ export default {
       tem_list.push(this.$SqsGlobal.article_list_data);
     }
     this.tableData = tem_list;
-    this.getlist();
   },
-
   methods: {
     tableRowClassName({ row, rowIndex }) {
       if (rowIndex === 1) {

@@ -95,7 +95,6 @@ export default {
     this.page = 1;
     this.limit = 50;
     this.noticeList = [];
-    this.getlist();
   },
   activated() {
     this.getlist();

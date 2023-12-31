@@ -136,7 +136,7 @@
       @current-change="handleCurrentChange"
       :current-page="page"
       :page-sizes="[1, 2, 6, 10, 20, 50]"
-      :page-size="blogpagesize"
+      :page-size="limit"
       layout="total, sizes, prev, pager, next, jumper"
       :total="total"
     ></el-pagination>
@@ -164,13 +164,12 @@ export default {
     this.isseetip = true;
     this.issearch = false; //判断是否搜索，从而进行分页查找
     this.page = 1;
-    this.blogpagesize = 50;
+    this.limit = 50;
     let tem_list = [];
     for (let i = 0; i < this.limit; ++i) {
       tem_list.push(this.$SqsGlobal.oj_contest_list_data);
     }
     this.contestlist = tem_list;
-    await this.getlist();
   },
   deactivated() {
     this.isseetip = false;
@@ -186,7 +185,7 @@ export default {
       contestlist: [],
       total: 0,
       page: 1,
-      blogpagesize: 50,
+      limit: 50,
       key: "",
     };
   },
@@ -236,7 +235,7 @@ export default {
 
     handleSizeChange(val) {
       this.page = 1;
-      this.blogpagesize = val;
+      this.limit = val;
       if (this.issearch) {
         this.search();
       } else {
@@ -262,7 +261,7 @@ export default {
         },
         data: {
           page: this.page,
-          limit: this.blogpagesize,
+          limit: this.limit,
         },
       }).catch((t) => {
         this.$msg({
@@ -287,7 +286,7 @@ export default {
         data: {
           key: this.key,
           page: this.page,
-          limit: this.blogpagesize,
+          limit: this.limit,
         },
       }).catch((t) => {
         this.$msg({
