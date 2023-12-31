@@ -3,7 +3,7 @@
  * @Author: wmzn-ltpp 1491579574@qq.com
  * @Date: 2023-08-07 18:43:59
  * @LastEditors: wmzn-ltpp 1491579574@qq.com
- * @LastEditTime: 2023-12-31 10:40:40
+ * @LastEditTime: 2023-12-31 10:58:02
  * @FilePath: \LTPP-CODE\config\process.php
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
@@ -24,26 +24,37 @@
  */
 
 return [
+    'CodeStatusCorrectCrontab' => [
+        'handler' => process\CodeStatusCorrectCrontab::class,
+        'count' => 1
+    ],
     'WebcodeCrontab' => [
-        'Webcode' => process\WebcodeCrontab::class,
+        'handler' => process\WebcodeCrontab::class,
+        'count' => 4
     ],
     'CreatContestCrontab' => [
-        'CreatContest' => process\CreatContestCrontab::class,
+        'handler' => process\CreatContestCrontab::class,
+        'count' => 1
     ],
     'ChatfileCrontab' => [
-        'handler' => process\ChatfileCrontab::class
+        'handler' => process\ChatfileCrontab::class,
+        'count' => 1
     ],
     'DayproblemCrontab' => [
-        'handler' => process\DayproblemCrontab::class
+        'handler' => process\DayproblemCrontab::class,
+        'count' => 1
     ],
     'GitcodeCrontab' => [
-        'handler' => process\GitcodeCrontab::class
+        'handler' => process\GitcodeCrontab::class,
+        'count' => 1
     ],
     'RobotContestCrontab' => [
-        'handler' => process\RobotContestCrontab::class
+        'handler' => process\RobotContestCrontab::class,
+        'count' => 1
     ],
     'ContestRankCrontab' => [
-        'handler' => process\ContestRankCrontab::class
+        'handler' => process\ContestRankCrontab::class,
+        'count' => 1
     ],
     // File update detection and automatic reload
     // 'monitor' => [

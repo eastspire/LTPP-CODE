@@ -16,8 +16,6 @@ class WebcodeCrontab
 
     static $user_num = 1000;
 
-    static $user_idx = 0;
-
     /**
      * 获取用户数组
      */
@@ -39,10 +37,8 @@ class WebcodeCrontab
         if (!WebcodeCrontab::$user_list || !is_array(WebcodeCrontab::$user_list) || !sizeof(WebcodeCrontab::$user_list)) {
             $this->getUserList();
         }
-        if (WebcodeCrontab::$user_idx < 0 || WebcodeCrontab::$user_idx >= sizeof(WebcodeCrontab::$user_list)) {
-            WebcodeCrontab::$user_idx = 0;
-        }
-        return WebcodeCrontab::$user_list[WebcodeCrontab::$user_idx];
+        $idx = rand(0, sizeof(WebcodeCrontab::$user_list) - 1);
+        return WebcodeCrontab::$user_list[$idx];
     }
 
     /**
@@ -106,7 +102,7 @@ class WebcodeCrontab
     private function runTask()
     {
         if (!Base::judgeJudgeInstall()) {
-            Robot::sendChatToOneUserMsg(Base::getRootId(), '定时任务进程 **【Webcode】** 判题机检测异常：判题机未安装！');
+            Robot::sendChatToOneUserMsg(Base::getRootId(), '定时任务进程 **【WebcodeCrontab】** 判题机检测异常：判题机未安装！');
             return;
         }
         $testin = '';
@@ -116,7 +112,7 @@ class WebcodeCrontab
         //代码检测
         $check_safe_json = Base::judgeCodeSafe($code, $userlanguage);
         if (!isset($check_safe_json['code']) || $check_safe_json['code'] != 1) {
-            Robot::sendChatToOneUserMsg(Base::getRootId(), '定时任务进程 **【Webcode】** 用户代码校验未通过：' . json($check_safe_json));
+            Robot::sendChatToOneUserMsg(Base::getRootId(), '定时任务进程 **【WebcodeCrontab】** 用户代码校验未通过：' . json($check_safe_json));
             return;
         }
         $code_id = Base::insertToDb('codehistory', [
@@ -149,7 +145,7 @@ class WebcodeCrontab
             try {
                 $this->runTask();
             } catch (Exception $e) {
-                Robot::sendChatToOneUserMsg(Base::getRootId(), '定时任务进程 **【Webcode】** 运行错误：' . $e->getMessage());
+                Robot::sendChatToOneUserMsg(Base::getRootId(), '定时任务进程 **【WebcodeCrontab】** 运行错误：' . $e->getMessage());
             }
         });
     }

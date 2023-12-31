@@ -86,7 +86,7 @@ class ChatfileCrontab
                 // 发送通知
                 Robot::sendChatToOneUserMsg($root_id, $msg);
             } catch (Exception $e) {
-                Robot::sendChatToOneUserMsg(Base::getRootId(), '定时任务进程 **【Chatfile】** 运行错误：' . $e->getMessage());
+                Robot::sendChatToOneUserMsg(Base::getRootId(), '定时任务进程 **【ChatfileCrontab】** 运行错误：' . $e->getMessage());
             }
         });
     }

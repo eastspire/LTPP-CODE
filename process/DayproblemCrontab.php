@@ -34,7 +34,7 @@ class DayproblemCrontab
                 'time' => date('Y-m-d H:i:s', time())
             ]));
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsg(Base::getRootId(), '定时任务进程 **【Dayproblem】** 运行错误：' . $e->getMessage());
+            Robot::sendChatToOneUserMsg(Base::getRootId(), '定时任务进程 **【DayproblemCrontab】** 运行错误：' . $e->getMessage());
         }
     }
 
@@ -97,7 +97,7 @@ class DayproblemCrontab
             try {
                 $this->addDayProblem();
             } catch (Exception $e) {
-                Robot::sendChatToOneUserMsg(Base::getRootId(), '定时任务进程 **【Dayproblem】** 运行错误：' . $e->getMessage());
+                Robot::sendChatToOneUserMsg(Base::getRootId(), '定时任务进程 **【DayproblemCrontab】** 运行错误：' . $e->getMessage());
             }
         });
 
@@ -106,7 +106,7 @@ class DayproblemCrontab
             try {
                 $this->addDayProblem();
             } catch (Exception $e) {
-                Robot::sendChatToOneUserMsg(Base::getRootId(), '定时任务进程 **【Dayproblem】** 运行错误：' . $e->getMessage());
+                Robot::sendChatToOneUserMsg(Base::getRootId(), '定时任务进程 **【DayproblemCrontab】** 运行错误：' . $e->getMessage());
             }
         });
     }

@@ -190,7 +190,7 @@ class CreatContestCrontab
                     $this->addUser($res_id, $user_list);
                 }
             } catch (Exception $e) {
-                Robot::sendChatToOneUserMsg(Base::getRootId(), '定时任务进程 **【CreatContest】** 运行错误：' . $e->getMessage());
+                Robot::sendChatToOneUserMsg(Base::getRootId(), '定时任务进程 **【CreatContestCrontab】** 运行错误：' . $e->getMessage());
             }
         });
     }

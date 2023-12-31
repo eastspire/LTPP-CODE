@@ -19,6 +19,7 @@ class User
         'sex',
         'headimage',
         'follow',
+        'email'
     ];
 
     static $video_bk_root_path = 'static/background/video/';
@@ -479,7 +480,6 @@ class User
     public function getFanFollow($id, $page, $limit, $do, $key = '')
     {
         Base::judgePageLimitIsSafe($page, $limit);
-        $isroot = Base::judgeIsRoot($id);
         $allnum = 0;
         $res_fans = [];
         $res_follow = [];
@@ -498,10 +498,10 @@ class User
                     ->select(User::$user_list_db_key)
                     ->first();
                 if ($dbfollow) {
+                    unset($dbfollow->email);
                     $arr_follow[] = $dbfollow;
                 }
             }
-
             $allnum = sizeof($arr_follow);
             $res_follow = array();
             for ($i = $limit * ($page - 1); $i < $limit * $page && $i < $allnum; ++$i) {
@@ -523,6 +523,7 @@ class User
                     ->select(User::$user_list_db_key)
                     ->first();
                 if ($dbfans) {
+                    unset($dbfans->email);
                     $arr_fans[] = $dbfans;
                 }
             }
@@ -831,7 +832,7 @@ class User
         $allnum = Db::table('user')
             ->where('isdel', 0)
             ->count();
-        Base::userOnline($info);
+        Base::userOnline($info, true, true);
         Base::dataToSafe($info);
         if ($info) {
             return json(['code' => 1, 'data' => $info, 'allnum' => $allnum, 'msg' => '加载用户列表成功']);
@@ -918,180 +919,25 @@ class User
         if (!$isroot) {
             return json(['code' => -1, 'msg' => '权限不足']);
         }
-
-        $judgeroot = Db::table('user')
-            ->where('id', $user_id)
-            ->where('isdel', 0)
-            ->first();
-
-        if ($judgeroot->name == 'root' && $judgeroot->grade == 3) {
+        $user_db = Base::getUserData($user_id);
+        if (!$user_db) {
+            return json(['code' => -1, 'msg' => '用户不存在']);
+        }
+        if ($user_db->name == 'root' && $user_db->grade == 3) {
             return \json(['code' => -1, 'msg' => '超级管理员账号禁止删除']);
         }
-
-        if ($judgeroot->name == '机器人') {
+        if ($user_db->name == '机器人' || $user_db->email == Base::$robot_email) {
             return \json(['code' => -1, 'msg' => '机器人账号禁止删除']);
         }
-        $info = Db::table('user')
+        $res = Db::table('user')
             ->where('id', $user_id)
             ->where('isdel', 0)
-            ->exists();
-
-        if ($info) {
-            $db = Db::table('followfans')
-                ->where('userid', $my_aid)
-                ->where('isdel', 0)
-                ->select('followid')
-                ->get();
-            foreach ($db as &$tem) {
-                Db::table('user')
-                    ->where('id', $tem->followid)
-                    ->where('fans', '>', 0)
-                    ->lockForUpdate()
-                    ->decrement('fans', 1);
-            }
-            $db = Db::table('followfans')
-                ->where('followid', $user_id)
-                ->where('isdel', 0)
-                ->select('userid')
-                ->get();
-            foreach ($db as &$tem) {
-                Db::table('user')
-                    ->where('id', $tem->userid)
-                    ->where('follow', '>', 0)
-                    ->lockForUpdate()
-                    ->decrement('follow', 1);
-            }
-
-            Db::table('followfans')
-                ->where('userid', $user_id)
-                ->where('isdel', 0)
-                ->update(['isdel' => 1]);
-            Db::table('followfans')
-                ->where('followid', $user_id)
-                ->where('isdel', 0)
-                ->update(['isdel' => 1]);
-            Db::table('blackip')
-                ->where('id', $user_id)
-                ->where('isdel', 0)
-                ->update(['isdel' => 1]);
-            Db::table('article')
-                ->where('writerid', $user_id)
-                ->where('isdel', 0)
-                ->update(['isdel' => 1]);
-            Db::table('codehistory')
-                ->where('userid', $user_id)
-                ->where('isdel', 0)
-                ->update(['isdel' => 1]);
-            Db::table('articlecomment')
-                ->where('userid', $user_id)
-                ->where('isdel', 0)
-                ->update(['isdel' => 1]);
-            Db::table('codehistory')
-                ->where('isdel', 0)
-                ->where('userid', $user_id)
-                ->where('isdel', 0)
-                ->update(['isdel' => 1]);
-            Db::table('codehistory')
-                ->where('userid', $user_id)
-                ->where('isdel', 0)
-                ->update(['isdel' => 1]);
-            Db::table('fabulousarticle')
-                ->where('userid', $user_id)
-                ->where('isdel', 0)
-                ->update(['isdel' => 1]);
-            Db::table('solveproblem')
-                ->where('userid', $user_id)
-                ->where('isdel', 0)
-                ->update(['isdel' => 1]);
-            Db::table('codehistory')
-                ->where('userid', $user_id)
-                ->where('isdel', 0)
-                ->update(['isdel' => 1]);
-            Db::table('usernotice')
-                ->where('userid', $user_id)
-                ->where('isdel', 0)
-                ->update(['isdel' => 1]);
-            Db::table('groupchat')
-                ->where('get_user_id', $user_id)
-                ->where('isdel', 0)
-                ->update(['isdel' => 1]);
-            $group_list = Db::table('groupuser')
-                ->where('user_id', $user_id)
-                ->where('isdel', 0)
-                ->get();
-            Db::table('groupuser')
-                ->where('user_id', $user_id)
-                ->where('isdel', 0)
-                ->update(['isdel' => 1]);
-            foreach ($group_list as &$tem) {
-                try {
-                    Db::table('group')
-                        ->where('id', $tem->group_id)
-                        ->where('isdel', 0)
-                        ->decrement('total', 1);
-                    Base::updateGroupDataRedis($tem->group_id);
-                } catch (Exception $e) {
-                }
-            }
-            Db::table('privatechat')
-                ->where('get_user_id', $user_id)
-                ->where('isdel', 0)
-                ->update(['isdel' => 1]);
-            Db::table('privatechat')
-                ->where('post_user_id', $user_id)
-                ->where('isdel', 0)
-                ->update(['isdel' => 1]);
-            Db::table('answer')
-                ->where('userid', $user_id)
-                ->where('isdel', 0)
-                ->update(['isdel' => 1]);
-            Db::table('lovequestion')
-                ->where('userid', $user_id)
-                ->where('isdel', 0)
-                ->update(['isdel' => 1]);
-
-            Db::table('privateuser')
-                ->where('get_user_id', $user_id)
-                ->where('isdel', 0)
-                ->update(['isdel' => 1]);
-
-            Db::table('privateuser')
-                ->where('post_user_id', $user_id)
-                ->where('isdel', 0)
-                ->update(['isdel' => 1]);
-
-            $res = Db::table('user')
-                ->where('id', $user_id)
-                ->where('isdel', 0)
-                ->update(['isdel' => 1]);
-            $md5uid = Base::getPathMd5($user_id);
-            $gitcode_path = Base::$LTPP_public_static_path . '/gitcode/' . $user_uid;
-            if (file_exists($gitcode_path)) {
-                Base::deleteAllFile($gitcode_path);
-            }
-
-            $image_bk_path = Base::deleteAllFile(Base::$LTPP_public_path . User::$image_bk_root_path . $md5uid);
-            $video_bk_path = Base::deleteAllFile(Base::$LTPP_public_path . User::$video_bk_root_path . $md5uid);
-            $headimage_path = Base::deleteAllFile(Base::$LTPP_public_path . User::$headimage_root_path . $md5uid);
-
-            if (file_exists($image_bk_path)) {
-                Base::deleteAllFile($image_bk_path);
-            }
-            if (file_exists($video_bk_path)) {
-                Base::deleteAllFile($video_bk_path);
-            }
-            if (file_exists($headimage_path)) {
-                Base::deleteAllFile($headimage_path);
-            }
-            if ($res) {
-                Base::updateUserDataRedis($my_aid);
-                return json(['code' => 1, 'msg' => '用户删除成功']);
-            } {
-                Base::updateUserDataRedis($my_aid);
-                return json(['code' => -1, 'msg' => '用户删除失败']);
-            }
+            ->update(['isdel' => 1]);
+        Base::updateUserDataRedis($my_aid);
+        if ($res) {
+            return json(['code' => 1, 'msg' => '用户删除成功']);
         }
-        return json(['code' => -1, 'data' => $info, 'msg' => '用户不存在']);
+        return json(['code' => -1, 'msg' => '用户删除失败']);
     }
 
     /**
@@ -1102,7 +948,7 @@ class User
         $my_uid = JwtToken::getCurrentId();
         $my_aid = Base::getIdByUid($my_uid);
         $my_data = Base::getUserData($my_aid);
-        if (!$my_data || empty($my_data)) {
+        if (!$my_data) {
             return \json(['code' => -1, 'msg' => '用户不存在']);
         }
         $my_data->password = '';
@@ -1473,9 +1319,6 @@ class User
      */
     public function userList(Request $request)
     {
-        $my_uid = JwtToken::getCurrentId();
-        $my_aid = Base::getIdByUid($my_uid);
-
         $page = $request->post('page');
         $limit = $request->post('limit');
         Base::judgePageLimitIsSafe($page, $limit);
@@ -1488,9 +1331,7 @@ class User
         $allnum = Db::table('user')
             ->where('isdel', 0)
             ->count();
-
-        $isroot = Base::judgeIsRoot($my_aid);
-        Base::userOnline($info);
+        Base::userOnline($info, true, true);
         Base::dataToSafe($info);
         return json(['code' => 1, 'data' => $info, 'allnum' => $allnum, 'msg' => "共有 $allnum 个用户"]);
     }
@@ -1559,7 +1400,7 @@ class User
             $info->password = '';
             $info->user_aid = $info->id;
         }
-        Base::userOnline($info, false);
+        Base::userOnline($info, false, false);
         Base::dataToSafe($info);
         if ($info) {
             return json(['code' => 1, 'data' => $info, 'msg' => '用户信息加载成功']);

@@ -62,7 +62,7 @@ class ContestRankCrontab
                 ContestRankCrontab::$times++;
             } catch (Exception $e) {
                 // 发送通知
-                Robot::sendChatToOneUserMsg(Base::getRootId(), '定时任务进程 **【ContestRank】** 运行错误：' . $e->getMessage());
+                Robot::sendChatToOneUserMsg(Base::getRootId(), '定时任务进程 **【ContestRankCrontab】** 运行错误：' . $e->getMessage());
             }
         });
     }

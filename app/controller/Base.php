@@ -3152,21 +3152,35 @@ class Base
     /**
      * 添加用户在线状态
      */
-    static public function userOnline(&$user, $is_list = true)
+    static public function userOnline(&$user, $is_list = true, $isdel_key_email = false)
     {
         if ($is_list) {
             foreach ($user as &$tem) {
-                if ((isset($tem->id) && Gateway::isUidOnline($tem->id)) || (isset($tem->name) &&  $tem->name == '机器人')) {
+                if (
+                    (isset($tem->id) && Gateway::isUidOnline($tem->id)) ||
+                    (isset($tem->name) &&  $tem->name == '机器人') ||
+                    (isset($tem->email) &&  $tem->email == Base::$robot_email)
+                ) {
                     $tem->online = 1;
                 } else {
                     $tem->online = 0;
                 }
+                if (isset($tem->email) && $isdel_key_email) {
+                    unset($tem->email);
+                }
             }
         } else {
-            if ((isset($user->id) && Gateway::isUidOnline($user->id)) || (isset($user->name) && $user->name == '机器人')) {
+            if (
+                (isset($user->id) && Gateway::isUidOnline($user->id)) ||
+                (isset($user->name) && $user->name == '机器人') ||
+                (isset($user->email) && $user->email == Base::$robot_email)
+            ) {
                 $user->online = 1;
             } else {
                 $user->online = 0;
+            }
+            if (isset($user->email) && $isdel_key_email) {
+                unset($user->email);
             }
         }
     }
