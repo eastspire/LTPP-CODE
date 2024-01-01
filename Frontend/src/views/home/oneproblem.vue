@@ -290,7 +290,7 @@ export default {
         Time: "加载中",
         Memory: "加载中",
         problemFrom: "加载中",
-        ACpoint: "加载中",
+        ACpoint: 1,
         public: 1,
       },
       /* context:  '',//输入的数据 */
