@@ -1001,7 +1001,7 @@
                   >
                 </template>
               </el-table-column>
-              <el-table-column label="用户名" width="400">
+              <el-table-column label="用户名" width="400" align="center">
                 <template slot-scope="scope">
                   <a
                     style="
@@ -1013,8 +1013,7 @@
                   >
                 </template>
               </el-table-column>
-
-              <el-table-column label="删除" width="auto">
+              <el-table-column label="删除" width="auto" align="center">
                 <template slot-scope="scope">
                   <el-button
                     type="text"

@@ -84,7 +84,7 @@
               </template>
             </el-table-column>
 
-            <el-table-column label="短句来源" width="auto">
+            <el-table-column label="短句来源" width="auto" align="center">
               <template slot-scope="scope">
                 <el-tooltip
                   class="item"
@@ -106,7 +106,7 @@
               </template>
             </el-table-column>
 
-            <el-table-column label="操作" width="240">
+            <el-table-column label="操作" width="240" align="center">
               <template slot-scope="scope">
                 <el-button
                   class="pulse-enter-active"

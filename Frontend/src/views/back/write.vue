@@ -43,13 +43,21 @@
           >
             图片
           </p>
-
-          <el-image
-            v-show="image && reg.test(image)"
-            :src="this.image"
-            lazy
-          ></el-image>
-
+          <div>
+            <div style="overflow: hidden">
+              <img
+                class="animate"
+                v-show="image && reg.test(image)"
+                :src="image"
+                style="
+                  display: block;
+                  width: 100%;
+                  height: 26rem;
+                  object-fit: cover;
+                "
+              />
+            </div>
+          </div>
           <div style="height: 1.06rem"></div>
           <p
             style="
@@ -363,7 +371,7 @@ export default {
       // 判断不同的视频原链接类型
       if (this.form.region == "url") {
         let linkFrameStart = `<div align="center" width="100%" style="border-width:0rem"><video style="height: ${
-          window.innerHeight / 2 + "px"
+          (window.innerHeight / 4) * 3 + "px"
         }; width: 100%" controls controlslist="nodownload"><source src="`;
         let linkFrameEnd = `" type="video/mp4" /></video></div>`;
 
@@ -540,4 +548,23 @@ export default {
 </script>
 <style scoped>
 @import "../../../public/md/markdown/github-markdown.min.css";
+.animate {
+  -webkit-transition: all 1s ease; /* Safari and Chrome */
+  -moz-transition: all 1s ease; /* Firefox */
+  -o-transition: all 1s ease; /* Opera */
+  -ms-transition: all 1s ease; /* IE 9 */
+  transition: all 1s ease;
+}
+img:hover {
+  transform-origin: center center;
+  transform: scale(1.1, 1.1);
+  -webkit-transform-origin: center center;
+  -webkit-transform: scale(1.1, 1.1);
+  -moz-transform-origin: center center;
+  -moz-transform: scale(1.1, 1.1);
+  -o-transform-origin: center center;
+  -o-transform: scale(1.1, 1.1);
+  -ms-transform-origin: center center;
+  -ms-transform: scale(1.1, 1.1);
+}
 </style>

@@ -88,7 +88,7 @@
                 </p>
               </template>
             </el-table-column>
-            <el-table-column label="视频url" width="auto">
+            <el-table-column label="视频url" width="auto" align="center">
               <template slot-scope="scope">
                 <p
                   style="font-weight: bold; font-size: 1.06rem; color: #67c23a"
@@ -97,7 +97,7 @@
                 </p>
               </template>
             </el-table-column>
-            <el-table-column label="标签" width="auto">
+            <el-table-column label="标签" width="auto" align="center">
               <template slot-scope="scope">
                 <p
                   style="font-weight: bold; font-size: 1.06rem; color: #67c23a"
@@ -106,7 +106,7 @@
                 </p>
               </template>
             </el-table-column>
-            <el-table-column label="操作" width="260">
+            <el-table-column label="操作" width="260" align="center">
               <template slot-scope="scope">
                 <el-button
                   class="pulse-enter-active"

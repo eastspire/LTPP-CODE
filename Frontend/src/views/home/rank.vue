@@ -17,7 +17,7 @@
             :data="tableData"
             style="width: 100%"
           >
-            <el-table-column label="排名" width="80" align="center">
+            <el-table-column label="排名" width="80">
               <template slot-scope="scope">
                 <el-tooltip
                   class="item;"

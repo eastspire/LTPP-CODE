@@ -41,7 +41,7 @@
             style="width: 100%"
             :row-class-name="tableRowClassName"
           >
-            <el-table-column label="提交时间" width="220" align="center">
+            <el-table-column label="提交时间" width="220">
               <template slot-scope="scope">
                 <p style="font-weight: bold; font-size: 1.06rem">
                   {{ scope.row.time.substr(0, 20) }}

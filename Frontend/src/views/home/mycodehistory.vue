@@ -19,7 +19,7 @@
               style="width: 100%"
               :row-class-name="tableRowClassName"
             >
-              <el-table-column label="提交时间" width="240" align="center">
+              <el-table-column label="提交时间" width="240">
                 <template slot-scope="scope">
                   <span
                     style="font-weight: bold; font-size: 1.06rem"

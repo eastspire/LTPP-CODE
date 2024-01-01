@@ -78,7 +78,7 @@
                 </p>
               </template>
             </el-table-column>
-            <el-table-column label="路径" width="auto">
+            <el-table-column label="路径" width="auto" align="center">
               <template slot-scope="scope">
                 <p
                   style="font-weight: bold; font-size: 1.06rem; color: #67c23a"
@@ -87,7 +87,7 @@
                 </p>
               </template>
             </el-table-column>
-            <el-table-column label="用户" width="88">
+            <el-table-column label="用户" width="220" align="center">
               <template slot-scope="scope">
                 <p
                   style="
@@ -99,11 +99,11 @@
                   "
                   @click="touserpage(scope.row.userid)"
                 >
-                  {{ scope.row.name }}
+                  {{ scope.row.name.substr(0, 10) }}
                 </p>
               </template>
             </el-table-column>
-            <el-table-column label="权限" width="136">
+            <el-table-column label="权限" width="136" align="center">
               <template slot-scope="scope">
                 <p
                   style="
@@ -122,7 +122,7 @@
                 </p>
               </template>
             </el-table-column>
-            <el-table-column label="用户ID" width="160">
+            <el-table-column label="用户ID" width="160" align="center">
               <template slot-scope="scope">
                 <p
                   style="font-weight: bold; font-size: 1.06rem; color: #67c23a"
@@ -131,7 +131,7 @@
                 </p>
               </template>
             </el-table-column>
-            <el-table-column label="时间" width="210">
+            <el-table-column label="时间" width="210" align="center">
               <template slot-scope="scope">
                 <p style="font-weight: bold; font-size: 1.06rem; color: red">
                   {{ scope.row.time }}

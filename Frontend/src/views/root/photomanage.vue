@@ -45,7 +45,7 @@
                 </p>
               </template>
             </el-table-column>
-            <el-table-column label="操作" width="160">
+            <el-table-column label="操作" width="160" align="center">
               <template slot-scope="scope">
                 <el-button
                   class="pulse-enter-active"

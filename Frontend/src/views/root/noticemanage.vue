@@ -70,7 +70,7 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="公告发布时间" width="auto">
+          <el-table-column label="公告发布时间" width="auto" align="center">
             <template slot-scope="scope">
               <span
                 class="my-span"
@@ -81,7 +81,7 @@
             </template>
           </el-table-column>
 
-          <el-table-column label="操作" width="246">
+          <el-table-column label="操作" width="246" align="center">
             <template slot-scope="scope">
               <el-button
                 class="pulse-enter-active"
@@ -483,7 +483,7 @@ export default {
       // 判断不同的视频原链接类型
       if (this.form.region == "url") {
         let linkFrameStart = `<div align="center" width="100%" style="border-width:0rem"><video style="height: ${
-          window.innerHeight / 2 + "px"
+          (window.innerHeight / 4) * 3 + "px"
         }; width: 100%" controls controlslist="nodownload"><source src="`;
         let linkFrameEnd = `" type="video/mp4" /></video></div>`;
 

@@ -301,10 +301,11 @@
                         class="no-select"
                         type="text"
                         style="
-                          font-size: 1.18rem !important;
+                          font-size: 1.06rem !important;
                           color: deeppink;
                           float: left;
                           margin-left: 1rem;
+                          margin-top: 0.2rem;
                         "
                         @click="touserpage(temanswer.userid)"
                         >{{ temanswer.username }}</el-button
@@ -314,10 +315,11 @@
                       class="no-select"
                       type="text"
                       style="
-                        font-size: 1.18rem !important;
+                        font-size: 1.06rem !important;
                         color: greenyellow;
                         float: left;
                         cursor: auto;
+                        margin-top: 0.16rem;
                       "
                       >（回答时间：{{ temanswer.time }}）</el-button
                     >
@@ -408,10 +410,11 @@
                             class="no-select"
                             type="text"
                             style="
-                              font-size: 1.18rem !important;
+                              font-size: 1.06rem !important;
                               color: deeppink;
                               float: left;
                               margin-left: 1rem;
+                              margin-top: 0.4rem;
                             "
                             @click="touserpage(temtouseranswer.userid)"
                           >
@@ -422,11 +425,12 @@
                           class="no-select"
                           type="text"
                           style="
-                            font-size: 1.18rem !important;
+                            font-size: 1.06rem !important;
                             color: deepskyblue;
                             float: left;
                             margin-left: 1rem;
                             cursor: auto;
+                            margin-top: 0.46rem;
                           "
                           >回复</el-button
                         >
@@ -450,10 +454,11 @@
                             class="no-select"
                             type="text"
                             style="
-                              font-size: 1.18rem !important;
+                              font-size: 1.06rem !important;
                               color: deeppink;
                               float: left;
                               margin-left: 1rem;
+                              margin-top: 0.4rem;
                             "
                             @click="touserpage(temtouseranswer.touserid)"
                           >
@@ -464,10 +469,11 @@
                           class="no-select"
                           type="text"
                           style="
-                            font-size: 1.18rem !important;
+                            font-size: 1.06rem !important;
                             color: deepskyblue;
                             float: left;
                             cursor: auto;
+                            margin-top: 0.4rem;
                           "
                           >（回答时间：{{ temtouseranswer.time }}）
                         </el-button>
@@ -963,7 +969,7 @@ export default {
       // 判断不同的视频原链接类型
       if (this.form.region == "url") {
         let linkFrameStart = `<div align="center" width="100%" style="border-width:0rem"><video style="height: ${
-          window.innerHeight / 2 + "px"
+          (window.innerHeight / 4) * 3 + "px"
         }; width: 100%" controls controlslist="nodownload"><source src="`;
         let linkFrameEnd = `" type="video/mp4" /></video></div>`;
 
@@ -1020,7 +1026,7 @@ export default {
       // 判断不同的视频原链接类型
       if (this.form.region == "url") {
         let linkFrameStart = `<div align="center" width="100%" style="border-width:0rem"><video style="height: ${
-          window.innerHeight / 2 + "px"
+          (window.innerHeight / 4) * 3 + "px"
         }; width: 100%" controls controlslist="nodownload"><source src="`;
         let linkFrameEnd = `" type="video/mp4" /></video></div>`;
 

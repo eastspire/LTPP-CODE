@@ -609,8 +609,8 @@ export default {
       group_user_list: [],
       file_percentage: 0,
       user_deep_color:
-        "background-color: rgba(0,0,0,0.68);color:rgba(255,255,255,0.9)",
-      user_no_deep_color: "background-color: rgba(30, 30, 30, 0.36)",
+        "background-color: rgba(41,50,56,0.66);color:rgba(255,255,255,0.9)",
+      user_no_deep_color: "background-color:rgba(41,50,56,0.06)",
       gitclass: [
         "folder",
         "music",
@@ -731,7 +731,7 @@ export default {
       // 判断不同的视频原链接类型
       if (this.form.region == "url") {
         let linkFrameStart = `<div align="center" width="100%" style="border-width:0rem"><video style="height: ${
-          window.innerHeight / 2 + "px"
+          (window.innerHeight / 4) * 3 + "px"
         }; width: 100%" controls controlslist="nodownload"><source src="`;
         let linkFrameEnd = `" type="video/mp4" /></video></div>`;
 
