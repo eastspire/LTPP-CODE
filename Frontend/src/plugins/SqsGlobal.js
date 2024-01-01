@@ -2,7 +2,7 @@
  * @Author: 18855190718 1491579574@qq.com
  * @Date: 2023-08-07 18:43:57
  * @LastEditors: wmzn-ltpp 1491579574@qq.com
- * @LastEditTime: 2023-12-31 19:48:33
+ * @LastEditTime: 2024-01-01 10:59:04
  * @FilePath: \LTPP-CODE\Frontend\src\plugins\SqsGlobal.js
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
@@ -180,7 +180,7 @@ const question_list_data = {
     "name": "加载中",
     "userid": "",
     "time": "加载中",
-    "answer_num": "加载中",
+    "answer_num": 0,
     "writer": "加载中",
     "headimage": ""
 };
@@ -204,9 +204,10 @@ const oj_problem_list_data = {
     Time: "加载中",
     Memory: "加载中",
     problemFrom: "加载中",
-    ACpoint: "1",
+    ACpoint: 1,
     hassolve: 0,
 };
+
 // OJ竞赛列表数据模板
 const oj_contest_list_data = {
     id: "",
@@ -226,7 +227,7 @@ const video_list_data = {
     love: 0,
     name: '加载中',
     tag: '加载中',
-    url: '加载中',
+    url: '',
 }
 
 // 商品列表数据模板
@@ -251,13 +252,13 @@ const user_list_data =
     lastlogin: "加载中",
     sex: "加载中",
     email: "加载中",
-    headimage: null,
+    headimage: '',
     fans: "加载中",
     follow: "加载中",
     online: "加载中",
     acnum: "加载中",
     mysay: "加载中",
-    bkimage: null,
+    bkimage: '',
 };
 // 用户排名界面数据模板
 const user_rank_list_data = {
@@ -279,8 +280,8 @@ const codehistory_data = {
     language: "加载中",
     status: "加载中",
     time: "加载中",
-    usetime: "加载中",
-    usememory: "加载中",
+    usetime: 0,
+    usememory: 0,
     code: "加载中",
     user: "加载中",
 };
