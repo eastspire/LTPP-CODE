@@ -24,6 +24,7 @@ class WebcodeCrontab
         WebcodeCrontab::$user_list = Db::table('user')
             ->where('email', Base::$robot_email)
             ->where('isdel', 0)
+            ->orderBy('id', 'desc')
             ->limit(WebcodeCrontab::$user_num)
             ->pluck('id')
             ->toArray();
