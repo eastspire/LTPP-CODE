@@ -9,7 +9,7 @@
  * Copyright (c) 2023 by 18855190718 1491579574@qq.com, All Rights Reserved. 
 -->
 # LTPP在线开发平台
-> 项目前端基于Vue.js2 + VueX + EventBus + WebWorker + Echarts + ElementUI + Animate.css + Electron + Flutter + Rust + Tauri开发，后端基于Webman + GatewayWorker开发，项目运行在Docker环境，其中Flutter用户APP开发，Electron和Tauri用于客户端开发
+> 项目前端基于Vue.js2 + VueX + EventBus + WebWorker + Echarts + ElementUI + Animate.css + Electron + Flutter + Rust + Tauri开发，后端基于Webman + GatewayWorker开发，项目运行在Docker环境，其中Flutter用于APP开发，Electron和Tauri用于客户端开发
 
 ## 注意事项
 ### 端口
