@@ -262,13 +262,13 @@ const user_list_data =
 };
 // 用户排名界面数据模板
 const user_rank_list_data = {
-    index: 0,
+    index: "加载中",
     id: "加载中",
     name: "加载中",
     acnum: "加载中",
     registertime: "加载中",
     lastlogin: "加载中",
-    online: "加载中",
+    online: 0,
     sex: "加载中",
     fans: "加载中",
     follow: "加载中",

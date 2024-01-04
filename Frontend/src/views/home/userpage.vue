@@ -304,16 +304,34 @@
             >
               个性签名
             </p>
-            <pre
-              style="font-size: 1.06rem; font-weight: bold; color: deepskyblue"
-              >{{
-                userdata.mysay == "" ||
-                userdata.mysay == null ||
-                userdata.mysay == undefined
-                  ? "    该用户暂未发布个性签名"
-                  : userdata.mysay
-              }}</pre
-            >
+            <div class="markdown-body">
+              <mavon-editor
+                class="md"
+                :codeStyle="prop.codeStyle"
+                :toolbars="toolbars"
+                :value="
+                  userdata.mysay ? userdata.mysay : '该用户暂未发布个性签名'
+                "
+                :subfield="prop.subfield"
+                :defaultOpen="prop.defaultOpen"
+                :toolbarsFlag="prop.toolbarsFlag"
+                :ishljs="true"
+                :editable="prop.editable"
+                :scrollStyle="prop.scrollStyle"
+                :boxShadow="prop.boxShadow"
+                :tabSize="prop.tabSize"
+                :fontSize="prop.fontSize"
+                :externalLink="externalLink"
+                :xssOptions="whiteList"
+                style="
+                  color: #ebeef5;
+                  min-height: 0rem;
+                  height: auto;
+                  border-width: 0rem;
+                "
+              >
+              </mavon-editor>
+            </div>
           </div>
           <div style="height: 2rem"></div>
           <div>
@@ -528,6 +546,9 @@
 
 <script>
 import urlencode from "../../../updateCompoents/urlencode";
+import "../../../updateCompoents/mavon-editor/dist/markdown/github-markdown.min.css";
+import "../../../updateCompoents/mavon-editor/dist/css/index.css";
+
 export default {
   name: "userpage",
   created() {
@@ -579,6 +600,28 @@ export default {
     this.timer = null;
     window.addEventListener("scroll", this.scrollBottom);
   },
+
+  computed: {
+    prop() {
+      let data = {
+        subfield: false, // 单双栏模式
+        defaultOpen: "preview", //edit： 默认展示编辑区域 ， preview： 默认展示预览区域
+        editable: false,
+        toolbarsFlag: false, //工具栏
+        scrollStyle: true,
+        codeStyle: "atom-one-dark",
+        boxShadow: false,
+        ishljs: true,
+        tabSize: 4,
+        toolbarsBackground: "rgba(0,0,0,0)",
+        editorBackground: "rgba(0,0,0,0)",
+        previewBackground: "rgba(0,0,0,0)",
+        fontSize: "1.06rem",
+        navigation: false,
+      };
+      return data;
+    },
+  },
   data() {
     return {
       timer: null,
@@ -592,6 +635,41 @@ export default {
       userarticle: [],
       isfollow: false,
       timeclock: false,
+      whiteList: false,
+      externalLink: {
+        markdown_css: false,
+        // 默认public文件夹下
+        hljs_js: () => "md/highlightjs/highlight.min.js",
+        hljs_css: (css) => "md/highlightjs/styles/" + css + ".min.css",
+        hljs_lang: (lang) => "md/highlightjs/languages/" + lang + ".min.js",
+        katex_css: () => "md/katex/katex.min.css",
+        katex_js: () => "md/katex/katex.min.js",
+      },
+      /* context:  */
+      toolbars: {
+        bold: true, // 粗体
+        italic: true, // 斜体
+        header: true, // 标题
+        underline: true, // 下划线
+        mark: true, // 标记
+        superscript: true, // 上角标
+        quote: true, // 引用
+        ol: true, // 有序列表
+        link: true, // 链接
+        imagelink: true, // 图片链接
+
+        code: true, // code
+        subfield: true, // 是否需要分栏
+        fullscreen: false, // 全屏编辑
+        readmodel: false, // 沉浸式阅读
+        /* 1.3.5 */
+        undo: true, // 上一步
+        trash: true, // 清空
+        save: false, // 保存（触发events中的save事件）
+        /* 1.4.2 */
+        navigation: false, // 导航目录
+        help: false,
+      },
     };
   },
   methods: {
@@ -823,7 +901,10 @@ export default {
 };
 </script>
 
-<style scoped>
+
+<style  lang="less" scoped>
+@import "../../../public/md/markdown/github-markdown.min.css";
+
 .clear {
   clear: both;
 }
