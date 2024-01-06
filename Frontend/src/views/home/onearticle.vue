@@ -10,15 +10,15 @@
       v-loading.lock="!loadfinish"
       element-loading-text="拼命加载中"
       element-loading-spinner="el-icon-loading"
-      element-loading-background="rgba(41, 50, 56, 0.06)"
+      element-loading-background="rgba(228, 147, 208, 0.06)"
     >
       <div
         class="shadow"
         style="
-          background-color: rgba(41, 50, 56, 0.06);
+          background-color: rgba(228, 147, 208, 0.06);
           color: #ffffffe6;
           border-width: 0rem;
-          border-color: rgba(41, 50, 56, 0.06);
+          border-color: rgba(228, 147, 208, 0.06);
           min-height: auto;
           width: 100%;
         "
@@ -386,7 +386,7 @@
                       "
                     >
                       <mavon-editor
-                        class="md"
+                        class="md shadow"
                         ref="md2"
                         :ishljs="true"
                         :toolbars="toolbars"
@@ -409,7 +409,12 @@
                           min-height: 0rem !important;
                           height: auto !important;
                           border-width: 0rem !important;
-                          background-color: rgba(41, 50, 56, 0.16) !important;
+                          background-color: rgba(
+                            228,
+                            147,
+                            208,
+                            0.16
+                          ) !important;
                           color: aliceblue !important;
                         "
                       ></mavon-editor>
@@ -544,7 +549,7 @@
                           "
                         >
                           <mavon-editor
-                            class="md"
+                            class="md shadow"
                             ref="md3"
                             :ishljs="true"
                             :toolbars="toolbars"

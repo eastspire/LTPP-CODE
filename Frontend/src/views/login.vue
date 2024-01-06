@@ -253,7 +253,7 @@ export default {
 ::v-deep .el-form-item__label,
 ::v-deep .el-input__inner {
   color: rgb(255, 246, 84) !important;
-  background-color: rgba(0, 0, 0, 0) !important;
+  background-color: rgba(117, 63, 178, 0) !important;
   border-color: rgb(233, 103, 194) !important;
   border-radius: 0.2rem !important;
   resize: none !important;

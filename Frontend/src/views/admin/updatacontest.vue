@@ -7,10 +7,10 @@
     <div
       class="shadow"
       style="
-        background-color: rgba(41, 50, 56, 0.06);
+        background-color: rgba(228, 147, 208, 0.06);
         color: azure;
         border-width: 0rem;
-        border-color: rgba(41, 50, 56, 0.06)
+        border-color: rgba(228, 147, 208, 0.06)
         height: auto;
         width: 100%;
       "
@@ -156,14 +156,14 @@
             <el-button
               class="el-icon-delete-solid pulse-enter-active"
               type="text"
-              style="font-size: 1.06rem; color: deeppink"
+              style="font-size: 1.02rem; color: #753fb2"
               @click="DeleteContestProblem(tem.id)"
               >点击移除题目：{{ "|标题|：" + tem.problemName }}
               {{ "|标签|:" + tem.problemLabe }}</el-button
             >
           </div>
         </div>
-        <div style="height: 2rem"></div>
+        <div style="height: 0.66rem"></div>
         <div>
           <el-input
             @keyup.enter.native="search()"
@@ -191,7 +191,7 @@
               <template slot-scope="scope">
                 <el-button
                   type="text"
-                  style="color: deeppink"
+                  style="color: #753fb2"
                   class="el-icon-circle-plus"
                   @click="changechoose(scope.row)"
                 ></el-button>
@@ -603,11 +603,11 @@ export default {
     cellStyle({ row, rowIndex }) {
       let acpoint = (row.ACpoint * 100).toFixed(0);
       let styleRes = {
-        background: "rgba(41, 50, 56, 0.16) !important",
+        background: "rgba(228, 147, 208, 0.16) !important",
         color: "chartreuse",
       };
       if (rowIndex % 2 != 0) {
-        styleRes.background = "rgba(26, 26, 26, 0.06) !important";
+        styleRes.background = "rgba(117, 63, 178, 0.06) !important";
       }
       if (acpoint <= 30) {
         /* 正确率低于30*/

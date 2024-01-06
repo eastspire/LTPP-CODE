@@ -17,10 +17,10 @@
     <div
       @dblclick="full()"
       style="
-        background-color: rgba(0, 0, 0, 0);
+        background-color: rgba(117, 63, 178, 0);
         color: azure;
         border-width: 0rem;
-        border-color: rgba(0, 0, 0, 0);
+        border-color: rgba(117, 63, 178, 0);
         height: auto;
         width: 100%;
       "

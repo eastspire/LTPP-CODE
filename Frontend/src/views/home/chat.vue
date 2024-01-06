@@ -9,7 +9,7 @@
     >
       <el-aside
         width="200px"
-        style="background-color: rgba(0, 0, 0, 0.16)"
+        style="background-color: rgba(117, 63, 178, 0.16)"
         id="scroll"
       >
         <div>
@@ -152,7 +152,7 @@
                   }`"
                 >
                   <mavon-editor
-                    class="md"
+                    class="md shadow"
                     :value="tem.msg"
                     :subfield="prop.subfield"
                     :defaultOpen="prop.defaultOpen"
@@ -609,8 +609,8 @@ export default {
       group_user_list: [],
       file_percentage: 0,
       user_deep_color:
-        "background-color: rgba(41,50,56,0.66);color:rgba(255,255,255,0.9)",
-      user_no_deep_color: "background-color:rgba(41,50,56,0.06)",
+        "background-color: rgba(117,63,178,0.66);color:rgba(255,255,255,0.9)",
+      user_no_deep_color: "background-color:rgba(117,63,178,0.06)",
       gitclass: [
         "folder",
         "music",
@@ -1761,14 +1761,14 @@ export default {
 
 /deep/.md,
 /deep/.markdown-body {
-  background-color: rgba(41, 50, 56, 0.06) !important;
+  background-color: rgba(228, 147, 208, 0.06) !important;
   width: fit-content !important;
   border-width: 0rem !important;
   height: auto !important;
 }
 
 .demo-drawer__content {
-  padding: 2rem;
+  padding: 0rem 2rem;
   text-align: center;
 }
 
@@ -1879,11 +1879,11 @@ export default {
 
 .user {
   border-width: 0rem;
-  background-color: rgba(41, 50, 56, 0.06);
+  background-color: rgba(228, 147, 208, 0.06);
 }
 
 .user div {
-  border: 2px solid rgba(41, 50, 56, 0.06);
+  border: 2px solid rgba(228, 147, 208, 0.06);
   position: relative;
 }
 
@@ -2005,7 +2005,7 @@ export default {
   width: 0.16rem !important;
   height: 0rem !important;
   border-radius: 0rem;
-  background-color: rgba(0, 0, 0, 0);
+  background-color: rgba(117, 63, 178, 0);
 }
 
 /* 滚动条上的按钮 (上下箭头). */
@@ -2025,17 +2025,17 @@ export default {
 /*  滚动条轨道. */
 ::-webkit-scrollbar-track {
   border-radius: 0rem;
-  background-color: rgba(0, 0, 0, 0);
+  background-color: rgba(117, 63, 178, 0);
 }
 
 /* 滚动条没有滑块的轨道部分 */
 ::-webkit-scrollbar-track-piece {
-  background-color: rgba(0, 0, 0, 0);
+  background-color: rgba(117, 63, 178, 0);
 }
 
 /* 当同时有垂直滚动条和水平滚动条时交汇的部分. */
 ::-webkit-scrollbar-corner {
-  background-color: rgba(0, 0, 0, 0);
+  background-color: rgba(117, 63, 178, 0);
   border-radius: 0rem;
 }
 

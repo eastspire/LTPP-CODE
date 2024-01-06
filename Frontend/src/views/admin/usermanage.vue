@@ -59,10 +59,10 @@
             "
             class="pulse-enter-active shadow"
             style="
-            background-color: rgba(41, 50, 56, 0.06);
+            background-color: rgba(228, 147, 208, 0.06);
             color: azure;
             border-width: 0rem;
-            border-color: rgba(41, 50, 56, 0.06)
+            border-color: rgba(228, 147, 208, 0.06)
 
             height: 8rem;
             overflow: hidden;
@@ -1052,7 +1052,7 @@ export default {
   height: 100%;
   width: 100%;
   background-color: #cecfd1;
-  box-shadow: 0 0 6px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 0 6px rgba(117, 63, 178, 0.12);
   text-align: center;
   line-height: 40px;
   color: #008bb6;

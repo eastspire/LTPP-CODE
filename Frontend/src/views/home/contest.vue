@@ -12,7 +12,7 @@
           background-color: rgba(248, 249, 250, 0.2);
           color: azure;
           border-width: 0rem;
-          border-color: rgba(41, 50, 56, 0.06)
+          border-color: rgba(228, 147, 208, 0.06)
           height: auto;
           width: 100%;
         "
@@ -223,12 +223,12 @@ export default {
       let endtime = Date.parse(row.end);
       let now = Date.parse(new Date());
       let styleRes = {
-        background: "rgba(41, 50, 56, 0.16) !important",
+        background: "rgba(228, 147, 208, 0.16) !important",
         height: "3.6rem !important",
         color: "chartreuse",
       };
       if (rowIndex % 2 != 0) {
-        styleRes.background = "rgba(26, 26, 26, 0.06) !important";
+        styleRes.background = "rgba(117, 63, 178, 0.06) !important";
       }
       // 状态列字体颜色
       if (endtime <= now) {

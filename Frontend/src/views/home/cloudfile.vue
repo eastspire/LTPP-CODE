@@ -4,10 +4,10 @@
       <div
         class="shadow"
         :style="`
-          background-color: rgba(41, 50, 56, 0.06);
+          background-color: rgba(228, 147, 208, 0.06);
           color: azure;
           border-width: 0rem;
-          border-color: rgba(41, 50, 56, 0.06)
+          border-color: rgba(228, 147, 208, 0.06)
           height: auto;
           width: 100%;
           min-height:${$store.state.no_scroll_height}vh
@@ -700,8 +700,8 @@ export default {
       isseetip: true,
       iscloseFile: false,
       height: window.innerHeight + "px",
-      deepcolor: "rgba(41, 50, 56, 0.16)",
-      notdeepcolor: "rgba(26, 26, 26, 0.06)",
+      deepcolor: "rgba(228, 147, 208, 0.16)",
+      notdeepcolor: "rgba(117, 63, 178, 0.06)",
       file_percentage: 0,
       gitclass: [
         "folder",

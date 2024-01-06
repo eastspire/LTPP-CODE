@@ -9,10 +9,10 @@
     <div
       class="shadow"
       style="
-        background-color: rgba(41, 50, 56, 0.06);
+        background-color: rgba(228, 147, 208, 0.06);
         color: azure;
         border-width: 0rem;
-        border-color: rgba(41, 50, 56, 0.06)
+        border-color: rgba(228, 147, 208, 0.06)
         height: auto;
         width: 100%;
       "
@@ -378,7 +378,7 @@
               width: 14%;
               overflow: hidden;
               margin-left: 1%;
-              background-color: rgb(28, 28, 28);
+              background-color: rgba(117, 63, 178, 0.2)
               border-width: 0rem;
             "
             icon="el-icon-upload"
@@ -1388,7 +1388,7 @@ export default {
     },
     cellStyle({ row, rowIndex }) {
       let styleRes = {
-        background: "rgba(41, 50, 56, 0.16) !important",
+        background: "rgba(228, 147, 208, 0.16) !important",
         height: "3.6rem !important",
         color: "chartreuse",
       };

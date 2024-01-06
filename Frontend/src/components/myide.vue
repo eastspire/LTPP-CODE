@@ -2,7 +2,7 @@
  * @Author: 18855190718 1491579574@qq.com
  * @Date: 2023-08-07 22:11:28
  * @LastEditors: wmzn-ltpp 1491579574@qq.com
- * @LastEditTime: 2023-12-31 09:37:58
+ * @LastEditTime: 2024-01-06 23:53:35
  * @FilePath: \LTPP-CODE\Frontend\src\components\myide.vue
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
@@ -12,10 +12,10 @@
   <div @contextmenu.prevent="" style="margin-left: auto; margin-right: auto">
     <div
       style="
-        background-color: rgba(0, 0, 0, 0);
+        background-color: rgba(117, 63, 178, 0);
         border-width: 0rem;
         color: azure;
-        border-color: rgba(0, 0, 0, 0);
+        border-color: rgba(117, 63, 178, 0);
         height: auto;
         width: 100%;
       "
@@ -212,8 +212,8 @@
                 style="
                   border-radius: 1rem;
                   padding: 1rem;
-                  background-color: rgba(50, 112, 0, 0.88);
-                  border-color: rgba(50, 112, 0, 0.88);
+                  background-color: rgba(228, 147, 208, 0.88);
+                  border-color: rgba(5228, 147, 208, 0.88);
                   color: rgb(254, 255, 255);
                   min-height: 1rem;
                 "

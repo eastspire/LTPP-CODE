@@ -40,10 +40,10 @@
           "
           class="pulse-enter-active shadow"
           style="
-            background-color: rgba(41, 50, 56, 0.06);
+            background-color: rgba(228, 147, 208, 0.06);
             color: azure;
             border-width: 0rem;
-            border-color: rgba(41, 50, 56, 0.06)
+            border-color: rgba(228, 147, 208, 0.06)
             height: 8rem;
             overflow: hidden;
             width: 100%;

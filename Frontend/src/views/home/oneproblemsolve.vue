@@ -3,10 +3,10 @@
     <div @contextmenu.prevent="" style="margin-left: auto; margin-right: auto">
       <div
         style="
-          background-color: rgba(0, 0, 0, 0);
+          background-color: rgba(117, 63, 178, 0);
           color: azure;
           border-width: 0rem;
-          border-color: rgba(0, 0, 0, 0);
+          border-color: rgba(117, 63, 178, 0);
           height: auto;
           width: 100%;
         "
@@ -21,7 +21,7 @@
               margin: 0rem 1rem 2rem 1rem;
               padding-top: 1rem;
               padding-bottom: 1rem;
-              background-color: rgba(41, 50, 56, 0.16);
+              background-color: rgba(228, 147, 208, 0.16);
               color: #ffffffe6;
             "
           >
@@ -37,14 +37,14 @@
                 v-loading.lock="!temtable || !temtable.id"
                 element-loading-text="拼命加载中"
                 element-loading-spinner="el-icon-loading"
-                element-loading-background="rgba(41, 50, 56, 0.06)"
+                element-loading-background="rgba(228, 147, 208, 0.06)"
                 @click="toOneArticle(temtable.id)"
                 style="cursor: pointer"
                 class="shadow"
               >
                 <div
                   style="
-                    background-color: rgba(41, 50, 56, 0.06);
+                    background-color: rgba(228, 147, 208, 0.06);
                     color: azure;
                     height: 22rem;
                     width: 100%;
@@ -104,7 +104,7 @@
                               style="
                                 overflow: hidden;
                                 text-align: center;
-                                color: rgba(0, 0, 0, 0.88);
+                                color: #f5f7fa;
                               "
                             >
                               {{ temtable.name.substr(0, 14) }}
@@ -116,7 +116,7 @@
                             background-color: rgba(248, 249, 250, 0.46);
                             margin: 0.6rem;
                             border-radius: 0.36rem;
-                            color: rgba(0, 0, 0, 0.88);
+                            color: #f5f7fa;
                             padding: 0.6rem;
                           "
                         >

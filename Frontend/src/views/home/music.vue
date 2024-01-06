@@ -10,7 +10,7 @@
         border-radius: 0.6rem;
         text-align: center;
         width: 11.6rem;
-        background-color: rgba(0, 0, 0, 0.16);
+        background-color: rgba(117, 63, 178, 0.16);
       "
       v-if="!isloginmusic"
     >
@@ -478,8 +478,8 @@ export default {
 </script>
 <style lang="less" scoped>
 /deep/.aplayer-notice {
-  color: rgba(0, 0, 0, 0);
-  background-color: rgba(0, 0, 0, 0);
+  color: rgba(117, 63, 178, 0);
+  background-color: rgba(117, 63, 178, 0);
 }
 input {
   border-radius: 0.6rem;

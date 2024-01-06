@@ -47,7 +47,7 @@
             shortsentenceList.length > 0
           "
           style="
-            background-color: rgba(41, 50, 56, 0.06);
+            background-color: rgba(228, 147, 208, 0.06);
             color: azure;
             width: 100%;
           "
@@ -124,7 +124,7 @@
           class="shadow"
           v-if="notice && notice != undefined && notice != null"
           style="
-            background-color: rgba(41, 50, 56, 0.06);
+            background-color: rgba(228, 147, 208, 0.06);
             color: azure;
             width: 100%;
             text-align: center;
@@ -137,7 +137,7 @@
               font-size: 1.4rem;
               color: deeppink;
               text-align: center;
-              background-color: rgba(0, 0, 0, 0);
+              background-color: rgba(117, 63, 178, 0);
               margin-top: 1rem;
             "
           >
@@ -175,7 +175,7 @@
               text-align: right;
               font-size: 1rem;
               color: #ffffffe6;
-              background-color: rgba(0, 0, 0, 0);
+              background-color: rgba(117, 63, 178, 0);
             "
             >{{ notice.time }}</pre
           >

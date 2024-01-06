@@ -7,10 +7,10 @@
     <div
       class="shadow"
       style="
-        background-color: rgba(41, 50, 56, 0.06);
+        background-color: rgba(228, 147, 208, 0.06);
         color: azure;
         border-width: 0rem;
-        border-color: rgba(41, 50, 56, 0.06)
+        border-color: rgba(228, 147, 208, 0.06)
         height: 6rem;
         width: 100%;
       "
@@ -34,8 +34,8 @@
             height: 2rem;
             cursor: pointer;
             border-radius: 0.46rem;
-            border-color: rgba(0, 0, 0, 0.8);
-            background-color: rgba(0, 0, 0, 0.8);
+            border-color: rgba(117, 63, 178, 0.8);
+            background-color: rgba(117, 63, 178, 0.8);
           "
           @click="useqqheadimage()"
         >
@@ -47,10 +47,10 @@
     <div
       class="shadow"
       style="
-        background-color: rgba(41, 50, 56, 0.06);
+        background-color: rgba(228, 147, 208, 0.06);
         color: azure;
         border-width: 0rem;
-        border-color: rgba(41, 50, 56, 0.06)
+        border-color: rgba(228, 147, 208, 0.06)
         height: auto;
         width: 100%;
       "
@@ -68,8 +68,8 @@
             border-color: aliceblue;
             padding: 0.6rem;
             border-radius: 0.46rem;
-            border-color: rgba(0, 0, 0, 0.8);
-            background-color: rgba(0, 0, 0, 0.8);
+            border-color: rgba(117, 63, 178, 0.8);
+            background-color: rgba(117, 63, 178, 0.8);
           "
         >
           {{
@@ -450,8 +450,8 @@
               width: 8rem;
               height: 2.6rem;
               border-radius: 0.46rem;
-              border-color: rgba(0, 0, 0, 0);
-              background-color: rgba(0, 0, 0, 0.8);
+              border-color: rgba(117, 63, 178, 0);
+              background-color: rgba(117, 63, 178, 0.8);
             "
             @click="updata()"
           >

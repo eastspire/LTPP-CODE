@@ -8,10 +8,10 @@
       <div
         class="shadow"
         style="
-          background-color: rgba(41, 50, 56, 0.06);
+          background-color: rgba(228, 147, 208, 0.06);
           color: #ffffffe6;
           border-width: 0rem;
-          border-color: rgba(41, 50, 56, 0.06)
+          border-color: rgba(228, 147, 208, 0.06)
           min-height: auto;
           width: 100%;
         "
@@ -195,7 +195,7 @@
                   margin-right: 0.36rem;
                   width: 100%;
                   height: 30rem;
-                  background-color: rgba(0, 0, 0, 0);
+                  background-color: rgba(117, 63, 178, 0);
                   will-change: transform;
                 "
               ></div>
@@ -1048,13 +1048,13 @@ export default {
     },
     cellStyle({ row, rowIndex }) {
       let styleRes = {
-        background: "rgba(41, 50, 56, 0.16) !important",
+        background: "rgba(228, 147, 208, 0.16) !important",
         color: "chartreuse",
         height: "50px",
         padding: "0rem",
       };
       if (rowIndex % 2 != 0) {
-        styleRes.background = "rgba(26, 26, 26, 0.06) !important";
+        styleRes.background = "rgba(117, 63, 178, 0.06) !important";
       }
       if (row.index < 4) {
         styleRes.color = "red";
@@ -1878,8 +1878,9 @@ export default {
 @import "../../../public/md/markdown/github-markdown.min.css";
 
 .el-button {
-  box-shadow: 0 2px 5px rgba(41, 50, 56, 0.16), 2px 0 5px rgba(41, 50, 56, 0.16),
-    -2px 0 5px rgba(41, 50, 56, 0.16), 0 -2px 5px rgba(41, 50, 56, 0.16);
+  box-shadow: 0 2px 5px rgba(228, 147, 208, 0.16),
+    2px 0 5px rgba(228, 147, 208, 0.16), -2px 0 5px rgba(228, 147, 208, 0.16),
+    0 -2px 5px rgba(228, 147, 208, 0.16);
   padding: 0.6rem 1rem !important;
   background-color: #002a4c !important;
 }
