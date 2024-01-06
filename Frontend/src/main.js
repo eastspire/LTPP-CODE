@@ -1,3 +1,13 @@
+/*
+ * @Author: wmzn-ltpp 1491579574@qq.com
+ * @Date: 2023-08-07 18:43:57
+ * @LastEditors: wmzn-ltpp 1491579574@qq.com
+ * @LastEditTime: 2024-01-06 21:10:48
+ * @FilePath: \LTPP-CODE\Frontend\src\main.js
+ * @Description: Email:1491579574@qq.com
+ * QQ:1491579574
+ * Copyright (c) 2024 by SQS, All Rights Reserved. 
+ */
 import Vue from 'vue'
 import './plugins/axios' //axios
 import App from './App.vue'
