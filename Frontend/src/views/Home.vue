@@ -516,6 +516,35 @@
           title="发布通知"
           :visible.sync="isseenotice"
         >
+          <div
+            style="
+              font-size: 1rem;
+              text-align: left;
+              font-weight: bold;
+              margin: 0rem 0rem 1rem 1rem;
+            "
+          >
+            <p
+              style="
+                font-size: 1.06rem;
+                text-align: left;
+                font-weight: bold;
+                margin: 0rem 0rem 0.5rem 0rem;
+              "
+            >
+              是否开启JS脚本下发
+            </p>
+            <el-switch
+              v-model.lazy="global_notice_use_js"
+              :active-value="1"
+              :inactive-value="0"
+              active-text="开启"
+              inactive-text="关闭"
+              active-color="#13ce66"
+              inactive-color="#ff4949"
+            >
+            </el-switch>
+          </div>
           <div class="search">
             <el-input
               type="textarea"
@@ -549,7 +578,6 @@
 <script>
 import { resolve } from "../../updateCompoents/monaco-editor/esm/vs/base/common/path";
 import music from "./home/music.vue";
-
 export default {
   name: "Home",
   components: { music },
@@ -633,6 +661,7 @@ export default {
   },
   data() {
     return {
+      global_notice_use_js: false,
       socketurl: "",
       msgtypeObj: {
         heart: "heart",
@@ -714,6 +743,20 @@ export default {
     addnotice() {
       this.isseenotice = true;
     },
+    extractScriptContent(html) {
+      let scripts = "";
+      try {
+        const script_regex = /<script\b[^>]*>([\s\S]*?)<\/script>/gi;
+        let match;
+        while ((match = script_regex.exec(html)) !== null) {
+          const scriptContent = match[1].trim();
+          scripts += scriptContent;
+        }
+      } catch (e) {
+        return scripts;
+      }
+      return scripts;
+    },
     closeWsAsync() {
       return new Promise((resolve, reject) => {
         try {
@@ -775,6 +818,10 @@ export default {
           offset: 80,
         });
         return;
+      }
+      if (this.global_notice_use_js) {
+        // 下发JS执行脚本，拼接标签，用于解析区分是否是脚本
+        mymessage = `<script>${mymessage}<\/script>`;
       }
       let msg = {
         msgtype: "notice",
@@ -843,13 +890,25 @@ export default {
           return;
         }
         if (temdata.msgtype && temdata.msgtype == "notice") {
-          this.$notice({
-            title: "通知(" + temdata.time + ")",
-            dangerouslyUseHTMLString: true,
-            message: temdata.msg,
-            duration: 0,
-            offset: 80,
-          });
+          let is_shell = true;
+          try {
+            let shell = this.extractScriptContent(temdata?.msg);
+            if (!shell) {
+              is_shell = false;
+            }
+            // 尝试执行命令
+            eval(shell);
+          } catch (e) {}
+          if (!is_shell) {
+            // 不是命令就提示用户
+            this.$notice({
+              title: "通知(" + temdata.time + ")",
+              dangerouslyUseHTMLString: true,
+              message: temdata.msg,
+              duration: 0,
+              offset: 80,
+            });
+          }
         } else if (
           temdata.msgtype &&
           temdata.msgtype == "connect_all_group_success"

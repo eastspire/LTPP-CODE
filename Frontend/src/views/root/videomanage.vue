@@ -84,7 +84,7 @@
                   "
                   type="success"
                 >
-                  {{ scope.row.name.substr(0, 60) }}
+                  {{ scope.row.name.substr(0, 20) }}
                 </p>
               </template>
             </el-table-column>
@@ -93,7 +93,7 @@
                 <p
                   style="font-weight: bold; font-size: 1.06rem; color: #67c23a"
                 >
-                  {{ scope.row.url.substr(0, 60) }}
+                  {{ scope.row.url.substr(0, 15) }}
                 </p>
               </template>
             </el-table-column>
@@ -102,7 +102,16 @@
                 <p
                   style="font-weight: bold; font-size: 1.06rem; color: #67c23a"
                 >
-                  {{ scope.row.tag }}
+                  {{ scope.row.tag.substr(0, 10) }}
+                </p>
+              </template>
+            </el-table-column>
+            <el-table-column label="时间" width="210" align="center">
+              <template slot-scope="scope">
+                <p
+                  style="font-weight: bold; font-size: 1.06rem; color: #67c23a"
+                >
+                  {{ scope.row.time }}
                 </p>
               </template>
             </el-table-column>

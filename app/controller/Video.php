@@ -24,7 +24,8 @@ class Video
         'tag',
         'url',
         'fabulous',
-        'love'
+        'love',
+        'time'
     ];
 
     /**
@@ -141,7 +142,7 @@ class Video
 
         $tag = '';
         $up_name = str_replace('.' . $file->getUploadExtension(), '', $file->getUploadName());
-        for ($i = 0; $i < strlen($up_name); ) {
+        for ($i = 0; $i < strlen($up_name);) {
             if ($up_name[$i] == '#') {
                 $tem = '';
                 for ($j = $i + 1; $j < strlen($up_name); ++$j) {
@@ -996,5 +997,4 @@ class Video
         }
         return json(['code' => -1, 'data' => $res, 'allnum' => $allnum, 'msg' => '未有点赞的视频']);
     }
-}
-;
+};

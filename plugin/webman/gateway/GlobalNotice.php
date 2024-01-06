@@ -12,12 +12,12 @@
 
 namespace plugin\webman\gateway;
 
-use app\controller\Base;
 use Exception;
+use app\controller\Base;
+use app\controller\Robot;
 use GatewayWorker\Lib\Gateway;
-use support\Db;
 
-class GlobalNotice
+class GlobalNotice extends ChatBase
 {
     static public function globalNotice(&$client_id, &$message, &$db_my, &$db_user)
     {
@@ -37,6 +37,7 @@ class GlobalNotice
             ]));
         } catch (Exception $e) {
             ChatBase::sendToOneError($client_id, '系统错误');
+            Robot::sendChatToOneUserMsg(Base::getRootId(), '全局通知下发错误：' . $e->getMessage());
             return;
         }
     }
