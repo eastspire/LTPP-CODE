@@ -139,7 +139,7 @@
       <el-drawer
         :size="drawer_size"
         @contextmenu.prevent=""
-        title="评论"
+        :title="`评论:【视频${onevideo.fabulous}人点赞】【视频${onevideo.love}人收藏】`"
         :visible.sync="isSeeComment"
         direction="rtl"
         ref="drawer"

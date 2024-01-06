@@ -137,7 +137,7 @@
       </div>
 
       <el-drawer
-        title="评论"
+        :title="`评论:【视频${onevideo.fabulous}人点赞】【视频${onevideo.love}人收藏】`"
         :size="drawer_size"
         @contextmenu.prevent=""
         :visible.sync="isSeeComment"
