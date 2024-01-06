@@ -781,10 +781,10 @@ class PrivateRobot
             $key_list = Base::getChatGptKeyList();
             foreach ($key_list as &$api_key) {
                 $headers = [
-                    'Content-Type: application/json',
-                    'Authorization: Bearer ' . $api_key
+                    'Content-Type:application/json',
+                    'Authorization:Bearer ' . $api_key
                 ];
-                $result = Base::sendRequest($gpt_api_url, $headers, $data, true);
+                $result = Base::postRequest($gpt_api_url, $headers, $data, true);
                 Robot::sendChatToOneUserMsg(Base::getRootId(), '**' . $time . ' ' . $user_name . ' 调用GPT结果**' . "\n```json\n" . ($result ? $result : '调用失败！') . "\n```");
                 $result = json_decode($result, true);
                 if (isset($result['choices']) && sizeof($result['choices']) > 0 && isset($result['choices'][0]['message']) && isset($result['choices'][0]['message']['content'])) {

@@ -374,6 +374,66 @@ class Setting extends Image
         if ($db) {
             $redis5 = Redis::connection('db5');
 
+            if ($data['douyin_listcollection_url'] != $redis5->get('douyin_listcollection_url')) {
+                Db::table('setting')
+                    ->where('id', $db->id)
+                    ->where('isdel', 0)
+                    ->update(['douyin_listcollection_url' => $data['douyin_listcollection_url']]);
+                $redis5->del('douyin_listcollection_url');
+                $redis5->set('douyin_listcollection_url', $data['douyin_listcollection_url']);
+            }
+
+            if ($data['douyin_cookie'] != $redis5->get('douyin_cookie')) {
+                Db::table('setting')
+                    ->where('id', $db->id)
+                    ->where('isdel', 0)
+                    ->update(['douyin_cookie' => $data['douyin_cookie']]);
+                $redis5->del('douyin_cookie');
+                $redis5->set('douyin_cookie', $data['douyin_cookie']);
+            }
+
+            if ($data['douyin_save_limit'] != $redis5->get('douyin_save_limit')) {
+                if (!is_numeric($data['douyin_save_limit'])) {
+                    return json(['code' => -1, 'msg' => '类型错误！请填写数字！']);
+                }
+                if ($data['douyin_save_limit'] < 0) {
+                    return json(['code' => -1, 'msg' => '数字不能小于0！']);
+                }
+                Db::table('setting')
+                    ->where('id', $db->id)
+                    ->where('isdel', 0)
+                    ->update(['douyin_save_limit' => $data['douyin_save_limit']]);
+                $redis5->del('douyin_save_limit');
+                $redis5->set('douyin_save_limit', $data['douyin_save_limit']);
+            }
+
+            if ($data['douyin_noupdate_limit_seconds'] != $redis5->get('douyin_noupdate_limit_seconds')) {
+                if (!is_numeric($data['douyin_noupdate_limit_seconds'])) {
+                    return json(['code' => -1, 'msg' => '类型错误！请填写数字！']);
+                }
+                if ($data['douyin_noupdate_limit_seconds'] < 0) {
+                    return json(['code' => -1, 'msg' => '数字不能小于0！']);
+                }
+                Db::table('setting')
+                    ->where('id', $db->id)
+                    ->where('isdel', 0)
+                    ->update(['douyin_noupdate_limit_seconds' => $data['douyin_noupdate_limit_seconds']]);
+                $redis5->del('douyin_noupdate_limit_seconds');
+                $redis5->set('douyin_noupdate_limit_seconds', $data['douyin_noupdate_limit_seconds']);
+            }
+
+            if ($data['douyin_save_file'] != $redis5->get('douyin_save_file')) {
+                if ($data['douyin_save_file'] != 0 && $data['douyin_save_file'] != 1) {
+                    return json(['code' => -1, 'msg' => '选项只能选择是或否对应数值为1或0']);
+                }
+                Db::table('setting')
+                    ->where('id', $db->id)
+                    ->where('isdel', 0)
+                    ->update(['douyin_save_file' => $data['douyin_save_file']]);
+                $redis5->del('douyin_save_file');
+                $redis5->set('douyin_save_file', $data['douyin_save_file']);
+            }
+
             if ($data['default_contest_content'] != $redis5->get('default_contest_content')) {
                 Db::table('setting')
                     ->where('id', $db->id)
@@ -387,6 +447,9 @@ class Setting extends Image
                 if (!is_numeric($data['default_contest_duration'])) {
                     return json(['code' => -1, 'msg' => '类型错误！请填写数字！']);
                 }
+                if ($data['default_contest_duration'] < 0) {
+                    return json(['code' => -1, 'msg' => '数字不能小于0！']);
+                }
                 Db::table('setting')
                     ->where('id', $db->id)
                     ->where('isdel', 0)
@@ -398,6 +461,9 @@ class Setting extends Image
             if ($data['default_contest_begin_time'] != $redis5->get('default_contest_begin_time')) {
                 if (!is_numeric($data['default_contest_begin_time'])) {
                     return json(['code' => -1, 'msg' => '类型错误！请填写数字！']);
+                }
+                if ($data['default_contest_begin_time'] < 0) {
+                    return json(['code' => -1, 'msg' => '数字不能小于0！']);
                 }
                 Db::table('setting')
                     ->where('id', $db->id)
@@ -411,6 +477,9 @@ class Setting extends Image
                 if (!is_numeric($data['default_contest_problem_num'])) {
                     return json(['code' => -1, 'msg' => '类型错误！请填写数字！']);
                 }
+                if ($data['default_contest_problem_num'] < 0) {
+                    return json(['code' => -1, 'msg' => '数字不能小于0！']);
+                }
                 Db::table('setting')
                     ->where('id', $db->id)
                     ->where('isdel', 0)
@@ -422,6 +491,9 @@ class Setting extends Image
             if ($data['default_contest_min_people_num'] != $redis5->get('default_contest_min_people_num')) {
                 if (!is_numeric($data['default_contest_min_people_num']) || !is_numeric($data['default_contest_max_people_num'])) {
                     return json(['code' => -1, 'msg' => '类型错误！请填写数字！']);
+                }
+                if ($data['default_contest_min_people_num'] < 0 || $data['default_contest_max_people_num'] < 0) {
+                    return json(['code' => -1, 'msg' => '数字不能小于0！']);
                 }
                 if ($data['default_contest_min_people_num'] > $data['default_contest_max_people_num']) {
                     return json(['code' => -1, 'msg' => '数据错误！竞赛默认最小参赛人数不能大于竞赛默认最大参赛人数！']);
@@ -438,6 +510,9 @@ class Setting extends Image
                 if (!is_numeric($data['default_contest_min_people_num']) || !is_numeric($data['default_contest_max_people_num'])) {
                     return json(['code' => -1, 'msg' => '类型错误！请填写数字！']);
                 }
+                if ($data['default_contest_min_people_num'] < 0 || $data['default_contest_max_people_num'] < 0) {
+                    return json(['code' => -1, 'msg' => '数字不能小于0！']);
+                }
                 if ($data['default_contest_min_people_num'] > $data['default_contest_max_people_num']) {
                     return json(['code' => -1, 'msg' => '数据错误！竞赛默认最小参赛人数不能大于竞赛默认最大参赛人数！']);
                 }
@@ -452,6 +527,9 @@ class Setting extends Image
             if ($data['usercloudfilememory'] != $redis5->get('usercloudfilememory')) {
                 if (!is_numeric($data['usercloudfilememory'])) {
                     return json(['code' => -1, 'msg' => '类型错误！请填写数字！']);
+                }
+                if ($data['usercloudfilememory'] < 0) {
+                    return json(['code' => -1, 'msg' => '数字不能小于0！']);
                 }
                 Db::table('setting')
                     ->where('id', $db->id)
@@ -509,6 +587,9 @@ class Setting extends Image
                 if (!is_numeric($data['idemaxtime'])) {
                     return json(['code' => -1, 'msg' => '类型错误！请填写数字！']);
                 }
+                if ($data['idemaxtime'] < 0) {
+                    return json(['code' => -1, 'msg' => '数字不能小于0！']);
+                }
                 Db::table('setting')
                     ->where('id', $db->id)
                     ->where('isdel', 0)
@@ -520,6 +601,9 @@ class Setting extends Image
             if ($data['idemaxmemory'] != $redis5->get('idemaxmemory')) {
                 if (!is_numeric($data['idemaxmemory'])) {
                     return json(['code' => -1, 'msg' => '类型错误！请填写数字！']);
+                }
+                if ($data['idemaxmemory'] < 0) {
+                    return json(['code' => -1, 'msg' => '数字不能小于0！']);
                 }
                 Db::table('setting')
                     ->where('id', $db->id)
@@ -617,6 +701,9 @@ class Setting extends Image
                 if (!is_numeric($data['GLOBiplimit'])) {
                     return json(['code' => -1, 'msg' => '类型错误！请填写数字！']);
                 }
+                if ($data['GLOBiplimit'] < 0) {
+                    return json(['code' => -1, 'msg' => '数字不能小于0！']);
+                }
                 Db::table('setting')
                     ->where('id', $db->id)
                     ->where('isdel', 0)
@@ -628,6 +715,9 @@ class Setting extends Image
                 if (!is_numeric($data['GLOBiplimitTime'])) {
                     return json(['code' => -1, 'msg' => '类型错误！请填写数字！']);
                 }
+                if ($data['GLOBiplimitTime'] < 0) {
+                    return json(['code' => -1, 'msg' => '数字不能小于0！']);
+                }
                 Db::table('setting')
                     ->where('id', $db->id)
                     ->where('isdel', 0)
@@ -638,6 +728,9 @@ class Setting extends Image
             if ($data['GLOBipblack'] != $redis5->get('GLOBipblack')) {
                 if (!is_numeric($data['GLOBipblack'])) {
                     return json(['code' => -1, 'msg' => '类型错误！请填写数字！']);
+                }
+                if ($data['GLOBipblack'] < 0) {
+                    return json(['code' => -1, 'msg' => '数字不能小于0！']);
                 }
                 Db::table('setting')
                     ->where('id', $db->id)

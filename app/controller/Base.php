@@ -968,14 +968,14 @@ class Base
     }
 
     /**
-     * 发送请求
+     * 发送POST请求
      * @param string $url 请求地址
      * @param array $header 请求头
      * @param array $body 请求体
      * @param bool $body_type_is_json 请求体是否是json
      * @return string $res 响应数据
      */
-    static function sendRequest($url = '', $header = [], $body = [], $body_type_is_json = false)
+    static function postRequest($url = '', $header = [], $body = [], $body_type_is_json = false)
     {
         if (!$url) {
             return '';
@@ -998,7 +998,35 @@ class Base
             curl_setopt($ch, CURLOPT_PROXY, 'http://172.17.0.1:7890');
             $res = curl_exec($ch);
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsg(Base::getRootId(), '请求异常信息：' . "\n" . $e->getMessage());
+            Robot::sendChatToOneUserMsg(Base::getRootId(), '发送POST请求异常信息：' . "\n" . $e->getMessage());
+        }
+        return $res;
+    }
+
+    /**
+     * 发送GET请求
+     */
+    static function getRequest($url = '', $header = [])
+    {
+        if (!$url) {
+            return '';
+        }
+        $res = '';
+        try {
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_HTTPGET, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 3600);
+            curl_setopt($ch, CURLOPT_ENCODING, 'UTF-8');
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+            curl_setopt($ch, CURLOPT_PROXY, 'http://172.17.0.1:7890');
+            $res = curl_exec($ch);
+        } catch (Exception $e) {
+            Robot::sendChatToOneUserMsg(Base::getRootId(), '发送GET请求异常信息：' . "\n" . $e->getMessage());
+        } finally {
+            curl_close($ch);
         }
         return $res;
     }
@@ -1909,26 +1937,30 @@ class Base
     }
 
     /**
+     * 从URL下载文件到本地
+     */
+    static public function saveNetworkFile($url, $save_path, $is_post = false, $header = [], $body = [], $body_type_is_json = false)
+    {
+        $file_data = '';
+        try {
+            if ($is_post) {
+                $file_data = Base::postRequest($url, $header, $body, $body_type_is_json);
+            } else {
+                $file_data = Base::getRequest($url, $header);
+            }
+            file_put_contents($save_path, $file_data);
+        } catch (Exception $e) {
+            Robot::sendChatToOneUserMsg(Base::getRootId(), '保存网络文件到本地出错：' . $e->getMessage());
+        }
+    }
+
+    /**
      * 获取GLOBlinuxurl
      * @return string $url linux url地址
      */
     static public function getGLOBlinuxurl()
     {
-        $redis5 = Redis::connection('db5');
-        if ($redis5->get('GLOBlinuxurl')) {
-            Base::$GLOBlinuxurl = $redis5->get('GLOBlinuxurl');
-        } else {
-            $setting_db = Db::table('setting')
-                ->where('isdel', 0)
-                ->select('GLOBlinuxurl')
-                ->orderBy('id', 'desc')
-                ->first();
-            if (!$setting_db) {
-                return null;
-            }
-            Base::$GLOBlinuxurl = $setting_db->GLOBlinuxurl;
-            $redis5->set('GLOBlinuxurl', Base::$GLOBlinuxurl);
-        }
+        Base::$GLOBlinuxurl = Base::getSettingKeyData('GLOBlinuxurl');
         return Base::$GLOBlinuxurl;
     }
 

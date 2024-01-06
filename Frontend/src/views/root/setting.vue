@@ -132,6 +132,28 @@
               font-size: 1.06rem;
               text-align: left;
               font-weight: bold;
+              margin: 1rem 0rem 0.5rem 0rem;
+            "
+          >
+            是否开启抖音视频保存本地
+          </p>
+          <el-switch
+            v-model.lazy="resdata.douyin_save_file"
+            :active-value="1"
+            :inactive-value="0"
+            active-text="是"
+            inactive-text="否"
+            @change="updatesetting()"
+            active-color="#13ce66"
+            inactive-color="#ff4949"
+          >
+          </el-switch>
+
+          <p
+            style="
+              font-size: 1.06rem;
+              text-align: left;
+              font-weight: bold;
               margin: 1rem 0rem 1rem 0rem;
             "
           >
@@ -728,7 +750,6 @@
           >
             ChatGPT API接口地址
           </p>
-
           <el-input
             type="password"
             show-password
@@ -755,7 +776,6 @@
           >
             ChatGPT KEYS（使用换行/空格进行分隔）
           </p>
-
           <el-input
             type="password"
             show-password
@@ -782,7 +802,6 @@
           >
             竞赛默认开始时间（当天零点开始的秒数）
           </p>
-
           <el-input
             type="password"
             show-password
@@ -809,7 +828,6 @@
           >
             竞赛默认持续时间（单位秒）
           </p>
-
           <el-input
             type="password"
             show-password
@@ -836,7 +854,6 @@
           >
             竞赛默认题目数目
           </p>
-
           <el-input
             type="password"
             show-password
@@ -863,7 +880,6 @@
           >
             竞赛默认最小参赛人数
           </p>
-
           <el-input
             type="password"
             show-password
@@ -890,7 +906,6 @@
           >
             竞赛默认最大参赛人数
           </p>
-
           <el-input
             type="password"
             show-password
@@ -917,7 +932,6 @@
           >
             竞赛默认内容描述
           </p>
-
           <el-input
             type="textarea"
             autosize
@@ -925,6 +939,110 @@
             placeholder="请输入竞赛默认内容描述"
             v-model.lazy="resdata.default_contest_content"
             @blur="updatesetting()"
+          >
+            <el-button
+              slot="append"
+              icon="el-icon-upload"
+              @click="updatesetting()"
+              >更新</el-button
+            >
+          </el-input>
+
+          <p
+            style="
+              font-size: 1.06rem;
+              text-align: left;
+              font-weight: bold;
+              margin: 1rem 0rem 1rem 0rem;
+            "
+          >
+            抖音收藏URL下载链接
+          </p>
+          <el-input
+            type="password"
+            show-password
+            style="font-size: 1.06rem"
+            placeholder="请输入抖音收藏URL下载链接"
+            v-model.lazy="resdata.douyin_listcollection_url"
+            @keyup.enter.native="updatesetting()"
+          >
+            <el-button
+              slot="append"
+              icon="el-icon-upload"
+              @click="updatesetting()"
+              >更新</el-button
+            >
+          </el-input>
+
+          <p
+            style="
+              font-size: 1.06rem;
+              text-align: left;
+              font-weight: bold;
+              margin: 1rem 0rem 1rem 0rem;
+            "
+          >
+            抖音Cookie
+          </p>
+          <el-input
+            type="password"
+            show-password
+            style="font-size: 1.06rem"
+            placeholder="请输入抖音Cookie"
+            v-model.lazy="resdata.douyin_cookie"
+            @keyup.enter.native="updatesetting()"
+          >
+            <el-button
+              slot="append"
+              icon="el-icon-upload"
+              @click="updatesetting()"
+              >更新</el-button
+            >
+          </el-input>
+
+          <p
+            style="
+              font-size: 1.06rem;
+              text-align: left;
+              font-weight: bold;
+              margin: 1rem 0rem 1rem 0rem;
+            "
+          >
+            抖音每次爬取最大条数限制
+          </p>
+          <el-input
+            type="password"
+            show-password
+            style="font-size: 1.06rem"
+            placeholder="请输入抖音每次爬取最大条数限制"
+            v-model.lazy="resdata.douyin_save_limit"
+            @keyup.enter.native="updatesetting()"
+          >
+            <el-button
+              slot="append"
+              icon="el-icon-upload"
+              @click="updatesetting()"
+              >更新</el-button
+            >
+          </el-input>
+
+          <p
+            style="
+              font-size: 1.06rem;
+              text-align: left;
+              font-weight: bold;
+              margin: 1rem 0rem 1rem 0rem;
+            "
+          >
+            抖音视频最大未更新秒数限制
+          </p>
+          <el-input
+            type="password"
+            show-password
+            style="font-size: 1.06rem"
+            placeholder="请输入抖音视频最大未更新秒数限制"
+            v-model.lazy="resdata.douyin_noupdate_limit_seconds"
+            @keyup.enter.native="updatesetting()"
           >
             <el-button
               slot="append"

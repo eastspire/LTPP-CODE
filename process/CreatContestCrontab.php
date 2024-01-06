@@ -180,10 +180,10 @@ class CreatContestCrontab
         // 每天的0点执行，注意这里省略了秒位'00 0 * * *'
         new Crontab('00 0 * * *', function () {
             try {
-                $pro_list = $this->getProblemList();
-                $user_list = $this->getUserList();
-                $time_list = $this->getTimeList();
                 foreach (Contest::$contest_type_list as &$type) {
+                    $pro_list = $this->getProblemList();
+                    $user_list = $this->getUserList();
+                    $time_list = $this->getTimeList();
                     $contest_title = $type . '赛制竞赛';
                     $contest_content = $this->getContent($contest_title);
                     $res_id = $this->addContest($contest_title, $contest_content, $time_list, $user_list, $type);

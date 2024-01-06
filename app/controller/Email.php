@@ -60,7 +60,7 @@ class Email extends Image
                 if (!$mail_url || !$mail_username) {
                     return;
                 }
-                Base::sendRequest($mail_url, ['Content-Type:application/x-www-form-urlencoded'], [
+                Base::postRequest($mail_url, ['Content-Type:application/x-www-form-urlencoded'], [
                     'mail_from' => $mail_username,
                     'password' => $mail_password,
                     'mail_to' => $to,

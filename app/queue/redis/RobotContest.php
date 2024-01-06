@@ -331,7 +331,7 @@ class RobotContest implements Consumer
             }
             $this_contest_is_end = false;
             // 提交次数
-            $submit_times = rand(2, 4);
+            $submit_times = rand(4, 6);
             // 竞赛距离结束剩余的秒数
             $contest_run_time_seconds = strtotime($contest_db->end) - time();
             if ($contest_run_time_seconds < 0 || $contest_run_time_seconds > Base::$robot_contest_can_join_limit_contest_time) {
@@ -349,7 +349,7 @@ class RobotContest implements Consumer
             // 每题休眠豪秒数，呈梯度上升
             $one_sleep_time_list = [];
             for ($i = 1; $i <= $problem_length; ++$i) {
-                $one_sleep_time_list[] = rand(0, 1) ? $one_sleep_min_time  : $one_sleep_min_time * $i;
+                $one_sleep_time_list[] = rand(0, 1) ? $one_sleep_min_time  : $one_sleep_min_time / $i;
             }
             for ($i = 0; $i < $submit_times; ++$i) {
                 foreach ($problem_list as $one_problem_index => &$one_problem_id) {

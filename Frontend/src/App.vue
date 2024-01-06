@@ -16,11 +16,14 @@ window.onload = () => {
     event.preventDefault();
   });
 };
+let err_times = 0;
+let max_err_times = 1;
+
 export default {
   name: "app",
   data() {
     return {
-      version: "1.6.7",
+      version: "1.6.9",
     };
   },
   beforeCreate() {
@@ -69,7 +72,7 @@ export default {
       window.localStorage.setItem(key, now);
       setInterval(() => {
         this.getVersion(is_electron);
-      }, 60000);
+      }, 6000);
       await this.getVersion(is_electron);
     } catch (err) {}
   },
@@ -87,7 +90,6 @@ export default {
     },
     async getVersion(is_electron = false) {
       while (true) {
-        let skip = false;
         const { data: res } = await this.$ajax({
           method: "post",
           url: "/Version/getVersion",
@@ -95,17 +97,22 @@ export default {
             process: "8793",
           },
         }).catch(() => {
-          skip = true;
-          this.$route.path != "/maintenance" &&
+          ++err_times;
+          err_times > max_err_times &&
+            this.$route.path != "/maintenance" &&
             this.$router.replace({
               path: "/maintenance",
               replace: true,
             });
         });
-        if (skip) {
-          continue;
-        }
-        if (res.code == 1) {
+        if (res?.code == 1) {
+          err_times = 0;
+          if (this.$route.path === "/maintenance") {
+            this.$router.replace({
+              path: "/homelist",
+              replace: true,
+            });
+          }
           if (this.version < res.version) {
             if (!is_electron) {
               this.$notice({
@@ -128,17 +135,12 @@ export default {
               });
               window.open(res.url, "_blank");
             }
-          } else {
-            if (this.$route.path === "/maintenance") {
-              this.$router.replace({
-                path: "/homelist",
-                replace: true,
-              });
-            }
           }
           return;
         } else {
-          this.$route.path != "/maintenance" &&
+          ++err_times;
+          err_times > max_err_times &&
+            this.$route.path != "/maintenance" &&
             this.$router.replace({
               path: "/maintenance",
               replace: true,
