@@ -65,7 +65,7 @@
         :scrollStyle="true"
         :transition="true"
         :codeStyle="codeStyle"
-        box-shadow-style="0 2px 12px 0 rgba(117, 63, 178, 0.1)"
+        box-shadow-style="0 2px 12px 0 rgba(var(--ltpp-main-bk-color), 0.1)"
         toolbars-background="#ffffff"
         preview-background="#fbfbfb"
       >

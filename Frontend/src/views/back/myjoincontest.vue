@@ -207,7 +207,8 @@ export default {
         color: "chartreuse",
       };
       if (rowIndex % 2 != 0) {
-        styleRes.background = "rgba(117, 63, 178, 0.06) !important";
+        styleRes.background =
+          "rgba(var(--ltpp-main-bk-color), 0.06) !important";
       }
       // 状态列字体颜色
       if (endtime <= now) {

@@ -262,7 +262,7 @@ export default {
     boxShadowStyle: {
       // 阴影样式
       type: String,
-      default: "0 2px 12px 0 rgba(117, 63, 178, 0.1)",
+      default: "0 2px 12px 0 rgba(var(--ltpp-main-bk-color), 0.1)",
     },
     help: {
       type: String,

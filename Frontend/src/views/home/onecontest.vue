@@ -195,7 +195,7 @@
                   margin-right: 0.36rem;
                   width: 100%;
                   height: 30rem;
-                  background-color: rgba(117, 63, 178, 0);
+                  background-color: rgba(var(--ltpp-main-bk-color), 0);
                   will-change: transform;
                 "
               ></div>
@@ -1054,7 +1054,8 @@ export default {
         padding: "0rem",
       };
       if (rowIndex % 2 != 0) {
-        styleRes.background = "rgba(117, 63, 178, 0.06) !important";
+        styleRes.background =
+          "rgba(var(--ltpp-main-bk-color), 0.06) !important";
       }
       if (row.index < 4) {
         styleRes.color = "red";

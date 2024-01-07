@@ -599,7 +599,7 @@ export default {
     z-index: 1600;
     border: 1px solid #ebeef5;
     border-radius: 4px;
-    box-shadow: 0 2px 12px 0 rgba(117, 63, 178, 0.1);
+    box-shadow: 0 2px 12px 0 rgba(var(--ltpp-main-bk-color), 0.1);
 
     .dropdown-item:first-child {
       border-top-left-radius: 3px;
@@ -709,7 +709,7 @@ export default {
   right: 0;
   top: 0;
   bottom: 0;
-  background: rgba(117, 63, 178, 0.7);
+  background: rgba(var(--ltpp-main-bk-color), 0.7);
   z-index: 1600;
   transition: all 0.1s linear 0s;
 
@@ -756,7 +756,7 @@ export default {
       position: absolute;
       right: 8px;
       top: 6px;
-      color: rgba(117, 63, 178, 0.7);
+      color: rgba(var(--ltpp-main-bk-color), 0.7);
       cursor: pointer;
     }
 

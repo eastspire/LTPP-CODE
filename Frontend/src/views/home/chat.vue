@@ -9,7 +9,7 @@
     >
       <el-aside
         width="200px"
-        style="background-color: rgba(117, 63, 178, 0.16)"
+        style="background-color: rgba(var(--ltpp-main-bk-color), 0.16)"
         id="scroll"
       >
         <div>
@@ -2005,7 +2005,7 @@ export default {
   width: 0.16rem !important;
   height: 0rem !important;
   border-radius: 0rem;
-  background-color: rgba(117, 63, 178, 0);
+  background-color: rgba(var(--ltpp-main-bk-color), 0);
 }
 
 /* 滚动条上的按钮 (上下箭头). */
@@ -2025,17 +2025,17 @@ export default {
 /*  滚动条轨道. */
 ::-webkit-scrollbar-track {
   border-radius: 0rem;
-  background-color: rgba(117, 63, 178, 0);
+  background-color: rgba(var(--ltpp-main-bk-color), 0);
 }
 
 /* 滚动条没有滑块的轨道部分 */
 ::-webkit-scrollbar-track-piece {
-  background-color: rgba(117, 63, 178, 0);
+  background-color: rgba(var(--ltpp-main-bk-color), 0);
 }
 
 /* 当同时有垂直滚动条和水平滚动条时交汇的部分. */
 ::-webkit-scrollbar-corner {
-  background-color: rgba(117, 63, 178, 0);
+  background-color: rgba(var(--ltpp-main-bk-color), 0);
   border-radius: 0rem;
 }
 

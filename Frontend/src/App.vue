@@ -153,6 +153,14 @@ export default {
 </script>
 
 <style lang="less">
+:root {
+  --ltpp-main-bk-color: 117, 63, 178;
+  --ltpp-main-color: #e493d0;
+  --ltpp-main-text-color: #f5f7fa;
+  --ltpp-shadow-color: rgba(255, 255, 255, 0.16);
+  --ltpp-shadow-border-width: 1px;
+}
+
 * {
   padding: 0;
   /*清除元素的内边距*/
@@ -332,10 +340,14 @@ span.hljs-string {
 .el-submenu__title,
 .el-menu-item,
 .el-tooltip {
+  padding-left: 12.555px !important;
+}
+
+.el-submenu__title,
+.el-menu-item {
   i {
     color: #e493d0 !important;
   }
-  padding-left: 12.555px !important;
   background-color: transparent !important;
 }
 
@@ -351,9 +363,14 @@ can-select {
 }
 
 .shadow {
-  box-shadow: 0 1px 1px rgba(255, 255, 255, 0.16),
-    1px 0 1px rgba(255, 255, 255, 0.16), -1px 0 1px rgba(255, 255, 255, 0.16),
-    0 -1px 1px rgba(255, 255, 255, 0.16);
+  box-shadow: 0px var(--ltpp-shadow-border-width)
+      var(--ltpp-shadow-border-width) var(--ltpp-shadow-color),
+    var(--ltpp-shadow-border-width) 0px var(--ltpp-shadow-border-width)
+      var(--ltpp-shadow-color),
+    calc(var(--ltpp-shadow-border-width) * -1) 0px
+      var(--ltpp-shadow-border-width) var(--ltpp-shadow-color),
+    0px calc(var(--ltpp-shadow-border-width) * -1)
+      var(--ltpp-shadow-border-width) var(--ltpp-shadow-color);
 }
 
 video:focus {
@@ -374,7 +391,7 @@ video:focus {
   transform: translate(-50%, -50%);
   height: 100%;
   width: 100%;
-  background-color: rgba(117, 63, 178, 0) !important;
+  background-color: rgba(var(--ltpp-main-bk-color), 0) !important;
   z-index: -1000000;
   will-change: transform;
 }
@@ -485,23 +502,22 @@ video:focus {
 
 .el-drawer,
 .el-drawer__header {
-  color: #f5f7fa !important;
-  background-color: #753fb2 !important;
+  background-color: rgba(var(--ltpp-main-bk-color), 1) !important;
 }
 
 .is-active {
   border: 0rem !important;
   font-size: 1.06rem !important;
-  border-color: rgba(117, 63, 178, 0) !important;
+  border-color: rgba(var(--ltpp-main-bk-color), 0) !important;
   color: deepskyblue !important;
-  background-color: rgba(117, 63, 178, 0) !important;
+  background-color: rgba(var(--ltpp-main-bk-color), 0) !important;
 }
 
 .no-select,
 .el-menu--horizontal,
 .el-menu-item {
   border: 0rem !important;
-  border-color: rgba(117, 63, 178, 0) !important;
+  border-color: rgba(var(--ltpp-main-bk-color), 0) !important;
   font-size: 1rem !important;
   z-index: 1000006 !important;
 }
@@ -519,7 +535,7 @@ video:focus {
 .is-top {
   border: 0rem !important;
   font-size: 1.06rem !important;
-  border-color: rgba(117, 63, 178, 0) !important;
+  border-color: rgba(var(--ltpp-main-bk-color), 0) !important;
   background-color: rgba(53, 61, 68, 1) !important;
 }
 
@@ -528,8 +544,7 @@ video:focus {
 .el-tabs__content {
   border-radius: 0;
   border: 0rem !important;
-  border-color: rgba(117, 63, 178, 0) !important;
-  color: #f5f7fa !important;
+  border-color: rgba(var(--ltpp-main-bk-color), 0) !important;
   background-color: rgba(53, 61, 68, 0.6) !important;
 }
 
@@ -544,20 +559,17 @@ video:focus {
 
 .el-picker-panel__body-wrapper,
 .el-picker-panel__footer {
-  background-color: #753fb2 !important;
-  color: #f5f7fa !important;
+  background-color: rgba(var(--ltpp-main-bk-color), 1) !important;
 }
 
 .el-upload__tip,
 .el-upload__text,
 .el-upload-dragger {
   background-color: transparent !important;
-  color: #f5f7fa !important;
-  border-color: #f5f7fa !important;
 }
 
 .el-input__count-inner {
-  background-color: rgba(117, 63, 178, 0) !important;
+  background-color: rgba(var(--ltpp-main-bk-color), 0) !important;
 }
 
 .el-autocomplete-suggestion,
@@ -633,7 +645,6 @@ a:active {
 .el-time-panel__btn.confirm {
   background-color: deepskyblue !important;
   border-width: 0 !important;
-  color: #f5f7fa !important;
   font-weight: bold;
 }
 
@@ -641,7 +652,6 @@ a:active {
 .el-time-panel__btn.cancel {
   background-color: #67c23a !important;
   border-width: 0 !important;
-  color: #f5f7fa !important;
   font-weight: bold;
 }
 
@@ -653,7 +663,6 @@ a:active {
 .el-scrollbar__bar .is-horizontal,
 .el-time-panel__footer {
   background-color: #e493d0 !important;
-  color: #f5f7fa !important;
 }
 
 .next-month,
@@ -661,16 +670,69 @@ a:active {
   color: rgba(248, 249, 250, 0.36) !important;
 }
 
-.available {
-  color: #f5f7fa !important;
-}
-
+.input,
+.cancel,
+.el-time-panel__btn.cancel,
+.sure,
+.el-time-panel__btn.confirm,
+.el-upload__tip,
+.el-upload__text,
+.el-upload-dragger,
+.el-picker-panel__body-wrapper,
+.el-picker-panel__footer,
+.el-tabs,
+.el-tabs__nav-scroll,
+.el-tabs__content,
+.el-drawer,
+.el-drawer__header,
+.el-tooltip__popper,
+.el-select,
+.el-input,
+.el-input__inner,
+.op-btn.sure,
+.op-btn.cancel,
+.el-form-item__label,
+.el-input__icon::before,
+.add-image-link input::placeholder,
+.el-textarea__inner::placeholder,
+.el-input__inner::placeholder,
+.el-range-input::placeholder,
+.el-descriptions__title,
+.md,
+.content-input-wrapper,
+.auto-textarea-input,
+.no-border,
+.content-input,
+.auto-textarea-wrapper,
+.markdown-body,
+.el-select-dropdown__item,
+.el-select,
+.el-select--mini,
+.el-scrollbar__view,
+.el-select-dropdown__list,
+.el-select-dropdown,
+.el-dialog__title,
+.el-dialog__body,
+.dropdown-item,
+.el-picker-panel__link-btn,
+.markdown-body h3,
+.add-image-link input,
+.add-image-link,
+.fa-mavon-times,
+.el-upload__tip,
+.el-upload__text,
+.el-upload-dragger,
+.available,
+.el-date-table th,
+.el-autocomplete-suggestion__list li,
+.el-scrollbar__view li,
+.el-select-dropdown__list li,
+.el-select-dropdown li,
+.el-scrollbar__wrap,
+.el-scrollbar__bar .is-horizontal,
+.el-time-panel__footer,
 .el-time-spinner__item {
-  color: #f5f7fa !important;
-}
-
-.el-date-table th {
-  color: #f5f7fa !important;
+  color: var(--ltpp-main-text-color) !important;
 }
 
 .el-picker-panel__icon-btn {
@@ -682,31 +744,24 @@ a:active {
 .v-note-navigation-title,
 .v-note-navigation-content {
   border-width: 0 !important;
-  border-color: rgba(117, 63, 178, 0) !important;
-  background-color: rgba(117, 63, 178, 0) !important;
+  border-color: rgba(var(--ltpp-main-bk-color), 0) !important;
+  background-color: rgba(var(--ltpp-main-bk-color), 0) !important;
 }
 
 .add-image-link,
 .fa-mavon-times {
-  background-color: #753fb2 !important;
+  background-color: rgba(var(--ltpp-main-bk-color), 1) !important;
   border-width: 0 !important;
-  color: #f5f7fa !important;
 }
 
 .add-image-link input {
-  background-color: #753fb2 !important;
+  background-color: rgba(var(--ltpp-main-bk-color), 1) !important;
   border-width: 0 !important;
-  color: #f5f7fa !important;
   border: none !important;
 }
 
-.markdown-body h3 {
-  color: #f5f7fa !important;
-}
-
 .el-picker-panel__link-btn {
-  color: #f5f7fa !important;
-  background-color: rgba(117, 63, 178, 0) !important;
+  background-color: rgba(var(--ltpp-main-bk-color), 0) !important;
   border-width: 0 !important;
   font-weight: bold !important;
   color: rgba(0, 162, 60, 1) !important;
@@ -714,9 +769,9 @@ a:active {
 }
 
 .in-range {
-  background-color: rgba(117, 63, 178, 0) !important;
+  background-color: rgba(var(--ltpp-main-bk-color), 0) !important;
   border-width: 0 !important;
-  color: #753fb2 !important;
+  color: rgba(var(--ltpp-main-bk-color), 1) !important;
 }
 
 .confirm {
@@ -727,8 +782,7 @@ a:active {
 }
 
 .dropdown-item {
-  background-color: #753fb2 !important;
-  color: #f5f7fa !important;
+  background-color: rgba(var(--ltpp-main-bk-color), 1) !important;
 }
 
 .dropdown-item :hover {
@@ -750,43 +804,35 @@ a:active {
 }
 
 .el-dialog__body {
-  background-color: #753fb2 !important;
-  color: #f5f7fa !important;
+  background-color: rgba(var(--ltpp-main-bk-color), 1) !important;
   border: 0 !important;
 }
 
 .el-dialog__header {
-  background-color: #753fb2 !important;
+  background-color: rgba(var(--ltpp-main-bk-color), 1) !important;
   height: 0rem !important;
   border: 0 !important;
 }
 
-.el-dialog__title {
-  color: #f5f7fa !important;
-}
-
 .el-dialog__footer {
-  background-color: #753fb2 !important;
+  background-color: rgba(var(--ltpp-main-bk-color), 1) !important;
 }
 
 .el-scrollbar__view,
 .el-select-dropdown__list,
 .el-select-dropdown {
   background-color: #e493d0 !important;
-  color: #f5f7fa !important;
   border: none !important;
 }
 
 .el-select,
 .el-select--mini {
   background-color: Transparent !important;
-  color: #f5f7fa !important;
   border: none !important;
 }
 
 .el-select-dropdown__item {
   background-color: #e493d0 !important;
-  color: #f5f7fa !important;
   margin-bottom: 0.6rem !important;
 }
 
@@ -811,9 +857,8 @@ a:active {
 .content-input,
 .auto-textarea-wrapper,
 .markdown-body {
-  color: #f5f7fa !important;
-  background-color: rgba(117, 63, 178, 0) !important;
-  border-color: rgba(117, 63, 178, 0) !important;
+  background-color: rgba(var(--ltpp-main-bk-color), 0) !important;
+  border-color: rgba(var(--ltpp-main-bk-color), 0) !important;
   border-width: 0rem !important;
   p {
     margin: 0px !important;
@@ -824,27 +869,15 @@ a:active {
 }
 
 .el-descriptions__title {
-  color: #f5f7fa;
   font-size: 0.88rem;
 }
 
-.el-form-item__label,
-.el-input__icon::before,
-.add-image-link input::placeholder,
-.el-textarea__inner::placeholder,
-.el-input__inner::placeholder,
-.el-range-input::placeholder {
-  color: #f5f7fa !important;
-}
-
 .op-btn.cancel {
-  color: #f5f7fa !important;
   font-weight: 400 !important;
   background-color: #67c23a !important;
 }
 
 .op-btn.sure {
-  color: #f5f7fa !important;
   font-weight: 400 !important;
   background-color: deepskyblue !important;
 }
@@ -852,7 +885,6 @@ a:active {
 .el-select,
 .el-input,
 .el-input__inner {
-  color: #f5f7fa !important;
   background-color: #e493d0 !important;
   border-color: #e493d0 !important;
   resize: none !important;
@@ -915,7 +947,6 @@ a:active {
     2px 0 5px rgba(228, 147, 208, 0.16), -2px 0 5px rgba(228, 147, 208, 0.16),
     0 -2px 5px rgba(228, 147, 208, 0.16);
   font-size: 1rem !important;
-  color: #f5f7fa !important;
   font-weight: bold !important;
   -webkit-transition: all 0.3s ease !important;
   /* Safari and Chrome */
@@ -1061,7 +1092,7 @@ a:active {
 }
 
 .v-show-content {
-  background-color: rgba(117, 63, 178, 0) !important;
+  background-color: rgba(var(--ltpp-main-bk-color), 0) !important;
   border-width: 0rem !important;
   font-size: 1.06rem;
 }
@@ -1112,9 +1143,9 @@ a:active {
 }
 
 .hljs {
-  border-color: rgba(117, 63, 178, 0) !important;
+  border-color: rgba(var(--ltpp-main-bk-color), 0) !important;
   font-size: 1.16rem !important;
-  background-color: rgba(117, 63, 178, 0) !important;
+  background-color: rgba(var(--ltpp-main-bk-color), 0) !important;
 }
 
 .hljs-params {
@@ -1129,7 +1160,7 @@ pre,
 .scroll-style th,
 .scroll-style-border-radius th {
   border: none !important;
-  background-color: rgba(117, 63, 178, 0) !important;
+  background-color: rgba(var(--ltpp-main-bk-color), 0) !important;
   /* pre保持格式的同时实现自动换行 */
   white-space: pre-wrap !important;
   word-wrap: break-word !important;
@@ -1142,8 +1173,7 @@ pre,
 
 .input {
   font-size: 1.06rem;
-  background-color: rgba(117, 63, 178, 0.6);
-  color: rgb(255, 255, 25);
+  background-color: rgba(var(--ltpp-main-bk-color), 0.6);
   border-width: 0rem;
   min-height: 2rem;
   width: auto;

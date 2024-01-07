@@ -348,7 +348,7 @@ export default {
   height: 100%;
   width: 100%;
   background-color: #cecfd1;
-  box-shadow: 0 0 6px rgba(117, 63, 178, 0.12);
+  box-shadow: 0 0 6px rgba(var(--ltpp-main-bk-color), 0.12);
   text-align: center;
   line-height: 40px;
   color: #008bb6;

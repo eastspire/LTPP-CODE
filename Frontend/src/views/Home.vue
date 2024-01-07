@@ -48,7 +48,7 @@
             :popper-append-to-body="true"
             :collapse="true"
             active-text-color="rgb(0, 123, 255)"
-            background-color="rgba(117, 63, 178, 1)"
+            background-color="rgba(var(--ltpp-main-bk-color), 1)"
             text-color="#f5f7fa"
             class="el-menu-demo no-select left_menu shadow"
             router
@@ -230,7 +230,7 @@
             :popper-append-to-body="true"
             :collapse="true"
             active-text-color="rgb(0, 123, 255)"
-            background-color="rgba(117, 63, 178, 1)"
+            background-color="rgba(var(--ltpp-main-bk-color), 1)"
             text-color="#f5f7fa"
             class="el-menu-demo no-select right_menu shadow"
             router
@@ -500,7 +500,7 @@
             height: 100%;
             width: 100%;
             background-color: #cecfd1;
-            box-shadow: 0 0 6px rgba(117, 63, 178, 0.12);
+            box-shadow: 0 0 6px rgba(var(--ltpp-main-bk-color), 0.12);
             text-align: center;
             line-height: 40px;
             color: #008bb6;
@@ -1374,7 +1374,7 @@ export default {
 /deep/.v-right-item,
 /deep/.transition {
   color: #f5f7fa !important;
-  background-color: rgba(117, 63, 178, 0) !important;
+  background-color: rgba(var(--ltpp-main-bk-color), 0) !important;
   border-width: 0rem !important;
   padding: 0rem 0rem;
 }
@@ -1387,12 +1387,12 @@ export default {
 /deep/.content-input-wrapper,
 /deep/.v-note-edit.diletea-wrapper.scroll-style.transition {
   color: #f5f7fa !important;
-  background-color: rgba(117, 63, 178, 0) !important;
+  background-color: rgba(var(--ltpp-main-bk-color), 0) !important;
 }
 
 /deep/.op-icon {
   color: #f5f7fa !important;
-  background-color: rgba(117, 63, 178, 0) !important;
+  background-color: rgba(var(--ltpp-main-bk-color), 0) !important;
 }
 
 /deep/.op-icon:hover {
@@ -1403,7 +1403,7 @@ export default {
 /deep/.v-show-content,
 /deep/.scroll-style,
 /deep/.scroll-style-border-radius {
-  background-color: rgba(117, 63, 178, 0) !important;
+  background-color: rgba(var(--ltpp-main-bk-color), 0) !important;
   padding: 0rem 0rem;
   border-width: 0rem !important;
 }
@@ -1414,7 +1414,7 @@ export default {
 /deep/.el-range-editor,
 /deep/.el-data-editor--datetimerange {
   color: #f5f7fa !important;
-  background-color: rgba(117, 63, 178, 0) !important;
+  background-color: rgba(var(--ltpp-main-bk-color), 0) !important;
   border-width: 0rem !important;
 }
 
@@ -1449,22 +1449,22 @@ export default {
   border-width: 0rem !important;
   width: 0rem !important;
   height: 0rem !important;
-  background-color: rgba(117, 63, 178, 0) !important;
+  background-color: rgba(var(--ltpp-main-bk-color), 0) !important;
 }
 
 /deep/.el-icon-arrow-left:before,
 /deep/.el-icon-arrow-right:before {
-  background-color: rgba(117, 63, 178, 0) !important;
+  background-color: rgba(var(--ltpp-main-bk-color), 0) !important;
 }
 
 /deep/.el-button--default {
   padding: 0rem 1.6rem !important;
-  background-color: rgba(117, 63, 178, 0) !important;
+  background-color: rgba(var(--ltpp-main-bk-color), 0) !important;
   color: #f5f7fa !important;
 }
 
 /deep/.el-input-group__append {
-  background-color: rgba(117, 63, 178, 0.2) !important;
+  background-color: rgba(var(--ltpp-main-bk-color), 0.2) !important;
   color: #f5f7fa !important;
   border-width: 0rem !important;
 }
@@ -1483,7 +1483,7 @@ export default {
 
 /deep/.el-scrollbar__bar,
 /deep/.is-horizontal {
-  background-color: rgba(117, 63, 178, 0) !important;
+  background-color: rgba(var(--ltpp-main-bk-color), 0) !important;
   color: #f5f7fa !important;
   height: 0rem !important;
   border: none !important;

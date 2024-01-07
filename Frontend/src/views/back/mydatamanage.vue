@@ -34,8 +34,8 @@
             height: 2rem;
             cursor: pointer;
             border-radius: 0.46rem;
-            border-color: rgba(117, 63, 178, 0.8);
-            background-color: rgba(117, 63, 178, 0.8);
+            border-color: rgba(var(--ltpp-main-bk-color), 0.8);
+            background-color: rgba(var(--ltpp-main-bk-color), 0.8);
           "
           @click="useqqheadimage()"
         >
@@ -68,8 +68,8 @@
             border-color: aliceblue;
             padding: 0.6rem;
             border-radius: 0.46rem;
-            border-color: rgba(117, 63, 178, 0.8);
-            background-color: rgba(117, 63, 178, 0.8);
+            border-color: rgba(var(--ltpp-main-bk-color), 0.8);
+            background-color: rgba(var(--ltpp-main-bk-color), 0.8);
           "
         >
           {{
@@ -450,8 +450,8 @@
               width: 8rem;
               height: 2.6rem;
               border-radius: 0.46rem;
-              border-color: rgba(117, 63, 178, 0);
-              background-color: rgba(117, 63, 178, 0.8);
+              border-color: rgba(var(--ltpp-main-bk-color), 0);
+              background-color: rgba(var(--ltpp-main-bk-color), 0.8);
             "
             @click="updata()"
           >

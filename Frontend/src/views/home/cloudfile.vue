@@ -701,7 +701,7 @@ export default {
       iscloseFile: false,
       height: window.innerHeight + "px",
       deepcolor: "rgba(228, 147, 208, 0.16)",
-      notdeepcolor: "rgba(117, 63, 178, 0.06)",
+      notdeepcolor: "rgba(var(--ltpp-main-bk-color), 0.06)",
       file_percentage: 0,
       gitclass: [
         "folder",

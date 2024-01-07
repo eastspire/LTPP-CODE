@@ -156,7 +156,10 @@
             <el-button
               class="el-icon-delete-solid pulse-enter-active"
               type="text"
-              style="font-size: 1.02rem; color: #753fb2"
+              style="
+                font-size: 1.02rem;
+                color: rgba(var(--ltpp-main-bk-color), 1);
+              "
               @click="DeleteContestProblem(tem.id)"
               >点击移除题目：{{ "|标题|：" + tem.problemName }}
               {{ "|标签|:" + tem.problemLabe }}</el-button
@@ -191,7 +194,7 @@
               <template slot-scope="scope">
                 <el-button
                   type="text"
-                  style="color: #753fb2"
+                  style="color: rgba(var(--ltpp-main-bk-color), 1)"
                   class="el-icon-circle-plus"
                   @click="changechoose(scope.row)"
                 ></el-button>
@@ -607,7 +610,8 @@ export default {
         color: "chartreuse",
       };
       if (rowIndex % 2 != 0) {
-        styleRes.background = "rgba(117, 63, 178, 0.06) !important";
+        styleRes.background =
+          "rgba(var(--ltpp-main-bk-color), 0.06) !important";
       }
       if (acpoint <= 30) {
         /* 正确率低于30*/

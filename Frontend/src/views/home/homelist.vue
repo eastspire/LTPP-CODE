@@ -137,7 +137,7 @@
               font-size: 1.4rem;
               color: deeppink;
               text-align: center;
-              background-color: rgba(117, 63, 178, 0);
+              background-color: rgba(var(--ltpp-main-bk-color), 0);
               margin-top: 1rem;
             "
           >
@@ -175,7 +175,7 @@
               text-align: right;
               font-size: 1rem;
               color: #ffffffe6;
-              background-color: rgba(117, 63, 178, 0);
+              background-color: rgba(var(--ltpp-main-bk-color), 0);
             "
             >{{ notice.time }}</pre
           >
