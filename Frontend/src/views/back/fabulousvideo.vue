@@ -42,9 +42,7 @@
           </div>
           <div style="height: 0.5rem"></div>
           <div
-            v-loading.lock="
-              !onevideo.url || !reg.test(onevideo.url) || total <= 0
-            "
+            v-loading.lock="!onevideo.url || !reg.test(onevideo.url)"
             element-loading-text="拼命加载中"
             element-loading-spinner="el-icon-loading"
             element-loading-background="background-color:rgba(var(--ltpp-main-bk-color),var(--ltpp-list-box-bk-opacity))"

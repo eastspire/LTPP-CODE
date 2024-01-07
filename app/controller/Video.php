@@ -936,7 +936,7 @@ class Video
         $key = $request->post('key');
         $page = $request->post('page');
         $limit = 1;
-        $db = Video::getVideoFromLoveOrFabulous('LoveVideo', $my_aid, $page, $limit, $key);
+        $db = Video::getVideoFromLoveOrFabulous('lovevideo', $my_aid, $page, $limit, $key);
         $res = $db[0];
         $allnum = $db[1];
         Base::dataToSafe($res);

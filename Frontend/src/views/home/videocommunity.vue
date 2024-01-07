@@ -369,7 +369,7 @@ import urlencode from "../../../updateCompoents/urlencode";
 export default {
   name: "videocommunity",
   async created() {
-    this.issearch = false;
+    this.key = "";
     this.showone = false;
     this.onevideo = {};
     this.$store.commit("updateObj", { my_id: this.getMyId() });
@@ -408,7 +408,6 @@ export default {
       video: null,
       onevideo: {},
       key: "",
-      issearch: false,
       showone: false,
     };
   },
@@ -764,7 +763,7 @@ export default {
     async pageChange(isInc = true) {
       this.comment_load_all_finish = false;
       this.userComment = [];
-      if (this.issearch) {
+      if (this.key) {
         await this.keysearch(isInc ? "down" : "up");
       } else {
         await this.getlist(isInc ? "down" : "up");
@@ -812,7 +811,6 @@ export default {
       }
     },
     async search(up_do = "down") {
-      this.issearch = false;
       this.onevideo.id = "";
       if (this.key == "" || this.key == null || this.key == undefined) {
         await this.getlist(up_do);
@@ -820,7 +818,6 @@ export default {
         await this.IsLove();
         return;
       }
-      this.issearch = true;
       await this.keysearch(up_do);
       await this.IsFabulous();
       await this.IsLove();
