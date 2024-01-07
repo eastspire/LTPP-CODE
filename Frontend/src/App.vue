@@ -1371,6 +1371,19 @@ pre,
   padding: 0rem 0rem;
 }
 
+.scroll-style.show {
+  background-color: rgb(var(--ltpp-main-bk-color)) !important;
+}
+
+.fullscreen {
+  z-index: 100000000 !important;
+  background-color: rgb(var(--ltpp-main-bk-color)) !important;
+}
+
+.md-video-dialog {
+  z-index: 100000000 !important;
+}
+
 .add-image-link {
   color: rgb(0, 0, 0) !important;
 }

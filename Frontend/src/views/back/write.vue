@@ -336,11 +336,11 @@ export default {
         code: true, // code
         htmlcode: false, // 展示html源码
         subfield: true, // 是否需要分栏
-        fullscreen: false, // 全屏编辑
-        readmodel: false, // 沉浸式阅读
+        fullscreen: true, // 全屏编辑
+        readmodel: true, // 沉浸式阅读
         /* 1.3.5 */
         undo: true, // 上一步
-        trash: true, // 清空
+        trash: false, // 清空
         save: false, // 保存（触发events中的save事件）
         /* 1.4.2 */
         navigation: false, // 导航目录

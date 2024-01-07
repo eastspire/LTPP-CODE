@@ -493,7 +493,7 @@ export default {
         readmodel: false, // 沉浸式阅读
         /* 1.3.5 */
         undo: true, // 上一步
-        trash: true, // 清空
+        trash: false, // 清空
         save: false, // 保存（触发events中的save事件）
         /* 1.4.2 */
         navigation: false, // 导航目录

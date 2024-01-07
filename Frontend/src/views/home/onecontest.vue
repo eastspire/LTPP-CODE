@@ -675,7 +675,7 @@
                 style="color: deeppink; font-size: 1.06rem"
                 @click="delrank()"
                 width="auto"
-                class="el-icon-delete-solid pulse-enter-active"
+                class="el-icon-delete-solid pulse-enter-active shadow"
                 >清理缓存</el-button
               >
               <el-button
@@ -684,7 +684,7 @@
                 style="color: aquamarine; font-size: 1.06rem"
                 @click="lookPublicContestRank()"
                 width="auto"
-                class="el-icon-s-data pulse-enter-active"
+                class="el-icon-s-data pulse-enter-active shadow"
                 >外链排名</el-button
               >
               <el-button
@@ -697,7 +697,7 @@
                 style="color: deepskyblue; font-size: 1.06rem"
                 @click="codeCheckSimilarity()"
                 width="auto"
-                class="el-icon-s-help pulse-enter-active"
+                class="el-icon-s-help pulse-enter-active shadow"
                 >代码查重</el-button
               >
               <el-button
@@ -712,7 +712,7 @@
                 style="color: deeppink; font-size: 1.06rem"
                 @click="lookoirank()"
                 width="auto"
-                class="el-icon-s-data pulse-enter-active"
+                class="el-icon-s-data pulse-enter-active shadow"
                 >封榜排名</el-button
               >
               <el-button
@@ -726,7 +726,7 @@
                 style="color: chartreuse; font-size: 1.06rem"
                 @click="download()"
                 width="auto"
-                class="el-icon-picture pulse-enter-active"
+                class="el-icon-picture pulse-enter-active shadow"
                 >下载图片</el-button
               >
               <el-button
@@ -738,7 +738,7 @@
                 style="color: deepskyblue; font-size: 1.06rem"
                 @click="getProblemMD()"
                 width="auto"
-                class="el-icon-s-order pulse-enter-active"
+                class="el-icon-s-order pulse-enter-active shadow"
                 >下载题目</el-button
               >
               <el-button
@@ -750,7 +750,7 @@
                 style="color: deepskyblue; font-size: 1.06rem"
                 @click="getProblemSolveMD()"
                 width="auto"
-                class="el-icon-s-help pulse-enter-active"
+                class="el-icon-s-help pulse-enter-active shadow"
                 >下载题解</el-button
               >
               <el-button
@@ -759,7 +759,7 @@
                 style="color: aqua; font-size: 1.06rem"
                 @click="joincontest()"
                 width="auto"
-                class="el-icon-user-solid pulse-enter-active"
+                class="el-icon-user-solid pulse-enter-active shadow"
                 >报名竞赛</el-button
               >
               <el-button
@@ -770,7 +770,7 @@
                 "
                 width="auto"
                 style="color: red; font-size: 1.06rem"
-                class="el-icon-s-unfold pulse-enter-active"
+                class="el-icon-s-unfold pulse-enter-active shadow"
                 >【返回】</el-button
               >
             </div>
@@ -971,7 +971,7 @@ export default {
         readmodel: false, // 沉浸式阅读
         /* 1.3.5 */
         undo: true, // 上一步
-        trash: true, // 清空
+        trash: false, // 清空
         save: false, // 保存（触发events中的save事件）
         /* 1.4.2 */
         navigation: false, // 导航目录
@@ -1869,12 +1869,8 @@ export default {
 @import "../../../public/md/markdown/github-markdown.min.css";
 
 .el-button {
-  box-shadow: 0 2px 5px rgba(var(--ltpp-light-color), 0.16),
-    2px 0 5px rgba(var(--ltpp-light-color), 0.16),
-    -2px 0 5px rgba(var(--ltpp-light-color), 0.16),
-    0 -2px 5px rgba(var(--ltpp-light-color), 0.16);
   padding: 0.6rem 1rem !important;
-  background-color: #002a4c !important;
+  background-color: rgba(var(--ltpp-light-color), 0.66) !important;
 }
 
 tr td,
