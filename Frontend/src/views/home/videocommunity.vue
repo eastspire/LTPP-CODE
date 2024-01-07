@@ -335,6 +335,8 @@
       </el-drawer>
     </div>
     <el-dialog
+      :close-on-click-modal="false"
+      :append-to-body="true"
       class="no-select"
       :visible.sync="isseeDia"
       width="36%"

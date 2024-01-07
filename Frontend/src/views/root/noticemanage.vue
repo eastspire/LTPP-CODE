@@ -113,6 +113,8 @@
 
     <!-- 更新对话框 -->
     <el-dialog
+      :close-on-click-modal="false"
+      :append-to-body="true"
       style="text-align: center; font-size: 2rem; font-weight: bold"
       :width="($store.state.max_width / $store.state.now_width) * 100 + '%'"
       title=""
@@ -208,6 +210,8 @@
 
     <!-- 添加对话框 -->
     <el-dialog
+      :close-on-click-modal="false"
+      :append-to-body="true"
       style="text-align: center; font-size: 2rem; font-weight: bold"
       :width="($store.state.max_width / $store.state.now_width) * 100 + '%'"
       title=""
@@ -301,6 +305,7 @@
     </el-dialog>
     <!-- 插入视频链接的dialog提示框，表单对话框 -->
     <el-dialog
+      :close-on-click-modal="false"
       title="插入视频资源"
       :append-to-body="true"
       :width="($store.state.max_width / $store.state.now_width) * 100 + '%'"
@@ -330,6 +335,7 @@
     </el-dialog>
     <!-- 错误提示框 -->
     <el-dialog
+      :close-on-click-modal="false"
       class="no-select"
       title="提示"
       :visible.sync="dialogVisible"

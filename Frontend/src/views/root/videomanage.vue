@@ -151,6 +151,8 @@
 
     <!-- 更新对话框 -->
     <el-dialog
+      :close-on-click-modal="false"
+      :append-to-body="true"
       :width="($store.state.max_width / $store.state.now_width) * 100 + '%'"
       style="text-align: center; font-size: 2rem; font-weight: bold"
       title=""
@@ -217,6 +219,8 @@
     </el-dialog>
     <!-- 添加对话框 -->
     <el-dialog
+      :close-on-click-modal="false"
+      :append-to-body="true"
       :width="($store.state.max_width / $store.state.now_width) * 100 + '%'"
       style="text-align: center; font-size: 2rem; font-weight: bold"
       title=""

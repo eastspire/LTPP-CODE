@@ -248,6 +248,8 @@
 
     <!-- 对话框 -->
     <el-dialog
+      :close-on-click-modal="false"
+      :append-to-body="true"
       title="确定移除该粉丝吗？"
       :visible.sync="deletesure"
       width="26rem"
@@ -276,6 +278,8 @@
       >
     </el-dialog>
     <el-dialog
+      :close-on-click-modal="false"
+      :append-to-body="true"
       title
       :visible.sync="dialogFormVisible"
       class="Mdialog"

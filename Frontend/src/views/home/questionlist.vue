@@ -2,7 +2,7 @@
  * @Author: 18855190718 1491579574@qq.com
  * @Date: 2023-03-17 09:42:16
  * @LastEditors: wmzn-ltpp 1491579574@qq.com
- * @LastEditTime: 2023-12-31 20:53:58
+ * @LastEditTime: 2024-01-07 15:07:00
  * @FilePath: \LTPP-CODE\Frontend\src\views\home\questionlist.vue
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
@@ -73,7 +73,7 @@
                 style="
                   font-size: 1.06rem;
                   color: rgba(38, 205, 77, 1);
-                  margin-top: 1rem;
+                  margin-top: 1.02rem;
                   margin-left: 1.06rem;
                 "
               >

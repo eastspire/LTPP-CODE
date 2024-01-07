@@ -49,7 +49,7 @@
             :collapse="true"
             active-text-color="rgb(0, 123, 255)"
             background-color="rgba(var(--ltpp-main-bk-color), 1)"
-            text-color="#f5f7fa"
+            text-color="var(--ltpp-main-text-color)"
             class="el-menu-demo no-select left_menu shadow"
             router
           >
@@ -231,7 +231,7 @@
             :collapse="true"
             active-text-color="rgb(0, 123, 255)"
             background-color="rgba(var(--ltpp-main-bk-color), 1)"
-            text-color="#f5f7fa"
+            text-color="var(--ltpp-main-text-color)"
             class="el-menu-demo no-select right_menu shadow"
             router
           >
@@ -511,6 +511,7 @@
       </el-backtop>
       <div v-if="$store.state.root">
         <el-dialog
+          :close-on-click-modal="false"
           :append-to-body="true"
           :width="($store.state.max_width / $store.state.now_width) * 100 + '%'"
           title="发布通知"
@@ -1274,213 +1275,6 @@ export default {
 
 .el-menu--collapse {
   height: 100% !important;
-}
-
-::v-deep .el-pagination.is-background .el-pager li {
-  color: #f5f7fa !important;
-  background-color: rgba(var(--ltpp-light-color), 1) !important;
-}
-
-::v-deep .el-icon-arrow-left:before,
-::v-deep .el-icon-arrow-right:before {
-  color: #f5f7fa !important;
-  background-color: rgba(var(--ltpp-light-color), 1) !important;
-}
-
-::v-deep .el-pagination.is-background .el-pager li:not(.disabled).active {
-  color: rgba(var(--ltpp-light-color), 1) !important;
-  background-color: #f5f7fa !important;
-}
-
-::v-deep .el-switch__label {
-  color: aliceblue;
-  font-weight: bold;
-}
-
-::v-deep .is-active {
-  color: deepskyblue !important;
-  font-weight: bold;
-}
-
-/deep/.el-carousel__arrow,
-/deep/.el-carousel__arrow--right,
-/deep/.btn-prev,
-/deep/ .btn-next {
-  color: #f5f7fa !important;
-  background-color: rgba(var(--ltpp-light-color), 1) !important;
-}
-
-/deep/.el-input,
-/deep/.el-pagination__editor,
-/deep/.is-in-pagination {
-  padding: 0rem !important;
-}
-
-/deep/.el-pagination__jump,
-/deep/.el-pagination__total {
-  color: rgba(248, 249, 250, 0.88) !important;
-  padding: 0rem 0.6rem !important;
-}
-
-/deep/.el-menu-item {
-  -webkit-touch-callout: none !important;
-  /* iOS Safari */
-  -webkit-user-select: none !important;
-  /* Chrome/Safari/Opera */
-  -khtml-user-select: none !important;
-  /* Konqueror */
-  -moz-user-select: none !important;
-  /* Firefox */
-  -ms-user-select: none !important;
-  /* Internet Explorer/Edge */
-  user-select: none !important;
-  /* Non-prefixed version, currently not supported by any browser */
-}
-
-/deep/.el-submenu__title {
-  -webkit-touch-callout: none !important;
-  /* iOS Safari */
-  -webkit-user-select: none !important;
-  /* Chrome/Safari/Opera */
-  -khtml-user-select: none !important;
-  /* Konqueror */
-  -moz-user-select: none !important;
-  /* Firefox */
-  -ms-user-select: none !important;
-  /* Internet Explorer/Edge */
-  user-select: none !important;
-  /* Non-prefixed version, currently not supported by any browser */
-}
-
-/deep/.el-submenu__title:hover {
-  color: deepskyblue !important;
-  background-color: rgba(var(--ltpp-light-color), 0.166) !important;
-}
-
-/deep/.search {
-  padding: 0.6rem 0.6rem !important;
-}
-
-/deep/.v-note-navigation-title,
-/deep/.v-note-read-model,
-/deep/.scroll-style.show,
-/deep/.v-note-navigation-content,
-/deep/.scroll-style,
-/deep/.auto-textarea-input,
-/deep/.no-border,
-/deep/.no-resize,
-/deep/.v-left-item,
-/deep/.transition,
-/deep/.v-right-item,
-/deep/.transition {
-  color: #f5f7fa !important;
-  background-color: rgba(var(--ltpp-main-bk-color), 0) !important;
-  border-width: 0rem !important;
-  padding: 0rem 0rem;
-}
-
-/deep/.add-image-link {
-  color: rgb(0, 0, 0) !important;
-}
-
-/deep/.v-note-op,
-/deep/.content-input-wrapper,
-/deep/.v-note-edit.diletea-wrapper.scroll-style.transition {
-  color: #f5f7fa !important;
-  background-color: rgba(var(--ltpp-main-bk-color), 0) !important;
-}
-
-/deep/.op-icon {
-  color: #f5f7fa !important;
-  background-color: rgba(var(--ltpp-main-bk-color), 0) !important;
-}
-
-/deep/.op-icon:hover {
-  color: rgb(0, 0, 0) !important;
-  background-color: #f5f7fa !important;
-}
-
-/deep/.v-show-content,
-/deep/.scroll-style,
-/deep/.scroll-style-border-radius {
-  background-color: rgba(var(--ltpp-main-bk-color), 0) !important;
-  padding: 0rem 0rem;
-  border-width: 0rem !important;
-}
-
-/deep/.el-range-input,
-/deep/.el-range-separator,
-/deep/.el-data-editor,
-/deep/.el-range-editor,
-/deep/.el-data-editor--datetimerange {
-  color: #f5f7fa !important;
-  background-color: rgba(var(--ltpp-main-bk-color), 0) !important;
-  border-width: 0rem !important;
-}
-
-/deep/.el-notification {
-  -webkit-touch-callout: none !important;
-  /* iOS Safari */
-  -webkit-user-select: none !important;
-  /* Chrome/Safari/Opera */
-  -khtml-user-select: none !important;
-  /* Konqueror */
-  -moz-user-select: none !important;
-  /* Firefox */
-  -ms-user-select: none !important;
-  /* Internet Explorer/Edge */
-  user-select: none !important;
-  /* Non-prefixed version, currently not supported by any browser */
-}
-
-/deep/.el-pager {
-  color: #f5f7fa !important;
-  background-color: Transparent !important;
-  border-width: 0rem !important;
-}
-
-/deep/.el-textarea__inner {
-  color: #f5f7fa !important;
-  background-color: rgba(var(--ltpp-light-color), 1) !important;
-  border-color: rgba(var(--ltpp-light-color), 1) !important;
-}
-
-/deep/.el-scrollbar__thumb {
-  border-width: 0rem !important;
-  width: 0rem !important;
-  height: 0rem !important;
-  background-color: rgba(var(--ltpp-main-bk-color), 0) !important;
-}
-
-/deep/.el-icon-arrow-left:before,
-/deep/.el-icon-arrow-right:before {
-  background-color: rgba(var(--ltpp-main-bk-color), 0) !important;
-}
-
-/deep/.el-button--default {
-  padding: 0rem 1.6rem !important;
-  background-color: rgba(var(--ltpp-main-bk-color), 0) !important;
-  color: #f5f7fa !important;
-}
-
-/deep/.el-descriptions__body {
-  background-color: rgba(var(--ltpp-light-color), 1) !important;
-  color: #f5f7fa !important;
-}
-
-/deep/.el-descriptions-item__cell,
-/deep/.el-descriptions-item__label,
-/deep/.is-bordered-label {
-  background-color: rgba(var(--ltpp-light-color), 1) !important;
-  color: #f5f7fa !important;
-}
-
-/deep/.el-scrollbar__bar,
-/deep/.is-horizontal {
-  background-color: rgba(var(--ltpp-main-bk-color), 0) !important;
-  color: #f5f7fa !important;
-  height: 0rem !important;
-  border: none !important;
 }
 
 .musicdiv {

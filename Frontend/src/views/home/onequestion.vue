@@ -36,7 +36,7 @@
             style="
               font-size: 1.06rem;
               color: rgba(38, 205, 77, 1);
-              margin-top: 1rem;
+              margin-top: 0.96rem;
               margin-left: 1.06rem;
             "
           >
@@ -558,6 +558,8 @@
           </div>
           <!-- 回复用户 -->
           <el-dialog
+            :close-on-click-modal="false"
+            :append-to-body="true"
             class="no-select"
             :visible.sync="istouseranswer"
             :width="
@@ -628,6 +630,7 @@
 
           <!-- 插入视频链接的dialog提示框，表单对话框 -->
           <el-dialog
+            :close-on-click-modal="false"
             title="插入视频资源"
             :append-to-body="true"
             :width="
@@ -665,6 +668,7 @@
           </el-dialog>
           <!-- 插入视频链接的dialog提示框，表单对话框 -->
           <el-dialog
+            :close-on-click-modal="false"
             class="no-select"
             title="插入视频资源"
             :append-to-body="true"
@@ -704,6 +708,7 @@
 
           <!-- 错误提示框 -->
           <el-dialog
+            :close-on-click-modal="false"
             class="no-select"
             title="提示"
             :visible.sync="dialogVisible"

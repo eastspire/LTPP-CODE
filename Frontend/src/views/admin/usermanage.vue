@@ -235,6 +235,8 @@
     <div style="height: 3.4rem"></div>
     <!-- 对话框 -->
     <el-dialog
+      :close-on-click-modal="false"
+      :append-to-body="true"
       :title="`更新用户${
         userdata.user_aid ? '【用户ID:' + userdata.user_aid + '】' : ''
       }`"
@@ -530,6 +532,8 @@
     </el-dialog>
 
     <el-dialog
+      :close-on-click-modal="false"
+      :append-to-body="true"
       title="新增用户"
       :visible.sync="addclick"
       class="Mdialog"

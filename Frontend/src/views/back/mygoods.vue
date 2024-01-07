@@ -204,6 +204,7 @@
     </div>
 
     <el-dialog
+      :append-to-body="true"
       title="商品信息"
       :visible.sync="see_dialog"
       class="Mdialog"

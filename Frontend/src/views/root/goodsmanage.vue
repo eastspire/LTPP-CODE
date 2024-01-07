@@ -237,6 +237,8 @@
     </div>
 
     <el-dialog
+      :close-on-click-modal="false"
+      :append-to-body="true"
       title="新增商品"
       :visible.sync="see_add_dialog"
       class="Mdialog"
@@ -359,6 +361,8 @@
     </el-dialog>
 
     <el-dialog
+      :close-on-click-modal="false"
+      :append-to-body="true"
       title="更新商品"
       :visible.sync="see_update_dialog"
       class="Mdialog"
@@ -491,6 +495,8 @@
     </el-dialog>
 
     <el-dialog
+      :close-on-click-modal="false"
+      :append-to-body="true"
       title="批量新增商品"
       :visible.sync="see_more_add_dialog"
       class="Mdialog"

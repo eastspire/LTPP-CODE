@@ -1156,8 +1156,10 @@
           </div>
           <!-- IP对话框 -->
           <el-dialog
+            :close-on-click-modal="false"
             title="添加IP黑名单"
-            :visible="showadd"
+            :append-to-body="true"
+            :visible.sync="showadd"
             :width="
               ($store.state.max_width / $store.state.now_width) * 100 + '%'
             "
@@ -1233,7 +1235,9 @@
 
           <!-- 日志和服务器信息对话框 -->
           <el-dialog
+            :close-on-click-modal="false"
             title="服务器信息展示"
+            :append-to-body="true"
             :visible.sync="showlinux"
             :width="
               ($store.state.max_width / $store.state.now_width) * 100 + '%'
@@ -1263,7 +1267,9 @@
             <div style="height: 1rem"></div>
           </el-dialog>
           <el-dialog
+            :close-on-click-modal="false"
             title="安装结果"
+            :append-to-body="true"
             :width="
               ($store.state.max_width / $store.state.now_width) * 100 + '%'
             "

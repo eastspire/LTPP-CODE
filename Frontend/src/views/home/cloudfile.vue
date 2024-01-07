@@ -195,6 +195,7 @@
             <!-- 新建文件、文件夹 -->
             <div>
               <el-dialog
+                :close-on-click-modal="false"
                 width="30%"
                 :append-to-body="true"
                 :visible.sync="Isnew"
@@ -237,6 +238,7 @@
             <!-- 文件预览 -->
             <div v-if="!iscloseFile">
               <el-dialog
+                :close-on-click-modal="false"
                 :width="
                   ($store.state.max_width / $store.state.now_width) * 100 + '%'
                 "
@@ -322,6 +324,7 @@
 
             <div>
               <el-dialog
+                :close-on-click-modal="false"
                 @contextmenu.prevent.native="savacode"
                 :visible.sync="IsShowCode"
                 title="文件内容"
@@ -381,6 +384,7 @@
                         </mavon-editor>
                         <!-- 插入视频链接的dialog提示框，表单对话框 -->
                         <el-dialog
+                          :close-on-click-modal="false"
                           title="插入视频资源"
                           :append-to-body="true"
                           :visible.sync="dialogFormVisible"
@@ -435,6 +439,7 @@
 
                         <!-- 错误提示框 -->
                         <el-dialog
+                          :close-on-click-modal="false"
                           title="提示"
                           :append-to-body="true"
                           :visible.sync="dialogVisible"
@@ -539,6 +544,7 @@
       </div>
       <div>
         <el-dialog
+          :close-on-click-modal="false"
           @contextmenu.prevent.native="IsShowUp = false"
           :visible.sync="IsShowUp"
           width="30%"

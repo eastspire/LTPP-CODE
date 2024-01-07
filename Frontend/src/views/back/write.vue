@@ -147,6 +147,7 @@
 
           <!-- 插入视频链接的dialog提示框，表单对话框 -->
           <el-dialog
+            :close-on-click-modal="false"
             title="插入视频资源"
             :append-to-body="true"
             :visible.sync="dialogFormVisible"
@@ -185,6 +186,7 @@
 
           <!-- 错误提示框 -->
           <el-dialog
+            :close-on-click-modal="false"
             title="提示"
             :visible.sync="dialogVisible"
             :append-to-body="true"

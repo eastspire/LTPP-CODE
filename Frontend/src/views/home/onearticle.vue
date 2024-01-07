@@ -607,7 +607,9 @@
 
             <!-- 回复用户 -->
             <el-dialog
+              :close-on-click-modal="false"
               class="no-select"
+              :append-to-body="true"
               :visible.sync="istousercomment"
               :width="
                 ($store.state.max_width / $store.state.now_width) * 100 + '%'
@@ -678,6 +680,7 @@
 
             <!-- 插入视频链接的dialog提示框，表单对话框 -->
             <el-dialog
+              :close-on-click-modal="false"
               title="插入视频资源"
               :append-to-body="true"
               :width="
@@ -715,6 +718,7 @@
             </el-dialog>
             <!-- 插入视频链接的dialog提示框，表单对话框 -->
             <el-dialog
+              :close-on-click-modal="false"
               class="no-select"
               title="插入视频资源"
               :append-to-body="true"
@@ -754,6 +758,7 @@
 
             <!-- 错误提示框 -->
             <el-dialog
+              :close-on-click-modal="false"
               class="no-select"
               title="提示"
               :visible.sync="dialogVisible"
@@ -781,8 +786,8 @@
 
 <script>
 import urlencode from "../../../updateCompoents/urlencode";
-import "../../../public/md/markdown/github-markdown.min.css";
-import "../../../public/md/css/index.css";
+import "../../../updateCompoents/mavon-editor/dist/markdown/github-markdown.min.css";
+import "../../../updateCompoents/mavon-editor/dist/css/index.css";
 
 export default {
   name: "onearticle",
@@ -1178,7 +1183,7 @@ export default {
         .then((res) => {
           // 第二步.将返回的url替换到文本原位置![...](0) -> ![...](url)
           // $vm.$img2Url 详情见本页末尾
-          this.$refs.md1.$img2Url(pos, res?.data.url);
+          this.$refs.md1.$img2Url(pos, res.data.url);
         })
         .catch((t) => {
           this.$msg({
@@ -1205,7 +1210,7 @@ export default {
         .then((res) => {
           // 第二步.将返回的url替换到文本原位置![...](0) -> ![...](url)
           // $vm.$img2Url 详情见本页末尾
-          this.$refs.md4.$img2Url(pos, res?.data.url);
+          this.$refs.md4.$img2Url(pos, res.data.url);
         })
         .catch((t) => {
           this.$msg({
@@ -1234,17 +1239,17 @@ export default {
         });
       });
 
-      if (res?.code == 1) {
+      if (res.code == 1) {
         this.$msg({
           type: "success",
-          message: res?.msg,
+          message: res.msg,
           duration: 600,
           offset: 80,
         });
       } else {
         this.$msg({
           type: "error",
-          message: res?.msg,
+          message: res.msg,
           duration: 800,
           offset: 80,
         });
@@ -1267,17 +1272,17 @@ export default {
         });
       });
 
-      if (res?.code == 1) {
+      if (res.code == 1) {
         this.$msg({
           type: "success",
-          message: res?.msg,
+          message: res.msg,
           duration: 600,
           offset: 80,
         });
       } else {
         this.$msg({
           type: "error",
-          message: res?.msg,
+          message: res.msg,
           duration: 800,
           offset: 80,
         });
@@ -1305,25 +1310,25 @@ export default {
         return;
       });
       this.loadfinish = true;
-      if (res?.code == 1) {
-        this.name = res?.data["name"];
-        this.article = res?.data["article"];
-        this.fabulous = res?.data["fabulous"];
-        this.collection = res?.data["collection"];
-        this.image = res?.data["image"];
-        this.writer = res?.data["writer"];
-        this.lastchangetime = res?.data["lastchangetime"];
-        this.releasetime = res?.data["releasetime"];
-        this.writerid = res?.data["writerid"];
-        this.problemid = res?.data["problemid"];
+      if (res.code == 1) {
+        this.name = res.data["name"];
+        this.article = res.data["article"];
+        this.fabulous = res.data["fabulous"];
+        this.collection = res.data["collection"];
+        this.image = res.data["image"];
+        this.writer = res.data["writer"];
+        this.lastchangetime = res.data["lastchangetime"];
+        this.releasetime = res.data["releasetime"];
+        this.writerid = res.data["writerid"];
+        this.problemid = res.data["problemid"];
         this.is_can_edit = res.edit;
         this.islove = res.love;
-        this.is_public = res?.data["public"];
+        this.is_public = res.data["public"];
         this.isfabulous = res.fabulous;
       } else {
         this.$msg({
           type: "error",
-          message: res?.msg,
+          message: res.msg,
           duration: 1600,
           offset: 80,
         });
@@ -1354,12 +1359,12 @@ export default {
       })
         .then((res) => {
           if (
-            res?.data &&
-            res?.data.data &&
-            res?.data.data.length &&
-            res?.data.data.length > 0
+            res.data &&
+            res.data.data &&
+            res.data.data.length &&
+            res.data.data.length > 0
           ) {
-            res?.data.data.forEach((tem) => {
+            res.data.data.forEach((tem) => {
               this.comment.push(tem);
             });
             this.islock = false;
@@ -1402,7 +1407,7 @@ export default {
           offset: 80,
         });
       });
-      if (res?.code == 1) {
+      if (res.code == 1) {
         let len = this.comment.length;
         for (let i = 0; i < len; ++i) {
           let tlen = this.comment[i].touserarray.length;
@@ -1421,14 +1426,14 @@ export default {
         }
         this.$msg({
           type: "success",
-          message: res?.msg,
+          message: res.msg,
           duration: 600,
           offset: 80,
         });
       } else {
         this.$msg({
           type: "error",
-          message: res?.msg,
+          message: res.msg,
           duration: 800,
           offset: 80,
         });
@@ -1472,12 +1477,12 @@ export default {
       });
       this.issendfinish = true;
       this.touserid = 0;
-      if (res?.code == 1) {
+      if (res.code == 1) {
         this.commenttext = "";
       } else {
         this.$msg({
           type: "error",
-          message: res?.msg,
+          message: res.msg,
           duration: 1800,
           offset: 80,
         });
@@ -1524,11 +1529,11 @@ export default {
         });
       });
       this.issendfinish = true;
-      if (res?.code == 1) {
+      if (res.code == 1) {
         this.tousercommenttext = "";
         this.$msg({
           type: "success",
-          message: res?.msg,
+          message: res.msg,
           duration: 600,
           offset: 80,
         });
@@ -1538,7 +1543,7 @@ export default {
       } else {
         this.$msg({
           type: "error",
-          message: res?.msg,
+          message: res.msg,
           duration: 800,
           offset: 80,
         });
@@ -1563,19 +1568,19 @@ export default {
           offset: 80,
         });
       });
-      if (res?.code == 1) {
+      if (res.code == 1) {
         ++this.fabulous;
         this.isfabulous = true;
         this.$msg({
           type: "success",
-          message: res?.msg,
+          message: res.msg,
           duration: 600,
           offset: 80,
         });
       } else {
         this.$msg({
           type: "error",
-          message: res?.msg,
+          message: res.msg,
           duration: 800,
           offset: 80,
         });
@@ -1604,10 +1609,10 @@ export default {
           offset: 80,
         });
       });
-      if (res?.code == 1) {
+      if (res.code == 1) {
         this.$msg({
           type: "success",
-          message: res?.msg,
+          message: res.msg,
           duration: 600,
           offset: 80,
         });
@@ -1616,7 +1621,7 @@ export default {
         --this.collection;
         this.$msg({
           type: "error",
-          message: res?.msg,
+          message: res.msg,
           duration: 800,
           offset: 80,
         });
@@ -1645,10 +1650,10 @@ export default {
           offset: 80,
         });
       });
-      if (res?.code == 1) {
+      if (res.code == 1) {
         this.$msg({
           type: "success",
-          message: res?.msg,
+          message: res.msg,
           duration: 600,
           offset: 80,
         });
@@ -1657,7 +1662,7 @@ export default {
         ++this.collection;
         this.$msg({
           type: "error",
-          message: res?.msg,
+          message: res.msg,
           duration: 800,
           offset: 80,
         });

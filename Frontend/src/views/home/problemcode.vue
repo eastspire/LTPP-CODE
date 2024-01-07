@@ -181,7 +181,7 @@
             </el-table-column>
           </el-table>
         </div>
-        <el-dialog
+        <el-dialog        
           @contextmenu.prevent.native="isseecode = false"
           title="代码详情"
           :visible.sync="isseecode"
