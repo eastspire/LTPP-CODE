@@ -2,7 +2,7 @@
  * @Author: 18855190718 1491579574@qq.com
  * @Date: 2023-08-07 18:43:57
  * @LastEditors: wmzn-ltpp 1491579574@qq.com
- * @LastEditTime: 2024-01-01 10:59:04
+ * @LastEditTime: 2024-01-07 23:14:07
  * @FilePath: \LTPP-CODE\Frontend\src\plugins\SqsGlobal.js
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
@@ -243,6 +243,14 @@ const goods_list_data = {
     "time": "加载中",
     "has_buy": true
 };
+
+// 公告数据模板
+const notice_list_data = {
+    "id": "",
+    "content": "加载中",
+    "time": "加载中"
+};
+
 // 用户列表数据模板
 const user_list_data =
 {
@@ -337,5 +345,6 @@ export default {
     max_video_retry_times,
     video_list_data,
     question_list_data,
-    monitor_list_data
+    monitor_list_data,
+    notice_list_data
 };

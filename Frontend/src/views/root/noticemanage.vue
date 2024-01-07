@@ -377,7 +377,6 @@ export default {
     this.issearch = false; //判断是否搜索，从而进行分页查找
     this.page = 1;
     this.limit = 50;
-    this.noticeList = [];
     await this.getlist();
   },
   deactivated() {
@@ -466,6 +465,14 @@ export default {
     };
   },
   methods: {
+    initData() {
+      this.noticeList = [];
+      let tem_list = [];
+      for (let i = 0; i < this.limit; ++i) {
+        tem_list.push(this.$SqsGlobal.notice_list_data);
+      }
+      this.noticeList = tem_list;
+    },
     videoLink() {
       // 准备链接模板
       let linkFrame = "";
@@ -612,6 +619,7 @@ export default {
     },
     //获取公告列表
     async getlist() {
+      this.initData();
       const { data: res } = await this.$ajax({
         method: "post",
         url: "/Notice/backLoadNotice",
@@ -725,6 +733,7 @@ export default {
     //搜索
     async keysearch() {
       this.lastkey = this.key;
+      this.initData();
       const { data: res } = await this.$ajax({
         method: "post",
         url: "/Notice/backFindNotice",

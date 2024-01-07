@@ -316,7 +316,6 @@ export default {
     this.issearch = false; //判断是否搜索，从而进行分页查找
     this.page = 1;
     this.blogpagesize = 50;
-    this.shortsentenceList = [];
     await this.getlist();
   },
   deactivated() {
@@ -344,6 +343,14 @@ export default {
     };
   },
   methods: {
+    initData() {
+      this.shortsentenceList = [];
+      let tem_list = [];
+      for (let i = 0; i < this.limit; ++i) {
+        tem_list.push(this.$SqsGlobal.short_sentence_list);
+      }
+      this.shortsentenceList = tem_list;
+    },
     handleCurrentChange(val) {
       this.page = val;
       if (this.issearch) {
@@ -376,6 +383,7 @@ export default {
     },
     //获取短句列表
     async getlist() {
+      this.initData();
       const { data: res } = await this.$ajax({
         method: "post",
         url: "/Shortsentence/loadAllShortSentence",
@@ -467,6 +475,7 @@ export default {
     //搜索
     async keysearch() {
       this.lastkey = this.key;
+      this.initData();
       const { data: res } = await this.$ajax({
         method: "post",
         url: "/Shortsentence/findShortSentenceList",
