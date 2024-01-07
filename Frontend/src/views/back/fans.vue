@@ -41,10 +41,10 @@
         "
         class="pulse-enter-active shadow"
         style="
-          background-color: rgba(228, 147, 208, 0.06);
+          background-color: rgba(var(--ltpp-deep-color), var(--ltpp-center-box-bk-opacity));
           color: azure;
           border-width: 0rem;
-          border-color:rgba(228, 147, 208, 0.06)
+          border-color:rgba(var(--ltpp-deep-color), var(--ltpp-center-box-bk-opacity))
           height: 8rem;
           overflow: hidden;
           width: 100%;
@@ -177,7 +177,7 @@
                   width: 4rem;
                   height: 2rem;
                   overflow: hidden;
-                  color: #ffffffe6;
+                  color: var(--ltpp-box-text-color);
                   font-weight: bold;
                 "
               >
@@ -233,7 +233,7 @@
                   margin: 0.26rem 0.6rem 0rem 0.6rem;
                   height: 2rem;
                   overflow: hidden;
-                  color: #ffffffe6;
+                  color: var(--ltpp-box-text-color);
                   font-weight: bold;
                   color: #e6a23c;
                 "

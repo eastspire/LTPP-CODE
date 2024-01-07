@@ -7,10 +7,10 @@
     <div
       class="shadow"
       style="
-        background-color: rgba(228, 147, 208, 0.06);
-        color: #ffffffe6;
+        background-color: rgba(var(--ltpp-deep-color), var(--ltpp-center-box-bk-opacity));
+        color: var(--ltpp-box-text-color);
         border-width: 0rem;
-        border-color: rgba(228, 147, 208, 0.06)
+        border-color: rgba(var(--ltpp-deep-color), var(--ltpp-center-box-bk-opacity))
         min-height: auto;
         width: 100%;
       "
@@ -602,7 +602,7 @@ export default {
     cellStyle({ row, rowIndex }) {
       let acpoint = (row.ACpoint * 100).toFixed(0);
       let styleRes = {
-        background: "rgba(228, 147, 208, 0.16) !important",
+        background: "rgba(var(--ltpp-deep-color), 0.16) !important",
         height: "3.6rem !important",
         color: "chartreuse",
       };

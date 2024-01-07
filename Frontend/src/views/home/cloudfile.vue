@@ -4,10 +4,10 @@
       <div
         class="shadow"
         :style="`
-          background-color: rgba(228, 147, 208, 0.06);
+          background-color: rgba(var(--ltpp-deep-color), var(--ltpp-center-box-bk-opacity));
           color: azure;
           border-width: 0rem;
-          border-color: rgba(228, 147, 208, 0.06)
+          border-color: rgba(var(--ltpp-deep-color), var(--ltpp-center-box-bk-opacity))
           height: auto;
           width: 100%;
           min-height:${$store.state.no_scroll_height}vh
@@ -700,7 +700,7 @@ export default {
       isseetip: true,
       iscloseFile: false,
       height: window.innerHeight + "px",
-      deepcolor: "rgba(228, 147, 208, 0.16)",
+      deepcolor: "rgba(var(--ltpp-deep-color), 0.16)",
       notdeepcolor: "rgba(var(--ltpp-main-bk-color), 0.06)",
       file_percentage: 0,
       gitclass: [
@@ -1472,7 +1472,7 @@ export default {
 @import "../../../public/md/markdown/github-markdown.min.css";
 
 /deep/.el-textarea__inner {
-  color: #ffffffe6 !important;
+  color: var(--ltpp-box-text-color) !important;
   background-color: rgba(30, 30, 30, 0.688) !important;
   border-color: rgba(30, 30, 30, 0.688) !important;
 }

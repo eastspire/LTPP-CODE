@@ -212,8 +212,8 @@
                 style="
                   border-radius: 1rem;
                   padding: 1rem;
-                  background-color: rgba(228, 147, 208, 0.88);
-                  border-color: rgba(5228, 147, 208, 0.88);
+                  background-color: rgba(var(--ltpp-deep-color), 0.88);
+                  border-color: rgba(5var(--ltpp-deep-color), 0.88);
                   color: rgb(254, 255, 255);
                   min-height: 1rem;
                 "

@@ -3,10 +3,10 @@
     <div
       class="shadow"
       style="
-        background-color: rgba(228, 147, 208, 0.06);
+        background-color: rgba(var(--ltpp-deep-color), var(--ltpp-center-box-bk-opacity));
         color: azure;
         border-width: 0rem;
-        border-color: rgba(228, 147, 208, 0.06)
+        border-color: rgba(var(--ltpp-deep-color), var(--ltpp-center-box-bk-opacity))
         height: auto;
         width: 100%;
       "

@@ -10,14 +10,14 @@
     v-loading.lock="!loadfinish"
     element-loading-text="拼命加载中"
     element-loading-spinner="el-icon-loading"
-    element-loading-background="rgba(228, 147, 208, 0.06)"
+    element-loading-background="rgba(var(--ltpp-deep-color), var(--ltpp-center-box-bk-opacity))"
   >
     <div style="height: 1rem"></div>
     <div
       v-show="loadfinish"
       class="shadow"
       style="
-        background-color: rgba(228, 147, 208, 0.06);
+        background-color: rgba(var(--ltpp-deep-color), var(--ltpp-center-box-bk-opacity));
         margin-left: auto;
         margin-right: auto;
         padding: 0rem;
@@ -28,9 +28,9 @@
         <div
           style="
             background-color: rgba(var(--ltpp-main-bk-color), 0);
-            color: #ffffffe6;
+            color: var(--ltpp-box-text-color);
             border-width: 0rem;
-            border-color: rgba(228, 147, 208, 0.06)
+            border-color: rgba(var(--ltpp-deep-color), var(--ltpp-center-box-bk-opacity))
             height: auto;
             width: 100%;
           "

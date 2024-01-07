@@ -396,16 +396,12 @@ big-div::after {
   z-index: 1;
 }
 /* 设置发光 */
-
 .bt:hover::before {
   animation: sun 8s infinite;
-  color: #ffffffe6;
 }
 /* 鼠标经过产生的效果 */
 .bt:hover {
-  /* 产生8秒的效果，sun是名称*/
   animation: sun 8s infinite;
-  color: #ffffffe6;
 }
 /* 设置流光 */
 @keyframes sun {

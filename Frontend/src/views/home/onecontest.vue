@@ -8,10 +8,10 @@
       <div
         class="shadow"
         style="
-          background-color: rgba(228, 147, 208, 0.06);
-          color: #ffffffe6;
+          background-color: rgba(var(--ltpp-deep-color), var(--ltpp-center-box-bk-opacity));
+          color: var(--ltpp-box-text-color);
           border-width: 0rem;
-          border-color: rgba(228, 147, 208, 0.06)
+          border-color: rgba(var(--ltpp-deep-color), var(--ltpp-center-box-bk-opacity))
           min-height: auto;
           width: 100%;
         "
@@ -90,7 +90,7 @@
               :editorBackground="prop.editorBackground"
               :xssOptions="whiteList"
               style="
-                color: #ffffffe6;
+                color: var(--ltpp-box-text-color);
                 min-height: 0rem;
                 height: auto;
                 border-width: 0rem;
@@ -533,7 +533,7 @@
                     class="my-span"
                     v-show="scope.row.res[index].firstAcTime != -1"
                     @dblclick="lookcode(scope.row.id, tempro.problemid)"
-                    style="font-size: 1rem; color: #ffffffe6"
+                    style="font-size: 1rem; color: var(--ltpp-box-text-color)"
                   >
                     {{
                       scope.row.res[index].firstAcTime != -1
@@ -574,7 +574,7 @@
                     class="my-span"
                     v-show="scope.row.res[index].firstAcTime != -1"
                     @dblclick="lookcode(scope.row.id, tempro.problemid)"
-                    style="font-size: 1rem; color: #ffffffe6"
+                    style="font-size: 1rem; color: var(--ltpp-box-text-color)"
                   >
                     {{
                       scope.row.res[index].firstAcTime != -1
@@ -1048,7 +1048,7 @@ export default {
     },
     cellStyle({ row, rowIndex }) {
       let styleRes = {
-        background: "rgba(228, 147, 208, 0.16) !important",
+        background: "rgba(var(--ltpp-deep-color), 0.16) !important",
         color: "chartreuse",
         height: "50px",
         padding: "0rem",
@@ -1879,9 +1879,10 @@ export default {
 @import "../../../public/md/markdown/github-markdown.min.css";
 
 .el-button {
-  box-shadow: 0 2px 5px rgba(228, 147, 208, 0.16),
-    2px 0 5px rgba(228, 147, 208, 0.16), -2px 0 5px rgba(228, 147, 208, 0.16),
-    0 -2px 5px rgba(228, 147, 208, 0.16);
+  box-shadow: 0 2px 5px rgba(var(--ltpp-deep-color), 0.16),
+    2px 0 5px rgba(var(--ltpp-deep-color), 0.16),
+    -2px 0 5px rgba(var(--ltpp-deep-color), 0.16),
+    0 -2px 5px rgba(var(--ltpp-deep-color), 0.16);
   padding: 0.6rem 1rem !important;
   background-color: #002a4c !important;
 }

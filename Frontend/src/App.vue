@@ -156,9 +156,14 @@ export default {
 :root {
   --ltpp-main-bk-color: 117, 63, 178;
   --ltpp-main-color: #e493d0;
+  --ltpp-deep-color: 228, 147, 208;
   --ltpp-main-text-color: #f5f7fa;
   --ltpp-shadow-color: rgba(255, 255, 255, 0.16);
   --ltpp-shadow-border-width: 1px;
+  --ltpp-hover-bk-color: rgba(var(var(--ltpp-deep-color)), 0.36);
+  --ltpp-hover-text-color: rgba(245, 247, 250, 0.66);
+  --ltpp-center-box-bk-opacity: 0.06;
+  --ltpp-box-text-color: #ffffffe6;
 }
 
 * {
@@ -525,9 +530,9 @@ video:focus {
 .el-submenu__title:hover,
 .el-menu-item:hover {
   i {
-    color: rgba(245, 247, 250, 0.66) !important;
+    color: var(--ltpp-hover-text-color) !important;
   }
-  background-color: rgba(228, 147, 208, 0.36) !important;
+  background-color: var(--ltpp-hover-bk-color) !important;
   z-index: 1000006 !important;
 }
 
@@ -576,7 +581,7 @@ video:focus {
 .el-popper,
 .el-popper:hover li,
 .el-autocomplete-suggestion:hover li {
-  background-color: rgba(228, 147, 208, 0) !important;
+  background-color: rgba(var(--ltpp-deep-color), 0) !important;
   border-width: 0 !important;
 }
 
@@ -775,7 +780,7 @@ a:active {
 }
 
 .confirm {
-  background-color: rgba(228, 147, 208, 0) !important;
+  background-color: rgba(var(--ltpp-deep-color), 0) !important;
   border-width: 0 !important;
   color: deepskyblue !important;
   font-weight: bold !important;
@@ -943,9 +948,10 @@ a:active {
   background: #e493d0 !important;
   border: transparent !important;
   border-width: 0px !important;
-  box-shadow: 0 2px 5px rgba(228, 147, 208, 0.16),
-    2px 0 5px rgba(228, 147, 208, 0.16), -2px 0 5px rgba(228, 147, 208, 0.16),
-    0 -2px 5px rgba(228, 147, 208, 0.16);
+  box-shadow: 0 2px 5px rgba(var(--ltpp-deep-color), 0.16),
+    2px 0 5px rgba(var(--ltpp-deep-color), 0.16),
+    -2px 0 5px rgba(var(--ltpp-deep-color), 0.16),
+    0 -2px 5px rgba(var(--ltpp-deep-color), 0.16);
   font-size: 1rem !important;
   font-weight: bold !important;
   -webkit-transition: all 0.3s ease !important;
@@ -1200,7 +1206,10 @@ pre,
   width: 0rem;
   height: 0.36rem !important;
   border-radius: 3rem;
-  background-color: rgba(228, 147, 208, 0.06);
+  background-color: rgba(
+    var(--ltpp-deep-color),
+    var(--ltpp-center-box-bk-opacity)
+  );
 }
 
 /* 滚动条上的按钮 (上下箭头). */
@@ -1220,17 +1229,26 @@ pre,
 /*  滚动条轨道. */
 ::-webkit-scrollbar-track {
   border-radius: 3rem;
-  background-color: rgba(228, 147, 208, 0.06);
+  background-color: rgba(
+    var(--ltpp-deep-color),
+    var(--ltpp-center-box-bk-opacity)
+  );
 }
 
 /* 滚动条没有滑块的轨道部分 */
 ::-webkit-scrollbar-track-piece {
-  background-color: rgba(228, 147, 208, 0.06);
+  background-color: rgba(
+    var(--ltpp-deep-color),
+    var(--ltpp-center-box-bk-opacity)
+  );
 }
 
 /* 当同时有垂直滚动条和水平滚动条时交汇的部分. */
 ::-webkit-scrollbar-corner {
-  background-color: rgba(228, 147, 208, 0.06);
+  background-color: rgba(
+    var(--ltpp-deep-color),
+    var(--ltpp-center-box-bk-opacity)
+  );
   border-radius: 3rem;
 }
 

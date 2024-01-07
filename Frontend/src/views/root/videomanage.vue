@@ -399,7 +399,7 @@ export default {
     },
     cellStyle({ rowIndex }) {
       let styleRes = {
-        background: "rgba(228, 147, 208, 0.16) !important",
+        background: "rgba(var(--ltpp-deep-color), 0.16) !important",
         color: "chartreuse",
       };
       if (rowIndex % 2 != 0) {

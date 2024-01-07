@@ -7,10 +7,10 @@
     <div
       class="shadow"
       style="
-        background-color: rgba(228, 147, 208, 0.06);
+        background-color: rgba(var(--ltpp-deep-color), var(--ltpp-center-box-bk-opacity));
         color: azure;
         border-width: 0rem;
-        border-color: rgba(228, 147, 208, 0.06)
+        border-color: rgba(var(--ltpp-deep-color), var(--ltpp-center-box-bk-opacity))
         height: 6rem;
         width: 100%;
       "
@@ -47,10 +47,10 @@
     <div
       class="shadow"
       style="
-        background-color: rgba(228, 147, 208, 0.06);
+        background-color: rgba(var(--ltpp-deep-color), var(--ltpp-center-box-bk-opacity));
         color: azure;
         border-width: 0rem;
-        border-color: rgba(228, 147, 208, 0.06)
+        border-color: rgba(var(--ltpp-deep-color), var(--ltpp-center-box-bk-opacity))
         height: auto;
         width: 100%;
       "
@@ -101,7 +101,11 @@
             >上传头像</el-button
           >
 
-          <div style="color: #ffffffe6" slot="tip" class="el-upload__tip">
+          <div
+            style="color: var(--ltpp-box-text-color)"
+            slot="tip"
+            class="el-upload__tip"
+          >
             仅允许上传jpg/png/jpeg/gif文件
           </div>
         </el-upload>
@@ -362,7 +366,11 @@
             class="pulse-enter-active"
             >上传图片背景</el-button
           >
-          <div slot="tip" class="el-upload__tip" style="color: #ffffffe6">
+          <div
+            slot="tip"
+            class="el-upload__tip"
+            style="color: var(--ltpp-box-text-color)"
+          >
             仅允许上传jpg/png/jpeg/gif文件
           </div>
         </el-upload>
@@ -402,7 +410,11 @@
             class="pulse-enter-active"
             >上传视频背景</el-button
           >
-          <div slot="tip" class="el-upload__tip" style="color: #ffffffe6">
+          <div
+            slot="tip"
+            class="el-upload__tip"
+            style="color: var(--ltpp-box-text-color)"
+          >
             仅允许上传MP4文件
           </div>
         </el-upload>

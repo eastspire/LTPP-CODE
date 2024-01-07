@@ -15,7 +15,10 @@
                 background-color: rgba(var(--ltpp-main-bk-color), 0.2);
                 color: azure;
                 border-width: 0rem;
-                border-color: rgba(228, 147, 208, 0.06);
+                border-color: rgba(
+                  var(--ltpp-deep-color),
+                  var(--ltpp-center-box-bk-opacity)
+                );
               "
             >
               <div class="search shadow">

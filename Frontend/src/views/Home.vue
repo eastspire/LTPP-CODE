@@ -1278,17 +1278,17 @@ export default {
 
 ::v-deep .el-pagination.is-background .el-pager li {
   color: #f5f7fa !important;
-  background-color: rgba(228, 147, 208, 1) !important;
+  background-color: rgba(var(--ltpp-deep-color), 1) !important;
 }
 
 ::v-deep .el-icon-arrow-left:before,
 ::v-deep .el-icon-arrow-right:before {
   color: #f5f7fa !important;
-  background-color: rgba(228, 147, 208, 1) !important;
+  background-color: rgba(var(--ltpp-deep-color), 1) !important;
 }
 
 ::v-deep .el-pagination.is-background .el-pager li:not(.disabled).active {
-  color: rgba(228, 147, 208, 1) !important;
+  color: rgba(var(--ltpp-deep-color), 1) !important;
   background-color: #f5f7fa !important;
 }
 
@@ -1307,7 +1307,7 @@ export default {
 /deep/.btn-prev,
 /deep/ .btn-next {
   color: #f5f7fa !important;
-  background-color: rgba(228, 147, 208, 1) !important;
+  background-color: rgba(var(--ltpp-deep-color), 1) !important;
 }
 
 /deep/.el-input,
@@ -1354,7 +1354,7 @@ export default {
 
 /deep/.el-submenu__title:hover {
   color: deepskyblue !important;
-  background-color: rgba(228, 147, 208, 0.166) !important;
+  background-color: rgba(var(--ltpp-deep-color), 0.166) !important;
 }
 
 /deep/.search {
@@ -1441,8 +1441,8 @@ export default {
 
 /deep/.el-textarea__inner {
   color: #f5f7fa !important;
-  background-color: rgba(228, 147, 208, 0.688) !important;
-  border-color: rgba(228, 147, 208, 0.688) !important;
+  background-color: rgba(var(--ltpp-deep-color), 0.688) !important;
+  border-color: rgba(var(--ltpp-deep-color), 0.688) !important;
 }
 
 /deep/.el-scrollbar__thumb {
@@ -1470,14 +1470,14 @@ export default {
 }
 
 /deep/.el-descriptions__body {
-  background-color: rgba(228, 147, 208, 1) !important;
+  background-color: rgba(var(--ltpp-deep-color), 1) !important;
   color: #f5f7fa !important;
 }
 
 /deep/.el-descriptions-item__cell,
 /deep/.el-descriptions-item__label,
 /deep/.is-bordered-label {
-  background-color: rgba(228, 147, 208, 1) !important;
+  background-color: rgba(var(--ltpp-deep-color), 1) !important;
   color: #f5f7fa !important;
 }
 

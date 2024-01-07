@@ -59,14 +59,14 @@
             "
             element-loading-text="拼命加载中"
             element-loading-spinner="el-icon-loading"
-            element-loading-background="rgba(228, 147, 208, 0.06)"
+            element-loading-background="rgba(var(--ltpp-deep-color), var(--ltpp-center-box-bk-opacity))"
             class="shadow"
             style="
               color: azure;
               backdrop-filter: blur(0.46rem);
-              background-color: rgba(228, 147, 208, 0.06);
+              background-color: rgba(var(--ltpp-deep-color), var(--ltpp-center-box-bk-opacity));
               border-width: 0rem;
-              border-color: rgba(228, 147, 208, 0.06)
+              border-color: rgba(var(--ltpp-deep-color), var(--ltpp-center-box-bk-opacity))
               height: auto;
               width: 100%;
               text-align: center;
@@ -170,7 +170,7 @@
                 font-size: 1.06rem;
                 font-weight: bold;
                 text-align: center;
-                color: #ffffffe6;
+                color: var(--ltpp-box-text-color);
               "
             >
               暂无评论

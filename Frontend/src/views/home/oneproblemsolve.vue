@@ -21,8 +21,8 @@
               margin: 0rem 1rem 2rem 1rem;
               padding-top: 1rem;
               padding-bottom: 1rem;
-              background-color: rgba(228, 147, 208, 0.16);
-              color: #ffffffe6;
+              background-color: rgba(var(--ltpp-deep-color), 0.16);
+              color: var(--ltpp-box-text-color);
             "
           >
             题 解 社 区
@@ -37,14 +37,14 @@
                 v-loading.lock="!temtable || !temtable.id"
                 element-loading-text="拼命加载中"
                 element-loading-spinner="el-icon-loading"
-                element-loading-background="rgba(228, 147, 208, 0.06)"
+                element-loading-background="rgba(var(--ltpp-deep-color), var(--ltpp-center-box-bk-opacity))"
                 @click="toOneArticle(temtable.id)"
                 style="cursor: pointer"
                 class="shadow"
               >
                 <div
                   style="
-                    background-color: rgba(228, 147, 208, 0.06);
+                    background-color: rgba(var(--ltpp-deep-color), var(--ltpp-center-box-bk-opacity));
                     color: azure;
                     height: 22rem;
                     width: 100%;

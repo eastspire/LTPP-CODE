@@ -1761,7 +1761,10 @@ export default {
 
 /deep/.md,
 /deep/.markdown-body {
-  background-color: rgba(228, 147, 208, 0.06) !important;
+  background-color: rgba(
+    var(--ltpp-deep-color),
+    var(--ltpp-center-box-bk-opacity)
+  ) !important;
   width: fit-content !important;
   border-width: 0rem !important;
   height: auto !important;
@@ -1879,11 +1882,15 @@ export default {
 
 .user {
   border-width: 0rem;
-  background-color: rgba(228, 147, 208, 0.06);
+  background-color: rgba(
+    var(--ltpp-deep-color),
+    var(--ltpp-center-box-bk-opacity)
+  );
 }
 
 .user div {
-  border: 2px solid rgba(228, 147, 208, 0.06);
+  border: 2px solid
+    rgba(var(--ltpp-deep-color), var(--ltpp-center-box-bk-opacity));
   position: relative;
 }
 
@@ -1906,7 +1913,7 @@ export default {
   top: 50%;
   right: 2%;
   transform: translate(0%, -50%);
-  color: #ffffffe6;
+  color: var(--ltpp-box-text-color);
 }
 
 .user .online-name {
@@ -1969,7 +1976,7 @@ export default {
     rgb(76, 139, 255),
     rgb(32, 209, 254)
   );
-  color: #ffffffe6;
+  color: var(--ltpp-box-text-color);
 }
 
 .main_header p {
@@ -1995,7 +2002,7 @@ export default {
 
 .user_name {
   margin: 1rem;
-  color: #ffffffe6;
+  color: var(--ltpp-box-text-color);
   font-weight: bold;
   cursor: pointer;
 }

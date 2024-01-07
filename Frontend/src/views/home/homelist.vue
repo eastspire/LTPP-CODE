@@ -47,7 +47,7 @@
             shortsentenceList.length > 0
           "
           style="
-            background-color: rgba(228, 147, 208, 0.06);
+            background-color: rgba(var(--ltpp-deep-color), var(--ltpp-center-box-bk-opacity));
             color: azure;
             width: 100%;
           "
@@ -94,7 +94,7 @@
               style="
                 padding: 0.6rem 3.6rem;
                 font-size: 1.06rem;
-                color: #ffffffe6;
+                color: var(--ltpp-box-text-color);
               "
               >{{ tem.hitokoto }}</pre
             >
@@ -103,7 +103,7 @@
                 text-align: right;
                 font-size: 1.06rem;
                 padding: 0.6rem 3.6rem;
-                color: #ffffffe6;
+                color: var(--ltpp-box-text-color);
               "
               >{{ tem.from }}</pre
             >
@@ -124,7 +124,7 @@
           class="shadow"
           v-if="notice && notice != undefined && notice != null"
           style="
-            background-color: rgba(228, 147, 208, 0.06);
+            background-color: rgba(var(--ltpp-deep-color), var(--ltpp-center-box-bk-opacity));
             color: azure;
             width: 100%;
             text-align: center;
@@ -174,7 +174,7 @@
               padding: 0.6rem 2.6rem;
               text-align: right;
               font-size: 1rem;
-              color: #ffffffe6;
+              color: var(--ltpp-box-text-color);
               background-color: rgba(var(--ltpp-main-bk-color), 0);
             "
             >{{ notice.time }}</pre
@@ -373,14 +373,14 @@ export default {
 @import "../../../public/md/markdown/github-markdown.min.css";
 /deep/.el-dialog__body {
   background-color: #293238;
-  color: #ffffffe6;
+  color: var(--ltpp-box-text-color);
 }
 /deep/.el-dialog__header {
   background-color: #293238;
   height: 0rem;
 }
 /deep/.el-dialog__title {
-  color: #ffffffe6;
+  color: var(--ltpp-box-text-color);
 }
 /deep/.el-dialog__footer {
   background-color: #293238;

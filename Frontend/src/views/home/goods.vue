@@ -11,7 +11,7 @@
           background-color: rgba(248, 249, 250, 0.2);
           color: azure;
           border-width: 0rem;
-          border-color: rgba(228, 147, 208, 0.06)
+          border-color: rgba(var(--ltpp-deep-color), var(--ltpp-center-box-bk-opacity))
           height: auto;
           width: 100%;
         "
@@ -361,7 +361,7 @@ export default {
      */
     cellStyle({ row, rowIndex }) {
       let styleRes = {
-        background: "rgba(228, 147, 208, 0.16) !important",
+        background: "rgba(var(--ltpp-deep-color), 0.16) !important",
         height: "3.6rem !important",
         color: "chartreuse",
       };
