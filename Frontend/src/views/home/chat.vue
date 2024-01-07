@@ -1762,7 +1762,7 @@ export default {
 /deep/.md,
 /deep/.markdown-body {
   background-color: rgba(
-    var(--ltpp-deep-color),
+    var(--ltpp-light-color),
     var(--ltpp-center-box-bk-opacity)
   ) !important;
   width: fit-content !important;
@@ -1883,14 +1883,14 @@ export default {
 .user {
   border-width: 0rem;
   background-color: rgba(
-    var(--ltpp-deep-color),
+    var(--ltpp-light-color),
     var(--ltpp-center-box-bk-opacity)
   );
 }
 
 .user div {
   border: 2px solid
-    rgba(var(--ltpp-deep-color), var(--ltpp-center-box-bk-opacity));
+    rgba(var(--ltpp-light-color), var(--ltpp-center-box-bk-opacity));
   position: relative;
 }
 

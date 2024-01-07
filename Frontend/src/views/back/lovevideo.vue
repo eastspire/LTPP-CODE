@@ -8,16 +8,7 @@
     class="no-select"
     style="margin-left: auto; margin-right: auto"
   >
-    <div
-      style="
-        background-color: rgba(248, 249, 250, 0.2);
-        color: azure;
-        border-width: 0rem;
-        border-color: rgba(248, 249, 250, 0.2);
-        height: auto;
-        width: 100%;
-      "
-    >
+    <div class="ltpp-list-box">
       <div class="search shadow">
         <el-input
           id="search-input"
@@ -58,16 +49,11 @@
             "
             element-loading-text="拼命加载中"
             element-loading-spinner="el-icon-loading"
-            element-loading-background="rgba(var(--ltpp-deep-color), var(--ltpp-center-box-bk-opacity))"
-            class="shadow"
+            element-loading-background="background-color:rgba(var(--ltpp-main-bk-color),var(--ltpp-list-box-bk-opacity))"
+            class="shadow ltpp-list-box"
             style="
-              color: azure;
               backdrop-filter: blur(0.46rem);
-              background-color: rgba(var(--ltpp-deep-color), var(--ltpp-center-box-bk-opacity));
               border-width: 0rem;
-              border-color: rgba(var(--ltpp-deep-color), var(--ltpp-center-box-bk-opacity))
-              height: auto;
-              width: 100%;
               text-align: center;
             "
           >
@@ -166,7 +152,7 @@
           <div v-show="userComment.length <= 0" style="text-align: center">
             <p
               style="
-                font-size: 1.06rem;
+                font-size: 1rem;
                 font-weight: bold;
                 text-align: center;
                 color: var(--ltpp-box-text-color);

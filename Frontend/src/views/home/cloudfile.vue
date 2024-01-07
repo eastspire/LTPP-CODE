@@ -2,16 +2,8 @@
   <div v-show="isseetip">
     <div @contextmenu.prevent="" style="margin-left: auto; margin-right: auto">
       <div
-        class="shadow"
-        :style="`
-          background-color: rgba(var(--ltpp-deep-color), var(--ltpp-center-box-bk-opacity));
-          color: azure;
-          border-width: 0rem;
-          border-color: rgba(var(--ltpp-deep-color), var(--ltpp-center-box-bk-opacity))
-          height: auto;
-          width: 100%;
-          min-height:${$store.state.no_scroll_height}vh
-        `"
+        class="shadow ltpp-list-box"
+        :style="`min-height:${$store.state.no_scroll_height}vh`"
       >
         <div>
           <div style="height: 1rem"></div>
@@ -700,7 +692,7 @@ export default {
       isseetip: true,
       iscloseFile: false,
       height: window.innerHeight + "px",
-      deepcolor: "rgba(var(--ltpp-deep-color), 0.16)",
+      deepcolor: "rgba(var(--ltpp-light-color), 0.16)",
       notdeepcolor: "rgba(var(--ltpp-main-bk-color), 0.06)",
       file_percentage: 0,
       gitclass: [

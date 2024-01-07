@@ -5,17 +5,7 @@
     style="margin-left: auto; margin-right: auto"
   >
     <div>
-      <div
-        class="shadow"
-        style="
-          background-color: rgba(var(--ltpp-deep-color), var(--ltpp-center-box-bk-opacity));
-          color: var(--ltpp-box-text-color);
-          border-width: 0rem;
-          border-color: rgba(var(--ltpp-deep-color), var(--ltpp-center-box-bk-opacity))
-          min-height: auto;
-          width: 100%;
-        "
-      >
+      <div class="shadow main-center-box-content">
         <div>
           <div style="height: 0.8rem"></div>
           <div>
@@ -1048,7 +1038,7 @@ export default {
     },
     cellStyle({ row, rowIndex }) {
       let styleRes = {
-        background: "rgba(var(--ltpp-deep-color), 0.16) !important",
+        background: "rgba(var(--ltpp-light-color), 0.16) !important",
         color: "chartreuse",
         height: "50px",
         padding: "0rem",
@@ -1879,10 +1869,10 @@ export default {
 @import "../../../public/md/markdown/github-markdown.min.css";
 
 .el-button {
-  box-shadow: 0 2px 5px rgba(var(--ltpp-deep-color), 0.16),
-    2px 0 5px rgba(var(--ltpp-deep-color), 0.16),
-    -2px 0 5px rgba(var(--ltpp-deep-color), 0.16),
-    0 -2px 5px rgba(var(--ltpp-deep-color), 0.16);
+  box-shadow: 0 2px 5px rgba(var(--ltpp-light-color), 0.16),
+    2px 0 5px rgba(var(--ltpp-light-color), 0.16),
+    -2px 0 5px rgba(var(--ltpp-light-color), 0.16),
+    0 -2px 5px rgba(var(--ltpp-light-color), 0.16);
   padding: 0.6rem 1rem !important;
   background-color: #002a4c !important;
 }

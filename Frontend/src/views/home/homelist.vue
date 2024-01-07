@@ -39,18 +39,14 @@
 
         <!-- 短句 -->
         <div
-          class="shadow"
+          class="shadow ltpp-list-box-bk"
           v-show="
             shortsentenceList &&
             shortsentenceList != undefined &&
             shortsentenceList != null &&
             shortsentenceList.length > 0
           "
-          style="
-            background-color: rgba(var(--ltpp-deep-color), var(--ltpp-center-box-bk-opacity));
-            color: azure;
-            width: 100%;
-          "
+          style="color: azure; width: 100%"
         >
           <div>
             <div style="text-align: center">
@@ -121,14 +117,9 @@
         ></div>
         <!-- 公告 -->
         <div
-          class="shadow"
+          class="shadow ltpp-list-box"
           v-if="notice && notice != undefined && notice != null"
-          style="
-            background-color: rgba(var(--ltpp-deep-color), var(--ltpp-center-box-bk-opacity));
-            color: azure;
-            width: 100%;
-            text-align: center;
-          "
+          style="text-align: center"
         >
           <div style="height: 1rem"></div>
           <p

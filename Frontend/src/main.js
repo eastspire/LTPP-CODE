@@ -2,7 +2,7 @@
  * @Author: wmzn-ltpp 1491579574@qq.com
  * @Date: 2023-08-07 18:43:57
  * @LastEditors: wmzn-ltpp 1491579574@qq.com
- * @LastEditTime: 2024-01-06 21:10:48
+ * @LastEditTime: 2024-01-07 11:29:00
  * @FilePath: \LTPP-CODE\Frontend\src\main.js
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
@@ -17,10 +17,10 @@ import '../updateCompoents/animate.css' //动画
 import store from './plugins/vuex.js'
 import SqsGlobal from './plugins/SqsGlobal.js'
 /* md */
-import mavonEditor from '../updateCompoents/mavon-editor';
-import '../updateCompoents/mavon-editor/dist/css/index.css';
+import mavonEditor from '../public/md/mavon-editor';
+import '../public/md/css/index.css';
 import '../updateCompoents/highlight.js/styles/googlecode.css';
-import "../updateCompoents/mavon-editor/dist/markdown/github-markdown.min.css";
+import "../public/md/markdown/github-markdown.min.css";
 /* m3u8视频流 */
 import "../updateCompoents/video.js/dist/video-js.css"
 import VueWorker from 'vue-worker';

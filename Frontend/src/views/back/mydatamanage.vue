@@ -5,15 +5,8 @@
 <template>
   <div @contextmenu.prevent="" style="margin-left: auto; margin-right: auto">
     <div
-      class="shadow"
-      style="
-        background-color: rgba(var(--ltpp-deep-color), var(--ltpp-center-box-bk-opacity));
-        color: azure;
-        border-width: 0rem;
-        border-color: rgba(var(--ltpp-deep-color), var(--ltpp-center-box-bk-opacity))
-        height: 6rem;
-        width: 100%;
-      "
+      class="shadow ltpp-list-box"
+      style="border-width: 0rem; height: 6rem; width: 100%"
     >
       <div style="float: left">
         <el-avatar
@@ -44,17 +37,7 @@
       </div>
     </div>
     <div style="height: 1rem; clear: both"></div>
-    <div
-      class="shadow"
-      style="
-        background-color: rgba(var(--ltpp-deep-color), var(--ltpp-center-box-bk-opacity));
-        color: azure;
-        border-width: 0rem;
-        border-color: rgba(var(--ltpp-deep-color), var(--ltpp-center-box-bk-opacity))
-        height: auto;
-        width: 100%;
-      "
-    >
+    <div class="shadow ltpp-list-box" style="border-width: 0rem">
       <div style="margin-left: 1.6rem; margin-right: 1.6rem">
         <div style="height: 1.6rem"></div>
         <span

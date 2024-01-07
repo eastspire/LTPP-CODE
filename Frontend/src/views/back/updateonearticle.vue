@@ -1,16 +1,6 @@
 <template>
   <div @contextmenu.prevent="" style="margin-left: auto; margin-right: auto">
-    <div
-      class="shadow"
-      style="
-        background-color: rgba(var(--ltpp-deep-color), var(--ltpp-center-box-bk-opacity));
-        color: azure;
-        border-width: 0rem;
-        border-color: rgba(var(--ltpp-deep-color), var(--ltpp-center-box-bk-opacity))
-        height: auto;
-        width: 100%;
-      "
-    >
+    <div class="shadow main-center-box-content" style="border-width: 0rem">
       <div style="margin-left: 1.6rem; margin-right: 1.6rem">
         <div style="height: 0.8rem"></div>
         <div>

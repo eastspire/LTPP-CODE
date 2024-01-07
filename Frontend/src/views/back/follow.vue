@@ -6,16 +6,7 @@
 
 <template>
   <div @contextmenu.prevent="" style="margin-left: auto; margin-right: auto">
-    <div
-      style="
-        background-color: rgba(248, 249, 250, 0.2);
-        color: azure;
-        border-width: 0rem;
-        border-color: rgba(248, 249, 250, 0.2);
-        height: auto;
-        width: 100%;
-      "
-    >
+    <div class="ltpp-list-box">
       <div class="search shadow">
         <el-input
           style="font-size: 1.06rem"
@@ -38,12 +29,9 @@
             passdata(temtable.id);
             dialogFormVisible = true;
           "
-          class="pulse-enter-active shadow"
+          class="pulse-enter-active shadow ltpp-list-box"
           style="
-            background-color: rgba(var(--ltpp-deep-color), var(--ltpp-center-box-bk-opacity));
-            color: azure;
             border-width: 0rem;
-            border-color: rgba(var(--ltpp-deep-color), var(--ltpp-center-box-bk-opacity))
             height: 8rem;
             overflow: hidden;
             width: 100%;

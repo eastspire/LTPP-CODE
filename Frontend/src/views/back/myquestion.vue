@@ -2,7 +2,7 @@
  * @Author: 18855190718 1491579574@qq.com
  * @Date: 2023-03-17 09:42:16
  * @LastEditors: wmzn-ltpp 1491579574@qq.com
- * @LastEditTime: 2023-12-31 20:57:13
+ * @LastEditTime: 2024-01-07 10:26:14
  * @FilePath: \LTPP-CODE\Frontend\src\views\back\myquestion.vue
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
@@ -14,26 +14,8 @@
     class="no-select"
     style="margin-left: auto; margin-right: auto"
   >
-    <div
-      class="shadow"
-      style="
-        background-color: rgba(var(--ltpp-deep-color), var(--ltpp-center-box-bk-opacity));
-        color: var(--ltpp-box-text-color);
-        border-width: 0rem;
-        border-color: rgba(var(--ltpp-deep-color), var(--ltpp-center-box-bk-opacity))
-        min-height: auto;
-        width: 100%;
-      "
-    >
-      <div
-        style="
-          background-color: rgba(248, 249, 250, 0.2);
-          color: azure;
-          border-width: 0rem;
-          height: auto;
-          width: 100%;
-        "
-      >
+    <div class="shadow">
+      <div class="ltpp-list-box">
         <div class="search shadow">
           <el-input
             style="font-size: 1rem"

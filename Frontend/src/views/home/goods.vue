@@ -5,17 +5,8 @@
     class="no-select"
     style="margin-left: auto; margin-right: auto"
   >
-    <div class="shadow">
-      <div
-        style="
-          background-color: rgba(248, 249, 250, 0.2);
-          color: azure;
-          border-width: 0rem;
-          border-color: rgba(var(--ltpp-deep-color), var(--ltpp-center-box-bk-opacity))
-          height: auto;
-          width: 100%;
-        "
-      >
+    <div class="shadow ltpp-list-box">
+      <div style="border-width: 0rem">
         <div class="search shadow">
           <el-input
             style="font-size: 1.06rem"
@@ -361,7 +352,7 @@ export default {
      */
     cellStyle({ row, rowIndex }) {
       let styleRes = {
-        background: "rgba(var(--ltpp-deep-color), 0.16) !important",
+        background: "rgba(var(--ltpp-light-color), 0.16) !important",
         height: "3.6rem !important",
         color: "chartreuse",
       };

@@ -11,15 +11,7 @@
     style="margin-left: auto; margin-right: auto"
   >
     <div>
-      <div
-        style="
-          background-color: rgba(248, 249, 250, 0.2);
-          color: azure;
-          border-width: 0rem;
-          height: auto;
-          width: 100%;
-        "
-      >
+      <div class="ltpp-list-box">
         <div class="search shadow">
           <el-input
             style="font-size: 1rem"
@@ -52,19 +44,12 @@
               v-loading.lock="!temtable || !temtable.id"
               element-loading-text="拼命加载中"
               element-loading-spinner="el-icon-loading"
-              element-loading-background="rgba(var(--ltpp-deep-color), var(--ltpp-center-box-bk-opacity))"
+              element-loading-background="background-color:rgba(var(--ltpp-main-bk-color),var(--ltpp-list-box-bk-opacity))"
               @click="toOneArticle(temtable.id)"
               style="cursor: pointer"
-              class="shadow"
+              class="shadow ltpp-list-box"
             >
-              <div
-                style="
-                  background-color: rgba(var(--ltpp-deep-color), var(--ltpp-center-box-bk-opacity));
-                  color: azure;
-                  height: 22rem;
-                  width: 100%;
-                "
-              >
+              <div style="height: 22rem; width: 100%">
                 <div style="padding: 0rem; position: relative">
                   <div
                     style="

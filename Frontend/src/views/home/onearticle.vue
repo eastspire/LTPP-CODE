@@ -10,19 +10,9 @@
       v-loading.lock="!loadfinish"
       element-loading-text="拼命加载中"
       element-loading-spinner="el-icon-loading"
-      element-loading-background="rgba(var(--ltpp-deep-color), var(--ltpp-center-box-bk-opacity))"
+      element-loading-background="background-color:rgba(var(--ltpp-main-bk-color),var(--ltpp-list-box-bk-opacity))"
     >
-      <div
-        class="shadow"
-        style="
-          background-color: rgba(var(--ltpp-deep-color), var(--ltpp-center-box-bk-opacity));
-          color: var(--ltpp-box-text-color);
-          border-width: 0rem;
-          border-color: rgba(var(--ltpp-deep-color), var(--ltpp-center-box-bk-opacity))
-          min-height: auto;
-          width: 100%;
-        "
-      >
+      <div class="shadow main-center-box-content">
         <div style="margin-left: 1.6rem; margin-right: 1.6rem">
           <div>
             <div style="height: 2rem"></div>
@@ -327,11 +317,7 @@
               <!-- 查看评论 -->
               <div v-show="comment.length <= 0" class="no-select">
                 <p
-                  style="
-                    font-size: 1.06rem;
-                    font-weight: bold;
-                    text-align: center;
-                  "
+                  style="font-size: 1rem; font-weight: bold; text-align: center"
                 >
                   暂无评论
                 </p>

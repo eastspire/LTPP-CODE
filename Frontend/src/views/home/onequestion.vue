@@ -9,19 +9,9 @@
       v-loading.lock="!loadfinish"
       element-loading-text="拼命加载中"
       element-loading-spinner="el-icon-loading"
-      element-loading-background="rgba(var(--ltpp-deep-color), var(--ltpp-center-box-bk-opacity))"
+      element-loading-background="background-color:rgba(var(--ltpp-main-bk-color),var(--ltpp-list-box-bk-opacity))"
     >
-      <div
-        class="shadow"
-        style="
-          background-color: rgba(var(--ltpp-deep-color), var(--ltpp-center-box-bk-opacity));
-          color: var(--ltpp-box-text-color);
-          border-width: 0rem;
-          border-color: rgba(var(--ltpp-deep-color), var(--ltpp-center-box-bk-opacity))
-          min-height: auto;
-          width: 100%;
-        "
-      >
+      <div class="shadow main-center-box-content">
         <div style="height: 1rem"></div>
         <div style="display: flex; flex-direction: row">
           <el-avatar

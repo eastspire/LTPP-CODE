@@ -154,16 +154,28 @@ export default {
 
 <style lang="less">
 :root {
+  // 主题背景色
   --ltpp-main-bk-color: 117, 63, 178;
+  // 主题色
   --ltpp-main-color: #e493d0;
-  --ltpp-deep-color: 228, 147, 208;
+  // 主题浅色
+  --ltpp-light-color: 228, 147, 208;
+  // 主题文字颜色
   --ltpp-main-text-color: #f5f7fa;
-  --ltpp-shadow-color: rgba(255, 255, 255, 0.16);
+  // 阴影色
+  --ltpp-shadow-color: rgba(var(--ltpp-main-bk-color), 0.08);
+  // 阴影宽度
   --ltpp-shadow-border-width: 1px;
-  --ltpp-hover-bk-color: rgba(var(var(--ltpp-deep-color)), 0.36);
+  // 弹出框背景悬浮颜色
+  --ltpp-hover-bk-color: rgba(var(--ltpp-light-color), 0.36);
+  // 弹出框悬浮文字颜色
   --ltpp-hover-text-color: rgba(245, 247, 250, 0.66);
-  --ltpp-center-box-bk-opacity: 0.06;
+  // 组件内容盒子背景透明度
+  --ltpp-center-box-bk-opacity: 0.16;
+  // 组件内容盒子颜色
   --ltpp-box-text-color: #ffffffe6;
+  // 表格背景透明度
+  --ltpp-list-box-bk-opacity: 0.16;
 }
 
 * {
@@ -184,6 +196,18 @@ export default {
   user-select: none !important;
 }
 
+.ltpp-list-box {
+  background-color: rgba(
+    var(--ltpp-main-bk-color),
+    var(--ltpp-list-box-bk-opacity)
+  );
+  border: 0px solid transparent;
+  color: var(--ltpp-main-text-color);
+  border-width: 0rem;
+  height: auto;
+  width: 100%;
+}
+
 blockquote {
   background: rgb(214 215 215/36%);
   border-left: 8px solid rgb(224 224 224/66%);
@@ -202,6 +226,22 @@ pre code.hljs {
   padding: 1em;
   border-radius: 0rem !important;
   font-size: 1.06rem;
+}
+
+.main-center-box-content {
+  background-color: rgba(
+    var(--ltpp-light-color),
+    var(--ltpp-center-box-bk-opacity)
+  );
+  color: var(--ltpp-box-text-color);
+  border-width: 0rem;
+  border-color: rgba(
+    var(--ltpp-light-color),
+    var(--ltpp-center-box-bk-opacity)
+  );
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 hr {
@@ -581,7 +621,7 @@ video:focus {
 .el-popper,
 .el-popper:hover li,
 .el-autocomplete-suggestion:hover li {
-  background-color: rgba(var(--ltpp-deep-color), 0) !important;
+  background-color: rgba(var(--ltpp-light-color), 0) !important;
   border-width: 0 !important;
 }
 
@@ -780,7 +820,7 @@ a:active {
 }
 
 .confirm {
-  background-color: rgba(var(--ltpp-deep-color), 0) !important;
+  background-color: rgba(var(--ltpp-light-color), 0) !important;
   border-width: 0 !important;
   color: deepskyblue !important;
   font-weight: bold !important;
@@ -948,10 +988,10 @@ a:active {
   background: #e493d0 !important;
   border: transparent !important;
   border-width: 0px !important;
-  box-shadow: 0 2px 5px rgba(var(--ltpp-deep-color), 0.16),
-    2px 0 5px rgba(var(--ltpp-deep-color), 0.16),
-    -2px 0 5px rgba(var(--ltpp-deep-color), 0.16),
-    0 -2px 5px rgba(var(--ltpp-deep-color), 0.16);
+  box-shadow: 0 2px 5px rgba(var(--ltpp-light-color), 0.16),
+    2px 0 5px rgba(var(--ltpp-light-color), 0.16),
+    -2px 0 5px rgba(var(--ltpp-light-color), 0.16),
+    0 -2px 5px rgba(var(--ltpp-light-color), 0.16);
   font-size: 1rem !important;
   font-weight: bold !important;
   -webkit-transition: all 0.3s ease !important;
@@ -1207,7 +1247,7 @@ pre,
   height: 0.36rem !important;
   border-radius: 3rem;
   background-color: rgba(
-    var(--ltpp-deep-color),
+    var(--ltpp-light-color),
     var(--ltpp-center-box-bk-opacity)
   );
 }
@@ -1230,7 +1270,7 @@ pre,
 ::-webkit-scrollbar-track {
   border-radius: 3rem;
   background-color: rgba(
-    var(--ltpp-deep-color),
+    var(--ltpp-light-color),
     var(--ltpp-center-box-bk-opacity)
   );
 }
@@ -1238,7 +1278,7 @@ pre,
 /* 滚动条没有滑块的轨道部分 */
 ::-webkit-scrollbar-track-piece {
   background-color: rgba(
-    var(--ltpp-deep-color),
+    var(--ltpp-light-color),
     var(--ltpp-center-box-bk-opacity)
   );
 }
@@ -1246,7 +1286,7 @@ pre,
 /* 当同时有垂直滚动条和水平滚动条时交汇的部分. */
 ::-webkit-scrollbar-corner {
   background-color: rgba(
-    var(--ltpp-deep-color),
+    var(--ltpp-light-color),
     var(--ltpp-center-box-bk-opacity)
   );
   border-radius: 3rem;

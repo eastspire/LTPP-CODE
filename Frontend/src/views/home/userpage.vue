@@ -1,17 +1,7 @@
 <template>
   <div v-show="isseetip">
     <div @contextmenu.prevent="" style="margin-left: auto; margin-right: auto">
-      <div
-        class="shadow"
-        style="
-          background-color: rgba(var(--ltpp-deep-color), var(--ltpp-center-box-bk-opacity));
-          color: azure;
-          border-width: 0rem;
-          border-color: rgba(var(--ltpp-deep-color), var(--ltpp-center-box-bk-opacity))
-          height: auto;
-          width: 100%;
-        "
-      >
+      <div class="shadow main-center-box-content" style="border-width: 0rem">
         <div style="margin-left: 1.6rem; margin-right: 1.6rem">
           <div style="height: 0.6rem"></div>
           <div>
@@ -398,16 +388,9 @@
           <div
             @click="toonearticle(temtable.id)"
             style="cursor: pointer"
-            class="shadow"
+            class="shadow ltpp-list-box"
           >
-            <div
-              style="
-                background-color: rgba(var(--ltpp-deep-color), var(--ltpp-center-box-bk-opacity));
-                color: azure;
-                height: 22rem;
-                width: 100%;
-              "
-            >
+            <div style="height: 22rem">
               <div style="padding: 0rem; position: relative">
                 <div
                   style="

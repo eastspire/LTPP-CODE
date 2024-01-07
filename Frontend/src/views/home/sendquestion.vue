@@ -1,16 +1,6 @@
 <template>
   <div @contextmenu.prevent="" style="margin-left: auto; margin-right: auto">
-    <div
-      class="shadow"
-      style="
-        background-color: rgba(var(--ltpp-deep-color), var(--ltpp-center-box-bk-opacity));
-        color: var(--ltpp-box-text-color);
-        border-width: 0rem;
-        border-color: rgba(var(--ltpp-deep-color), var(--ltpp-center-box-bk-opacity))
-        min-height: auto;
-        width: 100%;
-      "
-    >
+    <div class="shadow ltpp-list-box" style="border-width: 0rem">
       <div
         style="
           background-color: rgba(var(--ltpp-main-bk-color), 0);

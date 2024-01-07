@@ -21,7 +21,7 @@
               margin: 0rem 1rem 2rem 1rem;
               padding-top: 1rem;
               padding-bottom: 1rem;
-              background-color: rgba(var(--ltpp-deep-color), 0.16);
+              background-color: rgba(var(--ltpp-light-color), 0.16);
               color: var(--ltpp-box-text-color);
             "
           >
@@ -37,19 +37,12 @@
                 v-loading.lock="!temtable || !temtable.id"
                 element-loading-text="拼命加载中"
                 element-loading-spinner="el-icon-loading"
-                element-loading-background="rgba(var(--ltpp-deep-color), var(--ltpp-center-box-bk-opacity))"
+                element-loading-background="background-color:rgba(var(--ltpp-main-bk-color),var(--ltpp-list-box-bk-opacity))"
                 @click="toOneArticle(temtable.id)"
                 style="cursor: pointer"
-                class="shadow"
+                class="shadow ltpp-list-box"
               >
-                <div
-                  style="
-                    background-color: rgba(var(--ltpp-deep-color), var(--ltpp-center-box-bk-opacity));
-                    color: azure;
-                    height: 22rem;
-                    width: 100%;
-                  "
-                >
+                <div style="height: 22rem; width: 100%">
                   <div style="padding: 0rem; position: relative">
                     <div
                       style="

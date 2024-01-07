@@ -10,17 +10,7 @@
       <div>
         <div v-show="finish">
           <div>
-            <div
-              style="
-                background-color: rgba(var(--ltpp-main-bk-color), 0.2);
-                color: azure;
-                border-width: 0rem;
-                border-color: rgba(
-                  var(--ltpp-deep-color),
-                  var(--ltpp-center-box-bk-opacity)
-                );
-              "
-            >
+            <div class="ltpp-list-box" style="border-width: 0rem">
               <div class="search shadow">
                 <div
                   v-if="
@@ -36,13 +26,7 @@
             <div style="height: 2rem"></div>
           </div>
           <div>
-            <div
-              style="
-                background-color: rgba(248, 249, 250, 0.2);
-                color: azure;
-                border-width: 0rem;
-              "
-            >
+            <div class="ltpp-list-box">
               <div class="search shadow" style="position: relative">
                 <el-input
                   type="textarea"

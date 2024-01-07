@@ -14,26 +14,8 @@
     class="no-select"
     style="margin-left: auto; margin-right: auto"
   >
-    <div
-      class="shadow"
-      style="
-        background-color: rgba(var(--ltpp-deep-color), var(--ltpp-center-box-bk-opacity));
-        color: var(--ltpp-box-text-color);
-        border-width: 0rem;
-        border-color: rgba(var(--ltpp-deep-color), var(--ltpp-center-box-bk-opacity))
-        min-height: auto;
-        width: 100%;
-      "
-    >
-      <div
-        style="
-          background-color: rgba(248, 249, 250, 0.2);
-          color: azure;
-          border-width: 0rem;
-          height: auto;
-          width: 100%;
-        "
-      >
+    <div class="shadow ltpp-list-box" style="border-width: 0rem">
+      <div class="ltpp-list-box">
         <div class="search shadow">
           <el-input
             style="font-size: 1rem"

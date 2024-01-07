@@ -28,18 +28,9 @@
           v-loading.lock="!onevideo.url || !reg.test(onevideo.url)"
           element-loading-text="拼命加载中"
           element-loading-spinner="el-icon-loading"
-          element-loading-background="rgba(var(--ltpp-deep-color), var(--ltpp-center-box-bk-opacity))"
-          class="shadow"
-          style="
-            color: azure;
-            backdrop-filter: blur(0.46rem);
-            background-color: rgba(var(--ltpp-deep-color), var(--ltpp-center-box-bk-opacity));
-            border-width: 0rem;
-            border-color: rgba(var(--ltpp-deep-color), var(--ltpp-center-box-bk-opacity))
-            height: auto;
-            width: 100%;
-            text-align: center;
-          "
+          element-loading-background="background-color:rgba(var(--ltpp-main-bk-color),var(--ltpp-list-box-bk-opacity))"
+          class="shadow ltpp-list-box"
+          style="backdrop-filter: blur(0.46rem); text-align: center"
         >
           <div class="video-box search">
             <video
@@ -125,7 +116,7 @@
           <div v-show="userComment.length <= 0" style="text-align: center">
             <p
               style="
-                font-size: 1.06rem;
+                font-size: 1rem;
                 font-weight: bold;
                 text-align: center;
                 color: var(--ltpp-box-text-color);

@@ -4,17 +4,7 @@
     @keyup.27="toback()"
     style="margin-left: auto; margin-right: auto"
   >
-    <div
-      class="shadow"
-      style="
-        background-color: rgba(var(--ltpp-deep-color), var(--ltpp-center-box-bk-opacity));
-        color: var(--ltpp-box-text-color);
-        border-width: 0rem;
-        border-color: rgba(var(--ltpp-deep-color), var(--ltpp-center-box-bk-opacity))
-        min-height: auto;
-        width: 100%;
-      "
-    >
+    <div class="shadow main-center-box-content">
       <div style="height: 2.6rem"></div>
       <!-- 标题 -->
       <div style="text-align: center">

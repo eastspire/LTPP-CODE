@@ -6,17 +6,7 @@
     style="margin-left: auto; margin-right: auto"
     class="no-select"
   >
-    <div
-      class="shadow"
-      style="
-        background-color: rgba(var(--ltpp-deep-color), var(--ltpp-center-box-bk-opacity));
-        color: azure;
-        border-width: 0rem;
-        border-color: rgba(var(--ltpp-deep-color), var(--ltpp-center-box-bk-opacity))
-        height: auto;
-        width: 100%;
-      "
-    >
+    <div class="shadow ltpp-list-box" style="border-width: 0rem">
       <div style="margin-left: 1.4rem; margin-right: 1.4rem">
         <div style="height: 0.8rem"></div>
         <div style="margin-left: 1rem; margin-right: 1rem">
@@ -1388,7 +1378,7 @@ export default {
     },
     cellStyle({ row, rowIndex }) {
       let styleRes = {
-        background: "rgba(var(--ltpp-deep-color), 0.16) !important",
+        background: "rgba(var(--ltpp-light-color), 0.16) !important",
         height: "3.6rem !important",
         color: "chartreuse",
       };
