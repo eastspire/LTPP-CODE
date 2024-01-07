@@ -839,7 +839,7 @@ class User
         $allnum = Db::table('user')
             ->where('isdel', 0)
             ->count();
-        Base::userOnline($info, true, true);
+        Base::userOnline($info, true, true, false);
         Base::dataToSafe($info);
         if ($info) {
             return json(['code' => 1, 'data' => $info, 'allnum' => $allnum, 'msg' => '加载用户列表成功']);
@@ -1340,7 +1340,7 @@ class User
         $allnum = Db::table('user')
             ->where('isdel', 0)
             ->count();
-        Base::userOnline($info, true, true);
+        Base::userOnline($info, true, true, false);
         Base::dataToSafe($info);
         return json(['code' => 1, 'data' => $info, 'allnum' => $allnum, 'msg' => "共有 $allnum 个用户"]);
     }
@@ -1409,7 +1409,7 @@ class User
             $info->password = '';
             $info->user_aid = $info->id;
         }
-        Base::userOnline($info, false, false);
+        Base::userOnline($info, false, false, true);
         Base::dataToSafe($info);
         if ($info) {
             return json(['code' => 1, 'data' => $info, 'msg' => '用户信息加载成功']);

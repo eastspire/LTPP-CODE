@@ -3196,8 +3196,9 @@ class Base
     /**
      * 添加用户在线状态
      */
-    static public function userOnline(&$user, $is_list = true, $isdel_key_email = false)
+    static public function userOnline(&$user, $is_list = true, $isdel_key_email = false, $need_add_lastlogin = true)
     {
+        $now = date('Y-m-d H:i:s', time());
         if ($is_list) {
             foreach ($user as &$tem) {
                 if (
@@ -3205,7 +3206,11 @@ class Base
                     (isset($tem->name) &&  $tem->name == '机器人') ||
                     (isset($tem->email) &&  $tem->email == Base::$robot_email)
                 ) {
+                    // 机器人账号需要处理在线情况和上次在线时间
                     $tem->online = 1;
+                    if ($need_add_lastlogin) {
+                        $tem->lastlogin = $now;
+                    }
                 } else {
                     $tem->online = 0;
                 }
@@ -3220,6 +3225,9 @@ class Base
                 (isset($user->email) && $user->email == Base::$robot_email)
             ) {
                 $user->online = 1;
+                if ($need_add_lastlogin) {
+                    $user->lastlogin = $now;
+                }
             } else {
                 $user->online = 0;
             }

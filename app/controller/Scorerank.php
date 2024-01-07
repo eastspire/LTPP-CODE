@@ -3,7 +3,7 @@
  * @Author: 18855190718 1491579574@qq.com
  * @Date: 2023-01-12 12:38:58
  * @LastEditors: wmzn-ltpp 1491579574@qq.com
- * @LastEditTime: 2023-12-31 11:47:32
+ * @LastEditTime: 2024-01-07 16:49:22
  * @FilePath: \LTPP-CODE\app\controller\Scorerank.php
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
@@ -56,7 +56,7 @@ class Scorerank
         $allnum = Db::table('user')
             ->where('isdel', 0)
             ->count();
-        Base::userOnline($userdb, true, true);
+        Base::userOnline($userdb, true, true, true);
         Base::dataToSafe($res);
         return json(['data' => $res, 'allnum' => $allnum]);
     }
