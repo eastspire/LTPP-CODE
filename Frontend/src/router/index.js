@@ -57,6 +57,7 @@ import shortsentencemanage from "../views/root/shortsentencemanage.vue";
 import mynotice from '../views/back/mynotice.vue';
 import updateonequestion from '../views/back/updateonequestion.vue';
 import questionlist from '../views/home/questionlist.vue';
+import questionlistmanage from '../views/root/questionlistmanage.vue';
 import sendquestion from '../views/home/sendquestion.vue';
 import myquestion from '../views/back/myquestion.vue';
 import goods from '../views/home/goods.vue';
@@ -167,7 +168,18 @@ const routes = [{
 
             }
         },
+        {
+            path: '/questionlistmanage',
+            name: 'questionlistmanage',
+            component: () =>
+                import('../views/root/questionlistmanage.vue'),
+            meta: {
+                title: '问答圈管理',
+                keepAlive: true,
+                index: 2,
 
+            }
+        },
         {
             path: '/chat',
             name: 'chat',

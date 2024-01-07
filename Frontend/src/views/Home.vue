@@ -446,6 +446,15 @@
                   </template>
                 </el-menu-item>
                 <el-menu-item
+                  index="/questionlistmanage"
+                  v-if="$store.state.root && $store.state.my_name === 'root'"
+                  ><template slot="title">
+                    <i class="el-icon-s-order" style="font-size: 1.06rem"
+                      >问答圈管理</i
+                    >
+                  </template>
+                </el-menu-item>
+                <el-menu-item
                   index="/goodsmanage"
                   v-if="$store.state.root && $store.state.my_name === 'root'"
                 >
