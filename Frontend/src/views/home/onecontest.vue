@@ -800,9 +800,9 @@
 <script>
 import echarts from "../../../public/static/echarts.min.js";
 import urlencode from "../../../updateCompoents/urlencode";
-import "../../../updateCompoents/mavon-editor/dist/markdown/github-markdown.min.css";
+import "../../../public/md/markdown/github-markdown.min.css";
 import ShowCode from "../../components/showcode.vue";
-import "../../../updateCompoents/mavon-editor/dist/markdown/github-markdown.min.css";
+import "../../../public/md/markdown/github-markdown.min.css";
 
 export default {
   name: "onecontest",

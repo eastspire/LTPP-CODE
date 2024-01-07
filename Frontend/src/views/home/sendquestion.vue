@@ -128,7 +128,7 @@
 </template>
 
 <script>
-import "../../../updateCompoents/mavon-editor/dist/markdown/github-markdown.min.css";
+import "../../../public/md/markdown/github-markdown.min.css";
 
 export default {
   name: "write",

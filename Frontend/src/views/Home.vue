@@ -1441,8 +1441,8 @@ export default {
 
 /deep/.el-textarea__inner {
   color: #f5f7fa !important;
-  background-color: rgba(var(--ltpp-light-color), 0.688) !important;
-  border-color: rgba(var(--ltpp-light-color), 0.688) !important;
+  background-color: rgba(var(--ltpp-light-color), 0.888) !important;
+  border-color: rgba(var(--ltpp-light-color), 0.888) !important;
 }
 
 /deep/.el-scrollbar__thumb {

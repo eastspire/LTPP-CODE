@@ -362,8 +362,8 @@
 </template>
 
 <script>
-import "../../../updateCompoents/mavon-editor/dist/markdown/github-markdown.min.css";
-import "../../../updateCompoents/mavon-editor/dist/css/index.css";
+import "../../../public/md/markdown/github-markdown.min.css";
+import "../../../public/md/css/index.css";
 export default {
   name: "noticemanage",
   async activated() {

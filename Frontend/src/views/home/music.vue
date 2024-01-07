@@ -483,7 +483,7 @@ export default {
 }
 input {
   border-radius: 0.6rem;
-  background-color: rgb(30, 30, 30);
+  background-color: rgb(var(--ltpp-light-color));
   color: chartreuse;
   padding: 0rem 0.6rem 0rem 0.6rem;
 }

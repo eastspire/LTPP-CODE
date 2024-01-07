@@ -21,7 +21,7 @@
     <div
       style="
         color: rgb(255, 255, 255) !important;
-        background-color: rgb(30, 30, 30);
+        background-color: rgb(var(--ltpp-light-color));
         text-align: center;
       "
     >

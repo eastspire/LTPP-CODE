@@ -244,6 +244,11 @@ pre code.hljs {
   margin-right: auto;
 }
 
+.el-icon-full-screen {
+  background-color: var(--ltpp-main-color) !important;
+  border-width: 0rem;
+}
+
 hr {
   border-top: 3px dotted rgb(171, 178, 191);
   border-bottom: none;
@@ -717,6 +722,7 @@ a:active {
 
 .input,
 .cancel,
+.el-icon-full-screen,
 .el-time-panel__btn.cancel,
 .sure,
 .el-time-panel__btn.confirm,

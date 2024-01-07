@@ -578,7 +578,7 @@
 
 
 <script>
-import "../../../updateCompoents/mavon-editor/dist/markdown/github-markdown.min.css";
+import "../../../public/md/markdown/github-markdown.min.css";
 import urlencode from "../../../updateCompoents/urlencode";
 import myide from "../../components/myide.vue";
 
@@ -1465,8 +1465,8 @@ export default {
 
 /deep/.el-textarea__inner {
   color: var(--ltpp-box-text-color) !important;
-  background-color: rgba(30, 30, 30, 0.688) !important;
-  border-color: rgba(30, 30, 30, 0.688) !important;
+  background-color: rgba(var(--ltpp-light-color), 0.888) !important;
+  border-color: rgba(var(--ltpp-light-color), 0.888) !important;
 }
 .folder {
   float: left;
