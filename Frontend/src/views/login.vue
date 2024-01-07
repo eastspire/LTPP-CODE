@@ -249,9 +249,9 @@ export default {
 };
 </script>
 <style scoped>
-::v-deep .el-input,
-::v-deep .el-form-item__label,
-::v-deep .el-input__inner {
+.el-form-item__label,
+.el-input,
+.el-input__inner {
   color: rgb(255, 246, 84) !important;
   background-color: rgba(var(--ltpp-main-bk-color), 0) !important;
   border-color: rgb(233, 103, 194) !important;
@@ -359,7 +359,7 @@ big-div::after {
 
 .logintitle {
   color: rgb(255, 246, 84);
-  padding: 3rems, auto;
+  padding: 3rem, auto;
   text-align: center;
 }
 .demo-LoginForm {

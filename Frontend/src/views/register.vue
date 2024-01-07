@@ -13,7 +13,7 @@
         class="demo-RegisterForm"
       >
         <div style="height: 2rem"></div>
-        <h2 class="logintitle">注册</h2>
+        <h2 class="registertitle">注册</h2>
         <div style="height: 2rem"></div>
         <el-form-item label="账号" label-width="14%">
           <el-input
@@ -285,9 +285,9 @@ export default {
 };
 </script>
 <style scoped>
-::v-deep .el-input,
-::v-deep .el-form-item__label,
-::v-deep .el-input__inner {
+.el-input,
+.el-form-item__label,
+.el-input__inner {
   color: rgb(255, 246, 84) !important;
   background-color: rgba(var(--ltpp-main-bk-color), 0) !important;
   border-color: rgb(233, 103, 194) !important;
@@ -447,9 +447,9 @@ big-div::after {
   }
 }
 
-.logintitle {
+.registertitle {
   color: rgb(255, 246, 84);
-  padding: 3rems, auto;
+  padding: 3rem, auto;
   text-align: center;
 }
 .divregister {
