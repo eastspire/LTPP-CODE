@@ -295,7 +295,6 @@ export default {
         ol: true, // 有序列表
         link: true, // 链接
         imagelink: true, // 图片链接
-
         code: true, // code
         subfield: true, // 是否需要分栏
         fullscreen: false, // 全屏编辑

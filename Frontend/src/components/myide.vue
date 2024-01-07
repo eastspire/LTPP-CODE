@@ -2,7 +2,7 @@
  * @Author: 18855190718 1491579574@qq.com
  * @Date: 2023-08-07 22:11:28
  * @LastEditors: wmzn-ltpp 1491579574@qq.com
- * @LastEditTime: 2024-01-06 23:53:35
+ * @LastEditTime: 2024-01-07 16:23:11
  * @FilePath: \LTPP-CODE\Frontend\src\components\myide.vue
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
@@ -142,6 +142,20 @@
               class="el-icon-delete-solid pulse-enter-active"
               width="auto"
               >还原模板</el-button
+            >
+            <el-button
+              v-if="is_has_ac_code"
+              type="warning"
+              size="small"
+              style="
+                border-radius: 2rem;
+                margin: 1rem 0rem 0rem 1.88rem;
+                font-size: 1.06rem;
+              "
+              @click="useAcCode()"
+              class="el-icon-s-claim pulse-enter-active"
+              width="auto"
+              >使用AC代码</el-button
             >
             <el-button
               :loading="istest"
@@ -380,6 +394,8 @@ export default {
   },
   data() {
     return {
+      has_ac_code: "",
+      is_has_ac_code: false,
       local_testin: "",
       code_id: "",
       up_timer: null,
@@ -518,6 +534,11 @@ export default {
           theme: this.usertheme,
         });
       window.localStorage.setItem("theme", this.usertheme);
+    },
+    useAcCode() {
+      this.my_code = this.has_ac_code;
+      this.editor.setValue(this.my_code);
+      this.save();
     },
     towrite() {
       this.$router.push({
@@ -839,17 +860,11 @@ export default {
         });
       });
       if (res?.code == 1 && res?.data != undefined && res?.data != "") {
-        this.$alert("是否使用该题最近的AC代码？", "提示", {
-          confirmButtonText: "确定",
-          type: "warning",
-        })
-          .then(() => {
-            this.my_code = res?.data;
-            this.editor.setValue(res?.data);
-            this.save();
-          })
-          .catch(() => {});
+        this.is_has_ac_code = true;
+        this.has_ac_code = res?.data;
       } else {
+        this.is_has_ac_code = false;
+        this.has_ac_code = "";
         let problem_name = this.problem_data?.problemName ?? "";
         let cache_code = window.localStorage.getItem(
           "idecode" + problem_name + this.my_language

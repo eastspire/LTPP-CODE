@@ -1469,8 +1469,8 @@ pre,
 }
 
 .el-button--default {
-  padding: 0rem 1.6rem !important;
-  background-color: rgba(var(--ltpp-main-bk-color), 0) !important;
+  padding: 0.6rem 1rem !important;
+  background-color: rgba(var(--ltpp-main-bk-color), 1) !important;
   color: var(--ltpp-main-text-color) !important;
 }
 
