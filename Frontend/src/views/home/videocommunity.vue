@@ -16,6 +16,7 @@
           style="font-size: 1.06rem"
           placeholder="请输入需要搜索的视频名称"
           @keyup.enter.native="search()"
+          @blur="search()"
           v-model.lazy="key"
           class="input-with-select"
         >
@@ -368,23 +369,19 @@
 import urlencode from "../../../updateCompoents/urlencode";
 export default {
   name: "videocommunity",
-  created() {
+  async created() {
     this.issearch = false;
     this.showone = false;
     this.onevideo = {};
+    this.$store.commit("updateObj", { my_id: this.getMyId() });
+    await this.getlist();
+    await this.IsFabulous();
+    await this.IsLove();
   },
   async activated() {
     this.isSeeComment = false;
     this.comment_load_all_finish = false;
     this.userComment = [];
-    this.$store.commit("updateObj", { my_id: this.getMyId() });
-    if (this.key) {
-      await this.search();
-    } else {
-      await this.getlist();
-    }
-    await this.IsFabulous();
-    await this.IsLove();
     this.comment_load_all_finish = false;
     this.video = document.getElementById("nowvideo");
     this.video && this.video.addEventListener("ended", this.videoEnd);
@@ -817,7 +814,7 @@ export default {
     },
     async search(up_do = "down") {
       this.issearch = false;
-      this.onevideo = {};
+      this.onevideo.id = "";
       if (this.key == "" || this.key == null || this.key == undefined) {
         await this.getlist(up_do);
         await this.IsFabulous();
