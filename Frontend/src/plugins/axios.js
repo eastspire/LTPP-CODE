@@ -76,7 +76,7 @@ _axios.interceptors.request.use(
 // Add a response interceptor
 _axios.interceptors.response.use(
     function (response) {
-        if (response && response.data && response.data.code && response.data.code == 500) {
+        if (response?.data?.code == 500) {
             Vue.prototype.logoutRemove(true);
         }
         return response;
