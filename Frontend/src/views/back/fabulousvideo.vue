@@ -18,11 +18,9 @@
           v-model.lazy="key"
           class="input-with-select"
         >
-          <el-button
-            slot="append"
-            icon="el-icon-search"
-            @click="search()"
-          ></el-button>
+          <el-button slot="append" icon="el-icon-search" @click="search()"
+            >搜索</el-button
+          >
         </el-input>
       </div>
     </div>

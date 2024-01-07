@@ -14,7 +14,7 @@
           v-model.lazy="key"
           @keyup.enter.native="search()"
           ><el-button slot="append" icon="el-icon-search" @click="search()"
-            >搜索短句</el-button
+            >搜索</el-button
           ></el-input
         >
       </div>
