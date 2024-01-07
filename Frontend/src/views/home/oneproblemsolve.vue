@@ -97,7 +97,7 @@
                               style="
                                 overflow: hidden;
                                 text-align: center;
-                                color: var(--ltpp-main-text-color);
+                                color: rgba(0, 0, 0, 0.88);
                               "
                             >
                               {{ temtable.name.substr(0, 14) }}
@@ -109,7 +109,7 @@
                             background-color: rgba(248, 249, 250, 0.46);
                             margin: 0.6rem;
                             border-radius: 0.36rem;
-                            color: var(--ltpp-main-text-color);
+                            color: rgba(0, 0, 0, 0.88);
                             padding: 0.6rem;
                           "
                         >
