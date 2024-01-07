@@ -2,7 +2,7 @@
  * @Author: wmzn-ltpp 1491579574@qq.com
  * @Date: 2023-08-07 18:43:57
  * @LastEditors: wmzn-ltpp 1491579574@qq.com
- * @LastEditTime: 2024-01-07 11:29:00
+ * @LastEditTime: 2024-01-07 13:14:24
  * @FilePath: \LTPP-CODE\Frontend\src\main.js
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
@@ -100,6 +100,34 @@ Vue.prototype.deleteOneFileHistoryFromUpList = function (file, file_list) {
     } catch (err) {
     }
 }
+
+// 获取CSS配置并生效
+Vue.prototype.getCss = async function () {
+    const { data: res } = await this.$ajax({
+        method: "post",
+        url: "/User/getCss",
+        portType: {
+            process: "8793",
+        },
+    }).catch(() => {
+        return;
+    });
+    if (res?.code == 1) {
+        const ltpp_css_dom_id = "ltpp-css";
+        let style_tag = document.getElementById(ltpp_css_dom_id);
+        if (!style_tag) {
+            style_tag = document.createElement("style");
+            style_tag.id = ltpp_css_dom_id;
+            document.head?.appendChild(style_tag);
+        }
+        try {
+            style_tag.innerHTML = `:root{${res?.data}}`;
+        } catch (e) {
+            // 异常情况下删除新增的CSS配置，使用默认的配置
+            style_tag.parentNode.removeChild(style_tag);
+        }
+    }
+};
 
 // 随机字符串
 Vue.prototype.randomString = function (length = 32) {
@@ -212,9 +240,9 @@ Vue.prototype.getFronturl = async function () {
             offset: 80,
         });
     });
-    if (res.code == 1) {
-        window.sessionStorage.setItem("FrontUrl", res.data);
-        return res.data;
+    if (res?.code == 1) {
+        window.sessionStorage.setItem("FrontUrl", res?.data);
+        return res?.data;
     }
     return '';
 }
@@ -238,9 +266,9 @@ Vue.prototype.getBackurl = async function () {
             offset: 80,
         });
     });
-    if (res.code == 1) {
-        window.sessionStorage.setItem("BackUrl", res.data);
-        return res.data;
+    if (res?.code == 1) {
+        window.sessionStorage.setItem("BackUrl", res?.data);
+        return res?.data;
     }
     return '';
 }
@@ -391,10 +419,10 @@ Vue.prototype.downloadNoUrlContent = async function (type = 'text/html', data, d
             offset: 80,
         });
     });
-    if (res.code && res.code == -1) {
+    if (res?.code && res?.code == -1) {
         this.$msg({
             type: "error",
-            message: res.msg,
+            message: res?.msg,
             duration: 1600,
             offset: 80,
         });
@@ -486,10 +514,10 @@ Vue.prototype.downloadUrlContent = async function (url, data, download_name) {
             offset: 80,
         });
     });
-    if (res.code && res.code == -1) {
+    if (res?.code && res?.code == -1) {
         this.$msg({
             type: "error",
-            message: res.msg,
+            message: res?.msg,
             duration: 1600,
             offset: 80,
         });

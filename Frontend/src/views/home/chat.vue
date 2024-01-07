@@ -794,7 +794,7 @@ export default {
         .then((res) => {
           // 第二步.将返回的url替换到文本原位置![...](0) -> ![...](url)
           // $vm.$img2Url 详情见本页末尾
-          this.$refs.md.$img2Url(pos, res.data.url);
+          this.$refs.md.$img2Url(pos, res?.data.url);
         })
         .catch((t) => {
           this.$msg({
@@ -821,18 +821,18 @@ export default {
         });
       });
 
-      if (res.code == 1) {
+      if (res?.code == 1) {
         this.commenttext = "";
         this.$msg({
           type: "success",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
       } else {
         this.$msg({
           type: "error",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
@@ -857,8 +857,8 @@ export default {
           offset: 80,
         });
       });
-      if (res.code == 1) {
-        this.group_user_list = res.data;
+      if (res?.code == 1) {
+        this.group_user_list = res?.data;
       }
     },
     async getPercentage() {
@@ -879,7 +879,7 @@ export default {
           offset: 80,
         });
       });
-      this.file_percentage = res.data;
+      this.file_percentage = res?.data;
     },
     async clearNolookNum() {
       this.$ajax({
@@ -958,7 +958,7 @@ export default {
           let Name = this.Base64Decode(first_name, this.char_set) + last_name;
 
           /* 火狐谷歌的文件下载方式 */
-          const blob = new Blob([res.data], {
+          const blob = new Blob([res?.data], {
             type: "application/octet-stream;application/zip",
           });
           let url = window.URL.createObjectURL(blob);
@@ -1043,8 +1043,8 @@ export default {
             offset: 80,
           });
         });
-        if (res && res.code && res.code == 1) {
-          this.char_set = res.data;
+        if (res && res?.code && res?.code == 1) {
+          this.char_set = res?.data;
           return;
         }
       }
@@ -1066,7 +1066,7 @@ export default {
         });
         return;
       });
-      this.filelist = res.data;
+      this.filelist = res?.data;
     },
     //上传文件成功
     async uploadFinish(response, file, file_list) {
@@ -1221,7 +1221,7 @@ export default {
           offset: 80,
         });
       });
-      this.user_list = res.data;
+      this.user_list = res?.data;
       // 初始化显示第一个用户聊天框
       setTimeout(() => {
         this.$nextTick(async () => {
@@ -1283,15 +1283,15 @@ export default {
         });
         return -1;
       });
-      if (res.code == 1) {
+      if (res?.code == 1) {
         return 1;
-      } else if (res.code == 0) {
-        this.willJoinGroupData = res.data;
+      } else if (res?.code == 0) {
+        this.willJoinGroupData = res?.data;
         return 0;
       } else {
         this.$msg({
           type: "error",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
@@ -1353,7 +1353,7 @@ export default {
       if (res == null || !res) {
         return;
       }
-      res = res.data;
+      res = res?.data;
       res.forEach((t) => {
         t.value = t.name;
       });
@@ -1423,8 +1423,8 @@ export default {
         });
       });
 
-      if (res.code == 1 || res.code == 0) {
-        if (res.code == 0) {
+      if (res?.code == 1 || res?.code == 0) {
+        if (res?.code == 0) {
           // 删除本地旧数据
           this.chat_msg_list = [];
           window.localStorage.removeItem(
@@ -1432,17 +1432,17 @@ export default {
           );
         }
         // 添加新数据
-        res.data = res.data.reverse();
-        await this.chat_msg_list.push(...res.data);
+        res.data = res?.data.reverse();
+        await this.chat_msg_list.push(...res?.data);
         window.localStorage.setItem(
           "Chat " + this.now_user.type + " " + this.now_user.id,
-          JSON.stringify(res.data)
+          JSON.stringify(res?.data)
         );
         this.to_scroll_bottom(1);
       } else {
         this.$msg({
           type: "error",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
@@ -1507,8 +1507,8 @@ export default {
         });
       });
 
-      if (res.code == 1) {
-        let len = res.data.length;
+      if (res?.code == 1) {
+        let len = res?.data.length;
         if (len <= 0) {
           this.isSeeLastBtn = false;
           this.$msg({
@@ -1519,13 +1519,13 @@ export default {
           });
           return;
         }
-        res.data = res.data.reverse();
-        this.chat_msg_list = [...res.data, ...this.chat_msg_list];
+        res.data = res?.data.reverse();
+        this.chat_msg_list = [...res?.data, ...this.chat_msg_list];
         this.to_last_scroll();
       } else {
         tthis.$msg({
           type: "error",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });

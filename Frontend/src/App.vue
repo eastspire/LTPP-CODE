@@ -23,7 +23,7 @@ export default {
   name: "app",
   data() {
     return {
-      version: "1.7.0",
+      version: "1.7.1",
     };
   },
   beforeCreate() {
@@ -87,6 +87,7 @@ export default {
         window.localStorage.setItem("is_public_network", 1);
         this.$store.commit("updateObj", { is_public_network: 1 });
       }
+      this.getCss();
     },
     async getVersion(is_electron = false) {
       while (true) {
@@ -243,10 +244,22 @@ pre code.hljs {
   margin-left: auto;
   margin-right: auto;
 }
+.el-input-group--prepend,
+.el-input__inner,
+.el-input-group__append {
+  background-color: rgba(var(--ltpp-main-bk-color), 0.88) !important;
+  border: 0px solid transparent !important;
+  color: var(--ltpp-main-text-color) !important;
+  border-top-left-radius: 0 !important;
+  border-bottom-left-radius: 0 !important;
+  border-top-right-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
 
 .el-icon-full-screen {
   background-color: var(--ltpp-main-color) !important;
-  border-width: 0rem;
+  border: 0px solid transparent;
+  color: var(--ltpp-main-text-color) !important;
 }
 
 hr {
@@ -396,7 +409,7 @@ span.hljs-string {
 .el-submenu__title,
 .el-menu-item {
   i {
-    color: #e493d0 !important;
+    color: var(--ltpp-main-color) !important;
   }
   background-color: transparent !important;
 }
@@ -455,7 +468,7 @@ video:focus {
   margin: 0;
   z-index: -1000000;
   will-change: transform;
-  background-color: #e493d0;
+  background-color: var(--ltpp-main-color);
   background-image: radial-gradient(
       closest-side,
       rgba(235, 105, 78, 1),
@@ -712,7 +725,7 @@ a:active {
 .el-scrollbar__wrap,
 .el-scrollbar__bar .is-horizontal,
 .el-time-panel__footer {
-  background-color: #e493d0 !important;
+  background-color: var(--ltpp-main-color) !important;
 }
 
 .next-month,
@@ -872,7 +885,7 @@ a:active {
 .el-scrollbar__view,
 .el-select-dropdown__list,
 .el-select-dropdown {
-  background-color: #e493d0 !important;
+  background-color: var(--ltpp-main-color) !important;
   border: none !important;
 }
 
@@ -883,7 +896,7 @@ a:active {
 }
 
 .el-select-dropdown__item {
-  background-color: #e493d0 !important;
+  background-color: var(--ltpp-main-color) !important;
   margin-bottom: 0.6rem !important;
 }
 
@@ -936,8 +949,8 @@ a:active {
 .el-select,
 .el-input,
 .el-input__inner {
-  background-color: #e493d0 !important;
-  border-color: #e493d0 !important;
+  background-color: var(--ltpp-main-color) !important;
+  border-color: var(--ltpp-main-color) !important;
   resize: none !important;
   -webkit-touch-callout: none !important;
   /* iOS Safari */
@@ -991,7 +1004,7 @@ a:active {
 
 .el-tooltip__popper {
   max-width: 60% !important;
-  background: #e493d0 !important;
+  background: var(--ltpp-main-color) !important;
   border: transparent !important;
   border-width: 0px !important;
   box-shadow: 0 2px 5px rgba(var(--ltpp-light-color), 0.16),
@@ -1024,7 +1037,7 @@ a:active {
 }
 
 .el-tooltip__popper[x-placement^="top"] .popper__arrow:after {
-  border-top-color: #e493d0 !important;
+  border-top-color: var(--ltpp-main-color) !important;
   -webkit-transition: all 0.3s ease !important;
   /* Safari and Chrome */
   -moz-transition: all 0.3s ease !important;
@@ -1049,7 +1062,7 @@ a:active {
 }
 
 .el-tooltip__popper[x-placement^="right"] .popper__arrow:after {
-  border-right-color: #e493d0 !important;
+  border-right-color: var(--ltpp-main-color) !important;
   -webkit-transition: all 0.3s ease !important;
   /* Safari and Chrome */
   -moz-transition: all 0.3s ease !important;
@@ -1074,7 +1087,7 @@ a:active {
 }
 
 .el-tooltip__popper[x-placement^="bottom"] .popper__arrow:after {
-  border-bottom-color: #e493d0 !important;
+  border-bottom-color: var(--ltpp-main-color) !important;
   -webkit-transition: all 0.3s ease !important;
   /* Safari and Chrome */
   -moz-transition: all 0.3s ease !important;
@@ -1099,7 +1112,7 @@ a:active {
 }
 
 .el-tooltip__popper[x-placement^="left"] .popper__arrow:after {
-  border-left-color: #e493d0 !important;
+  border-left-color: var(--ltpp-main-color) !important;
   -webkit-transition: all 0.3s ease !important;
   /* Safari and Chrome */
   -moz-transition: all 0.3s ease !important;

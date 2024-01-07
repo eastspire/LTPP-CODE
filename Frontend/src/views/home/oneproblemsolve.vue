@@ -302,12 +302,12 @@ export default {
             offset: 80,
           });
         });
-        if (res.data.length <= 0) {
+        if (res?.data.length <= 0) {
           return;
         }
         this.userarticle.splice(this.limit, this.limit);
-        for (let i = res.data.length - 1; i >= 0; --i) {
-          this.userarticle.unshift(res.data[i]);
+        for (let i = res?.data.length - 1; i >= 0; --i) {
+          this.userarticle.unshift(res?.data[i]);
         }
         window.scrollTo(0, document.body.clientHeight / 2);
         return;
@@ -354,10 +354,10 @@ export default {
         this.page--;
         this.isinit = true;
       });
-      if (res.code != 1) {
+      if (res?.code != 1) {
         this.$msg({
           type: "error",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
@@ -366,8 +366,8 @@ export default {
         }, 1000);
         this.noshowfoot = false;
       } else if (
-        res.data &&
-        res.data.length <= 0 &&
+        res?.data &&
+        res?.data.length <= 0 &&
         this.userarticle.length <= 0
       ) {
         this.$msg({
@@ -380,14 +380,14 @@ export default {
           this.$router.go(-1);
         }, 1000);
         this.noshowfoot = false;
-      } else if (res.data && res.data.length <= 0) {
+      } else if (res?.data && res?.data.length <= 0) {
         this.noshowfoot = false;
       } else {
         if (!this.isinit) {
           this.userarticle = [];
         }
         this.noshowfoot = true;
-        this.userarticle.push(...res.data);
+        this.userarticle.push(...res?.data);
       }
       this.isinit = true;
     },

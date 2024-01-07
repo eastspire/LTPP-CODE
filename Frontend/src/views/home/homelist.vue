@@ -39,7 +39,7 @@
 
         <!-- 短句 -->
         <div
-          class="shadow ltpp-list-box-bk"
+          class="shadow ltpp-list-box"
           v-show="
             shortsentenceList &&
             shortsentenceList != undefined &&
@@ -296,7 +296,7 @@ export default {
           offset: 80,
         });
       });
-      this.shortsentenceList = res.data;
+      this.shortsentenceList = res?.data;
     },
     //刷新短句列表
     async refreshshortsentencelist() {
@@ -314,7 +314,7 @@ export default {
           offset: 80,
         });
       });
-      this.shortsentenceList = res.data;
+      this.shortsentenceList = res?.data;
     },
     async getlinuxurl() {
       const res = await this.getBackurl();
@@ -334,7 +334,7 @@ export default {
           offset: 80,
         });
       });
-      this.photoList = res.data;
+      this.photoList = res?.data;
     },
     async getNotice() {
       const { data: res } = await this.$ajax({
@@ -351,8 +351,8 @@ export default {
           offset: 80,
         });
       });
-      if (res.code == 1) {
-        this.notice = res.data[0];
+      if (res?.code == 1) {
+        this.notice = res?.data[0];
         this.allnum = res.allnum;
       }
     },

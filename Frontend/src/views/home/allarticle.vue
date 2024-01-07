@@ -264,7 +264,7 @@ export default {
           offset: 80,
         });
       });
-      this.tableData = res.data;
+      this.tableData = res?.data;
       this.scrolllock = false;
     },
 
@@ -322,11 +322,11 @@ export default {
             offset: 80,
           });
         });
-        if (!res.data || !res.data.length) {
+        if (!res?.data || !res?.data.length) {
           this.scrolllock = false;
           return;
         }
-        this.tableData = [...res.data, ...this.tableData];
+        this.tableData = [...res?.data, ...this.tableData];
         if (this.tableData.length > this.limit * 2) {
           this.tableData = this.tableData.slice(0, this.limit * 2);
           window.scrollTo(0, document.body.clientHeight / 2 - 100.8);
@@ -371,7 +371,7 @@ export default {
           offset: 80,
         });
       });
-      if (res.data.length <= 0) {
+      if (res?.data.length <= 0) {
         this.istobottom = true;
         this.$msg({
           type: "success",
@@ -383,7 +383,7 @@ export default {
         return;
       }
 
-      res.data.forEach((tem) => {
+      res?.data.forEach((tem) => {
         this.tableData.push(tem);
       });
       if (this.tableData.length > this.limit * 2) {
@@ -423,7 +423,7 @@ export default {
           offset: 80,
         });
       });
-      this.tableData = res.data;
+      this.tableData = res?.data;
       this.scrolllock = false;
     },
     toOneArticle(id) {

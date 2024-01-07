@@ -213,7 +213,7 @@ export default {
           offset: 80,
         });
       });
-      this.tableData = res.data;
+      this.tableData = res?.data;
       this.total = res.allnum;
     },
 

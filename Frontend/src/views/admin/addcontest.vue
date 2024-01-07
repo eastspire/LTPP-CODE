@@ -661,17 +661,17 @@ export default {
         });
       });
 
-      if (res.code == 1) {
+      if (res?.code == 1) {
         this.$msg({
           type: "success",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
       } else {
         this.$msg({
           type: "error",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
@@ -715,7 +715,7 @@ export default {
           offset: 80,
         });
       });
-      this.problemlist = res.data;
+      this.problemlist = res?.data;
       this.total = res.allnum;
     },
 
@@ -768,7 +768,7 @@ export default {
         });
         return;
       });
-      if (res.code == 1) {
+      if (res?.code == 1) {
         this.defaultnum = 0;
         this.onedata = {};
         this.problemlist = [];
@@ -790,7 +790,7 @@ export default {
         this.isup = false;
         this.$msg({
           type: "success",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
@@ -798,7 +798,7 @@ export default {
       } else {
         this.$msg({
           type: "error",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
@@ -834,7 +834,7 @@ export default {
           offset: 80,
         });
       });
-      this.problemlist = res.data;
+      this.problemlist = res?.data;
       this.total = res.allnum;
     },
     //搜索预处理

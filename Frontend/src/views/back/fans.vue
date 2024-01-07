@@ -430,12 +430,12 @@ export default {
           offset: 80,
         });
       });
-      this.tableData = res.data;
+      this.tableData = res?.data;
       this.total = res.allnum;
       if (!this.showone) {
         this.$msg({
           type: "success",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
@@ -495,9 +495,9 @@ export default {
         });
       });
       this.fansid = id;
-      this.name = res.data["name"];
-      this.sex = res.data["sex"];
-      this.email = res.data["email"];
+      this.name = res?.data["name"];
+      this.sex = res?.data["sex"];
+      this.email = res?.data["email"];
     },
 
     async getlist() {
@@ -519,12 +519,12 @@ export default {
           offset: 80,
         });
       });
-      this.tableData = res.data;
+      this.tableData = res?.data;
       this.total = res.allnum; //总条数
       if (!this.showone) {
         this.$msg({
           type: "success",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
@@ -550,17 +550,17 @@ export default {
           offset: 80,
         });
       });
-      if (res.code == 1) {
+      if (res?.code == 1) {
         this.$msg({
           type: "success",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
       } else
         this.$msg({
           type: "error",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });

@@ -343,20 +343,20 @@ export default {
       }).catch(() => {
         return;
       });
-      if (res.code == 400) {
+      if (res?.code == 400) {
         /* 参数错误 */
         this.isold = true;
         this.isnowscan = false;
         this.loginmusicimage();
-      } else if (res.code == 801) {
+      } else if (res?.code == 801) {
         /* 等待扫码 */
         this.isold = false;
         this.isnowscan = false;
-      } else if (res.code == 802) {
+      } else if (res?.code == 802) {
         /* 授权中 */
         this.isnowscan = true;
         this.isold = false;
-      } else if (res.code == 800) {
+      } else if (res?.code == 800) {
         /* 二维码不存在或已过期 */
         /* 首次过期显示 */
         if (this.isold == false) {
@@ -369,7 +369,7 @@ export default {
         }
         this.isold = true;
         this.isnowscan = false;
-      } else if (res.code == 803) {
+      } else if (res?.code == 803) {
         this.isloginmusic = true;
         this.isold = false;
         this.isnowscan = false;
@@ -406,7 +406,7 @@ export default {
       });
       let temlist = res.songs;
       let musiclist = [];
-      if (res.code == 200) {
+      if (res?.code == 200) {
         temlist.forEach((item) => {
           /* id转具体信息 */
           let temmusics = {};

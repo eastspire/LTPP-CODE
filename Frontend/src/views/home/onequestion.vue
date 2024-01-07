@@ -1096,7 +1096,7 @@ export default {
         .then((res) => {
           // 第二步.将返回的url替换到文本原位置![...](0) -> ![...](url)
           // $vm.$img2Url 详情见本页末尾
-          this.$refs.md1.$img2Url(pos, res.data.url);
+          this.$refs.md1.$img2Url(pos, res?.data.url);
         })
         .catch((t) => {
           this.$msg({
@@ -1123,7 +1123,7 @@ export default {
         .then((res) => {
           // 第二步.将返回的url替换到文本原位置![...](0) -> ![...](url)
           // $vm.$img2Url 详情见本页末尾
-          this.$refs.md4.$img2Url(pos, res.data.url);
+          this.$refs.md4.$img2Url(pos, res?.data.url);
         })
         .catch((t) => {
           this.$msg({
@@ -1152,17 +1152,17 @@ export default {
         });
       });
 
-      if (res.code == 1) {
+      if (res?.code == 1) {
         this.$msg({
           type: "success",
-          message: res.msg,
+          message: res?.msg,
           duration: 600,
           offset: 80,
         });
       } else {
         this.$msg({
           type: "error",
-          message: res.msg,
+          message: res?.msg,
           duration: 800,
           offset: 80,
         });
@@ -1185,17 +1185,17 @@ export default {
         });
       });
 
-      if (res.code == 1) {
+      if (res?.code == 1) {
         this.$msg({
           type: "success",
-          message: res.msg,
+          message: res?.msg,
           duration: 600,
           offset: 80,
         });
       } else {
         this.$msg({
           type: "error",
-          message: res.msg,
+          message: res?.msg,
           duration: 800,
           offset: 80,
         });
@@ -1223,14 +1223,14 @@ export default {
         return;
       });
       this.loadfinish = true;
-      if (res.code == 1) {
-        this.data = res.data;
-        this.islove = res.data.islove;
+      if (res?.code == 1) {
+        this.data = res?.data;
+        this.islove = res?.data.islove;
         this.is_can_edit = res.is_can_edit;
       } else {
         this.$msg({
           type: "error",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
@@ -1260,10 +1260,10 @@ export default {
         },
       })
         .then((res) => {
-          this.answernum = res.data.allnum;
+          this.answernum = res?.data.allnum;
           if (this.answernum != 0) {
-            if (res.data.data.length > 0) {
-              res.data.data.forEach((tem) => {
+            if (res?.data.data.length > 0) {
+              res?.data.data.forEach((tem) => {
                 this.answer.push(tem);
               });
             } else {
@@ -1311,7 +1311,7 @@ export default {
           offset: 80,
         });
       });
-      if (res.code == 1) {
+      if (res?.code == 1) {
         let len = this.answer.length;
         for (let i = 0; i < len; ++i) {
           let tlen = this.answer[i].touserarray.length;
@@ -1330,14 +1330,14 @@ export default {
         }
         this.$msg({
           type: "success",
-          message: res.msg,
+          message: res?.msg,
           duration: 600,
           offset: 80,
         });
       } else {
         this.$msg({
           type: "error",
-          message: res.msg,
+          message: res?.msg,
           duration: 800,
           offset: 80,
         });
@@ -1375,13 +1375,13 @@ export default {
         });
       });
       this.touserid = 0;
-      if (res.code == 1) {
+      if (res?.code == 1) {
         this.answertext = "";
         this.data["answer_num"]++;
       } else {
         this.$msg({
           type: "error",
-          message: res.msg,
+          message: res?.msg,
           duration: 1800,
           offset: 80,
         });
@@ -1423,19 +1423,19 @@ export default {
           offset: 80,
         });
       });
-      if (res.code == 1) {
+      if (res?.code == 1) {
         this.touseranswertext = "";
         this.data["answer_num"]++;
         this.$msg({
           type: "success",
-          message: res.msg,
+          message: res?.msg,
           duration: 600,
           offset: 80,
         });
       } else {
         this.$msg({
           type: "error",
-          message: res.msg,
+          message: res?.msg,
           duration: 800,
           offset: 80,
         });
@@ -1465,10 +1465,10 @@ export default {
           offset: 80,
         });
       });
-      if (res.code == 1) {
+      if (res?.code == 1) {
         this.$msg({
           type: "success",
-          message: res.msg,
+          message: res?.msg,
           duration: 600,
           offset: 80,
         });
@@ -1476,7 +1476,7 @@ export default {
         this.islove = false;
         this.$msg({
           type: "error",
-          message: res.msg,
+          message: res?.msg,
           duration: 800,
           offset: 80,
         });
@@ -1503,10 +1503,10 @@ export default {
           offset: 80,
         });
       });
-      if (res.code == 1) {
+      if (res?.code == 1) {
         this.$msg({
           type: "success",
-          message: res.msg,
+          message: res?.msg,
           duration: 600,
           offset: 80,
         });
@@ -1514,7 +1514,7 @@ export default {
         this.islove = true;
         this.$msg({
           type: "error",
-          message: res.msg,
+          message: res?.msg,
           duration: 800,
           offset: 80,
         });

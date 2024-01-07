@@ -288,6 +288,27 @@
           placeholder="请输入个性签名"
           style="font-size: 1rem"
           v-model.lazy="userdata['mysay']"
+          @blur="updata()"
+        >
+        </el-input>
+
+        <p
+          style="
+            font-size: 1.06rem;
+            text-align: left;
+            font-weight: bold;
+            margin: 1rem 0rem 0.5rem 0rem;
+          "
+        >
+          CSS自定义配置
+        </p>
+        <el-input
+          type="textarea"
+          autosize
+          placeholder="请输入CSS自定义配置"
+          style="font-size: 1rem"
+          v-model.lazy="userdata['root_css']"
+          @blur="updata()"
         >
         </el-input>
 
@@ -516,13 +537,13 @@ export default {
           offset: 80,
         });
       });
-      if (res.code == 1) {
-        res.data.forEach((t) => {
+      if (res?.code == 1) {
+        res?.data.forEach((t) => {
           t.value = t.name;
         });
         clearTimeout(this.timeout);
         this.timeout = setTimeout(() => {
-          cb(res.data);
+          cb(res?.data);
         }, 666);
       }
     },
@@ -548,13 +569,13 @@ export default {
           offset: 80,
         });
       });
-      if (res.code == 1) {
-        res.data.forEach((t) => {
+      if (res?.code == 1) {
+        res?.data.forEach((t) => {
           t.value = t.name;
         });
         clearTimeout(this.timeout);
         this.timeout = setTimeout(() => {
-          cb(res.data);
+          cb(res?.data);
         }, 666);
       }
     },
@@ -580,13 +601,13 @@ export default {
           offset: 80,
         });
       });
-      if (res.code == 1) {
-        res.data.forEach((t) => {
+      if (res?.code == 1) {
+        res?.data.forEach((t) => {
           t.value = t.name;
         });
         clearTimeout(this.timeout);
         this.timeout = setTimeout(() => {
-          cb(res.data);
+          cb(res?.data);
         }, 666);
       }
     },
@@ -612,13 +633,13 @@ export default {
           offset: 80,
         });
       });
-      if (res.code == 1) {
-        res.data.forEach((t) => {
+      if (res?.code == 1) {
+        res?.data.forEach((t) => {
           t.value = t.name;
         });
         clearTimeout(this.timeout);
         this.timeout = setTimeout(() => {
-          cb(res.data);
+          cb(res?.data);
         }, 666);
       }
     },
@@ -642,10 +663,10 @@ export default {
     },
     headimageupload(res) {
       this.resetHeadImageFileList();
-      if (res.code == 1) {
+      if (res?.code == 1) {
         this.$msg({
           type: "success",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
@@ -653,7 +674,7 @@ export default {
       } else {
         this.$msg({
           type: "error",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
@@ -661,10 +682,10 @@ export default {
     },
     bkimageupload(res) {
       this.resetBkImageFileList();
-      if (res.code == 1) {
+      if (res?.code == 1) {
         this.$msg({
           type: "success",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
@@ -672,7 +693,7 @@ export default {
       } else {
         this.$msg({
           type: "error",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
@@ -680,10 +701,10 @@ export default {
     },
     videoupload(res) {
       this.resetVideoFileList();
-      if (res.code == 1) {
+      if (res?.code == 1) {
         this.$msg({
           type: "success",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
@@ -692,7 +713,7 @@ export default {
       } else {
         this.$msg({
           type: "error",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
@@ -737,17 +758,17 @@ export default {
           offset: 80,
         });
       });
-      if (res.code == 1) {
+      if (res?.code == 1) {
         this.$msg({
           type: "success",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
       } else {
         this.$msg({
           type: "error",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
@@ -776,11 +797,11 @@ export default {
           offset: 80,
         });
       });
-      this.userdata = res.data;
-      this.key_search_school = res.data["school"];
-      this.key_search_college = res.data["college"];
-      this.key_search_subject = res.data["subject"];
-      this.key_search_class = res.data["class"];
+      this.userdata = res?.data;
+      this.key_search_school = res?.data["school"];
+      this.key_search_college = res?.data["college"];
+      this.key_search_subject = res?.data["subject"];
+      this.key_search_class = res?.data["class"];
     },
 
     async updata() {
@@ -806,19 +827,22 @@ export default {
           duration: 1600,
           offset: 80,
         });
+        return;
       });
       setTimeout(() => {
-        if (res.code == 1) {
+        // 重新获取CSS配置并生效
+        this.getCss();
+        if (res?.code == 1) {
           this.$msg({
             type: "success",
-            message: res.msg,
+            message: res?.msg,
             duration: 1600,
             offset: 80,
           });
         } else {
           this.$msg({
             type: "error",
-            message: res.msg,
+            message: res?.msg,
             duration: 1600,
             offset: 80,
           });

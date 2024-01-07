@@ -149,27 +149,27 @@ export default {
           offset: 80,
         });
       });
-      if (res.code == -1) {
+      if (res?.code == -1) {
         setTimeout(() => {
           this.$msg({
             type: "error",
-            message: res.msg,
+            message: res?.msg,
             duration: 2000,
             offset: 80,
           });
           this.isup = false;
         }, 360);
         return;
-      } else if (res.code == 1 || res.code == 2 || res.code == 3) {
+      } else if (res?.code == 1 || res?.code == 2 || res?.code == 3) {
         window.localStorage.setItem("authorization", res.authorization);
         window.localStorage.setItem("key", res.key);
         this.$store.commit("updateObj", { login: true });
-        this.$store.commit("updateObj", { root: res.code == 3 });
-        this.$store.commit("updateObj", { admin: res.code == 2 });
+        this.$store.commit("updateObj", { root: res?.code == 3 });
+        this.$store.commit("updateObj", { admin: res?.code == 2 });
         this.trueOnline();
         this.$msg({
           type: "success",
-          message: res.msg,
+          message: res?.msg,
           duration: 2600,
           offset: 80,
         });
@@ -182,7 +182,7 @@ export default {
         setTimeout(() => {
           this.$msg({
             type: "error",
-            message: res.msg,
+            message: res?.msg,
             duration: 2000,
             offset: 80,
           });
@@ -220,11 +220,11 @@ export default {
           offset: 80,
         });
       });
-      if (res.code == 1) {
+      if (res?.code == 1) {
         setTimeout(() => {
           this.$msg({
             type: "success",
-            message: res.msg,
+            message: res?.msg,
             duration: 1600,
             offset: 80,
           });
@@ -236,7 +236,7 @@ export default {
         setTimeout(() => {
           this.$msg({
             type: "error",
-            message: res.msg,
+            message: res?.msg,
             duration: 1600,
             offset: 80,
           });
@@ -269,7 +269,7 @@ export default {
   margin: 0;
   width: 100vw;
   min-height: 100vh;
-  background-color: #e493d0;
+  background-color: var(--ltpp-main-color);
   background-image: radial-gradient(
       closest-side,
       rgba(235, 105, 78, 1),

@@ -238,7 +238,7 @@ export default {
       });
 
       this.total = res.allnum;
-      this.tableData = res.data;
+      this.tableData = res?.data;
     },
 
     //加载文章
@@ -274,13 +274,13 @@ export default {
           offset: 80,
         });
       });
-      this.tableData = res.data;
+      this.tableData = res?.data;
       this.total = res.allnum;
 
       if (!this.showone) {
         this.$msg({
           type: "success",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });

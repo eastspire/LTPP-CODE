@@ -173,6 +173,10 @@ class AuthCheckTest extends Robot implements MiddlewareInterface
 
         $redis1 = Redis::connection('db1');
         $redisip = 'ip' . $loc . 'id' . $my_aid;
+        $user_db = Base::getUserData($my_aid);
+        if (!$user_db) {
+            return \json(['code' => 500, 'msg' => '账号不存在！请重新登录！']);
+        }
         if ($redis1->get($redisip)) {
             $requestnum = $redis1->get($redisip);
             //频率过快超过限制先拉黑处理
@@ -183,7 +187,7 @@ class AuthCheckTest extends Robot implements MiddlewareInterface
                     ->where('isdel', 0)
                     ->exists();
                 if (!$isblack) {
-                    $user_db = Base::getUserData($my_aid);
+
                     $msg = '';
                     $now = date('Y-m-d H:i:s', time());
                     if (!$user_db) {
@@ -204,7 +208,6 @@ class AuthCheckTest extends Robot implements MiddlewareInterface
                 if ($requestnum >= $GLOBiplimit) {
                     if ($requestnum == $GLOBiplimit) {
                         // 通知一次即可
-                        $user_db = Base::getUserData($my_aid);
                         $msg = '';
                         $now = date('Y-m-d H:i:s', time());
                         if (!$user_db) {

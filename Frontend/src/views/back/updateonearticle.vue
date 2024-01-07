@@ -586,17 +586,17 @@ export default {
         });
       });
 
-      if (res.code == 1) {
+      if (res?.code == 1) {
         this.$msg({
           type: "success",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
       } else {
         this.$msg({
           type: "error",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
@@ -621,17 +621,17 @@ export default {
           offset: 80,
         });
       });
-      if (res.code == 1)
+      if (res?.code == 1)
         this.$msg({
           type: "success",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
       else
         this.$msg({
           type: "error",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
@@ -655,10 +655,10 @@ export default {
             },
           })
             .then((res) => {
-              if (res.data.code == 1) {
+              if (res?.data.code == 1) {
                 this.$msg({
                   type: "success",
-                  message: res.data.msg,
+                  message: res?.data.msg,
                   duration: 1600,
                   offset: 80,
                 });
@@ -666,7 +666,7 @@ export default {
               } else {
                 this.$msg({
                   type: "error",
-                  message: res.data.msg,
+                  message: res?.data.msg,
                   duration: 1600,
                   offset: 80,
                 });
@@ -721,8 +721,8 @@ export default {
           offset: 80,
         });
       });
-      if (res.code == 1) {
-        this.article_data = res.data;
+      if (res?.code == 1) {
+        this.article_data = res?.data;
         this.islove = res.love;
         this.fabulous = res.fabulous;
       } else {
@@ -747,19 +747,19 @@ export default {
           offset: 80,
         });
       });
-      if (res.code == 1) {
+      if (res?.code == 1) {
         ++this.article_data.fabulous;
         this.fabulous = true;
         this.$msg({
           type: "success",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
       } else {
         this.$msg({
           type: "error",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
@@ -788,10 +788,10 @@ export default {
           offset: 80,
         });
       });
-      if (res.code == 1) {
+      if (res?.code == 1) {
         this.$msg({
           type: "success",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
@@ -800,7 +800,7 @@ export default {
         this.islove = false;
         this.$msg({
           type: "error",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
@@ -829,10 +829,10 @@ export default {
           offset: 80,
         });
       });
-      if (res.code == 1) {
+      if (res?.code == 1) {
         this.$msg({
           type: "success",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
@@ -841,7 +841,7 @@ export default {
         ++this.article_data.collection;
         this.$msg({
           type: "error",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });

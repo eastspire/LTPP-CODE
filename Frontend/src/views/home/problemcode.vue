@@ -366,7 +366,7 @@ export default {
           offset: 80,
         });
       });
-      this.tableData = res.data;
+      this.tableData = res?.data;
       this.total = res.allnum;
     },
     //搜索预处理
@@ -403,10 +403,10 @@ export default {
         });
         return;
       });
-      if (res.code == 1) {
-        this.code = res.data.code;
+      if (res?.code == 1) {
+        this.code = res?.data.code;
       } else {
-        this.code = res.msg;
+        this.code = res?.msg;
       }
       this.isseecode = true;
     },
@@ -431,7 +431,7 @@ export default {
           offset: 80,
         });
       });
-      this.tableData = res.data;
+      this.tableData = res?.data;
       this.total = res.total;
       if (res.total == 0) {
         this.$msg({

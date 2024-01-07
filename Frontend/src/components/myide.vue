@@ -212,8 +212,8 @@
                 style="
                   border-radius: 1rem;
                   padding: 1rem;
-                  background-color: rgba(var(--ltpp-light-color), 0.888);
-                  border-color: rgba(var(--ltpp-light-color), 0.888);
+                  background-color: rgba(var(--ltpp-light-color), 1);
+                  border-color: rgba(var(--ltpp-light-color), 1);
                   color: rgb(254, 255, 255);
                   min-height: 1rem;
                 "
@@ -566,7 +566,7 @@ export default {
           offset: 80,
         });
       });
-      if (res.code == 0) {
+      if (res?.code == 0) {
         // code为0
         // 等待中
         return;
@@ -581,7 +581,7 @@ export default {
       this.usememory = res.usememory;
       this.iswrong = true;
       this.wrong = res.result;
-      if (res.code == 1) {
+      if (res?.code == 1) {
         this.istestres = true;
       } else {
         this.istestres = false;
@@ -621,8 +621,8 @@ export default {
         });
         return;
       });
-      if (res.code == 1) {
-        this.code_id = res.code_id;
+      if (res?.code == 1) {
+        this.code_id = res?.code_id;
         this.up_timer = setInterval(() => {
           this.testQueryOne(this.code_id);
         }, 1000);
@@ -631,7 +631,7 @@ export default {
         this.istest = false;
         this.$msg({
           type: "error",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
@@ -666,7 +666,7 @@ export default {
           offset: 80,
         });
       });
-      if (res.code == 0) {
+      if (res?.code == 0) {
         // code为0
         // 等待中
         return;
@@ -679,7 +679,7 @@ export default {
       this.istest = false;
       this.usetime = res.usetime;
       this.usememory = res.usememory;
-      if (res.code == 1) {
+      if (res?.code == 1) {
         this.ac = res.result;
         this.isac = true;
         this.iswrong = false;
@@ -727,8 +727,8 @@ export default {
         });
         return;
       });
-      if (res.code == 1) {
-        this.code_id = res.code_id;
+      if (res?.code == 1) {
+        this.code_id = res?.code_id;
         this.up_timer = setInterval(() => {
           this.submitQueryOne(this.code_id);
         }, 1000);
@@ -737,7 +737,7 @@ export default {
         this.istest = false;
         this.$msg({
           type: "error",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
@@ -838,14 +838,14 @@ export default {
           offset: 80,
         });
       });
-      if (res.code == 1 && res.data != undefined && res.data != "") {
+      if (res?.code == 1 && res?.data != undefined && res?.data != "") {
         this.$alert("是否使用该题最近的AC代码？", "提示", {
           confirmButtonText: "确定",
           type: "warning",
         })
           .then(() => {
-            this.my_code = res.data;
-            this.editor.setValue(res.data);
+            this.my_code = res?.data;
+            this.editor.setValue(res?.data);
             this.save();
           })
           .catch(() => {});

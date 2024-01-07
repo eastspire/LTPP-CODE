@@ -423,6 +423,22 @@
         v-model.lazy="userdata.mysay"
         style="font-size: 1.06rem; overflow: hidden"
       ></el-input>
+      <p
+        style="
+          font-size: 1.06rem;
+          text-align: left;
+          font-weight: bold;
+          margin: 1rem 0rem 0.5rem 0rem;
+        "
+      >
+        CSS自定义配置
+      </p>
+      <el-input
+        type="textarea"
+        :autosize="{ minRows: 2, maxRows: 400000 }"
+        v-model.lazy="userdata.root_css"
+        style="font-size: 1.06rem; overflow: hidden"
+      ></el-input>
       <div style="height: 1.6rem"></div>
       <div slot="footer" class="dialog-footer">
         <div style="float: left">
@@ -605,7 +621,7 @@
           style="font-size: 1.06rem; margin-right: 2rem; font-weight: bold"
           width="auto"
           class="el-icon-upload2"
-          >添加用户</el-button
+          >添加</el-button
         >
         <el-button
           type="primary"
@@ -675,17 +691,17 @@ export default {
           offset: 80,
         });
       });
-      if (res.code == 1) {
+      if (res?.code == 1) {
         this.$msg({
           type: "success",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
       } else {
         this.$msg({
           type: "error",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
@@ -709,17 +725,17 @@ export default {
           offset: 80,
         });
       });
-      if (res.code == 1) {
+      if (res?.code == 1) {
         this.$msg({
           type: "success",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
       } else {
         this.$msg({
           type: "error",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
@@ -760,7 +776,7 @@ export default {
           offset: 80,
         });
       });
-      if (res.code == 1) {
+      if (res?.code == 1) {
         this.page = 1;
         this.limit = 50;
         this.headimage = "";
@@ -771,14 +787,14 @@ export default {
         this.email = "";
         this.$msg({
           type: "success",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
       } else {
         this.$msg({
           type: "error",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
@@ -817,13 +833,13 @@ export default {
           offset: 80,
         });
       });
-      this.tableData = res.data;
+      this.tableData = res?.data;
       this.total = res.allnum;
 
       if (!this.showone) {
         this.$msg({
           type: "success",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
@@ -884,7 +900,7 @@ export default {
           offset: 80,
         });
       });
-      this.userdata = res.data;
+      this.userdata = res?.data;
     },
 
     async getlist() {
@@ -909,7 +925,7 @@ export default {
           offset: 80,
         });
       });
-      this.tableData = res.data;
+      this.tableData = res?.data;
       this.total = res.allnum; //总条数
     },
 
@@ -932,17 +948,17 @@ export default {
         });
       });
 
-      if (res.code == 1) {
+      if (res?.code == 1) {
         this.$msg({
           type: "success",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
       } else
         this.$msg({
           type: "error",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
@@ -967,17 +983,17 @@ export default {
             },
           })
             .then((res) => {
-              if (res.data.code == 1) {
+              if (res?.data.code == 1) {
                 this.$msg({
                   type: "success",
-                  message: res.data.msg,
+                  message: res?.data.msg,
                   duration: 1600,
                   offset: 80,
                 });
               } else {
                 this.$msg({
                   type: "error",
-                  message: res.data.msg,
+                  message: res?.data.msg,
                   duration: 1600,
                   offset: 80,
                 });

@@ -365,12 +365,12 @@ export default {
           offset: 80,
         });
       });
-      if (res.code == 1) {
-        this.tableData = res.data;
+      if (res?.code == 1) {
+        this.tableData = res?.data;
       } else {
         this.$msg({
           type: "error",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });

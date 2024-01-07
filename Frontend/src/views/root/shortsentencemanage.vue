@@ -391,12 +391,12 @@ export default {
         });
       });
       this.total = res.allnum;
-      this.shortsentenceList = res.data;
+      this.shortsentenceList = res?.data;
 
-      if (res.code != 1) {
+      if (res?.code != 1) {
         this.$msg({
           type: "error",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
@@ -421,17 +421,17 @@ export default {
             },
           })
             .then((res) => {
-              if (res.data.code == 1) {
+              if (res?.data.code == 1) {
                 this.$msg({
                   type: "success",
-                  message: res.data.msg,
+                  message: res?.data.msg,
                   duration: 1600,
                   offset: 80,
                 });
               } else {
                 this.$msg({
                   type: "error",
-                  message: res.data.msg,
+                  message: res?.data.msg,
                   duration: 1600,
                   offset: 80,
                 });
@@ -482,13 +482,13 @@ export default {
           offset: 80,
         });
       });
-      this.shortsentenceList = res.data;
+      this.shortsentenceList = res?.data;
       this.total = res.allnum;
 
-      if (res.code != 1) {
+      if (res?.code != 1) {
         this.$msg({
           type: "error",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
@@ -531,17 +531,17 @@ export default {
           offset: 80,
         });
       });
-      if (res.code == 1) {
+      if (res?.code == 1) {
         this.$msg({
           type: "success",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
       } else {
         this.$msg({
           type: "error",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
@@ -572,17 +572,17 @@ export default {
           offset: 80,
         });
       });
-      if (res.code == 1) {
+      if (res?.code == 1) {
         this.$msg({
           type: "success",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
       } else {
         this.$msg({
           type: "error",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });

@@ -127,7 +127,7 @@ export default {
           return;
         });
       this.loadfinish = true;
-      this.tableData = res.data;
+      this.tableData = res?.data;
     },
   },
   data() {

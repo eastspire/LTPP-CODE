@@ -286,7 +286,7 @@ export default {
         });
       });
       this.total = res.allnum;
-      this.contestlist = res.data;
+      this.contestlist = res?.data;
     },
     //搜索
     async keysearch() {
@@ -310,7 +310,7 @@ export default {
           offset: 80,
         });
       });
-      this.contestlist = res.data;
+      this.contestlist = res?.data;
       this.total = res.allnum;
     },
     //搜索预处理

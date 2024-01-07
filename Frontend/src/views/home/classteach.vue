@@ -181,7 +181,7 @@ export default {
           offset: 80,
         });
       });
-      if (res.code == 1) {
+      if (res?.code == 1) {
         this.name = res.name;
       } else {
         this.name = "无名氏";
@@ -267,13 +267,13 @@ export default {
         });
       });
       this.finish = 1;
-      if (res.code == 1) {
+      if (res?.code == 1) {
         this.classurl = res.classurl;
         window.sessionStorage.setItem("classurl", res.classurl);
       } else {
         this.$msg({
           type: "error",
-          message: res.msg,
+          message: res?.msg,
           duration: 800,
           offset: 80,
         });

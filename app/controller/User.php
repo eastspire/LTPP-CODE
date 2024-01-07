@@ -2,7 +2,6 @@
 
 namespace app\controller;
 
-use Exception;
 use stdClass;
 use support\Request;
 use Tinywan\Jwt\JwtToken;
@@ -49,7 +48,8 @@ class User
         'class',
         'money',
         'musiclovelistid',
-        'musicuid'
+        'musicuid',
+        'root_css'
     ];
 
     /**
@@ -149,6 +149,18 @@ class User
     }
 
     /**
+     * 获取CSS
+     */
+    public function getCss()
+    {
+        $my_uid = JwtToken::getCurrentId();
+        $my_aid = Base::getIdByUid($my_uid);
+        $db = Base::getUserData($my_aid);
+        $css = $db->root_css;
+        return json(['code' => 1, 'data' => $css, 'msg' => 'CSS获取成功']);
+    }
+
+    /**
      * 使用QQ头像
      * @param Request $request 请求
      * @return string $res json
@@ -157,11 +169,7 @@ class User
     {
         $my_uid = JwtToken::getCurrentId();
         $my_aid = Base::getIdByUid($my_uid);
-        $db = Db::table('user')
-            ->where('id', $my_aid)
-            ->where('isdel', 0)
-            ->select('email')
-            ->first();
+        $db = Base::getUserData($my_aid);
         $qqheadimage = 'https://q1.qlogo.cn/headimg_dl?dst_uin=' . $db->email . '&spec=640';
         Db::table('user')
             ->where('id', $my_aid)
@@ -180,7 +188,6 @@ class User
         $my_uid = JwtToken::getCurrentId();
         $my_aid = Base::getIdByUid($my_uid);
         $now = time();
-
         Db::table('user')
             ->where('id', $my_aid)
             ->update([
@@ -1283,7 +1290,8 @@ class User
                     'school' => $data['school'],
                     'college' => $data['college'],
                     'subject' => $data['subject'],
-                    'class' => $data['class']
+                    'class' => $data['class'],
+                    'root_css' => $data['root_css'],
                 ]);
         } else {
             $info = Db::table('user')
@@ -1302,7 +1310,8 @@ class User
                     'school' => $data['school'],
                     'college' => $data['college'],
                     'subject' => $data['subject'],
-                    'class' => $data['class']
+                    'class' => $data['class'],
+                    'root_css' => $data['root_css'],
                 ]);
         }
         Base::updateUserDataRedis($my_aid);

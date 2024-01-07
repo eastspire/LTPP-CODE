@@ -220,7 +220,6 @@
                   "
                 >
                   <el-button
-                    class="pulse-enter-active"
                     slot="append"
                     icon="el-icon-success"
                     @click="
@@ -807,7 +806,7 @@ export default {
         .then((res) => {
           // 第二步.将返回的url替换到文本原位置![...](0) -> ![...](url)
           // $vm.$img2Url 详情见本页末尾
-          this.$refs.md.$img2Url(pos, res.data.url);
+          this.$refs.md.$img2Url(pos, res?.data.url);
         })
         .catch((t) => {
           this.$msg({
@@ -834,18 +833,18 @@ export default {
         });
       });
 
-      if (res.code == 1) {
+      if (res?.code == 1) {
         this.commenttext = "";
         this.$msg({
           type: "success",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
       } else {
         this.$msg({
           type: "error",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
@@ -914,8 +913,8 @@ export default {
             offset: 80,
           });
         });
-        if (res && res.code && res.code == 1) {
-          this.char_set = res.data;
+        if (res && res?.code && res?.code == 1) {
+          this.char_set = res?.data;
           return;
         }
       }
@@ -953,7 +952,7 @@ export default {
           offset: 80,
         });
       });
-      this.file_percentage = res.data;
+      this.file_percentage = res?.data;
     },
     async newfile() {
       if (this.newname == "") {
@@ -980,17 +979,17 @@ export default {
           offset: 80,
         });
       });
-      if (res.code == 1) {
+      if (res?.code == 1) {
         this.$msg({
           type: "success",
-          message: res.msg,
+          message: res?.msg,
           duration: 600,
           offset: 80,
         });
       } else {
         this.$msg({
           type: "error",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
@@ -1014,7 +1013,7 @@ export default {
           offset: 80,
         });
       });
-      this.list = res.data;
+      this.list = res?.data;
     },
     //上传文件自动刷新
     async reloadList(response, file, file_list) {
@@ -1049,7 +1048,7 @@ export default {
           offset: 80,
         });
       });
-      this.list = res.data;
+      this.list = res?.data;
     },
     async tolookfolder(path) {
       const { data: res } = await this.$ajax({
@@ -1067,7 +1066,7 @@ export default {
         });
       });
       this.filepath.push(path); //获取到文件列表后入栈
-      this.list = res.data;
+      this.list = res?.data;
     },
     async refreshlist(path) {
       const { data: res } = await this.$ajax({
@@ -1084,7 +1083,7 @@ export default {
           offset: 80,
         });
       });
-      this.list = res.data;
+      this.list = res?.data;
     },
 
     async tolookcode(path) {
@@ -1116,8 +1115,8 @@ export default {
           offset: 80,
         });
       });
-      if (res.code == 1) {
-        this.code = res.data;
+      if (res?.code == 1) {
+        this.code = res?.data;
         if (is_code) {
           this.is_code_file = true;
         }
@@ -1149,17 +1148,17 @@ export default {
           offset: 80,
         });
       });
-      if (res.code == 1) {
+      if (res?.code == 1) {
         this.$msg({
           type: "success",
-          message: res.msg,
+          message: res?.msg,
           duration: 600,
           offset: 80,
         });
       } else {
         this.$msg({
           type: "error",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
@@ -1269,7 +1268,7 @@ export default {
           offset: 80,
         });
       });
-      this.list = res.data;
+      this.list = res?.data;
     },
 
     async deletefile(path) {
@@ -1287,17 +1286,17 @@ export default {
           offset: 80,
         });
       });
-      if (res.code == 1) {
+      if (res?.code == 1) {
         this.$msg({
           type: "success",
-          message: res.msg,
+          message: res?.msg,
           duration: 600,
           offset: 80,
         });
       } else {
         this.$msg({
           type: "error",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
@@ -1375,13 +1374,13 @@ export default {
 
           let Name = this.Base64Decode(first_name, this.char_set) + last_name;
           if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-            const blob = new Blob([res.data], {
+            const blob = new Blob([res?.data], {
               type: "application/octet-stream;application/zip",
             });
             window.navigator.msSaveOrOpenBlob(blob, Name);
           } else {
             /* 火狐谷歌的文件下载方式 */
-            const blob = new Blob([res.data], {
+            const blob = new Blob([res?.data], {
               type: "application/octet-stream;application/zip",
             });
             let url = window.URL.createObjectURL(blob);
@@ -1431,13 +1430,13 @@ export default {
           let Name = "下载" + reslastname;
 
           if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-            const blob = new Blob([res.data], {
+            const blob = new Blob([res?.data], {
               type: "application/zip",
             });
             window.navigator.msSaveOrOpenBlob(blob, Name);
           } else {
             /* 火狐谷歌的文件下载方式 */
-            const blob = new Blob([res.data], {
+            const blob = new Blob([res?.data], {
               type: "application/zip",
             });
             let url = window.URL.createObjectURL(blob);
@@ -1465,8 +1464,8 @@ export default {
 
 /deep/.el-textarea__inner {
   color: var(--ltpp-box-text-color) !important;
-  background-color: rgba(var(--ltpp-light-color), 0.888) !important;
-  border-color: rgba(var(--ltpp-light-color), 0.888) !important;
+  background-color: rgba(var(--ltpp-light-color), 1) !important;
+  border-color: rgba(var(--ltpp-light-color), 1) !important;
 }
 .folder {
   float: left;

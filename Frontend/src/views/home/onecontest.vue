@@ -1106,7 +1106,7 @@ export default {
         return;
       });
       this.changecodelanguage(res.language);
-      this.code = res.data;
+      this.code = res?.data;
       this.isseecode = true;
     },
     async frontendJudgeIsMyContest() {
@@ -1127,8 +1127,8 @@ export default {
           offset: 80,
         });
       });
-      if (res.code == 1) {
-        this.is_my_contest = res.data == 1;
+      if (res?.code == 1) {
+        this.is_my_contest = res?.data == 1;
       }
     },
     async getProblemMD() {
@@ -1181,10 +1181,10 @@ export default {
         });
       });
       this.show_code_check_similarity = true;
-      if (res.code == 1) {
+      if (res?.code == 1) {
         this.$msg({
           type: "success",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
@@ -1193,7 +1193,7 @@ export default {
       } else {
         this.$msg({
           type: "error",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
@@ -1218,10 +1218,10 @@ export default {
           offset: 80,
         });
       });
-      if (res.code == 1) {
+      if (res?.code == 1) {
         this.$msg({
           type: "success",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
@@ -1244,7 +1244,7 @@ export default {
       } else {
         this.$msg({
           type: "error",
-          message: res.msg,
+          message: res?.msg,
           duration: 800,
           offset: 80,
         });
@@ -1277,10 +1277,10 @@ export default {
           });
           return;
         });
-        if (res.code == 1) {
+        if (res?.code == 1) {
           /* ACM赛制，SQS赛制 */
           this.isshow = true;
-          this.resuserrank = res.data;
+          this.resuserrank = res?.data;
           this.problemIndex = res.problemIndex;
           this.myrank = res.myrank;
           this.total = res.total;
@@ -1290,7 +1290,7 @@ export default {
             (this.showone_join_msg = true) &&
             this.$msg({
               type: "error",
-              message: res.msg,
+              message: res?.msg,
               duration: 800,
               offset: 80,
             });
@@ -1330,10 +1330,10 @@ export default {
           });
           return;
         });
-        if (res.code == 1) {
+        if (res?.code == 1) {
           /* OI赛制，IOI */
           this.show_oi_rank = true;
-          this.resuserrank = res.data;
+          this.resuserrank = res?.data;
           this.problemIndex = res.problemIndex;
           this.myrank = res.myrank;
           this.total = res.total;
@@ -1345,7 +1345,7 @@ export default {
             (this.showone_join_msg = true) &&
             this.$msg({
               type: "error",
-              message: res.msg,
+              message: res?.msg,
               duration: 800,
               offset: 80,
             });
@@ -1375,7 +1375,7 @@ export default {
         });
         return;
       });
-      if (res.code == 1) {
+      if (res?.code == 1) {
         this.isjoin = true;
       } else {
         this.isjoin = false;
@@ -1502,9 +1502,9 @@ export default {
       this.userdata = [];
       this.userdata = res.peopledata;
       this.timedata = res.timedata;
-      this.resrank = res.data;
+      this.resrank = res?.data;
       this.echartsnum = this.userdata.length;
-      if (res.code == 1 && this.type != "OI") {
+      if (res?.code == 1 && this.type != "OI") {
         this.getrank();
       }
     },
@@ -1679,15 +1679,15 @@ export default {
           offset: 80,
         });
       });
-      if (res.code == 1) {
-        this.problemList = res.data;
+      if (res?.code == 1) {
+        this.problemList = res?.data;
         this.isgetprolist = true;
       } else {
         !this.showone_join_msg &&
           (this.showone_join_msg = true) &&
           this.$msg({
             type: "error",
-            message: res.msg,
+            message: res?.msg,
             duration: 1600,
             offset: 80,
           });
@@ -1712,9 +1712,9 @@ export default {
           offset: 80,
         });
       });
-      if (res.code == 1) {
-        this.contestdata = res.data;
-        this.type = res.data.type;
+      if (res?.code == 1) {
+        this.contestdata = res?.data;
+        this.type = res?.data.type;
         /* 允许查看排名 */
         if (this.type == "ACM") {
           this.lookacmrank();
@@ -1746,7 +1746,7 @@ export default {
         } else {
           this.$msg({
             type: "error",
-            message: res.msg,
+            message: res?.msg,
             duration: 800,
             offset: 80,
           });
@@ -1754,7 +1754,7 @@ export default {
       } else {
         this.$msg({
           type: "error",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
@@ -1783,10 +1783,10 @@ export default {
         });
       });
       this.canclick = true;
-      if (res.code == 1) {
+      if (res?.code == 1) {
         this.$msg({
           type: "success",
-          message: res.msg,
+          message: res?.msg,
           duration: 1000,
           offset: 80,
         });
@@ -1834,7 +1834,7 @@ export default {
         this.isjoin = false;
         this.$msg({
           type: "error",
-          message: res.msg,
+          message: res?.msg,
           duration: 1000,
           offset: 80,
         });

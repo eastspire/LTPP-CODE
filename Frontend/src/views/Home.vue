@@ -499,11 +499,11 @@
             border-radius: 1rem;
             height: 100%;
             width: 100%;
-            background-color: #cecfd1;
+            background-color: rgba(var(--ltpp-main-bk-color);
             box-shadow: 0 0 6px rgba(var(--ltpp-main-bk-color), 0.12);
             text-align: center;
             line-height: 40px;
-            color: #008bb6;
+            color: var(--ltpp-main-text-color);
           "
         >
           UP
@@ -1040,7 +1040,7 @@ export default {
           this.$notice({
             title: "通知(" + res.time + ")",
             dangerouslyUseHTMLString: true,
-            message: res.msg,
+            message: res?.msg,
             duration: 10000,
             offset: 80,
           });
@@ -1063,11 +1063,11 @@ export default {
           offset: 80,
         });
       });
-      if (res.code == 1) {
-        this.$store.commit("updateObj", { my_name: res.data["name"] });
-        this.$store.commit("updateObj", { headimage: res.data["headimage"] });
-        this.$store.commit("updateObj", { bkimage: res.data["bkimage"] });
-        this.$store.commit("updateObj", { bkvideo: res.data["bkvideo"] });
+      if (res?.code == 1) {
+        this.$store.commit("updateObj", { my_name: res?.data["name"] });
+        this.$store.commit("updateObj", { headimage: res?.data["headimage"] });
+        this.$store.commit("updateObj", { bkimage: res?.data["bkimage"] });
+        this.$store.commit("updateObj", { bkvideo: res?.data["bkvideo"] });
       }
     },
     async getisusemusic() {
@@ -1085,8 +1085,8 @@ export default {
           offset: 80,
         });
       });
-      if (res.code == 1) {
-        this.lookmusic = res.data;
+      if (res?.code == 1) {
+        this.lookmusic = res?.data;
       } else {
         this.lookmusic = 0;
       }
@@ -1106,17 +1106,17 @@ export default {
           offset: 80,
         });
       });
-      if (res.code == 1) {
+      if (res?.code == 1) {
         this.$msg({
           type: "success",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
       } else {
         this.$msg({
           type: "error",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
@@ -1141,13 +1141,13 @@ export default {
           offset: 80,
         });
       });
-      if (res.code == 1) {
-        this.classurl = res.data;
-        window.sessionStorage.setItem("classurl", res.data);
+      if (res?.code == 1) {
+        this.classurl = res?.data;
+        window.sessionStorage.setItem("classurl", res?.data);
       } else {
         this.$msg({
           type: "error",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
@@ -1172,9 +1172,9 @@ export default {
           offset: 80,
         });
       });
-      if (res.code == 1) {
-        this.socketurl = res.data;
-        window.sessionStorage.setItem("socketurl", res.data);
+      if (res?.code == 1) {
+        this.socketurl = res?.data;
+        window.sessionStorage.setItem("socketurl", res?.data);
       }
     },
     onRouteChanged() {
@@ -1216,9 +1216,9 @@ export default {
         return;
       });
       this.$store.commit("updateObj", { login: true });
-      if (res.code == 2) {
+      if (res?.code == 2) {
         this.$store.commit("updateObj", { admin: true });
-      } else if (res.code == 3) {
+      } else if (res?.code == 3) {
         this.$store.commit("updateObj", { admin: true });
         this.$store.commit("updateObj", { root: true });
       }
@@ -1441,8 +1441,8 @@ export default {
 
 /deep/.el-textarea__inner {
   color: #f5f7fa !important;
-  background-color: rgba(var(--ltpp-light-color), 0.888) !important;
-  border-color: rgba(var(--ltpp-light-color), 0.888) !important;
+  background-color: rgba(var(--ltpp-light-color), 1) !important;
+  border-color: rgba(var(--ltpp-light-color), 1) !important;
 }
 
 /deep/.el-scrollbar__thumb {
@@ -1461,12 +1461,6 @@ export default {
   padding: 0rem 1.6rem !important;
   background-color: rgba(var(--ltpp-main-bk-color), 0) !important;
   color: #f5f7fa !important;
-}
-
-/deep/.el-input-group__append {
-  background-color: rgba(var(--ltpp-main-bk-color), 0.2) !important;
-  color: #f5f7fa !important;
-  border-width: 0rem !important;
 }
 
 /deep/.el-descriptions__body {

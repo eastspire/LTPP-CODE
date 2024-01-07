@@ -255,10 +255,10 @@ export default {
         return;
       });
       if (!this.monitorList?.length) {
-        this.last_id = res.data?.length ? res.data[0].id : "";
+        this.last_id = res?.data?.length ? res?.data[0].id : "";
       }
       this.total = res.allnum;
-      this.monitorList = res.data;
+      this.monitorList = res?.data;
     },
     //搜索
     async keysearch() {
@@ -287,9 +287,9 @@ export default {
         return;
       });
       if (!this.monitorList?.length) {
-        this.last_id = res.data?.length ? res.data[0].id : "";
+        this.last_id = res?.data?.length ? res?.data[0].id : "";
       }
-      this.monitorList = res.data;
+      this.monitorList = res?.data;
       this.total = res.allnum;
     },
     //搜索预处理

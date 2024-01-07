@@ -659,17 +659,17 @@ export default {
         });
       });
 
-      if (res.code == 1) {
+      if (res?.code == 1) {
         this.$msg({
           type: "success",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
       } else {
         this.$msg({
           type: "error",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
@@ -712,7 +712,7 @@ export default {
           offset: 80,
         });
       });
-      this.addproblem = res.data;
+      this.addproblem = res?.data;
     },
     /* 获取竞赛信息*/
     async getcontest() {
@@ -733,15 +733,15 @@ export default {
           offset: 80,
         });
       });
-      if (res.code == 1) {
-        this.onedata = res.data;
+      if (res?.code == 1) {
+        this.onedata = res?.data;
         this.contesttime = new Array();
-        this.contesttime.push(res.data.begin);
-        this.contesttime.push(res.data.end);
+        this.contesttime.push(res?.data.begin);
+        this.contesttime.push(res?.data.end);
       } else {
         this.$msg({
           type: "error",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
@@ -771,7 +771,7 @@ export default {
         });
       });
       this.total = res.allnum;
-      this.problemList = res.data;
+      this.problemList = res?.data;
     },
     backlast() {
       this.$router.go(-1);
@@ -823,10 +823,10 @@ export default {
           offset: 80,
         });
       });
-      if (res.code == 1) {
+      if (res?.code == 1) {
         this.$msg({
           type: "success",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
@@ -834,7 +834,7 @@ export default {
       } else {
         this.$msg({
           type: "error",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
@@ -871,7 +871,7 @@ export default {
           offset: 80,
         });
       });
-      this.problemList = res.data;
+      this.problemList = res?.data;
       this.total = res.allnum;
     },
     //搜索预处理

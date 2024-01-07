@@ -309,7 +309,7 @@ export default {
         });
       });
       this.total = res.allnum;
-      this.contestlist = res.data;
+      this.contestlist = res?.data;
     },
     //搜索
     async keysearch() {
@@ -334,7 +334,7 @@ export default {
           offset: 80,
         });
       });
-      this.contestlist = res.data;
+      this.contestlist = res?.data;
       this.total = res.allnum;
     },
     //搜索预处理
@@ -369,18 +369,18 @@ export default {
             },
           })
             .then((res) => {
-              if (res.data.code == 1) {
+              if (res?.data.code == 1) {
                 this.getlist();
                 this.$msg({
                   type: "success",
-                  message: res.data.msg,
+                  message: res?.data.msg,
                   duration: 1600,
                   offset: 80,
                 });
               } else {
                 this.$msg({
                   type: "error",
-                  message: res.data.msg,
+                  message: res?.data.msg,
                   duration: 1600,
                   offset: 80,
                 });

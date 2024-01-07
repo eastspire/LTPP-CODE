@@ -53,10 +53,10 @@ _axios.interceptors.request.use(
                     }).catch((e) => {
                         return config;
                     });
-                    if (res.code == 1) {
-                        config.baseURL = res.data;
-                        musicbkurl = res.data;
-                        window.sessionStorage.setItem("musicbkurl", res.data);
+                    if (res?.code == 1) {
+                        config.baseURL = res?.data;
+                        musicbkurl = res?.data;
+                        window.sessionStorage.setItem("musicbkurl", res?.data);
                     }
                     return config;
                 } else {

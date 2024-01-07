@@ -490,7 +490,7 @@ export default {
           offset: 80,
         });
       });
-      if (res.data == 1) {
+      if (res?.data == 1) {
         this.isfabulous = true;
       } else {
         this.isfabulous = false;
@@ -511,7 +511,7 @@ export default {
           offset: 80,
         });
       });
-      if (res.data == 1) {
+      if (res?.data == 1) {
         this.islove = true;
       } else {
         this.islove = false;
@@ -533,10 +533,10 @@ export default {
           offset: 80,
         });
       });
-      if (res.code == 1) {
+      if (res?.code == 1) {
         this.$msg({
           type: "success",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
@@ -545,7 +545,7 @@ export default {
       } else {
         this.$msg({
           type: "error",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
@@ -567,10 +567,10 @@ export default {
           offset: 80,
         });
       });
-      if (res.code == 1) {
+      if (res?.code == 1) {
         this.$msg({
           type: "success",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
@@ -579,7 +579,7 @@ export default {
       } else {
         this.$msg({
           type: "error",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
@@ -601,10 +601,10 @@ export default {
           offset: 80,
         });
       });
-      if (res.code == 1) {
+      if (res?.code == 1) {
         this.$msg({
           type: "success",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
@@ -613,7 +613,7 @@ export default {
       } else {
         this.$msg({
           type: "error",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
@@ -635,10 +635,10 @@ export default {
           offset: 80,
         });
       });
-      if (res.code == 1) {
+      if (res?.code == 1) {
         this.$msg({
           type: "success",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
@@ -647,7 +647,7 @@ export default {
       } else {
         this.$msg({
           type: "error",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
@@ -675,10 +675,10 @@ export default {
           offset: 80,
         });
       });
-      if (res.code == 1) {
+      if (res?.code == 1) {
         this.$msg({
           type: "success",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
@@ -691,7 +691,7 @@ export default {
       } else {
         this.$msg({
           type: "error",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
@@ -726,8 +726,8 @@ export default {
           offset: 80,
         });
       });
-      if (res.code == 1) {
-        await res.data.forEach(async (tem) => {
+      if (res?.code == 1) {
+        await res?.data.forEach(async (tem) => {
           await this.userComment.push(tem);
         });
 
@@ -741,7 +741,7 @@ export default {
       } else {
         this.$msg({
           type: "error",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
@@ -765,13 +765,13 @@ export default {
       });
       this.comment_load_all_finish = false;
       this.commentLock = false;
-      if (res.code == 1) {
+      if (res?.code == 1) {
         this.userComment = [];
         this.loadUserComment();
       } else {
         this.$msg({
           type: "error",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
@@ -792,7 +792,7 @@ export default {
           offset: 80,
         });
       });
-      this.onevideo = res.data;
+      this.onevideo = res?.data;
       this.total = res.allnum;
       if (!this.total || res?.code != 1) {
         this.$msg({
@@ -848,7 +848,7 @@ export default {
           offset: 80,
         });
       });
-      this.onevideo = res.data;
+      this.onevideo = res?.data;
       this.total = res.allnum;
       await this.IsFabulous();
       await this.IsLove();

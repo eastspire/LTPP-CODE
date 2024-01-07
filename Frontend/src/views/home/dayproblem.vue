@@ -258,7 +258,7 @@ export default {
           offset: 80,
         });
       });
-      this.problemList = res.data;
+      this.problemList = res?.data;
       this.total = res.allnum;
     },
 

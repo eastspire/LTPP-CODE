@@ -318,14 +318,14 @@ export default {
         });
       });
       this.total = res.allnum;
-      this.tableData = res.data;
+      this.tableData = res?.data;
       if (res.allnum == 0) {
         this.issearch = false;
       }
       if (!this.showone) {
         this.$msg({
           type: "success",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
@@ -383,14 +383,14 @@ export default {
         });
       });
       this.total = res.allnum;
-      this.tableData = res.data;
+      this.tableData = res?.data;
       if (res.allnum == 0) {
         this.issearch = false;
       }
       if (!this.showone) {
         this.$msg({
           type: "success",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
@@ -416,7 +416,7 @@ export default {
           offset: 80,
         });
       });
-      this.userdata = res.data;
+      this.userdata = res?.data;
     },
 
     async followuser() {
@@ -437,18 +437,18 @@ export default {
           offset: 80,
         });
       });
-      if (res.code == 1) {
+      if (res?.code == 1) {
         this.passdata(this.userdata.id);
         this.$msg({
           type: "success",
-          message: res.msg,
+          message: res?.msg,
           duration: 600,
           offset: 80,
         });
       } else {
         this.$msg({
           type: "error",
-          message: res.msg,
+          message: res?.msg,
           duration: 800,
           offset: 80,
         });

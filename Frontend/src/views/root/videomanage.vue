@@ -461,7 +461,7 @@ export default {
         });
       });
       this.total = res.allnum;
-      this.videoList = res.data;
+      this.videoList = res?.data;
     },
     async deleteallvideo() {
       this.$confirm("确定清空全部视频吗？", "提示", {
@@ -478,18 +478,18 @@ export default {
             },
           })
             .then((res) => {
-              if (res.data.code == 1) {
+              if (res?.data.code == 1) {
                 this.getlist();
                 this.$msg({
                   type: "success",
-                  message: res.data.msg,
+                  message: res?.data.msg,
                   duration: 1600,
                   offset: 80,
                 });
               } else {
                 this.$msg({
                   type: "error",
-                  message: res.data.msg,
+                  message: res?.data.msg,
                   duration: 1600,
                   offset: 80,
                 });
@@ -532,18 +532,18 @@ export default {
             },
           })
             .then((res) => {
-              if (res.data.code == 1) {
+              if (res?.data.code == 1) {
                 this.getlist();
                 this.$msg({
                   type: "success",
-                  message: res.data.msg,
+                  message: res?.data.msg,
                   duration: 1600,
                   offset: 80,
                 });
               } else {
                 this.$msg({
                   type: "error",
-                  message: res.data.msg,
+                  message: res?.data.msg,
                   duration: 1600,
                   offset: 80,
                 });
@@ -589,7 +589,7 @@ export default {
           offset: 80,
         });
       });
-      this.videoList = res.data;
+      this.videoList = res?.data;
       this.total = res.allnum;
     },
     //搜索预处理
@@ -630,7 +630,7 @@ export default {
           offset: 80,
         });
       });
-      if (res.code == 1) {
+      if (res?.code == 1) {
         this.isadd = false;
         this.isupdate = false;
         this.id = "";
@@ -639,14 +639,14 @@ export default {
         this.tag = "";
         this.$msg({
           type: "success",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
       } else {
         this.$msg({
           type: "error",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
@@ -680,7 +680,7 @@ export default {
           offset: 80,
         });
       });
-      if (res.code == 1) {
+      if (res?.code == 1) {
         this.isupdate = false;
         this.isadd = false;
         this.id = "";
@@ -689,14 +689,14 @@ export default {
         this.tag = "";
         this.$msg({
           type: "success",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
       } else {
         this.$msg({
           type: "error",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });

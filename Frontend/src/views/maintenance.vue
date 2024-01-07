@@ -53,7 +53,7 @@ export default {
   width: 100vw;
   height: 100vh;
   will-change: transform;
-  background-color: #e493d0;
+  background-color: var(--ltpp-main-color);
   background-image: radial-gradient(
       closest-side,
       rgba(235, 105, 78, 1),

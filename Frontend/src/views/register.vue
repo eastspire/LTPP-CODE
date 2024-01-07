@@ -152,7 +152,7 @@ export default {
         return;
       });
 
-      if (res.code == 500) {
+      if (res?.code == 500) {
         this.isup = false;
         this.$msg({
           type: "error",
@@ -162,11 +162,11 @@ export default {
         });
         return;
       }
-      if (res.code == 1) {
+      if (res?.code == 1) {
         setTimeout(() => {
           this.$msg({
             type: "success",
-            message: res.msg,
+            message: res?.msg,
             duration: 1600,
             offset: 80,
           });
@@ -177,7 +177,7 @@ export default {
         setTimeout(() => {
           this.$msg({
             type: "error",
-            message: res.msg,
+            message: res?.msg,
             duration: 1600,
             offset: 80,
           });
@@ -237,7 +237,7 @@ export default {
         return;
       });
 
-      if (res.code == 500) {
+      if (res?.code == 500) {
         setTimeout(() => {
           this.$msg({
             type: "error",
@@ -248,22 +248,22 @@ export default {
           this.isup = false;
         }, 360);
         return;
-      } else if (res.code == 1) {
+      } else if (res?.code == 1) {
         setTimeout(() => {
           this.$msg({
             type: "success",
-            message: res.msg,
+            message: res?.msg,
             duration: 1600,
             offset: 80,
           });
           this.isup = false;
         }, 360);
-      } else if (res.code == 0) {
+      } else if (res?.code == 0) {
         setTimeout(() => {
           this.$notice({
             title: "消息",
             dangerouslyUseHTMLString: true,
-            message: res.msg,
+            message: res?.msg,
             duration: 0,
             offset: 80,
           });
@@ -273,7 +273,7 @@ export default {
         setTimeout(() => {
           this.$msg({
             type: "error",
-            message: res.msg,
+            message: res?.msg,
             duration: 1600,
             offset: 80,
           });
@@ -305,7 +305,7 @@ export default {
   margin: 0;
   width: 100vw;
   min-height: 100vh;
-  background-color: #e493d0;
+  background-color: var(--ltpp-main-color);
   background-image: radial-gradient(
       closest-side,
       rgba(235, 105, 78, 1),

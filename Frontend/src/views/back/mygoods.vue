@@ -422,18 +422,18 @@ export default {
         });
         return;
       });
-      if (res.code == 1) {
+      if (res?.code == 1) {
         this.$notice({
           title: "通知",
           dangerouslyUseHTMLString: true,
-          message: res.msg,
+          message: res?.msg,
           duration: 3600,
           offset: 80,
         });
       } else {
         this.$msg({
           type: "error",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
@@ -471,13 +471,13 @@ export default {
             Name = this.goods_data.name + "." + this.goods_data.type;
           }
           if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-            const blob = new Blob([res.data], {
+            const blob = new Blob([res?.data], {
               type: "application/octet-stream;application/zip",
             });
             window.navigator.msSaveOrOpenBlob(blob, Name);
           } else {
             /* 火狐谷歌的文件下载方式 */
-            const blob = new Blob([res.data], {
+            const blob = new Blob([res?.data], {
               type: "application/octet-stream;application/zip",
             });
             let url = window.URL.createObjectURL(blob);
@@ -523,13 +523,13 @@ export default {
           offset: 80,
         });
       });
-      if (res.code == 1) {
+      if (res?.code == 1) {
         this.total = res.allnum;
-        this.goodsList = res.data;
+        this.goodsList = res?.data;
       } else {
         this.$msg({
           type: "error",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
@@ -554,13 +554,13 @@ export default {
           offset: 80,
         });
       });
-      if (res.code == 1) {
-        this.goods_data = res.data;
+      if (res?.code == 1) {
+        this.goods_data = res?.data;
         this.see_dialog = true;
       } else {
         this.$msg({
           type: "error",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
@@ -589,13 +589,13 @@ export default {
           offset: 80,
         });
       });
-      if (res.code == 1) {
-        this.goodsList = res.data;
+      if (res?.code == 1) {
+        this.goodsList = res?.data;
         this.total = res.allnum;
       } else {
         this.$msg({
           type: "error",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });

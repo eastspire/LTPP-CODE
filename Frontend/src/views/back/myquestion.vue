@@ -282,12 +282,12 @@ export default {
         this.isinit = true;
         return;
       });
-      if (res.code == 1) {
+      if (res?.code == 1) {
         if (!this.isinit) {
           this.data_list = [];
         }
-        this.data_list.push(...res.data);
-        if (res.data && !res.data?.length) {
+        this.data_list.push(...res?.data);
+        if (res?.data && !res?.data?.length) {
           this.$msg({
             type: "success",
             message: "没有更多啦！",
@@ -332,12 +332,12 @@ export default {
         this.isinit = true;
         return;
       });
-      if (res.code == 1) {
+      if (res?.code == 1) {
         if (!this.isinit) {
           this.data_list = [];
         }
-        this.data_list.push(...res.data);
-        if (res.data && !res.data?.length) {
+        this.data_list.push(...res?.data);
+        if (res?.data && !res?.data?.length) {
           this.$msg({
             type: "success",
             message: "没有更多啦！",

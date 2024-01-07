@@ -683,8 +683,8 @@ export default {
           offset: 80,
         });
       });
-      if (res.code == 1) {
-        this.aclist = res.data;
+      if (res?.code == 1) {
+        this.aclist = res?.data;
       }
     },
     scrollBottom() {
@@ -739,21 +739,21 @@ export default {
           offset: 80,
         });
       });
-      if (res.code == 1) {
+      if (res?.code == 1) {
         this.userdata.fans--;
         if (this.userid == this.getMyId()) {
           this.userdata.follow = Math.max(0, --this.userdata.follow);
         }
         this.$msg({
           type: "success",
-          message: res.msg,
+          message: res?.msg,
           duration: 600,
           offset: 80,
         });
       } else {
         this.$msg({
           type: "error",
-          message: res.msg,
+          message: res?.msg,
           duration: 800,
           offset: 80,
         });
@@ -779,8 +779,8 @@ export default {
           offset: 80,
         });
       });
-      this.userdata = res.data;
-      if (res.code != 1) {
+      this.userdata = res?.data;
+      if (res?.code != 1) {
         this.$router.go(-1);
       }
     },
@@ -803,7 +803,7 @@ export default {
         });
       });
 
-      if (res.code == 1) {
+      if (res?.code == 1) {
         this.isfollow = true;
       } else {
         this.isfollow = false;
@@ -831,11 +831,11 @@ export default {
           offset: 80,
         });
       });
-      if (res.data == false) {
+      if (res?.data == false) {
         this.showfoot = false;
       } else {
         this.showfoot = true;
-        this.userarticle.push(...res.data);
+        this.userarticle.push(...res?.data);
       }
     },
 
@@ -858,21 +858,21 @@ export default {
           offset: 80,
         });
       });
-      if (res.code == 1) {
+      if (res?.code == 1) {
         this.userdata.fans++;
         if (this.userid == this.getMyId()) {
           this.userdata.follow = Math.max(0, ++this.userdata.follow);
         }
         this.$msg({
           type: "success",
-          message: res.msg,
+          message: res?.msg,
           duration: 600,
           offset: 80,
         });
       } else {
         this.$msg({
           type: "error",
-          message: res.msg,
+          message: res?.msg,
           duration: 600,
           offset: 80,
         });

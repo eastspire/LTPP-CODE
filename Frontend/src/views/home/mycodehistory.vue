@@ -318,10 +318,10 @@ export default {
         });
         return;
       });
-      if (res.code == 1) {
-        this.code = res.data.code;
+      if (res?.code == 1) {
+        this.code = res?.data.code;
       } else {
-        this.code = res.msg;
+        this.code = res?.msg;
       }
       this.isseecode = true;
     },
@@ -354,7 +354,7 @@ export default {
           offset: 80,
         });
       });
-      this.allcodelist = res.data;
+      this.allcodelist = res?.data;
       this.total = res.total;
     },
 

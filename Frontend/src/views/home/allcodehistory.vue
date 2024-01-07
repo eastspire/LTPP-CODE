@@ -302,10 +302,10 @@ export default {
         });
         return;
       });
-      if (res.code == 1) {
-        this.code = res.data.code;
+      if (res?.code == 1) {
+        this.code = res?.data.code;
       } else {
-        this.code = res.msg;
+        this.code = res?.msg;
       }
       this.isseecode = true;
     },
@@ -346,11 +346,11 @@ export default {
             offset: 80,
           });
         });
-        if (!res.data || !res.data.length) {
+        if (!res?.data || !res?.data.length) {
           this.disabledscroll = false;
           return;
         }
-        this.allcodelist = [...res.data, ...this.allcodelist];
+        this.allcodelist = [...res?.data, ...this.allcodelist];
         if (this.allcodelist.length > this.limit * 2) {
           this.allcodelist = this.allcodelist.slice(0, this.limit * 2);
           window.scrollTo(0, document.body.clientHeight / 2 - 140);
@@ -389,7 +389,7 @@ export default {
           offset: 80,
         });
       });
-      if (res.data.length <= 0) {
+      if (res?.data.length <= 0) {
         this.istobottom = true;
         this.$msg({
           type: "success",
@@ -399,7 +399,7 @@ export default {
         });
         return;
       }
-      res.data.forEach((tem) => {
+      res?.data.forEach((tem) => {
         this.allcodelist.push(tem);
       });
       if (this.allcodelist.length > this.limit * 2) {
@@ -468,7 +468,7 @@ export default {
         });
       });
 
-      this.allcodelist = res.data;
+      this.allcodelist = res?.data;
     },
   },
 };

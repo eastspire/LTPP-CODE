@@ -578,13 +578,13 @@ export default {
           let reslastname = ".zip";
           let Name = this.tableData.problemName + reslastname;
           if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-            const blob = new Blob([res.data], {
+            const blob = new Blob([res?.data], {
               type: "application/zip",
             });
             window.navigator.msSaveOrOpenBlob(blob, Name);
           } else {
             /* 火狐谷歌的文件下载方式 */
-            const blob = new Blob([res.data], {
+            const blob = new Blob([res?.data], {
               type: "application/zip",
             });
             let url = window.URL.createObjectURL(blob);
@@ -711,21 +711,21 @@ export default {
         });
       });
       this.issendfinish = true;
-      if (res.code == 1) {
+      if (res?.code == 1) {
         this.$msg({
           type: "success",
           message: "请添加测试样例",
           duration: 1600,
           offset: 80,
         });
-        this.tableData = res.data;
+        this.tableData = res?.data;
         this.passparam = {
           id: this.tableData.id,
         };
       } else {
         this.$msg({
           type: "error",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
@@ -756,17 +756,17 @@ export default {
         });
       });
       this.issendfinish = true;
-      if (res.code == 1) {
+      if (res?.code == 1) {
         this.$msg({
           type: "success",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
       } else {
         this.$msg({
           type: "error",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
@@ -836,17 +836,17 @@ export default {
         });
       });
 
-      if (res.code == 1) {
+      if (res?.code == 1) {
         this.$msg({
           type: "success",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
       } else {
         this.$msg({
           type: "error",
-          message: res.msg,
+          message: res?.msg,
           duration: 1600,
           offset: 80,
         });
@@ -874,8 +874,8 @@ export default {
         });
         this.$router.go(-1);
       });
-      if (res.code == 0 || res.code == 1) {
-        this.tableData = res.data;
+      if (res?.code == 0 || res?.code == 1) {
+        this.tableData = res?.data;
       } else {
         this.$msg({
           type: "error",
