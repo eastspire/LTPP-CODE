@@ -43,9 +43,7 @@
           </div>
           <div style="height: 0.5rem"></div>
           <div
-            v-loading.lock="
-              !onevideo.url || !reg.test(onevideo.url) || total <= 0
-            "
+            v-loading.lock="!onevideo.url || !reg.test(onevideo.url)"
             element-loading-text="拼命加载中"
             element-loading-spinner="el-icon-loading"
             element-loading-background="background-color:rgba(var(--ltpp-main-bk-color),var(--ltpp-list-box-bk-opacity))"
@@ -64,12 +62,10 @@
                 controlslist="nodownload"
               ></video>
               <span
-                v-show="page > 1"
                 class="dec el-icon-caret-left my-span"
                 @click="pageChange(false)"
               ></span>
               <span
-                v-show="page < total"
                 class="inc el-icon-caret-right my-span"
                 @click="pageChange(true)"
               ></span>
@@ -101,7 +97,6 @@
                 @click="
                   comment_load_all_finish = false;
                   userComment = [];
-                  commentLock = false;
                   isSeeComment = true;
                   loadUserComment();
                 "
@@ -376,39 +371,27 @@ export default {
   created() {
     this.issearch = false;
     this.showone = false;
-    this.total = 0;
+    this.onevideo = {};
   },
   async activated() {
     this.isSeeComment = false;
-    this.timer = setInterval(() => {
-      this.lock = false;
-    }, 666);
-
-    this.onevideo = {};
-    this.page = 1;
-    this.commentLock = false;
     this.comment_load_all_finish = false;
     this.userComment = [];
     this.$store.commit("updateObj", { my_id: this.getMyId() });
-    if (this.total != 0) {
+    if (this.key) {
       await this.search();
     } else {
       await this.getlist();
     }
     await this.IsFabulous();
     await this.IsLove();
-    this.commentLock = false;
     this.comment_load_all_finish = false;
     this.video = document.getElementById("nowvideo");
     this.video && this.video.addEventListener("ended", this.videoEnd);
   },
   deactivated() {
-    clearInterval(this.timer);
-    this.timer = null;
-    this.onevideo = {};
     this.isSeeComment = false;
     this.userComment = [];
-    this.commentLock = false;
     this.comment_load_all_finish = false;
     this.video && this.video.removeEventListener("ended", this.videoEnd);
   },
@@ -417,26 +400,20 @@ export default {
       reg: /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\*\+,;=.]+$/,
       drawer_size: "460px",
       comment_load_all_finish: false,
-      lock: false,
-      timer: null,
       isSeeComment: false,
       isfabulous: false,
       islove: false,
       touserid: 0,
       mainid: 0,
       isseeDia: false,
-      commentLock: false,
       mysay: "",
       diamysay: "",
       userComment: [],
       video: null,
-      lastkey: "",
       onevideo: {},
       key: "",
-      page: 1,
       issearch: false,
       showone: false,
-      total: 0,
     };
   },
   methods: {
@@ -473,7 +450,7 @@ export default {
         method: "post",
         url: "/Video/judgeIsFabulous",
         data: {
-          video_id: this.onevideo.id,
+          video_id: this.onevideo?.id,
         },
       }).catch((t) => {
         this.$msg({
@@ -494,7 +471,7 @@ export default {
         method: "post",
         url: "/Video/judgeIsLove",
         data: {
-          video_id: this.onevideo.id,
+          video_id: this.onevideo?.id,
         },
       }).catch((t) => {
         this.$msg({
@@ -516,7 +493,7 @@ export default {
         method: "post",
         url: "/Video/loveVideo",
         data: {
-          video_id: this.onevideo.id,
+          video_id: this.onevideo?.id,
         },
       }).catch((t) => {
         this.$msg({
@@ -534,7 +511,7 @@ export default {
           offset: 80,
         });
         this.islove = true;
-        this.onevideo.love = Math.max(this.onevideo.love + 1, 0);
+        this.onevideo.love = Math.max(this.onevideo?.love + 1, 0);
       } else {
         this.$msg({
           type: "error",
@@ -550,7 +527,7 @@ export default {
         method: "post",
         url: "/Video/fabulousVideo",
         data: {
-          video_id: this.onevideo.id,
+          video_id: this.onevideo?.id,
         },
       }).catch((t) => {
         this.$msg({
@@ -568,7 +545,7 @@ export default {
           offset: 80,
         });
         this.isfabulous = true;
-        this.onevideo.fabulous = Math.max(this.onevideo.fabulous + 1, 0);
+        this.onevideo.fabulous = Math.max(this.onevideo?.fabulous + 1, 0);
       } else {
         this.$msg({
           type: "error",
@@ -584,7 +561,7 @@ export default {
         method: "post",
         url: "/Video/deleteLoveVideo",
         data: {
-          video_id: this.onevideo.id,
+          video_id: this.onevideo?.id,
         },
       }).catch((t) => {
         this.$msg({
@@ -602,7 +579,7 @@ export default {
           offset: 80,
         });
         this.islove = false;
-        this.onevideo.love = Math.max(this.onevideo.love - 1, 0);
+        this.onevideo.love = Math.max(this.onevideo?.love - 1, 0);
       } else {
         this.$msg({
           type: "error",
@@ -618,7 +595,7 @@ export default {
         method: "post",
         url: "/Video/deleteFabulousVideo",
         data: {
-          video_id: this.onevideo.id,
+          video_id: this.onevideo?.id,
         },
       }).catch((t) => {
         this.$msg({
@@ -636,7 +613,7 @@ export default {
           offset: 80,
         });
         this.isfabulous = false;
-        this.onevideo.fabulous = Math.max(this.onevideo.fabulous - 1, 0);
+        this.onevideo.fabulous = Math.max(this.onevideo?.fabulous - 1, 0);
       } else {
         this.$msg({
           type: "error",
@@ -648,19 +625,16 @@ export default {
     },
     // 发表评论
     async SendMyComment(id) {
-      this.commentLock = true;
-
       const { data: res } = await this.$ajax({
         method: "post",
         url: "/Video/sendMyComment",
         data: {
-          video_id: this.onevideo.id,
+          video_id: this.onevideo?.id,
           maincomment_id: id,
           touser_id: this.touserid,
           text: this.touserid == 0 ? this.mysay : this.diamysay,
         },
       }).catch((t) => {
-        this.commentLock = false;
         this.$msg({
           type: "error",
           message: t,
@@ -689,16 +663,14 @@ export default {
           offset: 80,
         });
       }
-      this.commentLock = false;
       this.comment_load_all_finish = false;
       this.userComment = [];
-      this.commentLock = false;
       this.isSeeComment = true;
       this.loadUserComment();
     },
     // 加载评论
     async loadUserComment() {
-      if (this.commentLock || this.comment_load_all_finish) {
+      if (this.comment_load_all_finish) {
         return;
       }
       const { data: res } = await this.$ajax({
@@ -709,7 +681,7 @@ export default {
             this.userComment?.length > 0
               ? this.userComment[this.userComment.length - 1].id
               : 0,
-          video_id: this.onevideo.id,
+          video_id: this.onevideo?.id,
         },
       }).catch((t) => {
         this.$msg({
@@ -725,9 +697,6 @@ export default {
         });
         if (res.is_end) {
           this.comment_load_all_finish = true;
-          setTimeout(() => {
-            this.commentLock = false;
-          }, 360);
           return;
         }
       } else {
@@ -744,7 +713,7 @@ export default {
         method: "post",
         url: "/Video/DeleteComment",
         data: {
-          video_id: this.onevideo.id,
+          video_id: this.onevideo?.id,
           delete_id: id,
         },
       }).catch((t) => {
@@ -756,7 +725,6 @@ export default {
         });
       });
       this.comment_load_all_finish = false;
-      this.commentLock = false;
       if (res?.code == 1) {
         this.userComment = [];
         this.loadUserComment();
@@ -769,12 +737,13 @@ export default {
         });
       }
     },
-    async getlist() {
+    async getlist(up_do = "down") {
       const { data: res } = await this.$ajax({
         method: "post",
         url: "/Video/loadVideo",
         data: {
-          page: this.page,
+          video_id: this.onevideo?.id,
+          do: up_do,
         },
       }).catch((t) => {
         this.$msg({
@@ -784,9 +753,10 @@ export default {
           offset: 80,
         });
       });
-      this.onevideo = res?.data;
-      this.total = res.allnum;
-      if (!this.total || res?.code != 1) {
+      if (res?.code == 1 && res?.data && res?.data?.url) {
+        this.onevideo = res?.data;
+      }
+      if (res?.code != 1) {
         this.$msg({
           type: "error",
           message: res?.msg,
@@ -796,16 +766,12 @@ export default {
       }
     },
     async pageChange(isInc = true) {
-      this.commentLock = true;
-      isInc
-        ? (this.page = Math.min(this.page + 1, this.total))
-        : (this.page = Math.max(0, this.page - 1));
       this.comment_load_all_finish = false;
       this.userComment = [];
       if (this.issearch) {
-        await this.keysearch();
+        await this.keysearch(isInc ? "down" : "up");
       } else {
-        await this.getlist();
+        await this.getlist(isInc ? "down" : "up");
       }
       await this.IsFabulous();
       await this.IsLove();
@@ -813,24 +779,21 @@ export default {
         this.video = document.getElementById("nowvideo");
         this.video && this.videoPlay();
       });
-
-      this.commentLock = false;
-      this.loadUserComment();
     },
     async share() {
       let front_url = await this.getFronturl();
       let url =
-        front_url + "/onevideo?path=" + urlencode(this.onevideo.id, "gbk");
+        front_url + "/onevideo?path=" + urlencode(this.onevideo?.id, "gbk");
       this.copy(url);
     },
-    async keysearch() {
-      this.lastkey = this.key;
+    async keysearch(up_do = "down") {
       const { data: res } = await this.$ajax({
         method: "post",
         url: "/Video/findvideo",
         data: {
           key: this.key,
-          page: this.page,
+          video_id: this.onevideo?.id,
+          do: up_do,
         },
       }).catch((t) => {
         this.$msg({
@@ -840,23 +803,31 @@ export default {
           offset: 80,
         });
       });
-      this.onevideo = res?.data;
-      this.total = res.allnum;
-      await this.IsFabulous();
-      await this.IsLove();
+      if (res?.code == 1 && res?.data && res?.data?.url) {
+        this.onevideo = res?.data;
+      }
+      if (res?.code != 1) {
+        this.$msg({
+          type: "error",
+          message: res?.msg,
+          duration: 1600,
+          offset: 80,
+        });
+      }
     },
-    async search() {
+    async search(up_do = "down") {
       this.issearch = false;
+      this.onevideo = {};
       if (this.key == "" || this.key == null || this.key == undefined) {
-        this.page = 1;
-        await this.getlist();
+        await this.getlist(up_do);
+        await this.IsFabulous();
+        await this.IsLove();
         return;
       }
-      if (this.lastkey != this.key) {
-        this.page = 1;
-      }
       this.issearch = true;
-      await this.keysearch();
+      await this.keysearch(up_do);
+      await this.IsFabulous();
+      await this.IsLove();
     },
   },
 };

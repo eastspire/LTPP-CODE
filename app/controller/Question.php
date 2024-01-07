@@ -409,8 +409,4 @@ class Question
         Base::dataToSafe($db);
         return json(['code' => 1, 'data' => $db, 'msg' => '加载完成']);
     }
-
-
-
-}
-;
+};

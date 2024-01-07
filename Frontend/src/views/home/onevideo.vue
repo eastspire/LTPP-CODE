@@ -71,7 +71,6 @@
               @click="
                 comment_load_all_finish = false;
                 userComment = [];
-                commentLock = false;
                 isSeeComment = true;
                 loadUserComment();
               "
@@ -351,7 +350,6 @@ export default {
     }
     this.isSeeComment = false;
     this.page = 1;
-    this.commentLock = false;
     this.comment_load_all_finish = false;
     this.userComment = [];
     this.$store.commit("updateObj", { my_id: this.getMyId() });
@@ -368,7 +366,6 @@ export default {
     this.onevideo = {};
     this.isSeeComment = false;
     this.userComment = [];
-    this.commentLock = false;
     this.comment_load_all_finish = false;
   },
   data() {
@@ -383,7 +380,6 @@ export default {
       touserid: 0,
       mainid: 0,
       isseeDia: false,
-      commentLock: false,
       mysay: "",
       diamysay: "",
       userComment: [],
@@ -601,8 +597,6 @@ export default {
 
     // 发表评论
     async SendMyComment(id) {
-      this.commentLock = true;
-
       const { data: res } = await this.$ajax({
         method: "post",
         url: "/Video/sendMyComment",
@@ -613,7 +607,6 @@ export default {
           text: this.touserid == 0 ? this.mysay : this.diamysay,
         },
       }).catch((t) => {
-        this.commentLock = false;
         this.$msg({
           type: "error",
           message: t,
@@ -642,17 +635,17 @@ export default {
           offset: 80,
         });
       }
-      this.commentLock = false;
+
       this.comment_load_all_finish = false;
       this.userComment = [];
-      this.commentLock = false;
+
       this.isSeeComment = true;
       this.loadUserComment();
     },
 
     // 加载评论
     async loadUserComment() {
-      if (this.commentLock || this.comment_load_all_finish) {
+      if (this.comment_load_all_finish) {
         return;
       }
       const { data: res } = await this.$ajax({
@@ -680,9 +673,7 @@ export default {
 
         if (res.is_end) {
           this.comment_load_all_finish = true;
-          setTimeout(() => {
-            this.commentLock = false;
-          }, 666);
+          setTimeout(() => {}, 666);
           return;
         }
       } else {
@@ -711,7 +702,7 @@ export default {
         });
       });
       this.comment_load_all_finish = false;
-      this.commentLock = false;
+
       if (res?.code == 1) {
         this.userComment = [];
         this.loadUserComment();

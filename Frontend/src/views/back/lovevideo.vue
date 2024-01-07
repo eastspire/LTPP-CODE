@@ -104,7 +104,6 @@
                 @click="
                   comment_load_all_finish = false;
                   userComment = [];
-                  commentLock = false;
                   isSeeComment = true;
                   loadUserComment();
                 "
@@ -383,12 +382,9 @@ export default {
   },
   async activated() {
     this.isSeeComment = false;
-    this.timer = setInterval(() => {
-      this.lock = false;
-    }, 666);
     this.onevideo = {};
     this.page = 1;
-    this.commentLock = false;
+
     this.comment_load_all_finish = false;
     this.userComment = [];
     this.$store.commit("updateObj", { my_id: this.getMyId() });
@@ -403,18 +399,15 @@ export default {
     }
     await this.IsFabulous();
     await this.IsLove();
-    this.commentLock = false;
+
     this.comment_load_all_finish = false;
     this.video = document.getElementById("nowvideo");
     this.video && this.video.addEventListener("ended", this.videoEnd);
   },
   deactivated() {
-    clearInterval(this.timer);
-    this.timer = null;
     this.onevideo = {};
     this.isSeeComment = false;
     this.userComment = [];
-    this.commentLock = false;
     this.comment_load_all_finish = false;
     this.video && this.video.removeEventListener("ended", this.videoEnd);
   },
@@ -423,8 +416,6 @@ export default {
       reg: /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\*\+,;=.]+$/,
       drawer_size: "460px",
       comment_load_all_finish: false,
-      lock: false,
-      timer: null,
       isSeeComment: false,
       isfabulous: false,
       islove: false,
@@ -655,8 +646,6 @@ export default {
     },
     // 发表评论
     async SendMyComment(id) {
-      this.commentLock = true;
-
       const { data: res } = await this.$ajax({
         method: "post",
         url: "/Video/sendMyComment",
@@ -667,7 +656,6 @@ export default {
           text: this.touserid == 0 ? this.mysay : this.diamysay,
         },
       }).catch((t) => {
-        this.commentLock = false;
         this.$msg({
           type: "error",
           message: t,
@@ -696,16 +684,16 @@ export default {
           offset: 80,
         });
       }
-      this.commentLock = false;
+
       this.comment_load_all_finish = false;
       this.userComment = [];
-      this.commentLock = false;
+
       this.isSeeComment = true;
       this.loadUserComment();
     },
     // 加载评论
     async loadUserComment() {
-      if (this.commentLock || this.comment_load_all_finish) {
+      if (this.comment_load_all_finish) {
         return;
       }
       const { data: res } = await this.$ajax({
@@ -733,9 +721,7 @@ export default {
 
         if (res.is_end) {
           this.comment_load_all_finish = true;
-          setTimeout(() => {
-            this.commentLock = false;
-          }, 360);
+          setTimeout(() => {}, 360);
           return;
         }
       } else {
@@ -764,7 +750,7 @@ export default {
         });
       });
       this.comment_load_all_finish = false;
-      this.commentLock = false;
+
       if (res?.code == 1) {
         this.userComment = [];
         this.loadUserComment();
@@ -804,7 +790,6 @@ export default {
       }
     },
     async pageChange(isInc = true) {
-      this.commentLock = true;
       isInc
         ? (this.page = Math.min(this.page + 1, this.total))
         : (this.page = Math.max(0, this.page - 1));
@@ -821,9 +806,6 @@ export default {
         this.video = document.getElementById("nowvideo");
         this.video && this.videoPlay();
       });
-
-      this.commentLock = false;
-      this.loadUserComment();
     },
     async share() {
       let front_url = await this.getFronturl();
@@ -850,14 +832,14 @@ export default {
       });
       this.onevideo = res?.data;
       this.total = res.allnum;
-      await this.IsFabulous();
-      await this.IsLove();
     },
     async search() {
       this.issearch = false;
       if (this.key == "" || this.key == null || this.key == undefined) {
         this.page = 1;
         await this.getlist();
+        await this.IsFabulous();
+        await this.IsLove();
         return;
       }
       if (this.lastkey != this.key) {
@@ -865,6 +847,8 @@ export default {
       }
       this.issearch = true;
       await this.keysearch();
+      await this.IsFabulous();
+      await this.IsLove();
     },
   },
 };

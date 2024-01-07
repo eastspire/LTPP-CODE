@@ -295,27 +295,33 @@ class Video
     public function findVideo(Request $request)
     {
         $key = $request->post('key');
-        $page = $request->post('page');
-        $limit = 1;
-        $info = Db::table('video')
-            ->where('name', 'like', '%' . $key . '%')
-            ->where('isdel', 0)
-            ->where('isdouyin', 0)
-            ->select(Video::$video_db_key)
-            ->orderBy('id', 'desc')
-            ->paginate($limit, '*', 'page', $page)
-            ->items();
-
-        $allnum = Db::table('video')
-            ->where('name', 'like', '%' . $key . '%')
-            ->where('isdel', 0)
-            ->where('isdouyin', 0)
-            ->count();
+        $video_uid = $request->post('video_id');
+        $video_id = Base::getIdByUid($video_uid);
+        $isdown = $request->post('do') ? $request->post('do')  == 'down' : true;
+        $info = [];
+        if ($video_id) {
+            $info = Db::table('video')
+                ->where('id', $isdown ? '<' : '>', $video_id)
+                ->where('name', 'like', '%' . $key . '%')
+                ->where('isdouyin', 0)
+                ->where('isdel', 0)
+                ->select(Video::$video_db_key)
+                ->orderBy('id', 'desc')
+                ->first();
+        } else {
+            $info = Db::table('video')
+                ->where('name', 'like', '%' . $key . '%')
+                ->where('isdouyin', 0)
+                ->where('isdel', 0)
+                ->select(Video::$video_db_key)
+                ->orderBy('id', 'desc')
+                ->first();
+        }
         Base::dataToSafe($info);
         if ($info) {
-            return json(['code' => 1, 'data' => $info[0], 'allnum' => $allnum, 'msg' => '查找视频成功']);
+            return json(['code' => 1, 'data' => $info, 'msg' => '查找视频成功']);
         }
-        return json(['code' => -1, 'data' => [], 'allnum' => 0, 'msg' => '未找到符合条件的视频']);
+        return json(['code' => -1, 'data' => [], 'msg' => '未找到符合条件的视频']);
     }
 
     /**
@@ -334,7 +340,6 @@ class Video
         return json(['code' => 1, 'data' => $data, 'msg' => '视频列表获取成功']);
     }
 
-
     /**
      * 视频列表
      * @param Request $request 请求
@@ -342,24 +347,31 @@ class Video
      */
     public function loadVideo(Request $request)
     {
-        $page = $request->post('page');
-        $limit = 1;
-        $info = Db::table('video')
-            ->where('isdel', 0)
-            ->where('isdouyin', 0)
-            ->select(Video::$video_db_key)
-            ->orderBy('id', 'desc')
-            ->paginate($limit, '*', 'page', $page)
-            ->items();
-        $allnum = Db::table('video')
-            ->where('isdel', 0)
-            ->where('isdouyin', 0)
-            ->count();
+        $video_uid = $request->post('video_id');
+        $video_id = Base::getIdByUid($video_uid);
+        $isdown = $request->post('do') ? $request->post('do')  == 'down' : true;
+        $info = [];
+        if ($video_id) {
+            $info = Db::table('video')
+                ->where('id', $isdown ? '<' : '>', $video_id)
+                ->where('isdouyin', 0)
+                ->where('isdel', 0)
+                ->select(Video::$video_db_key)
+                ->orderBy('id', 'desc')
+                ->first();
+        } else {
+            $info = Db::table('video')
+                ->where('isdouyin', 0)
+                ->where('isdel', 0)
+                ->select(Video::$video_db_key)
+                ->orderBy('id', 'desc')
+                ->first();
+        }
         Base::dataToSafe($info);
         if ($info) {
-            return json(['code' => 1, 'data' => $info[0], 'allnum' => $allnum, 'msg' => '视频列表获取成功']);
+            return json(['code' => 1, 'data' => $info, 'msg' => '视频列表获取成功']);
         }
-        return json(['code' => -1, 'data' => [], 'allnum' => 0, 'msg' => '暂时没有视频']);
+        return json(['code' => -1, 'data' => [], 'msg' => '暂时没有视频']);
     }
 
     /**
