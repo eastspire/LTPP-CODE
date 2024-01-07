@@ -368,7 +368,7 @@
               width: 14%;
               overflow: hidden;
               margin-left: 1%;
-              background-color: rgba(var(--ltpp-main-bk-color), 0.2)
+              background-color: rgba(var(--ltpp-main-bk-color), 1);
               border-width: 0rem;
             "
             icon="el-icon-upload"
