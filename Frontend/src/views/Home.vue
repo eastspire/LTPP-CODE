@@ -1232,6 +1232,7 @@ export default {
         return;
       }
       this.$store.commit("updateObj", { login: true });
+      this.getCss();
     },
     logout() {
       clearInterval(this.timer);

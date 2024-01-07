@@ -87,7 +87,6 @@ export default {
         window.localStorage.setItem("is_public_network", 1);
         this.$store.commit("updateObj", { is_public_network: 1 });
       }
-      this.getCss();
     },
     async getVersion(is_electron = false) {
       while (true) {
