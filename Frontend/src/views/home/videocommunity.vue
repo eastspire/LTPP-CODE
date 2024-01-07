@@ -16,7 +16,6 @@
           style="font-size: 1.06rem"
           placeholder="请输入需要搜索的视频名称"
           @keyup.enter.native="search()"
-          @blur="search()"
           v-model.lazy="key"
           class="input-with-select"
         >
