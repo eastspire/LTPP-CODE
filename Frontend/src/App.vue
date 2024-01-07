@@ -768,6 +768,8 @@ a:active {
 .el-textarea__inner::placeholder,
 .el-input__inner::placeholder,
 .el-range-input::placeholder,
+.auto-textarea-input,
+.auto-textarea-input::placeholder,
 .el-descriptions__title,
 .md,
 .content-input-wrapper,
@@ -1378,10 +1380,6 @@ pre,
 .fullscreen {
   z-index: 100000000 !important;
   background-color: rgb(var(--ltpp-main-bk-color)) !important;
-}
-
-.md-video-dialog {
-  z-index: 100000000 !important;
 }
 
 .add-image-link {

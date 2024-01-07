@@ -183,7 +183,7 @@ export default {
         ul: true, // 无序列表
         link: true, // 链接
         code: true, // code
-        readmodel: false, // 沉浸式阅读
+        readmodel: true, // 沉浸式阅读
         htmlcode: false, // 展示html源码
         /* 2.1.8 */
         alignleft: true, // 左对齐

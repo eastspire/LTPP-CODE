@@ -462,7 +462,7 @@ export default {
         code: true, // code
         subfield: true, // 是否需要分栏
         fullscreen: false, // 全屏编辑
-        readmodel: false, // 沉浸式阅读
+        readmodel: true, // 沉浸式阅读
         htmlcode: false, // 展示html源码
         /* 1.3.5 */
         undo: true, // 上一步
