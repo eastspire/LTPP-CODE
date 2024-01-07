@@ -179,14 +179,16 @@ export default {
     this.limit = 50;
     this.showone = false;
     this.issearch = false;
-    this.tableData = [];
-    let tem_list = [];
-    for (let i = 0; i < this.limit; ++i) {
-      tem_list.push(this.$SqsGlobal.article_list_data);
-    }
-    this.tableData = tem_list;
   },
   methods: {
+    initData() {
+      this.tableData = [];
+      let tem_list = [];
+      for (let i = 0; i < this.limit; ++i) {
+        tem_list.push(this.$SqsGlobal.article_list_data);
+      }
+      this.tableData = tem_list;
+    },
     tableRowClassName({ row, rowIndex }) {
       if (rowIndex === 1) {
         return "warning-row";
@@ -198,6 +200,7 @@ export default {
 
     async keysearch() {
       this.lastkey = this.key;
+      this.initData();
       const { data: res } = await this.$ajax({
         method: "post",
         url: "/Article/findLoveArticle",
@@ -275,6 +278,7 @@ export default {
     },
 
     async getlist() {
+      this.initData();
       const { data: res } = await this.$ajax({
         method: "post",
         url: "/Article/loadLoveArticleList",

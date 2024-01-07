@@ -666,16 +666,20 @@ export default {
     this.page = 1;
     this.limit = 50;
     this.total = 0;
-    let tem_list = [];
-    for (let i = 0; i < this.limit; ++i) {
-      tem_list.push(this.$SqsGlobal.user_list_data);
-    }
-    this.tableData = tem_list;
+
     this.issearch = false;
     this.showone = false;
   },
 
   methods: {
+    initData() {
+      this.tableData = [];
+      let tem_list = [];
+      for (let i = 0; i < this.limit; ++i) {
+        tem_list.push(this.$SqsGlobal.user_list_data);
+      }
+      this.tableData = tem_list;
+    },
     async addblack(id) {
       const { data: res } = await this.$ajax({
         method: "post",
@@ -818,6 +822,7 @@ export default {
 
     async keysearch() {
       this.lastkey = this.key;
+      this.initData();
       const { data: res } = await this.$ajax({
         method: "post",
         url: "/User/findUser",
@@ -908,7 +913,10 @@ export default {
     },
 
     async getlist() {
+      this.initData();
       if (!this.$store.state.root) {
+        this.tableData = [];
+        this.total = 0;
         return;
       }
       const { data: res } = await this.$ajax({

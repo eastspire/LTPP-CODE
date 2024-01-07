@@ -190,13 +190,16 @@ export default {
     this.limit = 50;
     this.showone = false;
     this.issearch = false;
-    let tem_list = [];
-    for (let i = 0; i < this.limit; ++i) {
-      tem_list.push(this.$SqsGlobal.article_list_data);
-    }
-    this.tableData = tem_list;
   },
   methods: {
+    initData() {
+      this.tableData = tem_list;
+      let tem_list = [];
+      for (let i = 0; i < this.limit; ++i) {
+        tem_list.push(this.$SqsGlobal.article_list_data);
+      }
+      this.tableData = tem_list;
+    },
     handleCurrentChange(val) {
       this.page = val;
       if (this.issearch) {
@@ -218,6 +221,7 @@ export default {
 
     //获取用户文章列表
     async getlist() {
+      this.initData();
       const { data: res } = await this.$ajax({
         method: "post",
         url: "/Article/loadMyArticleList",
@@ -255,6 +259,7 @@ export default {
     //查找
     async keysearch() {
       this.lastkey = this.key;
+      this.initData();
       const { data: res } = await this.$ajax({
         method: "post",
         url: "/Article/myArticleKeySearch",

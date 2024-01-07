@@ -139,12 +139,6 @@ export default {
     this.istobottom = false;
     this.scrolllock = false;
     this.limit = 18;
-    this.tableData = [];
-    let tem_list = [];
-    for (let i = 0; i < this.limit; ++i) {
-      tem_list.push(this.$SqsGlobal.article_list_data);
-    }
-    this.tableData = tem_list;
     if (this.total != 0) {
       if (this.issearch) {
         await this.search();
@@ -177,6 +171,14 @@ export default {
     window.removeEventListener("scroll", this.addlist);
   },
   methods: {
+    initData() {
+      this.tableData = [];
+      let tem_list = [];
+      for (let i = 0; i < this.limit; ++i) {
+        tem_list.push(this.$SqsGlobal.article_list_data);
+      }
+      this.tableData = tem_list;
+    },
     async addlist() {
       if (this.disabledscroll || this.scrolllock) {
         return;
@@ -240,7 +242,10 @@ export default {
       }
       this.scrolllock = true;
       this.disabledscroll = true;
-
+      const article_id =
+        this.tableData.length > 0
+          ? this.tableData[this.tableData.length - 1].id
+          : 0;
       const { data: res } = await this.$ajax({
         method: "post",
         url: this.issearch
@@ -250,10 +255,7 @@ export default {
           process: "8792",
         },
         data: {
-          article_id:
-            this.tableData.length > 0
-              ? this.tableData[this.tableData.length - 1].id
-              : 0,
+          article_id: article_id,
           limit: this.limit,
           do: "down",
           key: this.key,
@@ -300,6 +302,7 @@ export default {
       if (this.scrolllock) {
         return;
       }
+      this.initData();
       const { data: res } = await this.$ajax({
         method: "post",
         url: "/Article/loadAllArticleList",
@@ -338,6 +341,7 @@ export default {
       if (this.scrolllock) return;
       this.lastkey = this.key;
       this.scrolllock = true;
+      this.initData();
       const { data: res } = await this.$ajax({
         method: "post",
         url: "/Article/allArticleKeySearch",
@@ -346,7 +350,7 @@ export default {
         },
         data: {
           key: this.key,
-          article_id: 0,
+          article_id: "",
           limit: this.limit,
           do: "down",
         },
@@ -366,6 +370,7 @@ export default {
       this.scrolllock = false;
       if (this.key == "" || this.key == null || this.key == undefined) {
         this.issearch = false;
+        this.initData();
         this.getlist();
         return;
       }

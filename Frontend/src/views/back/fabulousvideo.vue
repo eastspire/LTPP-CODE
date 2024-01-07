@@ -857,6 +857,7 @@ export default {
     async search() {
       this.issearch = false;
       if (this.key == "" || this.key == null || this.key == undefined) {
+        this.page = 1;
         await this.getlist();
         return;
       }

@@ -389,14 +389,16 @@ export default {
     this.page = 1;
     this.limit = 50;
     this.total = 0;
-    let tem_list = [];
-    for (let i = 0; i < this.limit; ++i) {
-      tem_list.push(this.$SqsGlobal.user_list_data);
-    }
-    this.tableData = tem_list;
   },
-
   methods: {
+    initData() {
+      this.tableData = [];
+      let tem_list = [];
+      for (let i = 0; i < this.limit; ++i) {
+        tem_list.push(this.$SqsGlobal.user_list_data);
+      }
+      this.tableData = tem_list;
+    },
     touserpage(id) {
       id &&
         this.$router.push({
@@ -417,6 +419,7 @@ export default {
 
     async keysearch() {
       this.lastkey = this.key;
+      this.initData();
       const { data: res } = await this.$ajax({
         method: "post",
         url: "/User/searchFollow",
@@ -451,7 +454,6 @@ export default {
     },
     search() {
       this.issearch = false;
-
       if (this.key == "" || this.key == null || this.key == undefined) {
         this.getlist();
         return;
@@ -509,6 +511,7 @@ export default {
     },
 
     async getlist() {
+      this.initData();
       const { data: res } = await this.$ajax({
         method: "post",
         url: "/User/loadFollow",

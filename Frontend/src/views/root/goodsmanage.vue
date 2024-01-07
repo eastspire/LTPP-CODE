@@ -530,11 +530,7 @@ export default {
     this.issearch = false; //判断是否搜索，从而进行分页查找
     this.page = 1;
     this.limit = 50;
-    let tem_list = [];
-    for (let i = 0; i < this.limit; ++i) {
-      tem_list.push(this.$SqsGlobal.goods_list_data);
-    }
-    this.goodsList = tem_list;
+
     await this.getlinuxurl();
   },
   async activated() {
@@ -586,6 +582,14 @@ export default {
     };
   },
   methods: {
+    initData() {
+      this.goodsList = [];
+      let tem_list = [];
+      for (let i = 0; i < this.limit; ++i) {
+        tem_list.push(this.$SqsGlobal.goods_list_data);
+      }
+      this.goodsList = tem_list;
+    },
     upSuccess(response, file, file_list) {
       this.see_update_dialog = false;
       this.see_add_dialog = false;
@@ -762,6 +766,7 @@ export default {
     },
     //获取商品列表
     async getlist() {
+      this.initData();
       const { data: res } = await this.$ajax({
         method: "post",
         url: "/Goods/getList",
@@ -916,6 +921,7 @@ export default {
     //搜索
     async keysearch() {
       this.lastkey = this.key;
+      this.initData();
       const { data: res } = await this.$ajax({
         method: "post",
         url: "/Goods/keySearch",
