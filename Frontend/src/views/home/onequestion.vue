@@ -1552,21 +1552,6 @@ export default {
 </script>
 <style  lang="less" scoped>
 @import "../../../public/md/markdown/github-markdown.min.css";
-/deep/.el-dialog__body {
-  background-color: #293238;
-  color: var(--ltpp-box-text-color);
-}
-/deep/.el-dialog__header {
-  background-color: #293238;
-  height: 0rem;
-}
-/deep/.el-dialog__title {
-  color: var(--ltpp-box-text-color);
-}
-/deep/.el-dialog__footer {
-  background-color: #293238;
-}
-
 /**
 鼠标放上，图片变大
 */

@@ -162,7 +162,7 @@
               </el-table-column>
             </el-table>
             <div>
-              <el-dialog              
+              <el-dialog
                 @contextmenu.prevent.native="isseecode = false"
                 title="代码详情"
                 :visible.sync="isseecode"
@@ -226,11 +226,6 @@ export default {
     this.page = 1;
     this.limit = 50;
     this.total = 0;
-    let tem_list = [];
-    for (let i = 0; i < this.limit; ++i) {
-      tem_list.push(this.$SqsGlobal.codehistory_data);
-    }
-    this.allcodelist = tem_list;
     this.isseecode = false;
   },
   data() {
@@ -247,6 +242,14 @@ export default {
     };
   },
   methods: {
+    initData() {
+      this.allcodelist = [];
+      let tem_list = [];
+      for (let i = 0; i < this.limit; ++i) {
+        tem_list.push(this.$SqsGlobal.codehistory_data);
+      }
+      this.allcodelist = tem_list;
+    },
     cellStyle({ row, rowIndex }) {
       let styleRes = {
         background: "rgba(var(--ltpp-light-color), 0.16) !important",
@@ -336,6 +339,7 @@ export default {
     },
 
     async getlist() {
+      this.initData();
       const { data: res } = await this.$ajax({
         method: "post",
         url: "/Codehistory/getMyCodeList",

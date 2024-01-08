@@ -90,7 +90,7 @@ const routes = [{
             component: () =>
                 import('../views/back/updateonequestion.vue'),
             meta: {
-                title: '修改问题',
+                title: '更新问题',
                 keepAlive: true,
                 index: 2,
 
@@ -748,7 +748,7 @@ const routes = [{
             component: () =>
                 import('../views/back/mydatamanage.vue'),
             meta: {
-                title: '个人信息修改',
+                title: '个人信息更新',
                 keepAlive: true,
                 index: 2,
 

@@ -204,6 +204,7 @@ export default {
   },
   methods: {
     initData() {
+      this.data_list = [];
       let tem_list = [];
       for (let i = 0; i < limit; ++i) {
         tem_list.push(this.$SqsGlobal.question_list_data);

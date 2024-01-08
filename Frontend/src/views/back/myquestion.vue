@@ -2,7 +2,7 @@
  * @Author: 18855190718 1491579574@qq.com
  * @Date: 2023-03-17 09:42:16
  * @LastEditors: wmzn-ltpp 1491579574@qq.com
- * @LastEditTime: 2024-01-07 15:06:47
+ * @LastEditTime: 2024-01-08 20:29:01
  * @FilePath: \LTPP-CODE\Frontend\src\views\back\myquestion.vue
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
@@ -206,6 +206,7 @@ export default {
 
   methods: {
     initData() {
+      this.data_list = [];
       let tem_list = [];
       for (let i = 0; i < limit; ++i) {
         tem_list.push(this.$SqsGlobal.question_list_data);

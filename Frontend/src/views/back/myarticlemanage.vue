@@ -193,7 +193,7 @@ export default {
   },
   methods: {
     initData() {
-      this.tableData = tem_list;
+      this.tableData = [];
       let tem_list = [];
       for (let i = 0; i < this.limit; ++i) {
         tem_list.push(this.$SqsGlobal.article_list_data);

@@ -203,11 +203,6 @@ export default {
     this.istobottom = false;
     this.disabledscroll = false;
     this.allcodelist = [];
-    let tem_list = [];
-    for (let i = 0; i < this.limit; ++i) {
-      tem_list.push(this.$SqsGlobal.codehistory_data);
-    }
-    this.allcodelist = tem_list;
     this.getlist();
     this.scrolltimer = setInterval(() => {
       this.disabledscroll = false;
@@ -254,6 +249,14 @@ export default {
     };
   },
   methods: {
+    initData() {
+      this.allcodelist = [];
+      let tem_list = [];
+      for (let i = 0; i < this.limit; ++i) {
+        tem_list.push(this.$SqsGlobal.codehistory_data);
+      }
+      this.allcodelist = tem_list;
+    },
     changecodelanguage(language) {
       if (language == "C") {
         this.codelanguage = "c";
@@ -448,6 +451,7 @@ export default {
     },
 
     async getlist() {
+      this.initData();
       const { data: res } = await this.$ajax({
         method: "post",
         url: "/Codehistory/getAllCodeList",
