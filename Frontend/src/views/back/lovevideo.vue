@@ -776,8 +776,10 @@ export default {
           offset: 80,
         });
       });
-      this.onevideo = res?.data;
-      this.total = res.allnum;
+      if (res?.data?.url) {
+        this.onevideo = res?.data;
+      }
+      this.total = res?.allnum;
       if (!this.total || res?.code != 1) {
         this.$msg({
           type: "error",
@@ -828,8 +830,18 @@ export default {
           offset: 80,
         });
       });
-      this.onevideo = res?.data;
-      this.total = res.allnum;
+      if (res?.data?.url) {
+        this.onevideo = res?.data;
+      }
+      this.total = res?.allnum;
+      if (!this.total || res?.code != 1) {
+        this.$msg({
+          type: "error",
+          message: res?.msg,
+          duration: 1600,
+          offset: 80,
+        });
+      }
     },
     async search() {
       this.issearch = false;

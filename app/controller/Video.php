@@ -300,14 +300,25 @@ class Video
         $isdown = $request->post('do') ? $request->post('do')  == 'down' : true;
         $info = [];
         if ($video_id) {
-            $info = Db::table('video')
-                ->where('id', $isdown ? '<' : '>', $video_id)
-                ->where('name', 'like', '%' . $key . '%')
-                ->where('isdouyin', 0)
-                ->where('isdel', 0)
-                ->select(Video::$video_db_key)
-                ->orderBy('id', 'desc')
-                ->first();
+            if ($isdown) {
+                $info = Db::table('video')
+                    ->where('id', '<', $video_id)
+                    ->where('name', 'like', '%' . $key . '%')
+                    ->where('isdouyin', 0)
+                    ->where('isdel', 0)
+                    ->select(Video::$video_db_key)
+                    ->orderBy('id', 'desc')
+                    ->first();
+            } else {
+                $info = Db::table('video')
+                    ->where('id', '>', $video_id)
+                    ->where('name', 'like', '%' . $key . '%')
+                    ->where('isdouyin', 0)
+                    ->where('isdel', 0)
+                    ->select(Video::$video_db_key)
+                    ->orderBy('id', 'asc')
+                    ->first();
+            }
         } else {
             $info = Db::table('video')
                 ->where('name', 'like', '%' . $key . '%')
@@ -352,13 +363,23 @@ class Video
         $isdown = $request->post('do') ? $request->post('do')  == 'down' : true;
         $info = [];
         if ($video_id) {
-            $info = Db::table('video')
-                ->where('id', $isdown ? '<' : '>', $video_id)
-                ->where('isdouyin', 0)
-                ->where('isdel', 0)
-                ->select(Video::$video_db_key)
-                ->orderBy('id', 'desc')
-                ->first();
+            if ($isdown) {
+                $info = Db::table('video')
+                    ->where('id',  '<', $video_id)
+                    ->where('isdouyin', 0)
+                    ->where('isdel', 0)
+                    ->select(Video::$video_db_key)
+                    ->orderBy('id', 'desc')
+                    ->first();
+            } else {
+                $info = Db::table('video')
+                    ->where('id', '>', $video_id)
+                    ->where('isdouyin', 0)
+                    ->where('isdel', 0)
+                    ->select(Video::$video_db_key)
+                    ->orderBy('id', 'asc')
+                    ->first();
+            }
         } else {
             $info = Db::table('video')
                 ->where('isdouyin', 0)
