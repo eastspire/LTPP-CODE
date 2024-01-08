@@ -291,6 +291,16 @@
         <div style="height: 2rem"></div>
         <div style="text-align: right">
           <el-button
+            v-if="$store.state.root && $store.state.my_name === 'root'"
+            width="auto"
+            round
+            type="warning"
+            style="margin: 1rem 2rem 0rem 1rem; font-size: 1.06rem"
+            class="el-icon-s-opportunity pulse-enter-active"
+            @click="resetRobotFinishContest()"
+            >机器答题</el-button
+          >
+          <el-button
             width="auto"
             round
             style="margin: 1rem 2rem 0rem 1rem; font-size: 1.06rem"
@@ -307,7 +317,7 @@
             style="margin: 1rem 0.4rem 0rem 1rem; font-size: 1.06rem"
             @click="backlast()"
             class="el-icon-s-unfold pulse-enter-active"
-            >返回</el-button
+            >【返回】</el-button
           >
         </div>
         <div style="height: 3.6rem"></div>
@@ -784,6 +794,40 @@ export default {
           this.addproblem.splice(i, 1); //删除
           return;
         }
+      }
+    },
+    async resetRobotFinishContest() {
+      const { data: res } = await this.$ajax({
+        method: "post",
+        url: "/Contest/resetRobotFinishContest",
+        portType: {
+          process: "8796",
+        },
+        data: {
+          contest_id: this.onedata?.id,
+        },
+      }).catch((t) => {
+        this.$msg({
+          type: "error",
+          message: t,
+          duration: 1600,
+          offset: 80,
+        });
+      });
+      if (res?.code == 1) {
+        this.$msg({
+          type: "success",
+          message: res?.msg,
+          duration: 1600,
+          offset: 80,
+        });
+      } else {
+        this.$msg({
+          type: "error",
+          message: res?.msg,
+          duration: 1600,
+          offset: 80,
+        });
       }
     },
     /* 添加竞赛信息和问题 */

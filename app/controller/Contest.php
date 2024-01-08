@@ -3,7 +3,7 @@
  * @Author: 18855190718 1491579574@qq.com
  * @Date: 2023-01-19 23:50:37
  * @LastEditors: wmzn-ltpp 1491579574@qq.com
- * @LastEditTime: 2023-12-30 13:04:18
+ * @LastEditTime: 2024-01-08 21:47:47
  * @FilePath: \LTPP-CODE\app\controller\Contest.php
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
@@ -828,6 +828,38 @@ class Contest
         }
         Base::updateContestDataRedis($res_id);
         return json(['code' => 1, 'msg' => '竞赛添加成功']);
+    }
+
+    /**
+     * 取消机器人已完成竞赛     
+     */
+    public function resetRobotFinishContest(Request $request)
+    {
+        $my_uid = JwtToken::getCurrentId();
+        $my_aid = Base::getIdByUid($my_uid);
+        $isroot = Base::judgeIsRoot($my_aid);
+        if (!$isroot) {
+            return json(['code' => -1, 'msg' => '权限不足']);
+        }
+        $contest_uid = $request->post('contest_id');
+        $contest_id = Base::getIdByUid($contest_uid);
+        $contest_db = Base::getContestData($contest_id);
+        if (!$contest_db) {
+            return json(['code' => -1, 'msg' => '竞赛不存在！']);
+        }
+        $now = date('Y-m-d H:i:s', time());
+        if ($now <= $contest_db->end) {
+            // 竞赛未结束，更新机器人竞赛
+            Db::table('robotcontestfinish')
+                ->where('contestid', $contest_id)
+                ->where('isdel', 0)
+                ->update(['isdel' => 1]);
+            $redis27 = Redis::connection('db27');
+            $key = Base::$robot_contest_redis_front . $contest_id;
+            $redis27->del($key);
+            return json(['code' => 1, 'msg' => '操作成功！']);
+        }
+        return json(['code' => -1, 'msg' => '竞赛已结束，请修改竞赛结束时间！']);
     }
 
     /**

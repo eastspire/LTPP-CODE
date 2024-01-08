@@ -512,7 +512,7 @@
             box-shadow: 0 0 6px rgba(var(--ltpp-main-bk-color), 0.12);
             text-align: center;
             line-height: 40px;
-            color: var(--ltpp-main-text-color);
+            color: rgba(var(--ltpp-light-color), 1);
           "
         >
           UP

@@ -667,41 +667,38 @@
             <!-- 当展示排名就不展示按钮 -->
             <div style="display: flex; justify-content: space-around">
               <el-button
-                type="text"
+                round
+                style=""
                 v-if="
                   ($store.state.root && $store.state.my_name === 'root') ||
                   is_my_contest
                 "
-                style="color: deeppink; font-size: 1.06rem"
                 @click="delrank()"
                 width="auto"
                 class="el-icon-delete-solid pulse-enter-active shadow"
                 >清理缓存</el-button
               >
               <el-button
-                type="text"
                 v-if="$store.state.root || is_my_contest"
-                style="color: aquamarine; font-size: 1.06rem"
+                round
                 @click="lookPublicContestRank()"
                 width="auto"
                 class="el-icon-s-data pulse-enter-active shadow"
                 >外链排名</el-button
               >
               <el-button
-                type="text"
                 v-if="
                   (($store.state.root && $store.state.my_name === 'root') ||
                     is_my_contest) &&
                   show_code_check_similarity
                 "
-                style="color: deepskyblue; font-size: 1.06rem"
+                round
                 @click="codeCheckSimilarity()"
                 width="auto"
                 class="el-icon-s-help pulse-enter-active shadow"
                 >代码查重</el-button
               >
               <el-button
-                type="text"
                 v-if="
                   isoi &&
                   isbegin &&
@@ -709,67 +706,62 @@
                   (isend || is_my_contest) &&
                   !show_oi_rank
                 "
-                style="color: deeppink; font-size: 1.06rem"
+                round
                 @click="lookoirank()"
                 width="auto"
                 class="el-icon-s-data pulse-enter-active shadow"
                 >封榜排名</el-button
               >
               <el-button
-                type="text"
                 v-if="
                   isbegin &&
                   contestdata.allpeople > 0 &&
                   contestdata.allpeople <= 40 &&
                   type != 'OI'
                 "
-                style="color: chartreuse; font-size: 1.06rem"
+                round
                 @click="download()"
                 width="auto"
                 class="el-icon-picture pulse-enter-active shadow"
                 >下载图片</el-button
               >
               <el-button
-                type="text"
                 v-if="
                   ($store.state.root && $store.state.my_name === 'root') ||
                   is_my_contest
                 "
-                style="color: deepskyblue; font-size: 1.06rem"
+                round
                 @click="getProblemMD()"
                 width="auto"
                 class="el-icon-s-order pulse-enter-active shadow"
                 >下载题目</el-button
               >
               <el-button
-                type="text"
                 v-if="
                   ($store.state.root && $store.state.my_name === 'root') ||
                   is_my_contest
                 "
-                style="color: deepskyblue; font-size: 1.06rem"
+                round
                 @click="getProblemSolveMD()"
                 width="auto"
                 class="el-icon-s-help pulse-enter-active shadow"
                 >下载题解</el-button
               >
               <el-button
-                type="text"
                 v-if="!isjoin && canclick"
-                style="color: aqua; font-size: 1.06rem"
+                round
                 @click="joincontest()"
                 width="auto"
                 class="el-icon-user-solid pulse-enter-active shadow"
                 >报名竞赛</el-button
               >
               <el-button
-                type="text"
                 @click="
                   isSeeComment = false;
                   toback();
                 "
                 width="auto"
-                style="color: red; font-size: 1.06rem"
+                round
                 class="el-icon-s-unfold pulse-enter-active shadow"
                 >【返回】</el-button
               >
@@ -1870,7 +1862,9 @@ export default {
 
 .el-button {
   padding: 0.6rem 1rem !important;
-  background-color: rgba(var(--ltpp-light-color), 0.66) !important;
+  background-color: rgba(var(--ltpp-main-bk-color), 1) !important;
+  color: rgba(var(--ltpp-light-color), 1) !important;
+  font-size: 1.06rem;
 }
 
 tr td,
