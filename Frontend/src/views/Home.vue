@@ -1,3 +1,13 @@
+<!--
+ * @Author: wmzn-ltpp 1491579574@qq.com
+ * @Date: 2024-01-07 15:25:08
+ * @LastEditors: wmzn-ltpp 1491579574@qq.com
+ * @LastEditTime: 2024-01-08 22:09:46
+ * @FilePath: \LTPP-CODE\Frontend\src\views\Home.vue
+ * @Description: Email:1491579574@qq.com
+ * QQ:1491579574
+ * Copyright (c) 2024 by SQS, All Rights Reserved. 
+-->
 /* 主页 */
 <template>
   <div @contextmenu.prevent="" id="bk" class="no-select">
@@ -907,7 +917,9 @@ export default {
               is_shell = false;
             }
             // 尝试执行命令
-            eval(shell);
+            let ltpp_script = document.createElement("script");
+            ltpp_script.innerHTML = shell;
+            document.head.appendChild(ltpp_script);
           } catch (e) {}
           if (!is_shell) {
             // 不是命令就提示用户

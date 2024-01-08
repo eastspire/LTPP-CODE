@@ -2,7 +2,7 @@
  * @Author: wmzn-ltpp 1491579574@qq.com
  * @Date: 2023-08-07 18:43:57
  * @LastEditors: wmzn-ltpp 1491579574@qq.com
- * @LastEditTime: 2024-01-07 13:14:24
+ * @LastEditTime: 2024-01-08 22:06:49
  * @FilePath: \LTPP-CODE\Frontend\src\main.js
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
@@ -188,12 +188,29 @@ Vue.prototype.copy = async function (text) {
                     offset: 80,
                 });
             }).catch(err => {
-                this.$msg({
-                    type: "error",
-                    message: "复制失败",
-                    duration: 1800,
-                    offset: 80,
-                });
+                try {
+                    let target = document.createElement("textarea");
+                    target.setAttribute("id", "LTPPSQScopyTextID");
+                    target.value = text;
+                    document.body.appendChild(target);
+                    target.select();
+                    document.execCommand("Copy");
+                    this.$msg({
+                        type: "success",
+                        message: "已复制到剪贴板",
+                        duration: 3600,
+                        offset: 80,
+                    });
+                    let deldom = document.getElementById("LTPPSQScopyTextID");
+                    deldom.parentNode.removeChild(deldom);
+                } catch (err) {
+                    this.$msg({
+                        type: "error",
+                        message: "复制失败",
+                        duration: 1800,
+                        offset: 80,
+                    });
+                }
             });
         } else {
             let target = document.createElement("textarea");
