@@ -358,7 +358,6 @@ Vue.prototype.Base64Decode = function (str, char_set) {
             tem_bin += bin[j];
         }
         base64_decode += String.fromCharCode(parseInt(tem_bin, 2));
-
     }
     return base64_decode;
 };
