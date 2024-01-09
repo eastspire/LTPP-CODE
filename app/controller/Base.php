@@ -89,11 +89,6 @@ class Base
     static $judgepath = '/JudgeServer/judge';
 
     /**
-     * RobotContest进行竞赛的最大时长(默认一天，竞赛时长超过一天不进行计算)
-     */
-    static $robot_contest_can_join_limit_contest_time = 86400;
-
-    /**
      * 发送邮件消息队列名称
      */
     static $redis_queue_send_mail_name = 'send_mail';

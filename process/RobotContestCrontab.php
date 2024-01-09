@@ -54,9 +54,15 @@ class RobotContestCrontab
                     if (\app\queue\redis\RobotContest::judgeHasJudgeContest($redis27, $one_contest->id)) {
                         continue;
                     }
+                    // 竞赛已开始秒数
+                    $start_seconds = time() - strtotime($one_contest->begin);
+                    if ($start_seconds < 0) {
+                        // 竞赛未开始
+                        continue;
+                    }
                     $contest_run_time_seconds = strtotime($one_contest->end) - time();
-                    if ($contest_run_time_seconds < 0 || $contest_run_time_seconds > Base::$robot_contest_can_join_limit_contest_time) {
-                        // 竞赛结束 或者 距离竞赛结束时间过长 不进行提交
+                    if ($contest_run_time_seconds < 0) {
+                        // 竞赛结束不进行提交
                         continue;
                     }
                     RedisQueue::send(Base::$redis_queue_robot_contest_name, [

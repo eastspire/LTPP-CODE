@@ -3,7 +3,7 @@
  * @Author: SQS 1491579574@qq.com
  * @Date: 2023-06-02 11:58:18
  * @LastEditors: wmzn-ltpp 1491579574@qq.com
- * @LastEditTime: 2023-12-30 11:22:00
+ * @LastEditTime: 2024-01-09 08:49:35
  * @FilePath: \LTPP-CODE\app\queue\redis\RobotContest.php
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
@@ -334,8 +334,8 @@ class RobotContest implements Consumer
             $submit_times = rand(4, 6);
             // 竞赛距离结束剩余的秒数
             $contest_run_time_seconds = strtotime($contest_db->end) - time();
-            if ($contest_run_time_seconds < 0 || $contest_run_time_seconds > Base::$robot_contest_can_join_limit_contest_time) {
-                // 竞赛结束 或者 距离竞赛结束时间过长 不进行提交
+            if ($contest_run_time_seconds < 0) {
+                // 竞赛结束不进行提交
                 return;
             }
             // 提交用户数目
@@ -346,10 +346,10 @@ class RobotContest implements Consumer
             }
             // 每题最少休眠豪秒数，注意向上取整
             $one_sleep_min_time = $contest_run_time_seconds / ($people_length * $submit_times * $problem_length);
-            // 每题休眠豪秒数，呈梯度上升
+            // 每题休眠秒数，呈梯度上升
             $one_sleep_time_list = [];
             for ($i = 1; $i <= $problem_length; ++$i) {
-                $one_sleep_time_list[] = rand(0, 1) ? $one_sleep_min_time  : $one_sleep_min_time / $i;
+                $one_sleep_time_list[] = max(1, rand(0, 1) ? $one_sleep_min_time  : $one_sleep_min_time / $i);
             }
             for ($i = 0; $i < $submit_times; ++$i) {
                 foreach ($problem_list as $one_problem_index => &$one_problem_id) {
