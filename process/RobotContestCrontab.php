@@ -25,10 +25,13 @@ class RobotContestCrontab
      * 获取进行中的比赛列表
      * @return {*} $db
      */
-    private function getRunningContestList()
+    private function getRunningContestList($now = '')
     {
         try {
-            $now = date('Y-m-d H:i:s', time());
+            if (!$now) {
+                $now = time();
+            }
+            $now = date('Y-m-d H:i:s', $now);
             $db = Db::table('contest')
                 ->where('begin', '<=', $now)
                 ->where('end', '>=', $now)
@@ -48,19 +51,20 @@ class RobotContestCrontab
         // 每一分钟执行一次
         new Crontab('0 */1 * * * *', function () {
             try {
-                $contest_list = $this->getRunningContestList();
+                $now = time();
+                $contest_list = $this->getRunningContestList($now);
                 $redis27 = \support\Redis::connection('db27');
                 foreach ($contest_list as &$one_contest) {
                     if (\app\queue\redis\RobotContest::judgeHasJudgeContest($redis27, $one_contest->id)) {
                         continue;
                     }
                     // 竞赛已开始秒数
-                    $start_seconds = time() - strtotime($one_contest->begin);
+                    $start_seconds = $now - strtotime($one_contest->begin);
                     if ($start_seconds < 0) {
                         // 竞赛未开始
                         continue;
                     }
-                    $contest_run_time_seconds = strtotime($one_contest->end) - time();
+                    $contest_run_time_seconds = strtotime($one_contest->end) - $now;
                     if ($contest_run_time_seconds < 0) {
                         // 竞赛结束不进行提交
                         continue;

@@ -302,7 +302,8 @@ class RobotContest implements Consumer
     public function consume($data)
     {
         try {
-            $now = date('Y-m-d H:i:s', time());
+            $now_time = time();
+            $now = date('Y-m-d H:i:s', $now_time);
             $one_contest_id = $data['contest_id'] ?? 0;
             $redis27 = Redis::connection('db27');
             // 判断是否加锁，防止机器人重复执行一场竞赛
@@ -311,7 +312,7 @@ class RobotContest implements Consumer
             }
             $contest_db = Base::getContestData($one_contest_id);
             // 竞赛已开始秒数
-            $start_seconds = time() - strtotime($contest_db->begin);
+            $start_seconds = $now_time - strtotime($contest_db->begin);
             if ($start_seconds < 0) {
                 // 竞赛未开始
                 return;
@@ -333,7 +334,7 @@ class RobotContest implements Consumer
             // 提交次数
             $submit_times = rand(4, 6);
             // 竞赛距离结束剩余的秒数
-            $contest_run_time_seconds = strtotime($contest_db->end) - time();
+            $contest_run_time_seconds = strtotime($contest_db->end) - $now_time;
             if ($contest_run_time_seconds < 0) {
                 // 竞赛结束不进行提交
                 return;
@@ -355,7 +356,7 @@ class RobotContest implements Consumer
                 foreach ($problem_list as $one_problem_index => &$one_problem_id) {
                     foreach ($people_list as $one_person_index => &$one_person_id) {
                         // 先枚举用户
-                        $now = date('Y-m-d H:i:s', time());
+                        $now = date('Y-m-d H:i:s', $now_time);
                         if ($now < $contest_db->begin || $now > $contest_db->end) {
                             $this_contest_is_end = true;
                             break;
