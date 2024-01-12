@@ -992,12 +992,8 @@ class Contest
         if (!$isroot) {
             return json(['code' => -1, 'msg' => '权限不足']);
         }
-        $finish = false;
         while (1) {
             try {
-                if ($finish) {
-                    break;
-                }
                 $joinuser = Db::table('joincontest')
                     ->where('contestid', $contest_id)
                     ->where('isdel', 0)
@@ -1066,15 +1062,13 @@ class Contest
                     }
                 }
                 $redis30->del(Base::$redis_contest_code_list_key_name . $contest_id);
-                $finish = true;
+                if ($db) {
+                    break;
+                }
             } catch (Exception $e) {
-                $finish = false;
             }
         }
-        if ($db) {
-            return json(['code' => 1, 'msg' => '删除竞赛成功']);
-        }
-        return json(['code' => 1, 'msg' => '删除竞赛出错']);
+        return json(['code' => 1, 'msg' => '删除竞赛成功']);
     }
 
     /**

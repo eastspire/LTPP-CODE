@@ -126,7 +126,7 @@ class Base
     /**
      * 竞赛排名计算队列名称
      */
-    static $redis_queue_contest_rank = 'contest_rank';
+    static $redis_queue_contest_rank_name = 'contest_rank';
 
     /**
      * 监控队列名称

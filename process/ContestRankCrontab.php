@@ -46,7 +46,7 @@ class ContestRankCrontab
                     }
                     $obj->$key = true;
                     // 发布任务
-                    RedisQueue::send(Base::$redis_queue_contest_rank, ['contest_id' => $key]);
+                    RedisQueue::send(Base::$redis_queue_contest_rank_name, ['contest_id' => $key]);
                 }
                 $obj = null;
                 if (ContestRankCrontab::$times % ContestRankCrontab::$limit == 0) {
@@ -56,7 +56,7 @@ class ContestRankCrontab
                         ->toArray();
                     foreach ($contest_list as &$contest_id) {
                         // 发布任务
-                        RedisQueue::send(Base::$redis_queue_contest_rank, ['contest_id' => $contest_id]);
+                        RedisQueue::send(Base::$redis_queue_contest_rank_name, ['contest_id' => $contest_id]);
                     }
                 }
                 ContestRankCrontab::$times++;
