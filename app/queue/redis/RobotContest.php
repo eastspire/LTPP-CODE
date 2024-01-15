@@ -83,7 +83,7 @@ class RobotContest implements Consumer
         if (!$contest_begin || !$problem_id || !$my_id) {
             return 0;
         }
-        $can_total_score = (rand(0, 100) % 10 <= 3);
+        $can_total_score = (rand(0, 100) <= 66);
         $order_by = rand(0, 1) ? 'asc' : 'desc';
         if ($can_total_score) {
             $all = Db::table('codehistory')
@@ -345,12 +345,12 @@ class RobotContest implements Consumer
             if ($people_length <= 0) {
                 return;
             }
-            // 每题最少休眠豪秒数，注意向上取整
-            $one_sleep_min_time = $contest_run_time_seconds / ($people_length * $submit_times * $problem_length);
-            // 每题休眠秒数，呈梯度上升
+            // 每题最少休眠毫秒数
+            $one_sleep_min_time = ($contest_run_time_seconds * 1000) / ($people_length * $submit_times * $problem_length);
+            // 每题休眠毫秒数，呈梯度上升
             $one_sleep_time_list = [];
             for ($i = 1; $i <= $problem_length; ++$i) {
-                $one_sleep_time_list[] = max(1, rand(0, 1) ? $one_sleep_min_time  : $one_sleep_min_time / $i);
+                $one_sleep_time_list[] = $one_sleep_min_time / max(1, $problem_length + 1 - $i);
             }
             for ($i = 0; $i < $submit_times; ++$i) {
                 foreach ($problem_list as $one_problem_index => &$one_problem_id) {
@@ -361,7 +361,7 @@ class RobotContest implements Consumer
                             $this_contest_is_end = true;
                             break;
                         }
-                        if (rand(0, 1)) {
+                        if (rand(0, 100) <= 88) {
                             // 从代码历史查询记录，没有记录会自带生成一个记录
                             $code_id = $this->getCodeFromCodeHistory($contest_db->begin, $one_problem_id, $one_person_index + 1,  $one_person_id);
                             $this->addCodeFromCodeHistory($one_contest_id, $code_id, $one_person_id);

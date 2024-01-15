@@ -34,7 +34,7 @@ return [
     ],
     'WebcodeCrontab' => [
         'handler' => process\WebcodeCrontab::class,
-        'count' => 4
+        'count' => max((cpu_count() > 8 ? 8 : cpu_count()) / 2, 4),
     ],
     'CreatContestCrontab' => [
         'handler' => process\CreatContestCrontab::class,
