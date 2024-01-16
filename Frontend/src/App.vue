@@ -229,30 +229,25 @@ pre code.hljs {
 }
 
 .main-center-box-content {
-  background-color: rgba(
-    var(--ltpp-light-color),
-    var(--ltpp-center-box-bk-opacity)
-  );
   color: var(--ltpp-box-text-color);
   border-width: 0rem;
-  border-color: rgba(
-    var(--ltpp-light-color),
-    var(--ltpp-center-box-bk-opacity)
-  );
   width: 100%;
   margin-left: auto;
   margin-right: auto;
+  border-color: rgba(var(--ltpp-light-color), var(--ltpp-center-box-bk-opacity));
+  background-color: rgba(var(--ltpp-light-color), var(--ltpp-center-box-bk-opacity));
 }
+
 .el-input-group--prepend,
 .el-input__inner,
 .el-input-group__append {
-  background-color: rgba(var(--ltpp-main-bk-color), 0.88) !important;
   border: 0px solid transparent !important;
   color: var(--ltpp-main-text-color) !important;
   border-top-left-radius: 0 !important;
   border-bottom-left-radius: 0 !important;
   border-top-right-radius: 0 !important;
   border-bottom-right-radius: 0 !important;
+  background-color: rgba(var(--ltpp-main-bk-color), 1) !important;
 }
 
 .el-icon-full-screen {
