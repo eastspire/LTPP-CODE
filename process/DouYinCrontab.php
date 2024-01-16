@@ -111,13 +111,6 @@ class DouYinCrontab
                 // 每轮请求重新读取，root更新配置尽可能早生效
                 $is_save_file = Base::getSettingKeyData('douyin_save_file');
                 $save_limit = Base::getSettingKeyData('douyin_save_limit');
-                $noupdate_limit_seconds = Base::getSettingKeyData('douyin_noupdate_limit_seconds');
-                // 删除过期的抖音视频
-                Db::table('video')
-                    ->where('isdouyin', 1)
-                    ->where('isdel', 0)
-                    ->where('time', '<', date('Y-m-d H:i:s', time() - $noupdate_limit_seconds))
-                    ->update(['isdel' => 1]);
                 $res = $this->getListcollection($count, $cursor);
                 if (
                     !$res ||
@@ -180,7 +173,8 @@ class DouYinCrontab
                                 'tag' => $tag,
                                 'url' => $video_url,
                                 'fabulous' => $digg_count,
-                                'love' => $collect_count
+                                'love' => $collect_count,
+                                'time' => date('Y-m-d H:i:s', time())
                             ]);
                     } else {
                         // 无论是否保存文件，先插入抖音的视频地址
