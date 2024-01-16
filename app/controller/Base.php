@@ -114,6 +114,11 @@ class Base
     static $redis_queue_update_code_name = 'update_code';
 
     /**
+     * 删除竞赛队列名称
+     */
+    static $redis_queue_delete_contest_name = 'delete_contest';
+
+    /**
      * 更新题库信息消息队列名称
      */
     static $redis_queue_update_oj_name = 'update_oj';
@@ -1220,11 +1225,14 @@ class Base
         if (!$db_name || !$data) {
             return 0;
         }
-        try {
-            $resid = Db::table($db_name)->insertGetId($data);
-        } catch (Exception $e) {
-            Robot::sendChatToOneUserMsg(Base::getRootId(), '插入数据' . json_encode($data ?? []) . '到数据表' . $db_name . '出错:' . $e->getMessage());
-            return 0;
+        $resid = 0;
+        while (!$resid) {
+            try {
+                $resid = Db::table($db_name)->insertGetId($data);
+            } catch (Exception $e) {
+                Robot::sendChatToOneUserMsg(Base::getRootId(), '插入数据' . json_encode($data ?? []) . '到数据表' . $db_name . '出错（该任务即将重新运行）:' . $e->getMessage());
+                continue;
+            }
         }
         return $resid;
     }

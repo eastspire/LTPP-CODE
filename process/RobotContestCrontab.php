@@ -48,8 +48,8 @@ class RobotContestCrontab
 
     public function onWorkerStart()
     {
-        // 每一分钟执行一次
-        new Crontab('0 */1 * * * *', function () {
+        // 每一秒钟执行一次
+        new Crontab('*/1 * * * * *', function () {
             try {
                 $now = time();
                 $contest_list = $this->getRunningContestList($now);

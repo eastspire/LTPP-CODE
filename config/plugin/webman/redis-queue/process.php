@@ -20,6 +20,15 @@ return [
             'consumer_dir' => app_path() . '/queue/redis'
         ]
     ],
+    app\controller\Base::$redis_queue_delete_contest_name => [
+        'handler' => Webman\RedisQueue\Process\Consumer::class,
+        // 可以设置多进程同时消费
+        'count' => cpu_count() > 4 ? 4 : cpu_count(),
+        'constructor' => [
+            // 消费者类目录
+            'consumer_dir' => app_path() . '/queue/redis'
+        ]
+    ],
     app\controller\Base::$redis_queue_robot_contest_name => [
         'handler' => Webman\RedisQueue\Process\Consumer::class,
         // 可以设置多进程同时消费
