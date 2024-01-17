@@ -227,7 +227,8 @@ const video_list_data = {
     love: 0,
     name: '加载中',
     tag: '加载中',
-    url: '',
+    url: '加载中',
+    time: '加载中'
 }
 
 // 商品列表数据模板

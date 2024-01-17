@@ -386,7 +386,8 @@ export default {
       this.videoList = tem_list;
     },
     lookvideo(url) {
-      this.$router.push({
+      const reg = /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\*\+,;=.]+$/;
+      reg.test(url) && this.$router.push({
         path: "/staticfile",
         query: {
           path: urlencode(url, "gbk"),
