@@ -30,80 +30,84 @@ class DeleteContest implements Consumer
         try {
             $contest_id = $data['contest_id'] ?? '';
             while (1) {
-                $joinuser = Db::table('joincontest')
-                    ->where('contestid', $contest_id)
-                    ->where('isdel', 0)
-                    ->select('userid')
-                    ->get();
-                $redis4 = Redis::connection('db4');
-                //竞赛删除清空该竞赛全部用户缓存
-                foreach ($joinuser as &$tem) {
-                    $redis4->del('Contest' . $contest_id . 'problemdata' . $tem->userid);
-                }
-                //删除竞赛缓存信息
-                $redis4->del('Contest' . $contest_id . 'resarray');
-                $redis4->del('ContestRank' . $contest_id . 'echartsrank');
-                $redis4->del('ContestRank' . $contest_id . 'peopledata');
-                $redis4->del('ContestRank' . $contest_id . 'timedata');
-                $redis4->del('Contest' . $contest_id . 'problemIndex');
-                $redis4->del('Contest' . $contest_id . 'HtmlRank');
-                //删除竞赛
-                $db = Db::table('contest')
-                    ->where('id', $contest_id)
-                    ->where('isdel', 0)
-                    ->update(['isdel' => 1]);
-
-                //删除该竞赛题目
-                Db::table('contestproblem')
-                    ->where('contestid', $contest_id)
-                    ->where('isdel', 0)
-                    ->update(['isdel' => 1]);
-
-                //删除该竞赛所有提交记录
-                Db::table('contestrank')
-                    ->where('contestid', $contest_id)
-                    ->where('isdel', 0)
-                    ->update(['isdel' => 1]);
-
-                //删除该竞赛参加用户
-                Db::table('joincontest')
-                    ->where('contestid', $contest_id)
-                    ->where('isdel', 0)
-                    ->update(['isdel' => 1]);
-                Base::updateContestDataRedis($contest_id);
-
-                // 删除机器人完成竞赛缓存
-                $redis27 = Redis::connection('db27');
-                $key = Base::$robot_contest_redis_front . $contest_id;
-                $redis27->del($key);
-                // 删除查重缓存
-                $redis31 = Redis::connection('db31');
-                $key = Base::$contest_similarity_id_redis_front . $contest_id;
-                $redis_key = $redis31->get($key);
-                if ($redis_key) {
-                    $redis31->del($key);
-                    Base::deleteAllFile(Base::$LTPP_public_path . 'static/contest/' . $redis_key);
-                }
-                // 删除ContestRank代码缓存
-                $redis29 = Redis::connection('db29');
-                $redis30 = Redis::connection('db30');
-                $old_id_list = $redis30->get(Base::$redis_contest_code_list_key_name . $contest_id);
-                if ($old_id_list) {
-                    try {
-                        $old_id_list = json_decode($old_id_list, true);
-                    } catch (Exception $e) {
-                        $old_id_list = [];
+                try {
+                    $joinuser = Db::table('joincontest')
+                        ->where('contestid', $contest_id)
+                        ->where('isdel', 0)
+                        ->select('userid')
+                        ->get();
+                    $redis4 = Redis::connection('db4');
+                    //竞赛删除清空该竞赛全部用户缓存
+                    foreach ($joinuser as &$tem) {
+                        $redis4->del('Contest' . $contest_id . 'problemdata' . $tem->userid);
                     }
-                    foreach ($old_id_list as &$tem_one_old) {
-                        $redis29->del($tem_one_old[0]);
+                    //删除竞赛缓存信息
+                    $redis4->del('Contest' . $contest_id . 'resarray');
+                    $redis4->del('ContestRank' . $contest_id . 'echartsrank');
+                    $redis4->del('ContestRank' . $contest_id . 'peopledata');
+                    $redis4->del('ContestRank' . $contest_id . 'timedata');
+                    $redis4->del('Contest' . $contest_id . 'problemIndex');
+                    $redis4->del('Contest' . $contest_id . 'HtmlRank');
+                    //删除竞赛
+                    $db = Db::table('contest')
+                        ->where('id', $contest_id)
+                        ->where('isdel', 0)
+                        ->update(['isdel' => 1]);
+
+                    //删除该竞赛题目
+                    Db::table('contestproblem')
+                        ->where('contestid', $contest_id)
+                        ->where('isdel', 0)
+                        ->update(['isdel' => 1]);
+
+                    //删除该竞赛所有提交记录
+                    Db::table('contestrank')
+                        ->where('contestid', $contest_id)
+                        ->where('isdel', 0)
+                        ->update(['isdel' => 1]);
+
+                    //删除该竞赛参加用户
+                    Db::table('joincontest')
+                        ->where('contestid', $contest_id)
+                        ->where('isdel', 0)
+                        ->update(['isdel' => 1]);
+                    Base::updateContestDataRedis($contest_id);
+
+                    // 删除机器人完成竞赛缓存
+                    $redis27 = Redis::connection('db27');
+                    $key = Base::$robot_contest_redis_front . $contest_id;
+                    $redis27->del($key);
+                    // 删除查重缓存
+                    $redis31 = Redis::connection('db31');
+                    $key = Base::$contest_similarity_id_redis_front . $contest_id;
+                    $redis_key = $redis31->get($key);
+                    if ($redis_key) {
+                        $redis31->del($key);
+                        Base::deleteAllFile(Base::$LTPP_public_path . 'static/contest/' . $redis_key);
                     }
-                }
-                $redis30->del(Base::$redis_contest_code_list_key_name . $contest_id);
-                if ($db) {
-                    $title = 'DeleteContest消息队列运行结果';
-                    $content = '竞赛ID为' . $contest_id . '的竞赛已删除！';
-                    Robot::sendChatToOneUserMsg(Base::getRootId(), '#### ' . $title . "\n" . $content);
-                    break;
+                    // 删除ContestRank代码缓存
+                    $redis29 = Redis::connection('db29');
+                    $redis30 = Redis::connection('db30');
+                    $old_id_list = $redis30->get(Base::$redis_contest_code_list_key_name . $contest_id);
+                    if ($old_id_list) {
+                        try {
+                            $old_id_list = json_decode($old_id_list, true);
+                        } catch (Exception $e) {
+                            $old_id_list = [];
+                        }
+                        foreach ($old_id_list as &$tem_one_old) {
+                            $redis29->del($tem_one_old[0]);
+                        }
+                    }
+                    $redis30->del(Base::$redis_contest_code_list_key_name . $contest_id);
+                    if ($db) {
+                        $title = 'DeleteContest消息队列运行结果';
+                        $content = '竞赛ID为' . $contest_id . '的竞赛已删除！';
+                        Robot::sendChatToOneUserMsg(Base::getRootId(), '#### ' . $title . "\n" . $content);
+                        break;
+                    }
+                } catch (Exception $e) {
+                    continue;
                 }
             }
         } catch (Exception $e) {

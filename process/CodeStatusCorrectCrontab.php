@@ -54,7 +54,6 @@ class CodeStatusCorrectCrontab
                         'userlanguage' => $tem->language,
                         'testin' => ''
                     ]);
-                    Robot::sendChatToOneUserMsg(Base::getRootId(), '定时任务进程 **【CodeStatusCorrectCrontab】** 运行日志：【ID】为' . $tem->id . '，【提交时间】为' . $tem->time . '【提交者用户ID】为' . $tem->userid . '的代码已提交，正在等待重新运行！');
                 }
             } catch (Exception $e) {
                 Robot::sendChatToOneUserMsg(Base::getRootId(), '定时任务进程 **【CodeStatusCorrectCrontab】** 运行错误：' . $e->getMessage());

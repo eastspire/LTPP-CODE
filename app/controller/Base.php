@@ -1283,9 +1283,26 @@ class Base
      * @param $id 用户id
      * @return bool true为是root
      */
-    static public function judgeIsRoot($id)
+    static public function judgeIsRoot($id = 0)
     {
+        if (!$id) {
+            return false;
+        }
         return ((int) Base::getRootId()) === ((int) $id);
+    }
+
+    /**
+     * 判断是否为机器人
+     * @param $id 用户id
+     * @return bool true为是机器人
+     */
+    static public function judgeIsRobot($id)
+    {
+        $user_data = Base::getUserData($id);
+        if (!$user_data) {
+            return false;
+        }
+        return $user_data->email == Base::$robot_email;
     }
 
     /**

@@ -13,6 +13,7 @@
 namespace app\queue\redis;
 
 use app\controller\Base;
+use app\controller\Codehistory;
 use app\controller\Contest;
 use app\controller\Robot;
 use Exception;
@@ -24,6 +25,10 @@ class RobotContest implements Consumer
 {
     // 要消费的队列名
     public $queue = 'robot_contest';
+
+    static $code_all_code_db = [];
+    static $code_all_ac_code_db = [];
+    static $code_all_no_ac_code_db = [];
 
     /**
      * 获取赛题
@@ -74,89 +79,46 @@ class RobotContest implements Consumer
      * 获取CodeHistory代码ID
      * @param int $contest_begin
      * @param int $problem_id
-     * @param int $page 分页的页码（从1开始）
      * @param int $my_id
-     * @return int $contestrank_id
      */
-    private function getCodeFromCodeHistory($contest_begin = null, $problem_id = 0, $page = 1, $my_id = 0)
+    private function getCodeFromCodeHistory($contest_begin = null, $problem_id = 0, $my_id = 0)
     {
         if (!$contest_begin || !$problem_id || !$my_id) {
-            return 0;
+            return;
         }
-        $can_total_score = (rand(0, 100) <= 66);
-        $order_by = rand(0, 1) ? 'asc' : 'desc';
-        if ($can_total_score) {
-            $all = Db::table('codehistory')
+        if (!isset(RobotContest::$code_all_ac_code_db[$problem_id]) || !is_numeric(RobotContest::$code_all_ac_code_db[$problem_id])) {
+            RobotContest::$code_all_ac_code_db[$problem_id] = Db::table('codehistory')
                 ->where('problemid', $problem_id)
                 ->where('time', '<', $contest_begin)
                 ->where('status', 'AC')
                 ->where('isdel', 0)
-                ->count();
-            if ($all) {
-                if ($page > $all) {
-                    $page = $page % $all;
-                }
-                $db = Db::table('codehistory')
-                    ->where('problemid', $problem_id)
-                    ->where('time', '<', $contest_begin)
-                    ->where('status', 'AC')
-                    ->where('isdel', 0)
-                    ->select('id')
-                    ->orderBy('id', $order_by)
-                    ->paginate(1, '*', 'page', $page)
-                    ->items();
-                if ($db) {
-                    return $db[0]->id;
-                }
-            }
+                ->orderBy('id', 'desc')
+                ->first();
         }
-        $all = Db::table('codehistory')
-            ->where('problemid', $problem_id)
-            ->where('time', '<', $contest_begin)
-            ->where('status', '!=', 'AC')
-            ->where('isdel', 0)
-            ->count();
-        if ($all) {
-            if ($page > $all) {
-                $page = $page % $all;
-            }
-            $db = Db::table('codehistory')
+        if (!isset(RobotContest::$code_all_no_ac_code_db[$problem_id]) || !is_numeric(RobotContest::$code_all_no_ac_code_db[$problem_id])) {
+            RobotContest::$code_all_no_ac_code_db[$problem_id] = Db::table('codehistory')
                 ->where('problemid', $problem_id)
                 ->where('time', '<', $contest_begin)
+                ->where('status', '!=', Base::$code_up_waiting)
+                ->where('status', '!=', Base::$code_up_running)
                 ->where('status', '!=', 'AC')
                 ->where('isdel', 0)
-                ->select('id')
-                ->orderBy('id', $order_by)
-                ->paginate(1, '*', 'page', $page)
-                ->items();
-            if ($db) {
-                return $db[0]->id;
-            }
+                ->orderBy('id', 'desc')
+                ->first();
         }
-
-        // 没有题目的提交记录，就生成一个错误的答案提交记录
-        $all = Db::table('codehistory')
-            ->where('isdel', 0)
-            ->count();
-        $now = date('Y-m-d H:i:s', time());
-        $language = rand(0, 1) ? 'C' : 'C++';
-        $contestrank_db = null;
-        if ($all) {
-            if ($page > $all) {
-                $page = $page % $all;
-            }
-            $contestrank_db = Db::table('codehistory')
+        if (!isset(RobotContest::$code_all_code_db[$problem_id]) || !is_numeric(RobotContest::$code_all_code_db[$problem_id])) {
+            RobotContest::$code_all_code_db[$problem_id] = Db::table('codehistory')
+                ->where('status', '!=', Base::$code_up_waiting)
+                ->where('status', '!=', Base::$code_up_running)
                 ->where('isdel', 0)
-                ->orderBy('id', $order_by)
-                ->select('code', 'contestid', 'language')
-                ->paginate(1, '*', 'page', $page)
-                ->items();
-            if ($contestrank_db) {
-                $language = $contestrank_db[0]->language;
-            }
+                ->orderBy('id', 'desc')
+                ->first();
         }
-        $id = Db::table('codehistory')
-            ->insert([
+        // 没有题目的提交记录，就生成一个错误的答案提交记录
+        if (!RobotContest::$code_all_code_db[$problem_id]) {
+            $now = date('Y-m-d H:i:s', time());
+            $language = rand(0, 1) ? 'C' : 'C++';
+            $code_id = Base::insertToDb('codehistory', [
                 'userid' => $my_id,
                 'problemid' => $problem_id,
                 'language' => $language,
@@ -164,30 +126,47 @@ class RobotContest implements Consumer
                 'time' => $now,
                 'usetime' => rand(10, 100),
                 'usememory' => rand(10, 100),
-                'code' => $contestrank_db ? $contestrank_db[0]->code : '',
-                'contestid' => $contestrank_db ? $contestrank_db[0]->contestid : 0,
+                'code' => '',
+                'contestid' => 0,
             ]);
-        return $id;
+            RobotContest::$code_all_code_db[$problem_id] = Db::table('codehistory')
+                ->where('id', $code_id)
+                ->where('status', '!=', Base::$code_up_waiting)
+                ->where('status', '!=', Base::$code_up_running)
+                ->where('isdel', 0)
+                ->first();
+        }
+        if (!RobotContest::$code_all_code_db[$problem_id]) {
+            return;
+        }
+        if (!RobotContest::$code_all_ac_code_db[$problem_id]) {
+            RobotContest::$code_all_ac_code_db[$problem_id] = RobotContest::$code_all_code_db[$problem_id];
+        }
+        if (!RobotContest::$code_all_no_ac_code_db[$problem_id]) {
+            RobotContest::$code_all_no_ac_code_db[$problem_id] = RobotContest::$code_all_code_db[$problem_id];
+        }
     }
 
     /**
      * 从CodeHistory获取的代码提交代码
      * @param int $contest_id
-     * @param int $code_id
+     * @param int $problem_id
      * @param int $my_id
      */
-    private function addCodeFromCodeHistory($contest_id = 0, $code_id = 0, $my_id = 0)
+    private function addCodeFromCodeHistory($contest_id = 0, $problem_id = 0, $my_id = 0)
     {
+        if (!$contest_id || !$problem_id || !$my_id) {
+            return;
+        }
         $contest_db = Base::getContestData($contest_id);
         if (!$contest_db) {
             return;
         }
-        $db = Db::table('codehistory')
-            ->where('id', $code_id)
-            ->where('isdel', 0)
-            ->where('status', '!=', Base::$code_up_waiting)
-            ->where('status', '!=', Base::$code_up_running)
-            ->first();
+        $is_ac = (rand(0, 100) <= 88);
+        $db = RobotContest::$code_all_no_ac_code_db[$problem_id];
+        if ($is_ac) {
+            $db = RobotContest::$code_all_ac_code_db[$problem_id];
+        }
         if (!$db) {
             return;
         }
@@ -302,6 +281,10 @@ class RobotContest implements Consumer
     public function consume($data)
     {
         try {
+            // 初始化
+            RobotContest::$code_all_code_db = [];
+            RobotContest::$code_all_ac_code_db = [];
+            RobotContest::$code_all_no_ac_code_db = [];
             $now_time = time();
             $now = date('Y-m-d H:i:s', $now_time);
             $one_contest_id = $data['contest_id'] ?? 0;
@@ -354,7 +337,7 @@ class RobotContest implements Consumer
             }
             for ($i = 0; $i < $submit_times; ++$i) {
                 foreach ($problem_list as $one_problem_index => &$one_problem_id) {
-                    foreach ($people_list as $one_person_index => &$one_person_id) {
+                    foreach ($people_list as &$one_person_id) {
                         // 先枚举用户
                         $now = date('Y-m-d H:i:s', $now_time);
                         if ($now < $contest_db->begin || $now > $contest_db->end) {
@@ -363,8 +346,8 @@ class RobotContest implements Consumer
                         }
                         if (rand(0, 100) <= 88) {
                             // 从代码历史查询记录，没有记录会自带生成一个记录
-                            $code_id = $this->getCodeFromCodeHistory($contest_db->begin, $one_problem_id, $one_person_index + 1,  $one_person_id);
-                            $this->addCodeFromCodeHistory($one_contest_id, $code_id, $one_person_id);
+                            $this->getCodeFromCodeHistory($contest_db->begin, $one_problem_id, $one_person_id);
+                            $this->addCodeFromCodeHistory($one_contest_id, $one_problem_id, $one_person_id);
                             Contest::sendUpdateRankMQ($one_contest_id);
                         }
                         // 休眠毫秒数

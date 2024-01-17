@@ -159,6 +159,16 @@ class Codehistory
         $code_id = Base::getIdByUid($code_uid);
         $problem_uid = $request->post('problem_id');
         $problem_id = Base::getIdByUid($problem_uid);
+        if (!$code_id || !$my_aid) {
+            return json([
+                'code' => 1,
+                'msg' => '参数错误！',
+                'data' => [
+                    'code' => '参数错误！',
+                    'language' => 'C++'
+                ]
+            ]);
+        }
         $code = null;
         // 题目里面查看用户代码
         if ($problem_uid) {
@@ -191,13 +201,23 @@ class Codehistory
                 ->where('isdel', 0)
                 ->select(CodeHistory::$code_history_db_key_has_code)
                 ->first();
+            if (!$isroot && Base::judgeIsRobot($code->userid) && $code->userid != $my_aid) {
+                return json([
+                    'code' => 1,
+                    'msg' => '您没有权限查看该代码！',
+                    'data' => [
+                        'code' => '您没有权限查看该代码！',
+                        'language' => 'C++'
+                    ]
+                ]);
+            }
             // 不是管理员，题目不公开或者是竞赛的赛题就不可查看
             if (($oj_db->public != 1 || $iscontest) && !$isroot && $code->userid != $my_aid) {
                 return json([
                     'code' => 1,
-                    'msg' => '无权限，不可查看',
+                    'msg' => '您没有权限查看该代码！',
                     'data' => [
-                        'code' => '无权限，不可查看',
+                        'code' => '您没有权限查看该代码！',
                         'language' => $code->language,
                     ]
                 ]);
@@ -208,26 +228,45 @@ class Codehistory
                 ->where('id', $code_id)
                 ->where('userid', $my_aid)
                 ->where('isdel', 0)
+                ->select(CodeHistory::$code_history_db_key_has_code)
                 ->first();
         }
         if ($isroot == 1) {
             $code = Db::table('codehistory')
                 ->where('id', $code_id)
                 ->where('isdel', 0)
+                ->select(CodeHistory::$code_history_db_key_has_code)
                 ->first();
+        }
+        if (!$isroot && Base::judgeIsRobot($code->userid) && $code->userid != $my_aid) {
+            return json([
+                'code' => 1,
+                'msg' => '您没有权限查看该代码！',
+                'data' => [
+                    'code' => '您没有权限查看该代码！',
+                    'language' => 'C++'
+                ]
+            ]);
         }
         if (!$code) {
             return json([
                 'code' => -1,
-                'msg' => '无权限，不可查看',
+                'msg' => '您没有权限查看该代码！',
                 'data' => [
-                    'code' => '无权限，不可查看',
+                    'code' => '您没有权限查看该代码！',
                     'language' => 'C++',
                 ]
             ]);
         }
         Base::dataToSafe($code);
-        return json(['code' => 1, 'msg' => '代码加载完成', 'data' => $code]);
+        return json([
+            'code' => 1,
+            'msg' => '代码加载完成',
+            'data' => [
+                'code' => $code->code,
+                'language' => $code->language,
+            ]
+        ]);
     }
 
     /**

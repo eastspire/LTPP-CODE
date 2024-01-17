@@ -1483,14 +1483,18 @@ class Contest
                 $iscontest = true;
             }
         }
-
         // 竞赛赛题且竞赛未结束，普通用户无法看代码
-        if ($iscontest && !Contest::judgeIsMyContest($contest_id, $my_aid) && $my_aid != $user_id) {
-            return json(['code' => 1, 'data' => '该题目正处于竞赛中或者题目私密不可见，您没有权限查看其他用户代码！', 'language' => 'C++']);
+        $is_my_contest = Contest::judgeIsMyContest($contest_id, $my_aid);
+        if ($iscontest && !$is_my_contest && $my_aid != $user_id) {
+            return json(['code' => 1, 'data' => '由于该题目正处于竞赛中或者题目为私密状态所以您没有权限查看该代码！', 'language' => 'C++']);
+        }
+        if (!Base::judgeIsRoot($my_aid) && Base::judgeIsRobot($user_id) && !$is_my_contest && $my_aid != $user_id) {
+            return json(['code' => 1, 'data' => '您没有权限查看该代码！', 'language' => 'C++']);
         }
         $type = $db->type;
         $code = '';
         $language = 'C++';
+
         if ($type == 'ACM' || $type == 'SQS') {
             $codedb = Db::table('contestrank')
                 ->where('contestid', $contest_id)
@@ -1579,7 +1583,6 @@ class Contest
      */
     public function lookContestProblemCode(Request $request)
     {
-
         try {
             $key = $request->get('path');
             if (!$key) {
