@@ -873,7 +873,10 @@ class Ojjudge
                 ->where('id', $problem_id)
                 ->where('isdel', 0)
                 ->increment('ACNum', 1);
-            Base::updateOjDataRedis($problem_id);
+            RedisQueue::send(Base::$redis_queue_update_oj_name, [
+                'problem_id' => $problem_id,
+                'problem_data' => ['ACpoint' => $ACpoint]
+            ]);
             return [
                 'code' => 1,
                 'result' => Base::$ac_msg,
