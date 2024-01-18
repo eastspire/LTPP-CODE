@@ -120,7 +120,6 @@ class Ojjudge
         &$filepath,
         &$testin,
         $msg,
-        &$db,
         $type,
         &$my_aid,
         &$problem_id,
@@ -139,11 +138,9 @@ class Ojjudge
             $msg .= "\n";
         }
         Base::deleteAllFile($filepath);
-        //错误AC百分比,保留两位小数
-        $ACpoint = round((float) $db->ACNum / ((float) $db->ALLSubmitNum + 1), 2);
+        //错误
         RedisQueue::send(Base::$redis_queue_update_oj_name, [
-            'problem_id' => $problem_id,
-            'problem_data' => ['ACpoint' => $ACpoint]
+            'problem_id' => $problem_id
         ]);
         Ojjudge::updateCodeStatus($code_id, $msg, $usetime, $usememory);
         $isac = Db::table('contestrank')
@@ -425,17 +422,6 @@ class Ojjudge
             $onetestscore = 100 / $alltestnum;
         }
 
-        //提交数加一
-        $db = Base::getOjData($problem_id);
-        if (!$db) {
-            Ojjudge::updateCodeStatus($code_id, '运行出错', 0, 0);
-            return [
-                'code' => -1,
-                'result' => '题目不存在！',
-                'usememory' => 0,
-                'usetime' => 0
-            ];
-        }
         //代码所在路径+名称main
         $runcodefilepath = $filepath . 'main';
         $out = [];
@@ -607,11 +593,11 @@ class Ojjudge
                 }
                 switch ($status) {
                     case Base::$judge_code_tle:
-                        return Ojjudge::error($code_id, $filepath, $testin, 'TLE', $db, $type, $my_aid, $problem_id, $time, $maxtime, $maxmemory, $code, $userlanguage, $contest_id, $begintime, $endtime);
+                        return Ojjudge::error($code_id, $filepath, $testin, 'TLE', $type, $my_aid, $problem_id, $time, $maxtime, $maxmemory, $code, $userlanguage, $contest_id, $begintime, $endtime);
                     case Base::$judge_code_mle:
-                        return Ojjudge::error($code_id, $filepath, $testin, 'MLE', $db, $type, $my_aid, $problem_id, $time, $maxtime, $maxmemory, $code, $userlanguage, $contest_id, $begintime, $endtime);
+                        return Ojjudge::error($code_id, $filepath, $testin, 'MLE', $type, $my_aid, $problem_id, $time, $maxtime, $maxmemory, $code, $userlanguage, $contest_id, $begintime, $endtime);
                     case Base::$judge_code_re:
-                        return Ojjudge::error($code_id, $filepath, $testin, 'RE', $db, $type, $my_aid, $problem_id, $time, $maxtime, $maxmemory, $code, $userlanguage, $contest_id, $begintime, $endtime);
+                        return Ojjudge::error($code_id, $filepath, $testin, 'RE', $type, $my_aid, $problem_id, $time, $maxtime, $maxmemory, $code, $userlanguage, $contest_id, $begintime, $endtime);
                     default:
                         break;
                 }
@@ -628,11 +614,9 @@ class Ojjudge
                 //不是竞赛或者是SQS赛制，允许查看错误样例
                 if ($contest_id == 0 || $type == "SQS") {
                     Ojjudge::updateCodeStatus($code_id, '答案错误', $time_used, $memory_used);
-                    //错误AC百分比,保留两位小数
-                    $ACpoint = round((float) $db->ACNum / ((float) $db->ALLSubmitNum + 1), 2);
+                    //错误
                     RedisQueue::send(Base::$redis_queue_update_oj_name, [
                         'problem_id' => $problem_id,
-                        'problem_data' => ['ACpoint' => $ACpoint]
                     ]);
                     Base::deleteallfile($filepath);
                     //读取出错测试样例输入
@@ -657,12 +641,7 @@ class Ojjudge
 
         //最后删除文件夹
         Base::deleteallfile($filepath);
-        //正确AC百分比,保留两位小数
-        $ACpoint = round(((float) $db->ACNum + 1) / ((float) $db->ALLSubmitNum + 1), 2);
-        RedisQueue::send(Base::$redis_queue_update_oj_name, [
-            'problem_id' => $problem_id,
-            'problem_data' => ['ACpoint' => $ACpoint]
-        ]);
+
         if ($maxtime == '') {
             $maxtime = '0';
         }
@@ -681,6 +660,10 @@ class Ojjudge
                     // AC
                     // 代码记录
                     Ojjudge::updateCodeStatus($code_id, 'AC', $maxtime, $maxmemory);
+                    RedisQueue::send(Base::$redis_queue_update_oj_name, [
+                        'problem_id' => $problem_id,
+                        'is_ac' => true
+                    ]);
                     return [
                         'code' => 1,
                         'result' => '恭喜您AC本题！不在竞赛时间段内！提交不计入排名！',
@@ -691,6 +674,9 @@ class Ojjudge
                     // WA
                     // 代码记录
                     Ojjudge::updateCodeStatus($code_id, '答案错误', $maxtime, $maxmemory);
+                    RedisQueue::send(Base::$redis_queue_update_oj_name, [
+                        'problem_id' => $problem_id,
+                    ]);
                 }
                 return [
                     'code' => -1,
@@ -779,12 +765,10 @@ class Ojjudge
                 }
                 Ojjudge::updateCodeStatus($code_id, 'AC', $maxtime, $maxmemory);
 
-                //题目AC数目总量加一
-                Db::table('oj')
-                    ->where('id', $problem_id)
-                    ->where('isdel', 0)
-                    ->increment('ACNum', 1);
-                Base::updateOjDataRedis($problem_id);
+                RedisQueue::send(Base::$redis_queue_update_oj_name, [
+                    'problem_id' => $problem_id,
+                    'is_ac' => true
+                ]);
                 //清空竞赛题目缓存（用户通过题目高亮，缓存会有影响，所以要清除）
                 $redis4->del('Contest' . $contest_id . 'problemdata' . $my_aid);
                 // 更新用户总得分
@@ -793,11 +777,6 @@ class Ojjudge
                 //一场竞赛该用户首次AK停止记录时间
                 if ($acnum == $pronum && $ac_list_len < $pronum) {
                     Base::addAkMoney($my_aid, $contestdb);
-                    Db::table('joincontest')
-                        ->where('userid', $my_aid)
-                        ->where('contestid', $contest_id)
-                        ->where('isdel', 0)
-                        ->update(['totaltime' => time() - $begintime]);
                     return [
                         'code' => 1,
                         'result' => Base::$ak_msg,
@@ -823,6 +802,9 @@ class Ojjudge
             } else {
                 //竞赛过程中没有通过全部测试点
                 // 更新用户总得分
+                RedisQueue::send(Base::$redis_queue_update_oj_name, [
+                    'problem_id' => $problem_id,
+                ]);
                 Ojjudge::updateUserTotalScore($contest_id, $problem_id, $resscore, $my_aid, $type, $userlanguage, $code, $time, $contestdb);
                 Ojjudge::updateCodeStatus($code_id, '答案错误', $maxtime, $maxmemory);
                 if ($type == 'ACM') {
@@ -868,14 +850,10 @@ class Ojjudge
                     ]);
                 Base::addAcMoney($my_aid, $db->problemName, $userlanguage);
             }
-            //题目AC数目总量加一
-            Db::table('oj')
-                ->where('id', $problem_id)
-                ->where('isdel', 0)
-                ->increment('ACNum', 1);
+            //题目AC数目总量加一            
             RedisQueue::send(Base::$redis_queue_update_oj_name, [
                 'problem_id' => $problem_id,
-                'problem_data' => ['ACpoint' => $ACpoint]
+                'is_ac' => true
             ]);
             return [
                 'code' => 1,
@@ -885,6 +863,9 @@ class Ojjudge
             ];
         }
         Ojjudge::updateCodeStatus($code_id, '答案错误', $maxtime, $maxmemory);
+        RedisQueue::send(Base::$redis_queue_update_oj_name, [
+            'problem_id' => $problem_id,
+        ]);
         return [
             'code' => -1,
             'result' => '答案错误',
