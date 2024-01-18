@@ -319,7 +319,7 @@ class PrivateRobot
                     ->where('id', $problem_id)
                     ->where('isdel', 0)
                     ->increment('ALLSubmitNum', 1);
-
+                Base::updateOjDataRedis($problem_id);
                 //代码所在路径+前缀名称main
                 $runcodefilepath = $filepath . 'main';
                 //编译
@@ -483,12 +483,11 @@ class PrivateRobot
                 }
                 //最后删除文件夹
                 Base::deleteallfile($filepath);
-                //正确AC百分比,保留两位小数
-                $ACpoint = round(((float) $problem_db->ACNum + 1) / ((float) $problem_db->ALLSubmitNum + 1), 2);
-                Db::table('oj')
-                    ->where('id', $problem_id)
-                    ->update(['ACpoint' => $ACpoint]);
-
+                // AC               
+                RedisQueue::send(Base::$redis_queue_update_oj_name, [
+                    'problem_id' => $problem_id,
+                    'is_ac' => true
+                ]);
                 if ($maxtime == '') {
                     $maxtime = '0';
                 }

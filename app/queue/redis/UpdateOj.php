@@ -33,20 +33,16 @@ class UpdateOj implements Consumer
             if (!$problem_id) {
                 return;
             }
-            // 缓存中的数据
+            // 缓存中的数据（总数已经正常）
             $db = Base::getOjData($problem_id);
-            Db::table('oj')
-                ->where('id', $problem_id)
-                ->where('isdel', 0)
-                ->increment('ALLSubmitNum', 1);
             if ($is_ac) {
                 Db::table('oj')
                     ->where('id', $problem_id)
                     ->where('isdel', 0)
                     ->increment('ACNum', 1);
-                $problem_data['ACpoint'] = round((float) ($db->ACNum + 1) / ((float) $db->ALLSubmitNum + 1), 2);
+                $problem_data['ACpoint'] = round((float) ($db->ACNum + 1) / ((float) $db->ALLSubmitNum), 2);
             } else {
-                $problem_data['ACpoint'] = round((float) $db->ACNum / ((float) $db->ALLSubmitNum + 1), 2);
+                $problem_data['ACpoint'] = round((float) $db->ACNum / ((float) $db->ALLSubmitNum), 2);
             }
             Db::table('oj')
                 ->where('id', $problem_id)
