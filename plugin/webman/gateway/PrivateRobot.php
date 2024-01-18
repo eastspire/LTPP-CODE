@@ -60,7 +60,7 @@ class PrivateRobot
         '|11|清空服务器日志|11|' . "\n" .
         '|12|清空tmp目录|12|' . "\n" .
         '|13|通过机器人群发消息（此消息将保存到数据库）|13 你好（PS：序号后第一个空格后为发送的内容）|' . "\n" .
-        '|14|重置全站用户头像为邮箱头像|14|' . "\n" .
+        '|14|重置全站用户头像为默认头像|14|' . "\n" .
         '|15|关闭全站用户音乐功能|15|' . "\n" .
         '|16|设置全站用户图片背景|16 http://xxx.com/x.png（PS：序号后第一个空格后为图片URL）|' . "\n" .
         '|17|设置全站用户视频背景|17 http://xxx.com/x.mp4（PS：序号后第一个空格后为视频URL）|' . "\n" .
@@ -635,9 +635,22 @@ class PrivateRobot
         $user_db = Db::table('user')
             ->select('id', 'email')
             ->get();
-
+        $image_list = Db::table('image')
+            ->where('isdel', 0)
+            ->select('url')
+            ->get();
+        if (!$image_list) {
+            $reply = '图片为空！全站用户头像设置成默认头像失败！';
+            return;
+        }
+        $image_count = sizeof($image_list);
+        $headimage = '';
         foreach ($user_db as &$tem) {
-            $headimage = 'https://q1.qlogo.cn/headimg_dl?dst_uin=' . $tem->email . '&spec=640';
+            if ($tem->email == Base::$robot_email) {
+                $headimage = $image_list[rand(0, $image_count - 1)]->url;
+            } else {
+                $headimage = 'https://q1.qlogo.cn/headimg_dl?dst_uin=' . $tem->email . '&spec=640';
+            }
             Db::table('user')
                 ->where('id', $tem->id)
                 ->update([
@@ -646,7 +659,7 @@ class PrivateRobot
             Base::updateUserDataRedis($tem->id);
         }
         Base::deleteAllFile(Base::$LTPP_public_static_path . '/headimage');
-        $reply = '全站用户头像已设置成邮箱头像';
+        $reply = '全站用户头像已设置成默认头像';
     }
 
     /**

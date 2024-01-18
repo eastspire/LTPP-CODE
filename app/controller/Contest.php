@@ -777,6 +777,7 @@ class Contest
             $userdb = Db::table('user')
                 ->where('email', Base::getRobotEmail())
                 ->where('isdel', 0)
+                ->orderBy('id', 'desc')
                 ->limit($defaultnum)
                 ->pluck('id')
                 ->toArray();
