@@ -86,7 +86,7 @@ class RobotContest implements Consumer
         if (!$contest_begin || !$problem_id || !$my_id) {
             return;
         }
-        if (!isset(RobotContest::$code_all_ac_code_db[$problem_id]) || !is_numeric(RobotContest::$code_all_ac_code_db[$problem_id])) {
+        if (!isset(RobotContest::$code_all_ac_code_db[$problem_id]) || !RobotContest::$code_all_ac_code_db[$problem_id]) {
             RobotContest::$code_all_ac_code_db[$problem_id] = Db::table('codehistory')
                 ->where('problemid', $problem_id)
                 ->where('time', '<', $contest_begin)
@@ -95,7 +95,7 @@ class RobotContest implements Consumer
                 ->orderBy('id', 'desc')
                 ->first();
         }
-        if (!isset(RobotContest::$code_all_no_ac_code_db[$problem_id]) || !is_numeric(RobotContest::$code_all_no_ac_code_db[$problem_id])) {
+        if (!isset(RobotContest::$code_all_no_ac_code_db[$problem_id]) || !RobotContest::$code_all_no_ac_code_db[$problem_id]) {
             RobotContest::$code_all_no_ac_code_db[$problem_id] = Db::table('codehistory')
                 ->where('problemid', $problem_id)
                 ->where('time', '<', $contest_begin)
@@ -106,7 +106,7 @@ class RobotContest implements Consumer
                 ->orderBy('id', 'desc')
                 ->first();
         }
-        if (!isset(RobotContest::$code_all_code_db[$problem_id]) || !is_numeric(RobotContest::$code_all_code_db[$problem_id])) {
+        if (!isset(RobotContest::$code_all_code_db[$problem_id]) || !RobotContest::$code_all_code_db[$problem_id]) {
             RobotContest::$code_all_code_db[$problem_id] = Db::table('codehistory')
                 ->where('status', '!=', Base::$code_up_waiting)
                 ->where('status', '!=', Base::$code_up_running)
@@ -338,6 +338,11 @@ class RobotContest implements Consumer
             for ($i = 0; $i < $submit_times; ++$i) {
                 foreach ($problem_list as $one_problem_index => &$one_problem_id) {
                     foreach ($people_list as &$one_person_id) {
+                        $contest_db = Base::getContestData($one_contest_id);
+                        if (!$contest_db) {
+                            $this_contest_is_end = true;
+                            break;
+                        }
                         // 先枚举用户
                         $now = date('Y-m-d H:i:s', $now_time);
                         if ($now < $contest_db->begin || $now > $contest_db->end) {
@@ -351,7 +356,9 @@ class RobotContest implements Consumer
                             Contest::sendUpdateRankMQ($one_contest_id);
                         }
                         // 休眠毫秒数
-                        usleep(ceil($one_sleep_time_list[$one_problem_index]));
+                        if ($one_sleep_time_list[$one_problem_index]) {
+                            usleep(ceil($one_sleep_time_list[$one_problem_index]));
+                        }
                     }
                     if ($this_contest_is_end) {
                         break;
