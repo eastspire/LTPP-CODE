@@ -458,6 +458,21 @@ class Setting extends Image
                 $redis5->set('default_contest_duration', $data['default_contest_duration']);
             }
 
+            if ($data['default_contest_submit_sleep_time'] != $redis5->get('default_contest_submit_sleep_time')) {
+                if (!is_numeric($data['default_contest_submit_sleep_time'])) {
+                    return json(['code' => -1, 'msg' => '类型错误！请填写数字！']);
+                }
+                if ($data['default_contest_submit_sleep_time'] < 0) {
+                    return json(['code' => -1, 'msg' => '数字不能小于0！']);
+                }
+                Db::table('setting')
+                    ->where('id', $db->id)
+                    ->where('isdel', 0)
+                    ->update(['default_contest_submit_sleep_time' => $data['default_contest_submit_sleep_time']]);
+                $redis5->del('default_contest_submit_sleep_time');
+                $redis5->set('default_contest_submit_sleep_time', $data['default_contest_submit_sleep_time']);
+            }
+
             if ($data['default_contest_begin_time'] != $redis5->get('default_contest_begin_time')) {
                 if (!is_numeric($data['default_contest_begin_time'])) {
                     return json(['code' => -1, 'msg' => '类型错误！请填写数字！']);

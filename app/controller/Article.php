@@ -963,8 +963,8 @@ class Article extends Image
             } else {
                 if ($do == 'up') {
                     $info = Db::table('article')
-                        ->where('id', '>', $article_id)
                         ->where('name', 'like', '%' . $key . '%')
+                        ->where('id', '>', $article_id)
                         ->where('isdel', 0)
                         ->select(Article::$article_db_key)
                         ->orderBy('id', 'desc')
@@ -972,8 +972,8 @@ class Article extends Image
                         ->get();
                 } else if ($do == 'down') {
                     $info = Db::table('article')
-                        ->where('id', '<', $article_id)
                         ->where('name', 'like', '%' . $key . '%')
+                        ->where('id', '<', $article_id)
                         ->where('isdel', 0)
                         ->select(Article::$article_db_key)
                         ->orderBy('id', 'desc')
@@ -998,9 +998,9 @@ class Article extends Image
             } else {
                 if ($do == 'up') {
                     $info = Db::table('article')
+                        ->where('name', 'like', '%' . $key . '%')
                         ->where('public', 1)
                         ->where('isdel', 0)
-                        ->where('name', 'like', '%' . $key . '%')
                         ->where('id', '>', $article_id)
                         ->select(Article::$article_db_key)
                         ->orderBy('id', 'desc')
@@ -1008,9 +1008,9 @@ class Article extends Image
                         ->get();
                 } else if ($do == 'down') {
                     $info = Db::table('article')
+                        ->where('name', 'like', '%' . $key . '%')
                         ->where('public', 1)
                         ->where('isdel', 0)
-                        ->where('name', 'like', '%' . $key . '%')
                         ->where('id', '<', $article_id)
                         ->select(Article::$article_db_key)
                         ->orderBy('id', 'desc')

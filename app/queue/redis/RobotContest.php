@@ -329,7 +329,7 @@ class RobotContest implements Consumer
                 return;
             }
             // 每题最少休眠毫秒数
-            $one_sleep_min_time = ($contest_run_time_seconds * 1000) / ($people_length * $submit_times * $problem_length);
+            $one_sleep_min_time = min((int)Base::getSettingKeyData('default_contest_submit_sleep_time'), ($contest_run_time_seconds * 1000) / ($people_length * $submit_times * $problem_length));
             // 每题休眠毫秒数，呈梯度上升
             $one_sleep_time_list = [];
             for ($i = 1; $i <= $problem_length; ++$i) {
