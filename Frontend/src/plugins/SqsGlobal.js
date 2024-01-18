@@ -175,6 +175,7 @@ const article_list_data = {
     releasetime: "加载中",
     lastchangetime: "加载中"
 };
+
 const question_list_data = {
     "id": "",
     "name": "加载中",
@@ -206,6 +207,7 @@ const oj_problem_list_data = {
     problemFrom: "加载中",
     ACpoint: 1,
     hassolve: 0,
+    time: '加载中'
 };
 
 // OJ竞赛列表数据模板
