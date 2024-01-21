@@ -92,7 +92,6 @@ class Answer
         $data['userheadimg'] = $user_db->headimage;
         Db::table('question')
             ->where('id', $question_id)
-            ->lockForUpdate()
             ->increment('answer_num', 1);
         Base::dataToSafe($data, true);
         if ($res_id) {
@@ -217,7 +216,6 @@ class Answer
         $data['touserheadimg'] = Base::getUserHeadimage($touser_id);
         Db::table('question')
             ->where('id', $question_id)
-            ->lockForUpdate()
             ->increment('answer_num', 1);
         Base::dataToSafe($data, true);
         if ($resid) {
@@ -363,5 +361,4 @@ class Answer
         }
         return \json(['code' => -1, 'msg' => '删除失败']);
     }
-}
-;
+};

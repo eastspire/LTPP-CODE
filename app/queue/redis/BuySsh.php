@@ -181,7 +181,6 @@ class BuySsh implements Consumer
             $res = Db::table('user')
                 ->where('id', $my_aid)
                 ->where('isdel', 0)
-                ->lockForUpdate()
                 ->decrement('money', Ssh::$price);
             Base::updateUserDataRedis($my_aid);
             // 更新下一个端口

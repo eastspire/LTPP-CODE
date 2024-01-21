@@ -364,7 +364,6 @@ class Contest
         Db::table('contest')
             ->where('id', $contest_id)
             ->where('isdel', 0)
-            ->lockForUpdate()
             ->increment('allpeople', 1);
         if ($res) {
             Contest::sendUpdateRankMQ($contest_id);
@@ -802,7 +801,6 @@ class Contest
             $insert_user = [];
             Db::table('contest')
                 ->where('id', $res_id)
-                ->lockForUpdate()
                 ->increment('allpeople', $sum);
         }
         // 参赛用户使用缓存
@@ -915,7 +913,6 @@ class Contest
         //更新竞赛信息
         Db::table('contest')
             ->where('id', $contest_id)
-            ->lockForUpdate()
             ->where('isdel', 0)
             ->update(
                 [

@@ -328,7 +328,6 @@ class Article extends Image
             Db::table('article')
                 ->where('id', $article_id)
                 ->where('collection', '>', 0)
-                ->lockForUpdate()
                 ->decrement('collection', 1);
             Base::updateArticleDataRedis($article_id);
             return \json(['code' => 1, 'msg' => '取消收藏成功']);
@@ -836,7 +835,6 @@ class Article extends Image
         if ($res) {
             Db::table('article')
                 ->where('id', $article_id)
-                ->lockForUpdate()
                 ->increment('fabulous', 1);
             Base::updateArticleDataRedis($article_id);
             return \json(['code' => 1, 'msg' => '点赞成功']);
@@ -902,7 +900,6 @@ class Article extends Image
         if ($res) {
             Db::table('article')
                 ->where('id', $article_id)
-                ->lockForUpdate()
                 ->increment('collection', 1);
             $userdb = Db::table('user')
                 ->where('id', $my_aid)

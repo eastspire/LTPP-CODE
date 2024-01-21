@@ -703,12 +703,10 @@ class User
             Db::table('user')
                 ->where('id', $my_aid)
                 ->where('isdel', 0)
-                ->lockForUpdate()
                 ->increment('follow', 1);
             Db::table('user')
                 ->where('id', $follow_id)
                 ->where('isdel', 0)
-                ->lockForUpdate()
                 ->increment('fans', 1);
             $userdb = Db::table('user')
                 ->where('id', $my_aid)
@@ -747,12 +745,10 @@ class User
             Db::table('user')
                 ->where('id', $my_aid)
                 ->where('isdel', 0)
-                ->lockForUpdate()
                 ->decrement('follow', 1);
             Db::table('user')
                 ->where('id', $follow_id)
                 ->where('isdel', 0)
-                ->lockForUpdate()
                 ->decrement('fans', 1);
             Db::table('followfans')
                 ->where('userid', $my_aid)
@@ -1276,7 +1272,6 @@ class User
             $info = Db::table('user')
                 ->where('id', $my_aid)
                 ->where('isdel', 0)
-                ->lockForUpdate()
                 ->update([
                     'name' => $data['name'],
                     'email' => $data['email'],
@@ -1297,7 +1292,6 @@ class User
             $info = Db::table('user')
                 ->where('id', $my_aid)
                 ->where('isdel', 0)
-                ->lockForUpdate()
                 ->update([
                     'name' => $data['name'],
                     'email' => $data['email'],

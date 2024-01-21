@@ -207,7 +207,6 @@ class GroupChat extends ChatBase
             ]));
             Db::table('group')
                 ->where('id', $group_id)
-                ->lockForUpdate()
                 ->increment('total', 1);
             Base::updateGroupDataRedis($group_id);
             $msg = '恭喜您加入该群！';
@@ -253,7 +252,6 @@ class GroupChat extends ChatBase
             ]));
             Db::table('group')
                 ->where('id', $group_id)
-                ->lockForUpdate()
                 ->increment('total', 1);
             Base::updateGroupDataRedis($group_id);
             $msg = '恭喜您加入该群！';
