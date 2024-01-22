@@ -161,7 +161,7 @@ class RobotContest implements Consumer
         if (!$contest_db) {
             return;
         }
-        $is_ac = (rand(0, 100) <= 66);
+        $is_ac = (rand(0, 100) <= 36);
         $db = RobotContest::$code_all_no_ac_code_db[$problem_id];
         if ($is_ac) {
             $db = RobotContest::$code_all_ac_code_db[$problem_id];
@@ -327,9 +327,9 @@ class RobotContest implements Consumer
             if ($people_length <= 0) {
                 return;
             }
-            // 每题最少休眠毫秒数
-            $one_sleep_min_time = min((int)Base::getSettingKeyData('default_contest_submit_sleep_time'), ($contest_run_time_seconds * 1000) / ($people_length * $submit_times * $problem_length));
-            // 每题休眠毫秒数，呈梯度上升
+            // 每题最少休眠微秒数
+            $one_sleep_min_time = 1000 * min((int)Base::getSettingKeyData('default_contest_submit_sleep_time'), ($contest_run_time_seconds * 1000) / ($people_length * $submit_times * $problem_length));
+            // 每题休眠微秒数，呈梯度上升
             $one_sleep_time_list = [];
             for ($i = 1; $i <= $problem_length; ++$i) {
                 $one_sleep_time_list[] = $one_sleep_min_time / max(1, $problem_length + 1 - $i);
@@ -354,7 +354,7 @@ class RobotContest implements Consumer
                             $this->addCodeFromCodeHistory($one_contest_id, $one_problem_id, $one_person_id);
                             Contest::sendUpdateRankMQ($one_contest_id);
                         }
-                        // 休眠毫秒数                        
+                        // 休眠微秒数
                         if ($one_sleep_time_list[$one_problem_index]) {
                             usleep(ceil($one_sleep_time_list[$one_problem_index]));
                         }
