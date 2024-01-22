@@ -162,7 +162,7 @@ class RobotContest implements Consumer
         if (!$contest_db) {
             return;
         }
-        $is_ac = (rand(0, 100) <= 88);
+        $is_ac = (rand(0, 100) <= 66);
         $db = RobotContest::$code_all_no_ac_code_db[$problem_id];
         if ($is_ac) {
             $db = RobotContest::$code_all_ac_code_db[$problem_id];
