@@ -38,7 +38,7 @@ return [
     ],
     'WebcodeCrontab' => [
         'handler' => process\WebcodeCrontab::class,
-        'count' => max((cpu_count() > 8 ? 8 : cpu_count()) / 2, 4),
+        'count' => max((cpu_count() > 6 ? 6 : cpu_count()) / 2, 3),
     ],
     'CreatContestCrontab' => [
         'handler' => process\CreatContestCrontab::class,
@@ -90,7 +90,7 @@ return [
     // 'Register' => [
     //     'handler' => \Webman\App::class,
     //     'listen' => 'http://0.0.0.0:48800',
-    //     'count' => cpu_count() > 8 ? 8 : cpu_count(),
+    //     'count' => cpu_count() > 6 ? 6 : cpu_count(),
     //     // 进程数
     //     'constructor' => [
     //         'request_class' => \support\Request::class,

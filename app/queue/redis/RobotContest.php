@@ -13,7 +13,6 @@
 namespace app\queue\redis;
 
 use app\controller\Base;
-use app\controller\Codehistory;
 use app\controller\Contest;
 use app\controller\Robot;
 use Exception;
@@ -355,7 +354,7 @@ class RobotContest implements Consumer
                             $this->addCodeFromCodeHistory($one_contest_id, $one_problem_id, $one_person_id);
                             Contest::sendUpdateRankMQ($one_contest_id);
                         }
-                        // 休眠毫秒数
+                        // 休眠毫秒数                        
                         if ($one_sleep_time_list[$one_problem_index]) {
                             usleep(ceil($one_sleep_time_list[$one_problem_index]));
                         }
