@@ -1080,7 +1080,7 @@ class File
         if ($file->getSize() > Base::$image_size_limit) {
             return json(['code' => -1, 'msg' => '图片大小不能大于' . Base::$image_size_limit / Base::$one_mb_size . 'MB', 'url' => '']);
         }
-        $url = Base::uploadFileToDb('file_path', $file, $my_aid);
+        $url = Base::uploadFileToDb('file_path', $my_aid, $file, $file_extion);
         return \json(['url' => $url]);
     }
 

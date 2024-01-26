@@ -50,7 +50,8 @@ class Photo
             return json(['code' => -1, 'msg' => '权限不足']);
         }
         $file = $request->file('file');
-        Base::uploadFileToDb('home_photo', $file, $my_aid);
+        $file_extion = $file->getUploadExtension();
+        Base::uploadFileToDb('home_photo', $my_aid, $file, $file_extion);
         return json(['code' => 1, 'msg' => '上传成功']);
     }
 
@@ -72,7 +73,7 @@ class Photo
         if ($file->getSize() > Base::$image_size_limit) {
             return json(['code' => -1, 'msg' => '图片大小不能大于' . Base::$image_size_limit / Base::$one_mb_size . 'MB', 'url' => '']);
         }
-        $url = Base::uploadFileToDb('file_path', $file, $my_aid);
+        $url = Base::uploadFileToDb('file_path', $my_aid, $file, $file_extion);
         return \json(['url' => $url]);
     }
 

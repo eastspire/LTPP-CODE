@@ -3473,12 +3473,15 @@ class Base
     /**
      * 上传文件保存数据库
      */
-    static public function uploadFileToDb($db_name, $file, $my_aid)
+    static public function uploadFileToDb($db_name, $my_aid, $file, $file_upload_extension = '')
     {
         try {
             if ($file && $file->isValid() && file_exists($file->getRealPath())) {
+                if (!$file_upload_extension) {
+                    $file_upload_extension = $file->getUploadExtension();
+                }
                 $data = file_get_contents($file->getRealPath());
-                $new_path = Base::creatFilePath();
+                $new_path = Base::creatFilePath($file_upload_extension);
                 $id = Base::insertToDb('file_data', [
                     'data' => $data
                 ]);
