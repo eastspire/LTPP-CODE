@@ -202,9 +202,7 @@ export default {
     this.linuxurl = window.sessionStorage.getItem("linuxurl");
     if (!this.linuxurl) {
       await this.getlinuxurl();
-    } else {
-      this.linuxurl += "/static/homephoto/";
-    }
+    } 
     this.getphotolist();
     this.getshortsentencelist();
     this.getNotice();
@@ -317,10 +315,8 @@ export default {
       this.shortsentenceList = res?.data;
     },
     async getlinuxurl() {
-      const res = await this.getBackurl();
-      this.linuxurl = res + "/static/homephoto/";
+      this.linuxurl = await this.getBackurl();
     },
-
     //获取图片列表
     async getphotolist() {
       const { data: res } = await this.$ajax({

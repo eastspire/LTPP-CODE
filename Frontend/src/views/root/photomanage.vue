@@ -110,7 +110,6 @@ export default {
     if (!this.linuxurl) {
       await this.getlinuxurl();
     } else {
-      this.linuxurl += "/static/homephoto/";
       this.backurl += "/Photo/addphoto";
     }
     this.photo_list = [];
@@ -157,7 +156,6 @@ export default {
     async getlinuxurl() {
       const res = await this.getBackurl();
       this.backurl = res + "/Photo/addphoto";
-      this.linuxurl = res + "/static/homephoto/";
     },
     async deleteall() {
       this.$confirm("确定清空全部图片吗？", "提示", {
@@ -269,7 +267,7 @@ export default {
               process: "8797",
             },
             data: {
-              name: this.photo_path,
+              path: this.photo_path,
             },
           })
             .then((res) => {

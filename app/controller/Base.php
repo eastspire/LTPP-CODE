@@ -3485,12 +3485,20 @@ class Base
                 $id = Base::insertToDb('file_data', [
                     'data' => $data
                 ]);
-                Base::insertToDb($db_name, [
+                Base::insertToDb('file_path', [
                     'path' => $new_path,
                     'file_id' => $id,
                     'userid' => $my_aid,
                     'time' => date('Y-m-d H:i:s', time())
                 ]);
+                if ($db_name != 'file_path') {
+                    Base::insertToDb($db_name, [
+                        'path' => $new_path,
+                        'file_id' => $id,
+                        'userid' => $my_aid,
+                        'time' => date('Y-m-d H:i:s', time())
+                    ]);
+                }
                 Base::$GLOBlinuxurl = Base::getSettingKeyData('GLOBlinuxurl');
                 Base::deleteAllFile($file->getRealPath());
                 return \json(['url' => Base::$GLOBlinuxurl . $new_path]);

@@ -28,6 +28,14 @@ class Photo
             ->toArray();
         $redis35 = Redis::connection('db35');
         $redis35->del($list_path);
+        foreach ($list_path as &$path) {
+            Db::table('file_path')
+                ->where('path', $path)
+                ->where('isdel', 0)
+                ->update([
+                    'isdel' => 1
+                ]);
+        }
         Db::table('home_photo')
             ->where('isdel', 0)
             ->update([
@@ -91,6 +99,12 @@ class Photo
             return json(['code' => -1, 'msg' => '权限不足']);
         }
         $path = $request->post('path');
+        Db::table('file_path')
+            ->where('path', $path)
+            ->where('isdel', 0)
+            ->update([
+                'isdel' => 1
+            ]);
         Db::table('home_photo')
             ->where('path', $path)
             ->where('isdel', 0)
