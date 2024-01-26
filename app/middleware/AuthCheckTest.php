@@ -13,7 +13,7 @@ use support\Redis;
 use app\controller\Base;
 use Webman\RedisQueue\Redis as RedisQueue;
 
-class AuthCheckTest extends Robot implements MiddlewareInterface
+class AuthCheckTest implements MiddlewareInterface
 {
     /**
      * 公开方法
@@ -95,6 +95,11 @@ class AuthCheckTest extends Robot implements MiddlewareInterface
             'function' => $request->action,
             'user_uid' => $my_uid,
         ]);
+        // 判断是否是文件资源
+        $path = $request->path();
+        if (!empty($path) && stripos($path, Base::$LTPP_public_static_path) === 0) {
+            return $handler($request);
+        }
         //判断是否需要鉴权
         $func = $request->action;
         foreach (AuthCheckTest::$safe_func as &$tem) {

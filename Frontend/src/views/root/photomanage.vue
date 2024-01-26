@@ -31,7 +31,7 @@
               color: '#FFFFFF',
               'font-size': '1.06rem',
             }"
-            :data="photoList"
+            :data="photo_list"
             style="width: 100%"
           >
             <el-table-column label="图片名称" width="auto">
@@ -50,7 +50,7 @@
                 <el-button
                   class="pulse-enter-active"
                   @click="
-                    photoname = scope.row;
+                    photo_path = scope.row;
                     deletephoto();
                   "
                   style="
@@ -113,7 +113,7 @@ export default {
       this.linuxurl += "/static/homephoto/";
       this.backurl += "/Photo/addphoto";
     }
-    this.photoList = [];
+    this.photo_list = [];
     await this.getlist();
     this.head = {
       authorization: "Bearer " + window.localStorage.getItem("authorization"),
@@ -128,10 +128,10 @@ export default {
         authorization: "Bearer " + window.localStorage.getItem("authorization"),
         key: window.localStorage.getItem("key"),
       },
-      photoList: [],
+      photo_list: [],
       backurl: "",
       head: {},
-      photoname: "",
+      photo_path: "",
     };
   },
   methods: {
@@ -244,7 +244,7 @@ export default {
           offset: 80,
         });
       });
-      this.photoList = res?.data;
+      this.photo_list = res?.data;
       if (res?.code != 1) {
         this.$msg({
           type: "error",
@@ -269,7 +269,7 @@ export default {
               process: "8797",
             },
             data: {
-              name: this.photoname,
+              name: this.photo_path,
             },
           })
             .then((res) => {

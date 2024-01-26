@@ -346,7 +346,6 @@
                         <mavon-editor
                           ref="md"
                           @imgAdd="$imgAdd"
-                          @imgDel="$imgDel"
                           class="md"
                           v-model.lazy="code"
                           :toolbars="toolbars"
@@ -804,7 +803,7 @@ export default {
       let formdata = new FormData();
       formdata.append("image", $file);
       await this.$ajax({
-        url: "/CloudfileImage/saveImage",
+        url: "/File/saveImage",
         method: "post",
         data: formdata,
         headers: { "Content-Type": "multipart/form-data" },
@@ -822,39 +821,6 @@ export default {
             offset: 80,
           });
         });
-    },
-    async $imgDel(pos) {
-      const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/CloudfileImage/deleteImage",
-        data: {
-          path: pos[0],
-        },
-      }).catch((t) => {
-        this.$msg({
-          type: "error",
-          message: t,
-          duration: 1600,
-          offset: 80,
-        });
-      });
-
-      if (res?.code == 1) {
-        this.commenttext = "";
-        this.$msg({
-          type: "success",
-          message: res?.msg,
-          duration: 1600,
-          offset: 80,
-        });
-      } else {
-        this.$msg({
-          type: "error",
-          message: res?.msg,
-          duration: 1600,
-          offset: 80,
-        });
-      }
     },
     // 文件解码
     get_name(str) {

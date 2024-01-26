@@ -18,6 +18,11 @@ class Base
     static $app_name = 'LTPP在线开发平台';
 
     /**
+     * Redis数据库数目
+     */
+    static $redis_db_num = 38;
+
+    /**
      * 代码提交成功提示
      */
     static $code_up_success_msg = '代码提交成功';
@@ -806,7 +811,7 @@ class Base
      * LTPP static文件夹绝对路径
      * @var string $LTPP_public_path LTPP公开文件夹绝对路径
      */
-    static $LTPP_public_static_path = '/home/LTPP/public/static';
+    static $LTPP_public_static_path = '/static';
 
     /**
      * 保存文件名长度限制
@@ -1085,7 +1090,7 @@ class Base
     static public function judgeCreatPath($path, $grade = 0666)
     {
         if (file_exists($path)) {
-            return;
+            return true;
         }
         $name = [];
         $length = strlen($path);
@@ -1121,6 +1126,7 @@ class Base
                 }
             }
         }
+        return false;
     }
 
     /**
@@ -1228,7 +1234,11 @@ class Base
         $resid = 0;
         while (!$resid) {
             try {
-                $resid = Db::table($db_name)->insertGetId($data);
+                if ($db_name == 'file_path') {
+                    $resid = Db::table($db_name)->insert($data);
+                } else {
+                    $resid = Db::table($db_name)->insertGetId($data);
+                }
             } catch (Exception $e) {
                 Robot::sendChatToOneUserMsg(Base::getRootId(), '插入数据' . json_encode($data ?? []) . '到数据表' . $db_name . '出错（该任务即将重新运行）:' . $e->getMessage());
                 continue;
@@ -1871,10 +1881,12 @@ class Base
     /**
      * 字符串类似Base64方式编码
      * @param string $str 待编码字符串
+     * @param array $use_char_set 字符集
      * @return string $res 编码后的字符串
      */
     static public function Base64Encode($str, $use_char_set = null)
     {
+        $str = (string)$str;
         if (!$use_char_set) {
             $use_char_set = Base::$char_set;
         }
@@ -1918,6 +1930,7 @@ class Base
     static public function Base64Decode($str, $use_char_set = null)
     {
         try {
+            $str = (string)$str;
             if (!$use_char_set) {
                 $use_char_set = Base::$char_set;
             }
@@ -2247,7 +2260,7 @@ class Base
         if ($id <= 0 || !is_numeric($id)) {
             return '';
         }
-        $num = strval(rand(1000000, 9999999) % sizeof(Base::$id_char_set));
+        $num = rand(0, sizeof(Base::$id_char_set) - 1);
         $base_str = Base::Base64Encode(strval($id), Base::$id_char_set[$num]);
         $uid = $num . $base_str;
         return $uid;
@@ -2987,6 +3000,7 @@ class Base
      * @param string $code
      * @param string $filepath
      * @param string $runcodefilepath
+     * @return array $res
      */
     static public function compiler($userlanguage, $code, $filepath, $runcodefilepath)
     {
@@ -3108,17 +3122,26 @@ class Base
         $text = '';
         if (file_exists($file_path)) {
             $text = file_get_contents($file_path);
-            try {
-                $encoding = mb_detect_encoding($text);
-                if (!$encoding) {
-                    $encoding = Base::$str_encoding;
-                }
-                $text = mb_convert_encoding($text, 'UTF-8', $encoding);
-            } catch (Exception $e) {
-                return '';
-            }
         }
-        return $text;
+        return Base::textToSafeText($text);
+    }
+
+    /**
+     * 文本安全转换
+     */
+    static public function textToSafeText($text = '')
+    {
+        try {
+            $encoding = mb_detect_encoding($text);
+            if (!$encoding) {
+                $encoding = Base::$str_encoding;
+            }
+            $text = mb_convert_encoding($text, 'UTF-8', $encoding);
+            return $text;
+        } catch (Exception $e) {
+            Robot::sendChatToOneUserMsg(Base::getRootId(), '**【textToSafeText】** 运行错误：' . $e->getMessage());
+            return '';
+        }
     }
 
     /**
@@ -3285,5 +3308,193 @@ class Base
     static public function codeStatusIsFinish($status)
     {
         return $status && $status != Base::$code_up_waiting && $status != Base::$code_up_running;
+    }
+
+    /**
+     * 获取文件数据
+     * @return string|bool data
+     */
+    static public function getStaticFileData($file_path = '')
+    {
+        $redis35 = Redis::connection('db35');
+        if ($redis35->exists($file_path)) {
+            return $redis35->get($file_path);
+        }
+        $db = Db::table('file_path')
+            ->where('path', $file_path)
+            ->where('isdel', 0)
+            ->select('file_id')
+            ->first();
+        if (!$db) {
+            return false;
+        }
+        $db = Db::table('file_data')
+            ->where('id', $db->file_id)
+            ->select('data')
+            ->first();
+        if (!$db) {
+            return false;
+        }
+        $redis35->setEx($file_path, Base::$redis_timeout, $db->data);
+        return $db->data;
+    }
+
+    /**
+     * 删除文件
+     */
+    static public function deleteStaticFile($file_path = '')
+    {
+        $redis35 = Redis::connection('db35');
+        $redis35->del($file_path);
+        Db::table('file_path')
+            ->where('path', $file_path)
+            ->where('isdel', 0)
+            ->update(['isdel' => 0]);
+    }
+
+    /**
+     * 判断文件是否存在
+     */
+    static public function judgeFileExist($file_path)
+    {
+        $redis35 = Redis::connection('db35');
+        if ($redis35->exists($file_path)) {
+            return true;
+        }
+        $db = Db::table('file_path')
+            ->where('path', $file_path)
+            ->where('isdel', 0)
+            ->select('file_id')
+            ->first();
+        if (!$db) {
+            return false;
+        }
+        $db = Db::table('file_data')
+            ->where('id', $db->file_id)
+            ->select('data')
+            ->first();
+        if (!$db) {
+            return false;
+        }
+        $redis35->setEx($file_path, Base::$redis_timeout, $db->data);
+        return true;
+    }
+
+    /**
+     * 生成文件路径
+     */
+    static public function creatFilePath($file_upload_extension = '')
+    {
+        $file_path = Base::$LTPP_public_static_path . '/' . md5(date("Y-m", time()));
+        do {
+            $num = rand(0, sizeof(Base::$id_char_set) - 1);
+            $file_name = Base::Base64Encode(time(), Base::$id_char_set[$num]) . '/' . md5(uniqid() . mt_rand(1, 100000) . time()) . '/' . md5(uniqid() . mt_rand(1, 100000) . time()) . '.' . $file_upload_extension;
+        } while (Base::judgeFileExist($file_path . '/' . $file_name));
+        return $file_path . '/' . $file_name;
+    }
+
+    /**
+     * 根据文件类型获取Content-Type
+     */
+    static public function getContentType($file_extion = '')
+    {
+        if (isset(File::$file_extion_content_type_map[$file_extion])) {
+            return File::$file_extion_content_type_map[$file_extion];
+        }
+        return 'application/octet-stream';
+    }
+
+    /**
+     * 获取OJ测试用例
+     */
+    static public function getOjTestDataList($problem_id)
+    {
+        try {
+            $redis36 = Redis::connection('db36');
+            if ($redis36->exists($problem_id)) {
+                return json_decode($redis36->get($problem_id), false);
+            }
+            $list = Db::table('oj_test_data')
+                ->where('problem_id', $problem_id)
+                ->where('isdel', 0)
+                ->orderBy('id', 'asc')
+                ->select('id', 'test_in', 'test_out')
+                ->get();
+            $redis36->setEx($problem_id, Base::$redis_timeout, json_encode($list));
+            return $list;
+        } catch (Exception $e) {
+            Robot::sendChatToOneUserMsg(Base::getRootId(), '**【getOjTestData】** 运行错误：' . $e->getMessage());
+        }
+        return [];
+    }
+
+    /**
+     * 更新缓存中OJ测试用例
+     */
+    static public function updateOjTestDataListRedis($problem_id)
+    {
+        try {
+            $redis36 = Redis::connection('db36');
+            $list = Db::table('oj_test_data')
+                ->where('problem_id', $problem_id)
+                ->where('isdel', 0)
+                ->orderBy('id', 'asc')
+                ->select('id', 'test_in', 'test_out')
+                ->get();
+            $redis36->setEx($problem_id, Base::$redis_timeout, json_encode($list));
+            return $list;
+        } catch (Exception $e) {
+            Robot::sendChatToOneUserMsg(Base::getRootId(), '**【getOjTestData】** 运行错误：' . $e->getMessage());
+        }
+        return [];
+    }
+
+    /**
+     * 将输入用例写入本地
+     */
+    static public function writeOjDataInToFile($problem_id = 0, $path = '/tmp/', $test_data_list = [])
+    {
+        try {
+            if (Base::judgeCreatPath($path)) {
+                return;
+            }
+            if (!$test_data_list) {
+                $test_data_list = Base::getOjTestDataList($problem_id);
+            }
+            foreach ($test_data_list as &$tem) {
+                $file_in_path = $path . $tem->id . '.in';
+                Base::writeToFile($file_in_path, $tem->test_in);
+            }
+        } catch (Exception $e) {
+            Robot::sendChatToOneUserMsg(Base::getRootId(), '**【writeOjDataInToFile】** 运行错误：' . $e->getMessage());
+        }
+    }
+
+    /**
+     * 上传文件保存数据库
+     */
+    static public function uploadFileToDb($db_name, $file, $my_aid)
+    {
+        try {
+            if ($file && $file->isValid() && file_exists($file->getRealPath())) {
+                $data = file_get_contents($file->getRealPath());
+                $new_path = Base::creatFilePath();
+                $id = Base::insertToDb('file_data', [
+                    'data' => $data
+                ]);
+                Base::insertToDb($db_name, [
+                    'path' => $new_path,
+                    'file_id' => $id,
+                    'userid' => $my_aid,
+                    'time' => date('Y-m-d H:i:s', time())
+                ]);
+                Base::$GLOBlinuxurl = Base::getSettingKeyData('GLOBlinuxurl');
+                Base::deleteAllFile($file->getRealPath());
+                return \json(['url' => Base::$GLOBlinuxurl . $new_path]);
+            }
+        } catch (Exception $e) {
+            Robot::sendChatToOneUserMsg(Base::getRootId(), '**【uploadFileToDb】** 运行错误：' . $e->getMessage());
+        }
+        return '';
     }
 };

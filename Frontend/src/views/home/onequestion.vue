@@ -106,7 +106,6 @@
               <mavon-editor
                 ref="md1"
                 @imgAdd="$imgAdd1"
-                @imgDel="$answerimgDel1"
                 class="md"
                 :ishljs="true"
                 :toolbars="toolbars"
@@ -571,7 +570,6 @@
               <mavon-editor
                 ref="md4"
                 @imgAdd="$imgAdd4"
-                @imgDel="$answerimgDel4"
                 class="md"
                 v-model.lazy="touseranswertext"
                 :toolbars="toolbars"
@@ -1090,7 +1088,7 @@ export default {
       let formdata = new FormData();
       formdata.append("image", $file);
       await this.$ajax({
-        url: "/AnswerImage/saveImage",
+        url: "/File/saveImage",
         method: "post",
         data: formdata,
         headers: {
@@ -1117,7 +1115,7 @@ export default {
       let formdata = new FormData();
       formdata.append("image", $file);
       await this.$ajax({
-        url: "/AnswerImage/saveImage",
+        url: "/File/saveImage",
         method: "post",
         data: formdata,
         headers: {
@@ -1139,74 +1137,6 @@ export default {
           });
         });
     },
-
-    async $answerimgDel1(pos) {
-      const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/AnswerImage/deleteImage",
-        data: {
-          path: pos[0],
-          question_id: this.question_id,
-        },
-      }).catch((t) => {
-        this.$msg({
-          type: "error",
-          message: t,
-          duration: 1600,
-          offset: 80,
-        });
-      });
-
-      if (res?.code == 1) {
-        this.$msg({
-          type: "success",
-          message: res?.msg,
-          duration: 600,
-          offset: 80,
-        });
-      } else {
-        this.$msg({
-          type: "error",
-          message: res?.msg,
-          duration: 800,
-          offset: 80,
-        });
-      }
-    },
-    async $answerimgDel4(pos) {
-      const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/AnswerImage/deleteImage",
-        data: {
-          path: pos[0],
-          question_id: this.question_id,
-        },
-      }).catch((t) => {
-        this.$msg({
-          type: "error",
-          message: t,
-          duration: 1600,
-          offset: 80,
-        });
-      });
-
-      if (res?.code == 1) {
-        this.$msg({
-          type: "success",
-          message: res?.msg,
-          duration: 600,
-          offset: 80,
-        });
-      } else {
-        this.$msg({
-          type: "error",
-          message: res?.msg,
-          duration: 800,
-          offset: 80,
-        });
-      }
-    },
-
     async lookquestion() {
       const { data: res } = await this.$ajax({
         method: "post",

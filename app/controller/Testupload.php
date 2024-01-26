@@ -12,6 +12,7 @@
 
 namespace app\controller;
 
+use Illuminate\Support\Facades\Redis;
 use support\Request;
 use Tinywan\Jwt\JwtToken;
 use support\Db;
@@ -27,14 +28,6 @@ class Testupload extends Oj
     {
         $my_uid = JwtToken::getCurrentId();
         $my_aid = Base::getIdByUid($my_uid);
-        $user = Db::table('user')
-            ->where('id', $my_aid)
-            ->where('isdel', 0)
-            ->first();
-        if (!$user) {
-            return \json(['code' => -1, 'msg' => '用户不存在！']);
-        }
-
         $file = $request->file('file');
         $problem_uid = \request()->post('id');
         $problem_id = Base::getIdByUid($problem_uid);
@@ -43,19 +36,47 @@ class Testupload extends Oj
             return \json(['code' => -1, 'msg' => '权限不足！']);
         }
         $md5_problem_id = Base::doubleMd5($problem_id);
-        $newPath = '/home/LTPP/testdata/' . $md5_problem_id . '/'; // 目标文件夹
-
+        $alltestpath = Base::$tmp_path . 'testdata/' . $md5_problem_id . '/'; // 目标文件夹
+        Base::deleteAllFile($alltestpath);
+        Base::creatFilePath($alltestpath);
         $out = '';
         if ($file->getUploadExtension() === 'zip') {
-            //先清空
-            Base::deleteAllFile($newPath);
-            //判断是否新建文件夹
-            if (!file_exists($newPath)) {
-                @mkdir($newPath, 0666, true);
-            } else {
-                Base::deleteAllFile("$newPath" . '/*'); //'/*'删除文件夹全部文件此保留文件夹
+            exec('unzip -d ' . $alltestpath . ' ' . $file->getRealPath() . ' 2>&1', $out);
+            //获取所有输入输出样例文件名称
+            $testfileout = glob($alltestpath . '*.out');
+            if (sizeof($testfileout) == 0) {
+                // 兼容ICPC测试样例
+                $testfileout = glob($alltestpath . '*.ans');
             }
-            exec('unzip -d ' . $newPath . ' ' . $file->getRealPath() . ' 2>&1', $out);
+            Db::table('oj_test_data')
+                ->where('problem_id', $problem_id)
+                ->where('isdel', 0)
+                ->update([
+                    'isdel' => 1
+                ]);
+            foreach ($testfileout as $temout) {
+                $path_parts = pathinfo($temout);
+                //文件全名
+                $fullname = $path_parts['basename'];
+                //文件前缀名
+                $testname = pathinfo($fullname, PATHINFO_FILENAME);
+                $in = '';
+                $out = '';
+                if (file_exists($alltestpath . $testname . '.in')) {
+                    $in = Base::getFileText($alltestpath . $testname . '.in');
+                } else if (file_exists($alltestpath . $testname . '.ans')) {
+                    $in = Base::getFileText($alltestpath . $testname . '.ans');
+                }
+                if (file_exists($alltestpath . $testname . '.out')) {
+                    $out = Base::getFileText($alltestpath . $testname . '.out');
+                }
+                Base::insertToDb('oj_test_data', [
+                    'problem_id' => $problem_id,
+                    'test_in' => $in,
+                    'test_out' => $out,
+                ]);
+            }
+            Base::updateOjTestDataListRedis($problem_id);
         } else {
             //删除上传的临时文件
             Base::deleteAllFile($file->getRealPath());
@@ -65,5 +86,4 @@ class Testupload extends Oj
         Base::deleteAllFile($file->getRealPath());
         return \json(['code' => 1, 'msg' => '测试样例上传成功！']);
     }
-}
-;
+};

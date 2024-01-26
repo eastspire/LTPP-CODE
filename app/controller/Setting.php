@@ -88,32 +88,6 @@ class Setting extends Image
     }
 
     /**
-     * 安装题库测试样例
-     * @param Request $request 请求
-     * @return string $res json
-     */
-    public function installTest()
-    {
-        $my_uid = JwtToken::getCurrentId();
-        $my_aid = Base::getIdByUid($my_uid);
-        $isroot = Base::judgeIsRoot($my_aid);
-        if (!$isroot) {
-            return json(['code' => -1, 'msg' => '无权限']);
-        }
-        $res = '';
-        $out = array();
-        exec('cp -r -f ' . Base::$LTPP_path . 'InstallMust/testdata /home/LTPP/ 2>&1', $out);
-        if (!empty($out)) {
-            foreach ($out as $tem) {
-                $res .= $tem . "\n";
-            }
-            return json(['code' => -1, 'msg' => '安装出错' . $res]);
-        }
-        Base::chmodFile(Base::$LTPP_path . 'InstallMust', 0555);
-        return json(['code' => 1, 'msg' => '测试样例安装成功']);
-    }
-
-    /**
      * 安装判题机
      * @param Request $request 请求
      * @return string $res json
@@ -207,7 +181,7 @@ class Setting extends Image
         if (!$isroot) {
             return json(['code' => -1, 'msg' => '无权限']);
         }
-        $testpath = Base::$LTPP_public_path . 'static/dbimage/';
+        $testpath = Base::$LTPP_public_static_path . 'dbimage/';
         // 清空数据库
         Db::table('image')
             ->where('isdel', 0)
@@ -216,7 +190,11 @@ class Setting extends Image
         $this->renameImage($my_aid);
         Base::$GLOBlinuxurl = Base::getSettingKeyData('GLOBlinuxurl');
         $data = [];
+        Db::table('image')
+            ->where('isdel', 0)
+            ->update(['isdel' => 1]);
         foreach (Cloudfile::$photo as &$t_img) {
+            $i = 0;
             $file = glob($testpath . '*.' . $t_img);
             foreach ($file as &$tem) {
                 $loc = strpos($tem, 'dbimage/') + 8;
@@ -227,12 +205,26 @@ class Setting extends Image
                 $data[] = [
                     'url' => Base::$GLOBlinuxurl . '/static/dbimage/' . $ts
                 ];
+                $path = Base::$LTPP_public_static_path . 'dbimage/' . $ts;
+                $id = Base::insertToDb('file_data', [
+                    'data' => file_get_contents($path),
+                ]);
+                Base::insertToDb('file_path', [
+                    'path' => $path,
+                    'file_id' => $id,
+                    'userid' => $my_aid,
+                    'time' => date('Y-m-d H:i:s', time())
+                ]);
+                if (sizeof($data) % 888 == 0) {
+                    Db::table('image')->insert($data);
+                    $data = [];
+                }
+            }
+            if (sizeof($data) >= 0) {
+                Db::table('image')->insert($data);
+                $data = [];
             }
         }
-        Db::table('image')
-            ->where('isdel', 0)
-            ->update(['isdel' => 1]);
-        Db::table('image')->insert($data);
         $this->articleImage($my_aid);
         return json(['code' => 1, 'msg' => '网站图片更新完成']);
     }
@@ -250,7 +242,7 @@ class Setting extends Image
         if (!$isroot) {
             return json(['code' => -1, 'msg' => '无权限']);
         }
-        for ($i = 0; $i <= 36; ++$i) {
+        for ($i = 0; $i < Base::$redis_db_num; ++$i) {
             $redis = Redis::connection('db' . $i);
             $redis->flushdb();
         }

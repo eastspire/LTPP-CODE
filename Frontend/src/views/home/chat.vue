@@ -212,7 +212,6 @@
             <mavon-editor
               ref="md"
               @imgAdd="$imgAdd"
-              @imgDel="$imgDel"
               class="md shadow"
               v-model.lazy="mymessage"
               :toolbars="toolbars"
@@ -787,7 +786,7 @@ export default {
       let formdata = new FormData();
       formdata.append("image", $file);
       await this.$ajax({
-        url: "/Chatimage/saveImage",
+        url: "/File/saveImage",
         method: "post",
         data: formdata,
         headers: {
@@ -808,39 +807,6 @@ export default {
             offset: 80,
           });
         });
-    },
-    async $imgDel(pos) {
-      const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Chatimage/deleteImage",
-        data: {
-          path: pos[0],
-        },
-      }).catch((t) => {
-        this.$msg({
-          type: "error",
-          message: t,
-          duration: 1600,
-          offset: 80,
-        });
-      });
-
-      if (res?.code == 1) {
-        this.commenttext = "";
-        this.$msg({
-          type: "success",
-          message: res?.msg,
-          duration: 1600,
-          offset: 80,
-        });
-      } else {
-        this.$msg({
-          type: "error",
-          message: res?.msg,
-          duration: 1600,
-          offset: 80,
-        });
-      }
     },
     async getGroupUserList() {
       this.isSeeChatUser = true;
@@ -1123,7 +1089,7 @@ export default {
     async getlinuxurl() {
       const res = await this.getBackurl();
       this.linuxurl = res;
-      this.backurl = this.linuxurl + "/Chatimage/addGroupPhoto";
+      this.backurl = this.linuxurl + "/File/saveImage";
     },
 
     // 滚动到顶部

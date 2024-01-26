@@ -41,7 +41,6 @@
             ref="md"
             class="md"
             @imgAdd="$imgAdd"
-            @imgDel="$imgDel"
             v-model.lazy="onedata.content"
             :toolbars="toolbars"
             :subfield="prop.subfield"
@@ -636,7 +635,7 @@ export default {
       let formdata = new FormData();
       formdata.append("image", $file);
       this.$ajax({
-        url: "/Contestimage/saveImage",
+        url: "/File/saveImage",
         method: "post",
         data: formdata,
         headers: { "Content-Type": "multipart/form-data" },
@@ -654,38 +653,6 @@ export default {
             offset: 80,
           });
         });
-    },
-    async $imgDel(pos) {
-      const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Contestimage/deleteImage",
-        data: {
-          path: pos[0],
-        },
-      }).catch((t) => {
-        this.$msg({
-          type: "error",
-          message: t,
-          duration: 1600,
-          offset: 80,
-        });
-      });
-
-      if (res?.code == 1) {
-        this.$msg({
-          type: "success",
-          message: res?.msg,
-          duration: 1600,
-          offset: 80,
-        });
-      } else {
-        this.$msg({
-          type: "error",
-          message: res?.msg,
-          duration: 1600,
-          offset: 80,
-        });
-      }
     },
     handleCurrentChange(val) {
       this.page = val;

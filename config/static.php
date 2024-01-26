@@ -9,6 +9,7 @@
  * QQ:1491579574
  * Copyright (c) 2023 by SQS, All Rights Reserved. 
  */
+
 /**
  * This file is part of webman.
  *
@@ -26,9 +27,6 @@
  * Static file settings
  */
 return [
-    'enable' => true,
-    'middleware' => [
-            // Static file Middleware
-        app\middleware\StaticFile::class,
-    ],
+    'enable' => false,
+    'middleware' => [],
 ];

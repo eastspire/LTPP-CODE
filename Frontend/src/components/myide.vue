@@ -383,6 +383,7 @@ export default {
   },
   destroyed() {
     try {
+      this.test_query_one_can_next = true;
       this.save(true);
       this.ide_base && this.ide_base.dispose();
       this.editor && this.editor.dispose();
@@ -394,6 +395,7 @@ export default {
   },
   data() {
     return {
+      test_query_one_can_next: true,
       has_ac_code: "",
       is_has_ac_code: false,
       local_testin: "",
@@ -559,9 +561,10 @@ export default {
       });
     },
     async testQueryOne(code_id) {
-      if (!this.editor || !code_id) {
+      if (!this.editor  || !this.test_query_one_can_next || !code_id) {
         return;
       }
+      this.test_query_one_can_next = false;
       this.save();
       this.isshow = false;
       this.istest = true;
@@ -580,6 +583,7 @@ export default {
       }).catch((t) => {
         this.isup = false;
         this.istest = false;
+        this.test_query_one_can_next = true;
         this.$msg({
           type: "error",
           message: t,
@@ -587,9 +591,10 @@ export default {
           offset: 80,
         });
       });
+      this.test_query_one_can_next = true;
       if (res?.code == 0) {
         // code为0
-        // 等待中
+        // 等待中        
         return;
       }
       try {
@@ -752,7 +757,7 @@ export default {
         this.code_id = res?.code_id;
         this.up_timer = setInterval(() => {
           this.submitQueryOne(this.code_id);
-        }, 1000);
+        }, 100);
       } else {
         this.isup = false;
         this.istest = false;
@@ -770,6 +775,10 @@ export default {
         type: "warning",
       })
         .then(() => {
+          try {
+            clearInterval(this.up_timer);
+            this.up_timer = null;
+          } catch (err) {}
           if (!this.editor) {
             return;
           }

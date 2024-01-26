@@ -17,6 +17,5 @@ return [
     '' => [
         app\middleware\CrossDomain::class,
         app\middleware\AuthCheckTest::class,
-        app\middleware\StaticFile::class,
     ]
 ];

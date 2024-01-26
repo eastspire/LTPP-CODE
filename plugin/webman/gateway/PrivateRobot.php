@@ -253,16 +253,12 @@ class PrivateRobot
         $limittime = (int) $problem_db->Time;
         $limitmemory = ((int) $problem_db->Memory) << 20;
         $md5_problem_id = Base::doubleMd5($problem_id);
-        $alltestpath = '/home/LTPP/testdata/' . $md5_problem_id . '/';
-
+        $alltestpath =  Base::$tmp_path . 'testdata/' . $md5_problem_id . '/';
+        $test_data_list = Base::getOjTestDataList($problem_id);
+        Base::writeOjDataInToFile($problem_id, $alltestpath, $test_data_list);
         //获取所有输入输出样例文件名称
         $testfilein = glob($alltestpath . '*.in');
-        $testfileout = glob($alltestpath . '*.out');
-        if (sizeof($testfileout) == 0) {
-            // 兼容ICPC测试样例
-            $testfileout = glob($alltestpath . '*.ans');
-        }
-        if (sizeof($testfilein) <= 0 || sizeof($testfileout) <= 0) {
+        if (sizeof($test_data_list) <= 0) {
             return '题目 **【' . $problem_name . '】** 无测试样例！';
         }
         foreach ($contest_list as &$contest_id) {
@@ -372,13 +368,10 @@ class PrivateRobot
                 $maxtime = '';
                 $maxmemory = '';
                 // 遍历测试样例
-                foreach ($testfileout as $temout) {
+                foreach ($test_data_list as &$one_oj_test_data_db) {
                     Base::writeToFile($outpath, '');
-                    $path_parts = pathinfo($temout);
-                    //文件全名
-                    $fullname = $path_parts['basename'];
                     //文件前缀名
-                    $testname = pathinfo($fullname, PATHINFO_FILENAME);
+                    $testname = $one_oj_test_data_db->id;
                     //运行
                     $out = [];
                     $out = Base::run($userlanguage, $filepath, $alltestpath . $testname . '.in ', $outpath, $errpath, $runcodefilepath, $limittime, $limitmemory);
@@ -436,7 +429,6 @@ class PrivateRobot
                     $maxmemory = max($maxmemory, $memory_used);
 
                     $testout = '';
-                    $testoutpath = $alltestpath . $fullname;
 
                     if ($status != Base::$judge_code_finish) {
                         Base::deleteallfile($filepath);
@@ -469,7 +461,7 @@ class PrivateRobot
                     }
                     //读取输出
                     $resout = Base::getFileText($outpath);
-                    $testout = Base::getFileText($testoutpath);
+                    $testout = Base::textToSafeText($one_oj_test_data_db->test_out);
                     //处理空格和换行错误
                     $testout = str_replace([' ', "\n", "\r", "\r\n"], '', $testout);
                     $resout = str_replace([' ', "\n", "\r", "\r\n"], '', $resout);

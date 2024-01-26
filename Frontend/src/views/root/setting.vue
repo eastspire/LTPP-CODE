@@ -223,24 +223,7 @@
             style="font-size: 1.06rem; color: deeppink"
             @click="installJudgeSever()"
             >安装判题机</el-button
-          >
-          <p
-            style="
-              font-size: 1.06rem;
-              text-align: left;
-              font-weight: bold;
-              margin: 1rem 0rem 1rem 0rem;
-            "
-          >
-            安装题库测试样例
-          </p>
-          <el-button
-            type="text"
-            class="pulse-enter-active"
-            style="font-size: 1.06rem; color: deeppink"
-            @click="installTest()"
-            >安装题库测试样例</el-button
-          >
+          >                 
           <p
             style="
               font-size: 1.06rem;
@@ -1421,37 +1404,6 @@ export default {
       const { data: res } = await this.$ajax({
         method: "post",
         url: "/Setting/runMusic",
-        portType: {
-          process: "8797",
-        },
-      }).catch((t) => {
-        this.$msg({
-          type: "error",
-          message: t,
-          duration: 1600,
-          offset: 80,
-        });
-      });
-      if (res?.code == 1) {
-        this.$msg({
-          type: "success",
-          message: res?.msg,
-          duration: 1600,
-          offset: 80,
-        });
-      } else {
-        this.$msg({
-          type: "error",
-          message: res?.msg,
-          duration: 1600,
-          offset: 80,
-        });
-      }
-    },
-    async installTest() {
-      const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Setting/installTest",
         portType: {
           process: "8797",
         },

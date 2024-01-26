@@ -15,7 +15,6 @@
           <mavon-editor
             ref="md"
             @imgAdd="$imgAdd"
-            @imgDel="$imgDel"
             class="md"
             v-model.lazy="question_name"
             :toolbars="toolbars"
@@ -291,7 +290,7 @@ export default {
       let formdata = new FormData();
       formdata.append("image", $file);
       await this.$ajax({
-        url: "/QuestionImage/saveImage",
+        url: "/File/saveImage",
         method: "post",
         data: formdata,
         headers: { "Content-Type": "multipart/form-data" },
@@ -310,40 +309,6 @@ export default {
           });
         });
     },
-    async $imgDel(pos) {
-      const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/QuestionImage/deleteImage",
-        data: {
-          path: pos[0],
-        },
-      }).catch((t) => {
-        this.$msg({
-          type: "error",
-          message: t,
-          duration: 1600,
-          offset: 80,
-        });
-      });
-
-      if (res?.code == 1) {
-        this.commenttext = "";
-        this.$msg({
-          type: "success",
-          message: res?.msg,
-          duration: 1600,
-          offset: 80,
-        });
-      } else {
-        this.$msg({
-          type: "error",
-          message: res?.msg,
-          duration: 1600,
-          offset: 80,
-        });
-      }
-    },
-
     async upQuestion() {
       if (!this.issendfinish) {
         return;

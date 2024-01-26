@@ -398,15 +398,12 @@ class Ojjudge
         }
 
         $md5_problem_id = Base::doubleMd5($problem_id);
-        $alltestpath = '/home/LTPP/testdata/' . $md5_problem_id . '/';
+        $alltestpath = Base::$tmp_path . 'testdata/' . $md5_problem_id . '/';
+        $test_data_list = Base::getOjTestDataList($problem_id);
+        Base::writeOjDataInToFile($problem_id, $alltestpath, $test_data_list);
         //获取所有输入输出样例文件名称
         $testfilein = glob($alltestpath . '*.in');
-        $testfileout = glob($alltestpath . '*.out');
-        if (sizeof($testfileout) == 0) {
-            // 兼容ICPC测试样例
-            $testfileout = glob($alltestpath . '*.ans');
-        }
-        if (sizeof($testfilein) <= 0 || sizeof($testfileout) <= 0) {
+        if (sizeof($test_data_list) <= 0) {
             Ojjudge::updateCodeStatus($code_id, '运行出错', 0, 0);
             return [
                 'code' => -1,
@@ -496,13 +493,10 @@ class Ojjudge
         // 开始运行，当前判题数目加一
 
         // 遍历测试样例
-        foreach ($testfileout as $temout) {
+        foreach ($test_data_list as &$one_oj_test_data_db) {
             Base::writeToFile($outpath, '');
-            $path_parts = pathinfo($temout);
-            //文件全名
-            $fullname = $path_parts['basename'];
             //文件前缀名
-            $testname = pathinfo($fullname, PATHINFO_FILENAME);
+            $testname = $one_oj_test_data_db->id;
             $out = [];
             //运行
             $out = Base::run($userlanguage, $filepath, $alltestpath . $testname . '.in ', $outpath, $errpath, $runcodefilepath, $limittime, $limitmemory);
@@ -581,7 +575,6 @@ class Ojjudge
             $maxtime = max($maxtime, $time_used);
             $maxmemory = max($maxmemory, $memory_used);
             $testout = '';
-            $testoutpath = $alltestpath . $fullname;
             // 不是竞赛赛题或者是SQS赛制判题遇到错误就结束
             if ($contest_id == 0 || $type == "SQS") {
                 $testin = Base::getFileText($alltestpath . $testname . '.in');
@@ -604,7 +597,7 @@ class Ojjudge
             }
             //读取输出
             $resout = Base::getFileText($outpath);
-            $testout = Base::getFileText($testoutpath);
+            $testout = Base::textToSafeText($one_oj_test_data_db->test_out);
             //处理空格和换行错误
             $testout = str_replace([' ', "\n", "\r", "\r\n"], '', $testout);
             $resout = str_replace([' ', "\n", "\r", "\r\n"], '', $resout);

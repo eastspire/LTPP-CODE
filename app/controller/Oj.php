@@ -701,7 +701,7 @@ class Oj
             ->where('isdel', 0)
             ->update(['isdel' => 1]);
         $md5_problem_id = Base::doubleMd5($problem_id);
-        Base::deleteAllFile('/home/LTPP/testdata/' . $md5_problem_id . '/');
+        Base::deleteAllFile(Base::$tmp_path . 'testdata/' . $md5_problem_id . '/');
         Base::updateOjDataRedis($problem_id);
         if ($deldb) {
             return json(['code' => 1, 'msg' => '删除成功']);
@@ -755,26 +755,29 @@ class Oj
         $my_aid = Base::getIdByUid($my_uid);
         $problem_uid = $request->post('problem_id');
         $problem_id = Base::getIdByUid($problem_uid);
-        $double_md5 = Base::doubleMd5($problem_id);
-        $path = '/home/LTPP/testdata/' . $double_md5;
+        $md5_problem_id = Base::doubleMd5($problem_id);
         // 鉴权
         $ismypro = $this->judgeIsMyProblem($problem_id, $my_aid);
         if ($ismypro != 1) {
             return \json(['code' => -1, 'msg' => '权限不足']);
         }
-        $db = Db::table('oj')
-            ->where('id', $problem_id)
-            ->select('problemName')
-            ->first();
+        $db = Base::getOjData($problem_id);
         if (!$db) {
             return json(['code' => -1, 'msg' => '题目不存在！']);
         }
-        if (!file_exists($path)) {
-            return json(['code' => -1, 'msg' => '题目样例不存在！']);
+        $data = Base::getOjTestDataList($problem_id);
+        $path = Base::$tmp_path . 'testdata/' . $md5_problem_id . '/';
+        Base::judgeCreatPath($path);
+        $i = 1;
+        foreach ($data as &$tem) {
+            Base::writeToFile($path . $i . '.in', $tem->test_in);
+            Base::writeToFile($path . $i . '.out', $tem->test_out);
+            ++$i;
         }
         //文件路径加文件名称
-        $tmp = '/tmp/' . $db->problemName . '.zip';
-        Base::make_zip_file_for_folder($tmp, $path); //调用方法，对要打包的根目录进行操作，并将ZipArchive的对象传递给方法
-        return response('')->download($tmp);
+        $zip_path = '/tmp/file/' . (uniqid() . mt_rand(1, 100000) . time()) . '/' . $db->problemName . '.zip';
+        Base::judgeCreatPath($zip_path);
+        Base::make_zip_file_for_folder($zip_path, $path); //调用方法，对要打包的根目录进行操作，并将ZipArchive的对象传递给方法
+        return response('')->download($zip_path);
     }
 };

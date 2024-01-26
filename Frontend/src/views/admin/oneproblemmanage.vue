@@ -28,7 +28,6 @@
             ref="md"
             class="md"
             @imgAdd="$imgAdd"
-            @imgDel="$imgDel"
             :toolbars="toolbars"
             v-model.lazy="tableData.problemContent"
             :subfield="prop.subfield"
@@ -803,7 +802,7 @@ export default {
       let formdata = new FormData();
       formdata.append("image", $file);
       this.$ajax({
-        url: "/Problemimage/saveImage",
+        url: "/File/saveImage",
         method: "post",
         data: formdata,
         headers: { "Content-Type": "multipart/form-data" },
@@ -822,39 +821,6 @@ export default {
           });
         });
     },
-    async $imgDel(pos) {
-      const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Problemimage/deleteImage",
-        data: {
-          path: pos[0],
-        },
-      }).catch((t) => {
-        this.$msg({
-          type: "error",
-          message: t,
-          duration: 1600,
-          offset: 80,
-        });
-      });
-
-      if (res?.code == 1) {
-        this.$msg({
-          type: "success",
-          message: res?.msg,
-          duration: 1600,
-          offset: 80,
-        });
-      } else {
-        this.$msg({
-          type: "error",
-          message: res?.msg,
-          duration: 1600,
-          offset: 80,
-        });
-      }
-    },
-
     //获取题目内容
     async getproblem(id) {
       const { data: res } = await this.$ajax({
