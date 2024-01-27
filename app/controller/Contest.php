@@ -1795,13 +1795,8 @@ class Contest
         }
         $res .= '</body></html>';
         $key = Base::getContestSimilarityId($contest_id);
-        // 二级路径更安全，防止被破解
-        $path = 'static/contest/' . Base::doubleMd5($contest_id) . '/' . $key . '/';
-        $save_path = Base::$LTPP_public_path . $path;
-        Base::judgeCreatPath($save_path);
         $file_name = Base::getSafeUniqidByIdOnce($contest_id) . '.html';
-        Base::writeToFile($save_path . $file_name, $res);
-        $url = Base::$GLOBlinuxurl . '/' . $path . $file_name;
+        $url = Base::writeNewStaticFile($my_aid, $res, Base::getDbFileExtion($file_name));
         $redis32->del($contest_id);
         return json(['code' => 1, 'url' => $url, 'msg' => '查重完成']);
     }

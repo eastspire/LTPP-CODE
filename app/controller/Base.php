@@ -3417,6 +3417,32 @@ class Base
     }
 
     /**
+     * 新增文件插入数据返回URL
+     */
+    static public function writeNewStaticFile($my_aid, $data, $file_extion)
+    {
+        try {
+            if (!$my_aid) {
+                return '';
+            }
+            Base::$GLOBlinuxurl = Base::getSettingKeyData('GLOBlinuxurl');
+            $id = Base::insertToDb('file_data', [
+                'data' => $data
+            ]);
+            $file_path = Base::creatFilePath($file_extion);
+            Base::insertToDb('file_path', [
+                'path' => $file_path,
+                'file_id' => $id,
+                'userid' => $my_aid,
+                'time' => date('Y-m-d H:i:s', time())
+            ]);
+            return Base::$GLOBlinuxurl . $file_path;
+        } catch (Exception $e) {
+            Robot::sendChatToOneUserMsg(Base::getRootId(), '**【writeNewStaticFile】** 运行错误：' . $e->getMessage());
+        }
+    }
+
+    /**
      * 获取文件数据
      * @return string|bool data
      */
