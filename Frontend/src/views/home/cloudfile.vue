@@ -20,22 +20,7 @@
             我的云盘
           </p>
           <div>
-            <div style="float: left">
-              <el-button
-                type="text"
-                class="pulse-enter-active"
-                icon="el-icon-caret-bottom"
-                size="mini"
-                style="
-                  font-size: 1.06rem;
-                  text-align: left;
-                  padding: 1.25rem 1.25rem;
-                  float: left;
-                  color: chartreuse;
-                "
-                @click="downloadFile(filepath[filepath.length - 1])"
-                >下载本页面文件</el-button
-              >
+            <div style="float: left">              
               <el-button
                 type="text"
                 class="pulse-enter-active"
@@ -49,7 +34,7 @@
                   color: chartreuse;
                 "
                 @click="Isnew = true"
-                >新建文件（夹）</el-button
+                >新建文件</el-button
               >
             </div>
             <div style="float: right">
@@ -66,39 +51,12 @@
                 @click="IsShowUp = true"
                 >上传文件</el-button
               >
-              <el-button
-                v-show="
-                  filepath.length > 0 && filepath[filepath.length - 1] != ''
-                "
-                style="
-                  font-size: 1.06rem;
-                  font-weight: bold;
-                  padding: 1.25rem 2rem;
-                  color: aqua;
-                "
-                width="auto"
-                type="text"
-                class="el-icon-s-unfold pulse-enter-active"
-                @click="backfile()"
-                >返回</el-button
-              >
               <div style="clear: both"></div>
             </div>
           </div>
         </div>
         <div style="clear: both"></div>
-        <div style="height: 0.8rem"></div>
-        <div
-          style="color: #dcdfe6; margin-left: 1.6rem; font-weight: bold"
-          v-show="filepath.length > 0"
-        >
-          当前路径：{{
-            filepath.length > 0 && filepath[filepath.length - 1] == ""
-              ? "/"
-              : get_dir_name(filepath[filepath.length - 1])
-          }}
-          <div style="height: 0.8rem"></div>
-        </div>
+        <div style="height: 0.8rem"></div>        
         <p style="color: #dcdfe6; margin-left: 1.6rem; font-weight: bold">
           容量使用情况
         </p>
@@ -126,15 +84,11 @@
               };margin-top:0.46rem;`"
               @contextmenu.prevent="
                 showdelete(
-                  filepath[filepath.length - 1] + '/' + tem[0],
+                  tem[0],
                   base64_decode(tem[0])
                 )
               "
-              @dblclick="
-                tem[1] === 1
-                  ? tolookfolder(filepath[filepath.length - 1] + '/' + tem[0])
-                  : tolookcode(filepath[filepath.length - 1] + '/' + tem[0])
-              "
+              @dblclick="tolookcode(tem[0])"
             >
               <div>
                 <div>
@@ -192,7 +146,7 @@
               <div class="clear"></div>
             </div>
 
-            <!-- 新建文件、文件夹 -->
+            <!-- 新建文件 -->
             <div>
               <el-dialog
                 :close-on-click-modal="false"
@@ -559,8 +513,6 @@
               drag
               ref="upload"
               :auto-upload="true"
-              :before-upload="passpath"
-              :data="passparam"
               :action="cloudfileurl"
               :on-success="reloadList"
               multiple
@@ -570,7 +522,7 @@
                 将文件拖到此处，或<em>点击上传</em>
               </div>
               <div class="el-upload__tip" slot="tip" style="font-size: 1.06rem">
-                （支持多文件上传，不支持文件夹上传)
+                （支持多文件上传）
               </div>
             </el-upload>
           </div>
@@ -639,8 +591,6 @@ export default {
       authorization: "Bearer " + window.localStorage.getItem("authorization"),
       key: window.localStorage.getItem("key"),
     };
-    this.filepath = []; //一定要清空文件夹路径
-    this.filepath.push("");
     await this.loadCharset();
     this.getlist();
     this.getPercentage();
@@ -720,10 +670,6 @@ export default {
       list: [],
       filename: "", //文本路径加文本名称
       onetheme: "monokai",
-      filepath: [],
-      passparam: {
-        path: "",
-      },
       head: {
         authorization: "Bearer " + window.localStorage.getItem("authorization"),
         key: window.localStorage.getItem("key"),
@@ -846,28 +792,6 @@ export default {
       name = first_name + last_name;
       return name;
     },
-    // 目录解码
-    get_dir_name(str) {
-      let name = "";
-      let len = str.length;
-      let one_name = "";
-      for (let i = 0; i < len; ++i) {
-        if (str[i] == ".") {
-          return "错误：不是文件夹！";
-        }
-        if (str[i] == "/") {
-          name = name + this.Base64Decode(one_name, this.char_set) + "/";
-          one_name = "";
-        } else {
-          one_name += str[i];
-          if (i == len - 1) {
-            name = name + this.Base64Decode(one_name, this.char_set) + "/";
-            one_name = "";
-          }
-        }
-      }
-      return name;
-    },
     // 获取字符集
     async loadCharset() {
       while (!this.char_set.length) {
@@ -899,9 +823,6 @@ export default {
     },
     closeFile() {
       this.iscloseFile = true;
-    },
-    passpath() {
-      this.passparam.path = this.filepath[this.filepath.length - 1];
     },
     async getlinuxurl() {
       const res = await this.getBackurl();
@@ -940,7 +861,6 @@ export default {
         method: "post",
         url: "/Cloudfile/newFile",
         data: {
-          path: this.filepath[this.filepath.length - 1],
           name: this.newname,
         },
       }).catch((t) => {
@@ -966,17 +886,14 @@ export default {
           offset: 80,
         });
       }
-      this.tolookfolder(this.filepath[this.filepath.length - 1]);
+      this.getlist();
+      this.getPercentage();
     },
-
-    //首次加载自动获取文件和文件夹
+    //首次加载自动获取文件
     async getlist() {
       const { data: res } = await this.$ajax({
         method: "post",
-        url: "/Cloudfile/loadList",
-        data: {
-          path: this.filepath[0],
-        },
+        url: "/Cloudfile/loadList",       
       }).catch((t) => {
         this.$msg({
           type: "error",
@@ -1008,10 +925,7 @@ export default {
       this.getPercentage();
       const { data: res } = await this.$ajax({
         method: "post",
-        url: "/Cloudfile/loadList",
-        data: {
-          path: this.filepath[this.filepath.length - 1],
-        },
+        url: "/Cloudfile/loadList",       
       }).catch((t) => {
         this.$msg({
           type: "error",
@@ -1020,24 +934,6 @@ export default {
           offset: 80,
         });
       });
-      this.list = res?.data;
-    },
-    async tolookfolder(path) {
-      const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Cloudfile/loadList",
-        data: {
-          path: path,
-        },
-      }).catch((t) => {
-        this.$msg({
-          type: "error",
-          message: t,
-          duration: 1600,
-          offset: 80,
-        });
-      });
-      this.filepath.push(path); //获取到文件列表后入栈
       this.list = res?.data;
     },
     async refreshlist(path) {
@@ -1222,27 +1118,6 @@ export default {
         this.filename;
       window.open(url);
     },
-    async backfile() {
-      if (this.filepath.length <= 1) return;
-      this.filepath.pop(); //去除当前路径
-      let lastpath = this.filepath[this.filepath.length - 1];
-      const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Cloudfile/loadList",
-        data: {
-          path: lastpath,
-        },
-      }).catch((t) => {
-        this.$msg({
-          type: "error",
-          message: t,
-          duration: 1600,
-          offset: 80,
-        });
-      });
-      this.list = res?.data;
-    },
-
     async deletefile(path) {
       const { data: res } = await this.$ajax({
         method: "post",
@@ -1273,7 +1148,7 @@ export default {
           offset: 80,
         });
       }
-      this.refreshlist(this.filepath[this.filepath.length - 1]);
+      this.refreshlist();
       this.getPercentage();
     },
 
@@ -1354,62 +1229,6 @@ export default {
             /* 火狐谷歌的文件下载方式 */
             const blob = new Blob([res?.data], {
               type: "application/octet-stream;application/zip",
-            });
-            let url = window.URL.createObjectURL(blob);
-            const link = document.createElement("a"); // 创建a标签
-            link.href = url;
-            link.download = Name; // 重命名文件
-            link.click();
-            URL.revokeObjectURL(url); // 释放内存
-          }
-        })
-        .catch((t) => {
-          this.$msg({
-            type: "error",
-            message: t,
-            duration: 1600,
-            offset: 80,
-          });
-        });
-    },
-    //下载当前页所有文件
-    async downloadFile(downloadpath) {
-      this.$msg({
-        type: "success",
-        message: "开始下载",
-        duration: 1600,
-        offset: 80,
-      });
-      await this.$ajax({
-        method: "post",
-        url: "/Cloudfile/downloadFile",
-        responseType: "blob",
-        headers: {
-          "Content-Type": "application/json; application/octet-stream;",
-        },
-        data: {
-          path: downloadpath,
-        },
-      })
-        .then((res) => {
-          this.$msg({
-            type: "success",
-            message: "下载完成",
-            duration: 1600,
-            offset: 80,
-          });
-          let reslastname = ".zip";
-          let Name = "下载" + reslastname;
-
-          if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-            const blob = new Blob([res?.data], {
-              type: "application/zip",
-            });
-            window.navigator.msSaveOrOpenBlob(blob, Name);
-          } else {
-            /* 火狐谷歌的文件下载方式 */
-            const blob = new Blob([res?.data], {
-              type: "application/zip",
             });
             let url = window.URL.createObjectURL(blob);
             const link = document.createElement("a"); // 创建a标签

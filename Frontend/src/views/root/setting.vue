@@ -955,6 +955,58 @@
               margin: 1rem 0rem 1rem 0rem;
             "
           >
+            云盘默认文件名称
+          </p>
+          <el-input
+            type="password"
+            show-password
+            style="font-size: 1.06rem"
+            placeholder="云盘默认文件名称"
+            v-model.lazy="resdata.cloud_file_readme_txt_file_name"
+            @keyup.enter.native="updatesetting()"
+          >
+            <el-button
+              slot="append"
+              icon="el-icon-upload"
+              @click="updatesetting()"
+              >更新</el-button
+            >
+          </el-input>
+
+          <p
+            style="
+              font-size: 1.06rem;
+              text-align: left;
+              font-weight: bold;
+              margin: 1rem 0rem 1rem 0rem;
+            "
+          >
+            云盘默认文件内容
+          </p>
+          <el-input
+            type="textarea"
+            autosize
+            style="font-size: 1.06rem"
+            placeholder="云盘默认文件内容"
+            v-model.lazy="resdata.cloud_file_readme_txt"
+            @blur="updatesetting()"
+          >
+            <el-button
+              slot="append"
+              icon="el-icon-upload"
+              @click="updatesetting()"
+              >更新</el-button
+            >
+          </el-input>
+
+          <p
+            style="
+              font-size: 1.06rem;
+              text-align: left;
+              font-weight: bold;
+              margin: 1rem 0rem 1rem 0rem;
+            "
+          >
             抖音收藏URL下载链接
           </p>
           <el-input

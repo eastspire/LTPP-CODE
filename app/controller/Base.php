@@ -62,6 +62,112 @@ class Base
      */
     static $chat_gpt_api_url_key = 'chatgpt_api_url';
 
+
+    /**
+     * @var array $extion_map_number 文件类型转数字
+     */
+    static public $extion_map_number = [
+        'mp3' => 2,
+        'aac' => 2,
+        'ac3' => 2,
+        'mp3adu' => 2,
+        'mp3adufloat' => 2,
+        'mp3float' => 2,
+        'mp3on4' => 2,
+        'mp3on4float' => 2,
+        'amrnb' => 2,
+        'amrwb' => 2,
+        'cook' => 2,
+        'ra_144' => 2,
+        'ra_288' => 2,
+        'sipr' => 2,
+        'wmav1' => 2,
+        'wmav2' => 2,
+        'wmavoice' => 2,
+        'wmapro' => 2,
+        'wamlossless' => 2,
+        'nellymoser' => 2,
+        'vorbis' => 2,
+        'm3u8' => 2,
+        'mp4' => 3,
+        'avi' => 3,
+        'rmvb' => 3,
+        '3gp' => 3,
+        'mpeg' => 3,
+        'wmv' => 3,
+        'mov' => 3,
+        'mpv' => 3,
+        'flv' => 3,
+        'swf' => 3,
+        'cpp' => 4,
+        'c' => 4,
+        'js' => 4,
+        'html' => 4,
+        'css' => 4,
+        'php' => 4,
+        'go' => 4,
+        'java' => 4,
+        'py' => 4,
+        'ts' => 4,
+        'json' => 4,
+        'gitignore' => 4,
+        'sh' => 4,
+        'lock' => 4,
+        'rs' => 4,
+        'dart' => 4,
+        'cs' => 4,
+        'r' => 4,
+        'pdf' => 5,
+        'rar' => 6,
+        'zip' => 6,
+        'tar' => 6,
+        'gz' => 6,
+        'tar.gz' => 6,
+        '7z' => 6,
+        'apz' => 6,
+        'ar' => 6,
+        'bz' => 6,
+        'car' => 6,
+        'dar' => 6,
+        'cpgz' => 6,
+        'f' => 6,
+        'ha' => 6,
+        'hbcj' => 6,
+        'hbc2j' => 6,
+        'hbej' => 6,
+        'hpkj' => 6,
+        'hypj' => 6,
+        'jpg' => 7,
+        'png' => 7,
+        'jpeg' => 7,
+        'gif' => 7,
+        'svg' => 7,
+        'bmp' => 7,
+        'tif' => 7,
+        'pcx' => 7,
+        'tga' => 7,
+        'exif' => 7,
+        'fpx' => 7,
+        'psd' => 7,
+        'cdr' => 7,
+        'pcd' => 7,
+        'dxf' => 7,
+        'ufo' => 7,
+        'eps' => 7,
+        'ai' => 7,
+        'raw' => 7,
+        'WMF' => 7,
+        'webp' => 7,
+        'avif' => 7,
+        'apng' => 7,
+        'exe' => 8,
+        'apk' => 8,
+        'bat' => 8,
+        'ace' => 8,
+        'app' => 8,
+        'com' => 8
+    ];
+
     /**
      * Redis密码
      */
@@ -817,7 +923,7 @@ class Base
      * 保存文件名长度限制
      * @var string $file_name_length_limit 保存文件名长度限制
      */
-    static $file_name_length_limit = 20;
+    static $file_name_length_limit = 100;
 
     /**
      * 临时目录
@@ -3501,11 +3607,235 @@ class Base
                 }
                 Base::$GLOBlinuxurl = Base::getSettingKeyData('GLOBlinuxurl');
                 Base::deleteAllFile($file->getRealPath());
-                return \json(['url' => Base::$GLOBlinuxurl . $new_path]);
+                return Base::$GLOBlinuxurl . $new_path;
             }
         } catch (Exception $e) {
             Robot::sendChatToOneUserMsg(Base::getRootId(), '**【uploadFileToDb】** 运行错误：' . $e->getMessage());
         }
         return '';
+    }
+
+    /**
+     * 上传聊天文件保存数据库
+     */
+    static public function uploadChatFileToDb($post_user_id, $get_user_id, $file, $file_upload_extension = '')
+    {
+        try {
+            if ($file && $file->isValid() && file_exists($file->getRealPath())) {
+                if (!$file_upload_extension) {
+                    $file_upload_extension = $file->getUploadExtension();
+                }
+                $file_name = $file->getUploadName();
+                $file_size = $file->getSize();
+                $data = file_get_contents($file->getRealPath());
+                $new_path = Base::creatFilePath($file_upload_extension);
+                $id = Base::insertToDb('file_data', [
+                    'data' => $data
+                ]);
+                Base::insertToDb('file_path', [
+                    'path' => $new_path,
+                    'file_id' => $id,
+                    'userid' => $post_user_id,
+                    'time' => date('Y-m-d H:i:s', time())
+                ]);
+                Base::insertToDb('chat_file_path', [
+                    'name' => $file_name,
+                    'path' => $new_path,
+                    'file_id' => $id,
+                    'post_user_id' => $post_user_id,
+                    'get_user_id' => $get_user_id,
+                    'time' => date('Y-m-d H:i:s', time()),
+                    'size' => $file_size
+                ]);
+                Base::$GLOBlinuxurl = Base::getSettingKeyData('GLOBlinuxurl');
+                Base::deleteAllFile($file->getRealPath());
+                return '[' . $file_name . '](' . Base::$GLOBlinuxurl . $new_path . ')';
+            }
+        } catch (Exception $e) {
+            Robot::sendChatToOneUserMsg(Base::getRootId(), '**【uploadChatFileToDb】** 运行错误：' . $e->getMessage());
+        }
+        return '';
+    }
+
+    /**
+     * 加载聊天文件列表
+     */
+    static public function loadChatFileList($post_user_id, $get_user_id)
+    {
+        if (!$post_user_id || !$get_user_id) {
+            return [];
+        }
+        $db = Db::table('chat_file_path')
+            ->orWhere(function ($query) use ($post_user_id, $get_user_id) {
+                $query
+                    ->where('post_user_id', $post_user_id)
+                    ->where('get_user_id', $get_user_id)
+                    ->where('isdel', 0);
+            })
+            ->orWhere(function ($query) use ($post_user_id, $get_user_id) {
+                $query
+                    ->where('post_user_id', $get_user_id)
+                    ->where('get_user_id', $post_user_id)
+                    ->where('isdel', 0);
+            })
+            ->orderBy('id', 'desc')
+            ->select('name', 'path', 'time')
+            ->get();
+        return $db;
+    }
+
+    /**
+     * 获取数据库文件大小
+     * @param string $path
+     * @return int res
+     */
+    static public function getDbFileSize($path)
+    {
+        $res = 0;
+        try {
+            $data = Base::getStaticFileData($path);
+            $res = strlen(Base::textToSafeText($data));
+        } catch (Exception $e) {
+            Robot::sendChatToOneUserMsg(Base::getRootId(), '**【getDbFileSize】** 运行错误：' . $e->getMessage());
+        }
+        return $res;
+    }
+
+    /**
+     * 获取数据库文件后缀
+     */
+    static public function getDbFileExtion($path)
+    {
+        $file_extion = '';
+        try {
+            $len = strlen($path);
+            $begin_point = false;
+            for ($i = 0; $i < $len; ++$i) {
+                if ($path[$i] == '.') {
+                    $file_extion = '';
+                    $begin_point = true;
+                    continue;
+                }
+                if ($begin_point) {
+                    $file_extion .= $path[$i];
+                }
+            }
+        } catch (Exception $e) {
+            Robot::sendChatToOneUserMsg(Base::getRootId(), '**【getDbFileExtion】** 运行错误：' . $e->getMessage());
+        }
+        return $file_extion;
+    }
+
+    /**
+     * 文件类型转数字
+     */
+    static public function fileExtionToNumberType($file_extion)
+    {
+        try {
+            if (isset(Base::$extion_map_number[$file_extion])) {
+                return Base::$extion_map_number[$file_extion];
+            }
+        } catch (Exception $e) {
+            Robot::sendChatToOneUserMsg(Base::getRootId(), '**【fileExtionToNumberType】** 运行错误：' . $e->getMessage());
+        }
+        return 9;
+    }
+
+    /**
+     * 上传云盘文件保存数据库
+     */
+    static public function uploadCloudFileToDb($my_aid, $file, $file_upload_extension = '')
+    {
+        try {
+            if ($file && $file->isValid() && file_exists($file->getRealPath())) {
+                if (!$file_upload_extension) {
+                    $file_upload_extension = $file->getUploadExtension();
+                }
+                $file_name = $file->getUploadName();
+                $file_size = $file->getSize();
+                $data = file_get_contents($file->getRealPath());
+                $new_path = Base::creatFilePath($file_upload_extension);
+                $id = Base::insertToDb('file_data', [
+                    'data' => $data
+                ]);
+                Base::insertToDb('file_path', [
+                    'path' => $new_path,
+                    'file_id' => $id,
+                    'userid' => $my_aid,
+                    'time' => date('Y-m-d H:i:s', time())
+                ]);
+                Base::insertToDb('chat_file_path', [
+                    'name' => $file_name,
+                    'path' => $new_path,
+                    'file_id' => $id,
+                    'userid' => $my_aid,
+                    'time' => date('Y-m-d H:i:s', time()),
+                    'size' => $file_size
+                ]);
+                Base::$GLOBlinuxurl = Base::getSettingKeyData('GLOBlinuxurl');
+                Base::deleteAllFile($file->getRealPath());
+                return '[' . $file_name . '](' . Base::$GLOBlinuxurl . $new_path . ')';
+            }
+        } catch (Exception $e) {
+            Robot::sendChatToOneUserMsg(Base::getRootId(), '**【uploadCloudFileToDb】** 运行错误：' . $e->getMessage());
+        }
+        return '';
+    }
+
+    /**
+     * 更新云盘文件数据
+     */
+    static public function updateCloudFileData($userid, $file_path = '', $data = '')
+    {
+        try {
+            if (!$file_path || !$userid) {
+                return;
+            }
+            $redis35 = Redis::connection('db35');
+            $db = Db::table('file_path')
+                ->where('userid', $userid)
+                ->where('path', $file_path)
+                ->where('isdel', 0)
+                ->select('file_id')
+                ->first();
+            if (!$db) {
+                return;
+            }
+            Db::table('file_data')
+                ->where('id', $db->file_id)
+                ->update(['data' => $data]);
+            $redis35->setEx($file_path, Base::$redis_timeout, $data);
+        } catch (Exception $e) {
+            Robot::sendChatToOneUserMsg(Base::getRootId(), '**【updateCloudFileData】** 运行错误：' . $e->getMessage());
+        }
+    }
+
+    /**
+     * 删除云盘文件数据
+     */
+    static public function deleteCloudFileData($userid, $file_path = '')
+    {
+        try {
+            if (!$file_path || !$userid) {
+                return;
+            }
+            $redis35 = Redis::connection('db35');
+            $db = Db::table('file_path')
+                ->where('userid', $userid)
+                ->where('path', $file_path)
+                ->where('isdel', 0)
+                ->exists();
+            if (!$db) {
+                return;
+            }
+            Db::table('file_path')
+                ->where('userid', $userid)
+                ->where('path', $file_path)
+                ->where('isdel', 0)
+                ->update(['isdel' => 1]);
+            $redis35->del($file_path);
+        } catch (Exception $e) {
+            Robot::sendChatToOneUserMsg(Base::getRootId(), '**【deleteCloudFileData】** 运行错误：' . $e->getMessage());
+        }
     }
 };

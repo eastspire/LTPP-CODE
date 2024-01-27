@@ -201,7 +201,6 @@
               class="el-icon-menu pulse-enter-active"
               style="font-size: 1.06rem; color: deepskyblue; margin-left: 1rem"
               @click="
-                getPercentage();
                 loadFileList();
                 isSeeChatFile = true;
               "
@@ -467,21 +466,12 @@
     <el-drawer
       :size="drawer_size"
       @contextmenu.prevent=""
-      title="云文件（有效期30天）"
+      title="云文件"
       :visible.sync="isSeeChatFile"
       direction="rtl"
       ref="drawer"
     >
       <div>
-        <p style="color: #dcdfe6; margin-left: 1.6rem; font-weight: bold">
-          容量使用情况
-        </p>
-        <el-progress
-          style="margin: 0.4rem 1.6rem"
-          :text-inside="true"
-          :percentage="file_percentage"
-          status="success"
-        ></el-progress>
         <div v-for="(tem, index) in filelist" :key="index">
           <div>
             <div
@@ -610,7 +600,6 @@ export default {
       drawer_size: "460px",
       isSeeChatUser: false,
       group_user_list: [],
-      file_percentage: 0,
       user_deep_color:
         "background-color: rgba(117,63,178,0.66);color:rgba(255,255,255,0.9)",
       user_no_deep_color: "background-color:rgba(117,63,178,0.06)",
@@ -831,26 +820,6 @@ export default {
         this.group_user_list = res?.data;
       }
     },
-    async getPercentage() {
-      const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Chatfile/getCloudfilePercentage",
-        portType: {
-          process: "8797",
-        },
-        data: {
-          path: this.passparam.path,
-        },
-      }).catch((t) => {
-        this.$msg({
-          type: "error",
-          message: t,
-          duration: 1600,
-          offset: 80,
-        });
-      });
-      this.file_percentage = res?.data;
-    },
     async clearNolookNum() {
       this.$ajax({
         method: "post",
@@ -1048,9 +1017,9 @@ export default {
           offset: 80,
         });
         this.mymessage =
-          "我刚刚上传 " +
+          "我刚刚上传" +
           this.base64_decode(response.filename) +
-          " 到云文件，快去看看吧。";
+          "到云文件，快去看看吧。";
         this.postmessage();
         this.mymessage = "";
       } else {

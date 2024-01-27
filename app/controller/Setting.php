@@ -10,6 +10,46 @@ use support\Redis;
 
 class Setting extends Image
 {
+    static $setting_db_key = [
+        'canregister',
+        'canlogin',
+        'offline',
+        'useqqmail',
+        'useemail',
+        'chatgpt_api_url',
+        'chatgpt_keys',
+        'classurl',
+        'smtp',
+        'smtpkey',
+        'mysmtpurl',
+        'mysmtpname',
+        'mysmtppassword',
+        'GLOBlinuxurl',
+        'GLOBiplimit',
+        'GLOBiplimitTime',
+        'GLOBipblack',
+        'musicbkurl',
+        'socketurl',
+        'idemaxtime',
+        'idemaxmemory',
+        'usercloudfilememory',
+        'GLOBfronturl',
+        'ssh_back_url',
+        'default_contest_content',
+        'default_contest_duration',
+        'default_contest_begin_time',
+        'default_contest_problem_num',
+        'default_contest_min_people_num',
+        'default_contest_max_people_num',
+        'douyin_listcollection_url',
+        'douyin_cookie',
+        'douyin_save_limit',
+        'douyin_save_file',
+        'douyin_noupdate_limit_seconds',
+        'default_contest_submit_sleep_time',
+        'cloud_file_readme_txt'
+    ];
+
     static $blackip_key = [
         'id',
         'user_id',
@@ -363,8 +403,27 @@ class Setting extends Image
             ->select('id')
             ->orderBy('id', 'desc')
             ->first();
+
         if ($db) {
             $redis5 = Redis::connection('db5');
+
+            if ($data['cloud_file_readme_txt_file_name'] != $redis5->get('cloud_file_readme_txt_file_name')) {
+                Db::table('setting')
+                    ->where('id', $db->id)
+                    ->where('isdel', 0)
+                    ->update(['cloud_file_readme_txt_file_name' => $data['cloud_file_readme_txt_file_name']]);
+                $redis5->del('cloud_file_readme_txt_file_name');
+                $redis5->set('cloud_file_readme_txt_file_name', $data['cloud_file_readme_txt_file_name']);
+            }
+
+            if ($data['cloud_file_readme_txt'] != $redis5->get('cloud_file_readme_txt')) {
+                Db::table('setting')
+                    ->where('id', $db->id)
+                    ->where('isdel', 0)
+                    ->update(['cloud_file_readme_txt' => $data['cloud_file_readme_txt']]);
+                $redis5->del('cloud_file_readme_txt');
+                $redis5->set('cloud_file_readme_txt', $data['cloud_file_readme_txt']);
+            }
 
             if ($data['douyin_listcollection_url'] != $redis5->get('douyin_listcollection_url')) {
                 Db::table('setting')

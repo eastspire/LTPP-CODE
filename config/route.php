@@ -22,19 +22,7 @@ Route::any(Base::$LTPP_public_static_path . '[/{path:.+}]', function (Request $r
     try {
         $path = $request->path();
         // 匹配到访问静态资源
-        $file_extion = '';
-        $len = strlen($path);
-        $begin_point = false;
-        for ($i = 0; $i < $len; ++$i) {
-            if ($path[$i] == '.') {
-                $file_extion = '';
-                $begin_point = true;
-                continue;
-            }
-            if ($begin_point) {
-                $file_extion .= $path[$i];
-            }
-        }
+        $file_extion = Base::getDbFileExtion($path);
         $iscode = false;
         $language = '';
         foreach (Base::$map_language_file as $key => $val) {

@@ -386,7 +386,6 @@ Vue.prototype.initDevice = function () {
 
 Vue.prototype.logoutRemove = function (is_force = false) {
     try {
-        return;
         store.commit("reset");
         window.localStorage.removeItem('key');
         window.localStorage.removeItem('authorization');
