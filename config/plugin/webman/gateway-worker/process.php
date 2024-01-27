@@ -18,7 +18,7 @@ return [
     'gateway' => [
         'handler' => Gateway::class,
         'listen' => 'websocket://0.0.0.0:47272',
-        'count' => (cpu_count() > 6 ? 6 : cpu_count()) * 6,
+        'count' => (cpu_count() > 6 ? 6 : cpu_count()) * 2,
         'constructor' => [
             'config' => [
                 'lanIp' => '127.0.0.1',
@@ -33,7 +33,7 @@ return [
     ],
     'worker' => [
         'handler' => BusinessWorker::class,
-        'count' => cpu_count() > 6 ? 6 : cpu_count(),
+        'count' => (cpu_count() > 6 ? 6 : cpu_count()) * 2,
         'constructor' => [
             'config' => [
                 'eventHandler' => plugin\webman\gateway\Events::class,
