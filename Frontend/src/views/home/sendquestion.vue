@@ -288,7 +288,7 @@ export default {
     async $imgAdd(pos, $file) {
       // 第一步.将图片上传到服务器.
       let formdata = new FormData();
-      formdata.append("image", $file);
+      formdata.append('file', $file);
       await this.$ajax({
         url: "/File/saveImage",
         method: "post",

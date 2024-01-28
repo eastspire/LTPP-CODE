@@ -9,89 +9,6 @@ use support\Db;
 class Cloudfile
 {
     /**
-     * @var array $unsupport 不支持的文件类型
-     */
-    static public $unsupport = [
-        'xlsx' => true,
-        'exe' => true,
-        'docx' => true,
-        'mp4' => true,
-        'avi' => true,
-        'rmvb' => true,
-        '3gp' => true,
-        'mpeg' => true,
-        'wmv' => true,
-        'mov' => true,
-        'mpv' => true,
-        'flv' => true,
-        'swf' => true,
-        'rar' => true,
-        'zip' => true,
-        'tar' => true,
-        'gz' => true,
-        'tar.gz' => true,
-        '7z' => true,
-        'apz' => true,
-        'ar' => true,
-        'bz' => true,
-        'car' => true,
-        'dar' => true,
-        'cpgz' => true,
-        'f' => true,
-        'ha' => true,
-        'hbc' => true,
-        'hbc2' => true,
-        'hbe' => true,
-        'hpk' => true,
-        'hyp' => true,
-        'mp3' => true,
-        'aac' => true,
-        'ac3' => true,
-        'mp3adu' => true,
-        'mp3adufloat' => true,
-        'mp3float' => true,
-        'mp3on4' => true,
-        'mp3on4float' => true,
-        'amrnb' => true,
-        'amrwb' => true,
-        'cook' => true,
-        'ra_144' => true,
-        'ra_288' => true,
-        'sipr' => true,
-        'wmav1' => true,
-        'wmav2' => true,
-        'wmavoice' => true,
-        'wmapro' => true,
-        'wamlossless' => true,
-        'nellymoser' => true,
-        'vorbis' => true,
-        'jpg' => true,
-        'png' => true,
-        'jpeg' => true,
-        'gif' => true,
-        'svg' => true,
-        'bmp' => true,
-        'tif' => true,
-        'pcx' => true,
-        'tga' => true,
-        'exif' => true,
-        'fpx' => true,
-        'psd' => true,
-        'cdr' => true,
-        'pcd' => true,
-        'dxf' => true,
-        'ufo' => true,
-        'eps' => true,
-        'ai' => true,
-        'raw' => true,
-        'WMF' => true,
-        'webp' => true,
-        'avif' => true,
-        'apng' => true,
-        'm3u8' => true
-    ];
-
-    /**
      * @var array $pgoto 图片的文件类型
      */
     static public $photo = [
@@ -214,7 +131,7 @@ class Cloudfile
     {
         $path = $request->post('path');
         $path = Base::Base64Decode($path);
-        if (isset(Cloudfile::$unsupport[Base::getDbFileExtion($path)])) {
+        if (isset(Base::$extion_map_number[Base::getDbFileExtion($path)]) && Base::$extion_map_number[Base::getDbFileExtion($path)] != 4) {
             return json(['code' => -1, 'msg' => '该格式不支持访问']);
         }
         $data = Base::getStaticFileData($path);

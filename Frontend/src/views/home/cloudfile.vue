@@ -194,7 +194,6 @@
                 :width="
                   ($store.state.max_width / $store.state.now_width) * 100 + '%'
                 "
-                @contextmenu.prevent.native="closeFile"
                 @closed="iscloseFile = true"
                 :visible.sync="IsShowStaticFile"
                 title="文件预览"
@@ -745,7 +744,7 @@ export default {
     async $imgAdd(pos, $file) {
       // 第一步.将图片上传到服务器.
       let formdata = new FormData();
-      formdata.append("image", $file);
+      formdata.append('file', $file);
       await this.$ajax({
         url: "/File/saveImage",
         method: "post",
@@ -818,9 +817,6 @@ export default {
     },
     base_encode(str) {
       return this.Base64Encode(str, this.char_set);
-    },
-    closeFile() {
-      this.iscloseFile = true;
     },
     async getlinuxurl() {
       const res = await this.getBackurl();

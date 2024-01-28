@@ -34,17 +34,7 @@
         <div id="list">
           <div v-for="tem in user_list" :key="tem.idnex" class="user">
             <div
-              @click="
-                id = 0;
-                tem.no_look_num = 0;
-                now_post_type = tem.type;
-                now_user = tem;
-                chat_msg_list = [];
-                isSeeLastBtn = true;
-                passparam.user_id = tem.id;
-                clearNolookNum();
-                getLatestChatData();
-              "
+              @click="changeNowWindow(tem)"
             >
               <el-image
                 fit="cover"
@@ -83,6 +73,10 @@
       </el-aside>
 
       <el-container
+        v-loading.lock="!load_msg_list_finish"
+        element-loading-text="拼命加载中"
+        element-loading-spinner="el-icon-loading"
+        element-loading-background="background-color:rgba(var(--ltpp-main-bk-color),var(--ltpp-list-box-bk-opacity))"    
         v-if="user_list && typeof user_list == 'object' && user_list.length > 0"
       >
         <el-header class="main_header" v-show="now_user && now_user.id">
@@ -328,8 +322,8 @@
       <div style="overflow: hidden">
         <img
           class="animate"
-          v-show="creat__group_chat_image && reg.test(creat__group_chat_image)"
-          :src="creat__group_chat_image"
+          v-show="creat_group_chat_image && reg.test(creat_group_chat_image)"
+          :src="creat_group_chat_image"
           style="display: block; width: 100%; height: 16rem; object-fit: cover"
         />
       </div>
@@ -558,6 +552,7 @@ export default {
   name: "chat",
   data() {
     return {
+      load_msg_list_finish: false,
       requestid_timer: null,
       char_set: [],
       toolbars: {
@@ -593,7 +588,7 @@ export default {
         region: "",
       },
       reg: /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\*\+,;=.]+$/,
-      creat__group_chat_image: "",
+      creat_group_chat_image: "",
       drawer_size: "460px",
       isSeeChatUser: false,
       group_user_list: [],
@@ -712,6 +707,17 @@ export default {
   },
 
   methods: {
+    async changeNowWindow(tem){
+      this.id = 0;
+      tem.no_look_num = 0;
+      this.now_post_type = tem.type;
+      this.now_user = tem;
+      this.chat_msg_list = [];
+      this.isSeeLastBtn = true;
+      this.passparam.user_id = tem.id;
+      this.clearNolookNum();
+      await this.getLatestChatData();
+    },
     videoLink() {
       // 准备链接模板
       let linkFrame = "";
@@ -776,7 +782,7 @@ export default {
     async $imgAdd(pos, $file) {
       // 第一步.将图片上传到服务器.
       let formdata = new FormData();
-      formdata.append("image", $file);
+      formdata.append('file', $file);
       await this.$ajax({
         url: "/File/saveImage",
         method: "post",
@@ -972,23 +978,10 @@ export default {
       return typeof str == "string" && str.constructor == String;
     },
     uploadPhotoSuccess(response, file, file_list) {
-      if (response.code == 1) {
+      if (response?.url) {
         this.group_data.headimage = response.url;
-        this.creat__group_chat_image = response.url;
-        this.$msg({
-          type: "success",
-          message: response.msg,
-          duration: 1600,
-          offset: 80,
-        });
-      } else {
-        this.$msg({
-          type: "error",
-          message: response.msg,
-          duration: 1600,
-          offset: 80,
-        });
-      }
+        this.creat_group_chat_image = response.url;
+      } 
       this.deleteOneFileHistoryFromUpList(file, file_list);
     },
     async getlinuxurl() {
@@ -1254,73 +1247,84 @@ export default {
     },
     // 加载新消息
     async getLatestChatData() {
-      if (!this.now_user.id || !this.now_user.type) {
-        this.$msg({
-          type: "error",
-          message: "用户加载出错",
-          duration: 1600,
-          offset: 80,
-        });
-        return;
-      }
-      let cacheData = window.localStorage.getItem(
-        "Chat " + this.now_user.type + " " + this.now_user.id
-      );
-      this.chat_msg_list = eval("(" + cacheData + ")");
-      if (
-        this.chat_msg_list &&
-        typeof this.chat_msg_list == "object" &&
-        this.chat_msg_list.length > 0
-      ) {
-        this.id = this.chat_msg_list[this.chat_msg_list.length - 1].id;
-      } else {
-        this.id = 0;
-        this.chat_msg_list = [];
-      }
-
-      const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Chat/getLatestChatData",
-        portType: {
-          process: "8793",
-        },
-        data: {
-          type: this.now_user.type,
-          msg_id: this.id,
-          user_id: this.now_user.id,
-        },
-      }).catch((t) => {
-        this.$msg({
-          type: "error",
-          message: t,
-          duration: 1600,
-          offset: 80,
-        });
-      });
-
-      if (res?.code == 1 || res?.code == 0) {
-        if (res?.code == 0) {
-          // 删除本地旧数据
-          this.chat_msg_list = [];
-          window.localStorage.removeItem(
-            "Chat " + this.now_user.type + " " + this.now_user.id
-          );
+      try{
+        if (!this.now_user.id || !this.now_user.type) {
+          this.$msg({
+            type: "error",
+            message: "用户加载出错",
+            duration: 1600,
+            offset: 80,
+          });
+          return;
         }
-        // 添加新数据
-        res.data = res?.data.reverse();
-        await this.chat_msg_list.push(...res?.data);
-        window.localStorage.setItem(
-          "Chat " + this.now_user.type + " " + this.now_user.id,
-          JSON.stringify(res?.data)
+        const copy_now_user_id = this.now_user.id;
+        let cacheData = window.localStorage.getItem(
+          "Chat " + this.now_user.type + " " + this.now_user.id
         );
-        this.to_scroll_bottom(1);
-      } else {
-        this.$msg({
-          type: "error",
-          message: res?.msg,
-          duration: 1600,
-          offset: 80,
+        this.chat_msg_list = eval("(" + cacheData + ")");
+        if (
+          this.chat_msg_list &&
+          typeof this.chat_msg_list == "object" &&
+          this.chat_msg_list.length > 0
+        ) {
+          this.id = this.chat_msg_list[this.chat_msg_list.length - 1].id;
+        } else {
+          this.id = 0;
+          this.chat_msg_list = [];
+        }
+        this.load_msg_list_finish = false;
+        const { data: res } = await this.$ajax({
+          method: "post",
+          url: "/Chat/getLatestChatData",
+          portType: {
+            process: "8793",
+          },
+          data: {
+            type: this.now_user.type,
+            msg_id: this.id,
+            user_id: this.now_user.id,
+          },
+        }).catch((t) => {
+          this.$msg({
+            type: "error",
+            message: t,
+            duration: 1600,
+            offset: 80,
+          });
+          this.load_msg_list_finish = true;
         });
+        if(this.now_user.id != copy_now_user_id){
+          // 切换用户了
+          this.load_msg_list_finish = true;
+          return;
+        }
+        if (res?.code == 1 || res?.code == 0) {
+          if (res?.code == 0) {
+            // 删除本地旧数据
+            this.chat_msg_list = [];
+            window.localStorage.removeItem(
+              "Chat " + this.now_user.type + " " + this.now_user.id
+            );
+          }
+          // 添加新数据
+          res.data = res?.data.reverse();
+          await this.chat_msg_list.push(...res?.data);
+          window.localStorage.setItem(
+            "Chat " + this.now_user.type + " " + this.now_user.id,
+            JSON.stringify(res?.data)
+          );
+          this.to_scroll_bottom(1);
+        } else {
+          this.$msg({
+            type: "error",
+            message: res?.msg,
+            duration: 1600,
+            offset: 80,
+          });
+        }
+        this.load_msg_list_finish = true;
+      }catch(err){
+        this.load_msg_list_finish = true;
       }
     },
 

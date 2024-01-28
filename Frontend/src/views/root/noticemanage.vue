@@ -116,7 +116,8 @@
       :close-on-click-modal="false"
       :append-to-body="true"
       style="text-align: center; font-size: 2rem; font-weight: bold"
-      :width="($store.state.max_width / $store.state.now_width) * 100 + '%'"
+      :width="($store.state.max_width / $store.state.now_width) * 100 + '%'"      
+      @contextmenu.prevent.native="updateid();isadd = false;isupdate = false;"
       title=""
       :visible.sync="isupdate"
     >
@@ -214,6 +215,7 @@
       :append-to-body="true"
       style="text-align: center; font-size: 2rem; font-weight: bold"
       :width="($store.state.max_width / $store.state.now_width) * 100 + '%'"
+      @contextmenu.prevent.native="addid();isupdate = false;isadd = false;"
       title=""
       :visible.sync="isadd"
     >
@@ -536,7 +538,7 @@ export default {
     async $imgAdd(pos, $file) {
       // 第一步.将图片上传到服务器.
       let formdata = new FormData();
-      formdata.append("image", $file);
+      formdata.append('file', $file);
       await this.$ajax({
         url: "/File/saveImage",
         method: "post",

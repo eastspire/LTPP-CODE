@@ -1041,7 +1041,7 @@ class File
     {
         $my_uid = JwtToken::getCurrentId();
         $my_aid = Base::getIdByUid($my_uid);
-        $file = $request->file('image');
+        $file = $request->file('file');
         $file_extion = $file->getUploadExtension();
         if ($file_extion != 'jpg' && $file_extion != 'png' && $file_extion != 'jpeg' && $file_extion != 'gif') {
             return json(['code' => -1, 'msg' => '图片格式不正确', 'url' => '']);

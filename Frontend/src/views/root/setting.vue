@@ -35,7 +35,7 @@
               type="text"
               icon="el-icon-circle-plus"
               class="pulse-enter-active"
-              style="font-size: 1.06rem; margin: 0.4rem 10rem; color: red"
+              style="font-size: 1.06rem; margin: 0.4rem 10rem; color: deeppink"
               @click="showadd = true"
               >添加IP黑名单</el-button
             >
@@ -43,7 +43,7 @@
               type="text"
               icon="el-icon-s-platform"
               class="pulse-enter-active"
-              style="font-size: 1.06rem; margin: 0.4rem 10rem; color: red"
+              style="font-size: 1.06rem; margin: 0.4rem 10rem; color: deeppink"
               @click="
                 showlinux = true;
                 lookbase();
