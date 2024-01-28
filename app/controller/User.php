@@ -271,35 +271,21 @@ class User
         $my_uid = JwtToken::getCurrentId();
         $my_aid = Base::getIdByUid($my_uid);
         $file = $request->file('file');
-        $fileextion = $file->getUploadExtension();
-        if ($fileextion != 'jpg' && $fileextion != 'png' && $fileextion != 'jpeg' && $fileextion != 'gif') {
+        $file_extion = $file->getUploadExtension();
+        if ($file_extion != 'jpg' && $file_extion != 'png' && $file_extion != 'jpeg' && $file_extion != 'gif') {
             return json(['code' => -1, 'url' => '', 'msg' => '图片格式不正确']);
         }
         // 大小限制
         if ($file->getSize() > Base::$image_size_limit && !Base::judgeIsRoot($my_aid)) {
             return json(['code' => -1, 'url' => '', 'msg' => '图片大小不能大于' . Base::$image_size_limit / Base::$one_mb_size . 'MB']);
         }
-        $md5uid = Base::getPathMd5($my_aid);
-        $newPath = Base::$LTPP_public_path . User::$image_bk_root_path . $md5uid; // 目标文件夹
-        Base::judgeCreatPath($newPath);
-        Base::deleteAllFile($newPath . '/');
-
-        do {
-            $newName = md5(uniqid() . mt_rand(1, 100000) . time()) . '.' . $file->getUploadExtension();
-        } while (file_exists($newPath . '/' . $newName));
-
-        if ($file && $file->isValid()) {
-            $file->move($newPath . '/' . $newName);
-            $userbk = Base::getGLOBlinuxurl() . '/' . User::$image_bk_root_path . $md5uid . '/' . $newName;
-
-            Db::table('user')
-                ->where('id', $my_aid)
-                ->where('isdel', 0)
-                ->update(['bkimage' => $userbk]);
-            Base::updateUserDataRedis($my_aid);
-            return \json(['code' => 1, 'msg' => '上传成功', 'url' => $userbk]);
-        }
-        return \json(['code' => -1, 'msg' => 'error', 'url' => "error"]);
+        $url = Base::uploadFileToDb('file_path', $my_aid, $file, $file_extion);
+        Db::table('user')
+            ->where('id', $my_aid)
+            ->where('isdel', 0)
+            ->update(['bkimage' => $url]);
+        Base::updateUserDataRedis($my_aid);
+        return \json(['code' => 1, 'msg' => '上传成功', 'url' => $url]);
     }
 
     /**
@@ -312,35 +298,21 @@ class User
         $my_uid = JwtToken::getCurrentId();
         $my_aid = Base::getIdByUid($my_uid);
         $file = $request->file('file');
-        $fileextion = $file->getUploadExtension();
-        if ($fileextion != 'mp4') {
-            return json(['code' => -1, 'url' => '', 'msg' => '视频格式不正确']);
+        $file_extion = $file->getUploadExtension();
+        if ($file_extion != 'mp4') {
+            return json(['code' => -1, 'url' => '', 'msg' => '仅支持上传MP4格式视频']);
         }
         // 大小限制
         if ($file->getSize() > Base::$video_size_limit && !Base::judgeIsRoot($my_aid)) {
             return json(['code' => -1, 'url' => '', 'msg' => '视频大小不能大于' . Base::$video_size_limit / Base::$one_mb_size . 'MB']);
         }
-        $md5uid = Base::getPathMd5($my_aid);
-        $newPath = Base::$LTPP_public_path . User::$video_bk_root_path . $md5uid; // 目标文件夹
-        Base::judgeCreatPath($newPath);
-        Base::deleteAllFile($newPath . '/');
-
-        do {
-            $newName = md5(uniqid() . mt_rand(1, 100000) . time()) . '.' . $file->getUploadExtension();
-        } while (file_exists($newPath . '/' . $newName));
-
-        if ($file && $file->isValid()) {
-            $file->move($newPath . '/' . $newName);
-            $userbk = Base::getGLOBlinuxurl() . '/' . User::$video_bk_root_path . $md5uid . '/' . $newName;
-
-            Db::table('user')
-                ->where('id', $my_aid)
-                ->where('isdel', 0)
-                ->update(['bkvideo' => $userbk]);
-            Base::updateUserDataRedis($my_aid);
-            return \json(['code' => 1, 'msg' => '上传成功', 'url' => $userbk]);
-        }
-        return \json(['code' => -1, 'msg' => 'error', 'url' => "error"]);
+        $url = Base::uploadFileToDb('file_path', $my_aid, $file, $file_extion);
+        Db::table('user')
+            ->where('id', $my_aid)
+            ->where('isdel', 0)
+            ->update(['bkvideo' => $url]);
+        Base::updateUserDataRedis($my_aid);
+        return \json(['code' => 1, 'msg' => '上传成功', 'url' => $url]);
     }
 
     /**
@@ -353,35 +325,20 @@ class User
         $my_uid = JwtToken::getCurrentId();
         $my_aid = Base::getIdByUid($my_uid);
         $file = $request->file('file');
-        $fileextion = $file->getUploadExtension();
-        if ($fileextion != 'jpg' && $fileextion != 'png' && $fileextion != 'jpeg' && $fileextion != 'gif') {
+        $file_extion = $file->getUploadExtension();
+        if ($file_extion != 'jpg' && $file_extion != 'png' && $file_extion != 'jpeg' && $file_extion != 'gif') {
             return json(['code' => -1, 'url' => '', 'msg' => '图片格式不正确']);
         }
         // 大小限制
         if ($file->getSize() > Base::$image_size_limit && !Base::judgeIsRoot($my_aid)) {
             return json(['code' => -1, 'url' => '', 'msg' => '图片大小不能大于' . Base::$image_size_limit / Base::$one_mb_size . 'MB']);
         }
-        $md5uid = Base::getPathMd5($my_aid);
-
-        $newPath = Base::$LTPP_public_path . User::$headimage_root_path . $md5uid; // 目标文件夹
-        Base::judgeCreatPath($newPath);
-        Base::deleteAllFile($newPath . '/');
-
-        do {
-            $newName = md5(uniqid() . mt_rand(1, 100000) . time()) . '.' . $file->getUploadExtension();
-        } while (file_exists($newPath . '/' . $newName));
-
-        if ($file && $file->isValid()) {
-            $file->move($newPath . '/' . $newName);
-            $userheadimage = Base::getGLOBlinuxurl() . '/' . User::$headimage_root_path . $md5uid . '/' . $newName;
-            Db::table('user')
-                ->where('id', $my_aid)
-                ->update(['headimage' => $userheadimage]);
-
-            Base::updateUserDataRedis($my_aid);
-            return \json(['code' => 1, 'msg' => '上传成功', 'url' => $userheadimage]);
-        }
-        return \json(['code' => -1, 'msg' => 'error', 'url' => "error"]);
+        $url = Base::uploadFileToDb('file_path', $my_aid, $file, $file_extion);
+        Db::table('user')
+            ->where('id', $my_aid)
+            ->update(['headimage' => $url]);
+        Base::updateUserDataRedis($my_aid);
+        return \json(['code' => 1, 'msg' => '上传成功', 'url' => $url]);
     }
 
     /**
