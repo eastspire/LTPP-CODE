@@ -3647,6 +3647,36 @@ class Base
     }
 
     /**
+     * 上传商品文件保存数据库
+     */
+    static public function uploadGoodsFileToDb($my_aid, $file, $file_upload_extension = '')
+    {
+        try {
+            if ($file && $file->isValid() && file_exists($file->getRealPath())) {
+                if (!$file_upload_extension) {
+                    $file_upload_extension = $file->getUploadExtension();
+                }
+                $data = file_get_contents($file->getRealPath());
+                $new_path = Base::creatFilePath($file_upload_extension);
+                $id = Base::insertToDb('file_data', [
+                    'data' => $data
+                ]);
+                Base::insertToDb('file_path', [
+                    'path' => $new_path,
+                    'file_id' => $id,
+                    'userid' => $my_aid,
+                    'time' => date('Y-m-d H:i:s', time())
+                ]);
+                Base::deleteAllFile($file->getRealPath());
+                return $new_path;
+            }
+        } catch (Exception $e) {
+            Robot::sendChatToOneUserMsg(Base::getRootId(), '**【uploadFileToDb】** 运行错误：' . $e->getMessage());
+        }
+        return '';
+    }
+
+    /**
      * 上传聊天文件保存数据库
      */
     static public function uploadChatFileToDb($post_user_id, $get_user_id, $file, $file_upload_extension = '')

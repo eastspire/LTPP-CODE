@@ -274,7 +274,6 @@ class Goods
                 ->where('id', $my_aid)
                 ->where('isdel', 0)
                 ->decrement('money', $goods_money);
-
             Base::updateUserDataRedis($my_aid);
         }
         $res = Base::insertToDb('orderforgoods', [
@@ -298,18 +297,16 @@ class Goods
      */
     private function downloadFile($path)
     {
-        $is_safe = strripos($path, Goods::$root_path);
-        if ($is_safe === false) {
-            return json(['code' => -1, 'msg' => '路径不合法！']);
-        }
-        $is_safe = strripos($path, '..');
-        if ($is_safe !== false) {
-            return json(['code' => -1, 'msg' => '路径不合法！']);
-        }
-        if (file_exists($path)) {
-            return response('')->download($path);
-        }
-        return json(['code' => -1, 'msg' => '文件不存在']);
+        $file_data = Base::getStaticFileData($path);
+        $file_extion = Base::getDbFileExtion($path);
+        return Response($file_data, 200, [
+            'Content-Type' => Base::getContentType($file_extion),
+            'Accept-Ranges' => 'bytes',
+            'Content-Length' => strlen($file_data),
+            'File-Path' => $path,
+            'File-Extion' => $file_extion,
+            'File-Content-Type' => Base::getContentType($file_extion),
+        ]);
     }
 
     /**
@@ -385,37 +382,23 @@ class Goods
         if (!$db) {
             return json(['code' => -1, 'msg' => '数据库没有该商品记录']);
         }
-
         $file = $request->file('file');
-
-        if (!$file->isValid()) {
-            return json(['code' => -1, 'msg' => '文件不存在']);
-        }
-
         $up_full_name = $file->getUploadName();
         if (Base::getStrLen($up_full_name) > Base::$file_name_length_limit) {
             return json(['code' => -1, 'msg' => '文件名字符数不能超过' . Base::$file_name_length_limit . '个']);
         }
-
-        Base::judgeCreatPath(Goods::$root_path . $md5month);
-        $newName = '';
-        do {
-            $newName = md5(uniqid() . mt_rand(1, 100000) . time()) . '.' . $file->getUploadExtension();
-        } while (file_exists($postpath . '/' . $newName));
-
+        $file_extion = $file->getUploadExtension();
         $size = $file->getSize();
-        $file->move($postpath . '/' . $newName);
         Base::getChineseSize($size);
+        $path = Base::uploadGoodsFileToDb($my_aid, $file, $file_extion);
         Db::table('goods')
             ->where('id', $goods_id)
             ->update([
-                'path' => $postpath . '/' . $newName,
+                'path' => $path,
                 'type' => substr($file->getUploadExtension() ?? '', 0, Base::$other_name_len_limit),
                 'size' => $size
             ]);
-        //删除上传的临时文件
-        Base::deleteAllFile($file->getRealPath());
-        return json(['code' => 1, 'msg' => '上传成功', 'filename' => $newName]);
+        return json(['code' => 1, 'msg' => '上传成功']);
     }
 
     /**
@@ -428,21 +411,10 @@ class Goods
         if (!Base::judgeIsRoot($my_aid)) {
             return json(['code' => -1, 'msg' => '权限不足']);
         }
-        $md5month = md5(date("Y-m", time()));
-        $postpath = Goods::$root_path . $md5month . '/';
-        $isexist = strripos($postpath, '..');
-        if ($isexist !== false) {
-            return json(['code' => -1, 'msg' => '路径不合法！']);
-        }
-
         $file = $request->file('file');
-
-        if (!$file->isValid()) {
-            return json(['code' => -1, 'msg' => '文件不存在']);
-        }
-
         $up_full_name = $file->getUploadName();
         $type = $file->getUploadExtension();
+        $file_extion = $file->getUploadExtension();
         $size = $file->getSize();
         Base::getChineseSize($size);
         $res_id = Base::insertToDb('goods', [
@@ -455,24 +427,12 @@ class Goods
             'size' => $size,
             'times' => 0
         ]);
-        $postpath .= $this->getNameByUid(Base::getUidById($res_id));
-        Base::judgeCreatPath(Goods::$root_path . $md5month);
-        $newName = '';
-        do {
-            $newName = md5(uniqid() . mt_rand(1, 100000) . time()) . '.' . $type;
-        } while (file_exists($postpath . '/' . $newName));
-
-        $file->move($postpath . '/' . $newName);
+        $path = Base::uploadGoodsFileToDb($my_aid, $file, $file_extion);
         Db::table('goods')
             ->where('id', $res_id)
-            ->update([
-                'path' => $postpath . '/' . $newName,
-            ]);
-        //删除上传的临时文件
-        Base::deleteAllFile($file->getRealPath());
-        return json(['code' => 1, 'msg' => '上传成功', 'filename' => $newName]);
+            ->update(['path' => $path]);
+        return json(['code' => 1, 'msg' => '上传成功']);
     }
-
 
     /**
      * 获取我购买的商品列表

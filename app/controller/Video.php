@@ -129,19 +129,14 @@ class Video
         $path = Base::$LTPP_public_path . Video::$video_root_path . $md5month;
         Base::judgeCreatPath($path);
         $file = $request->file('file');
-        if ($file->getUploadExtension() != 'mp4') {
+        $file_extion = $file->getUploadExtension();
+        if ($file_extion != 'mp4') {
             Base::deleteAllFile($file->getRealPath());
             return json(['code' => -1, 'msg' => '格式错误，仅支持mp4格式文件']);
         }
-        do {
-            $name = md5(uniqid() . mt_rand(1, 100000) . time()) . '.' . $file->getUploadExtension();
-        } while (file_exists($path . '/' . $name));
-        $file->move($path . '/' . $name);
-
-        Base::$GLOBlinuxurl = Base::getGLOBlinuxurl();
-
+        $url = Base::uploadFileToDb('file_path', $my_aid, $file, $file_extion);
         $tag = '';
-        $up_name = str_replace('.' . $file->getUploadExtension(), '', $file->getUploadName());
+        $up_name = str_replace('.' . $file_extion, '', $file->getUploadName());
         for ($i = 0; $i < strlen($up_name);) {
             if ($up_name[$i] == '#') {
                 $tem = '';
@@ -162,9 +157,8 @@ class Video
             'name' => $up_name,
             'isdouyin' => 0,
             'tag' => $tag,
-            'url' => Base::$GLOBlinuxurl . '/' . Video::$video_root_path . $md5month . '/' . $name
+            'url' => $url,
         ]);
-        Base::deleteAllFile($file->getRealPath());
         return json(['code' => 1, 'msg' => '上传成功']);
     }
 
@@ -218,8 +212,7 @@ class Video
         $db = Db::table('video')
             ->where('id', $video_id)
             ->where('isdel', 0)
-            ->select('url')
-            ->first();
+            ->exists();
         if (!$db) {
             return json(['code' => -1, 'msg' => '该条记录不存在，无法删除']);
         }
@@ -239,22 +232,6 @@ class Video
             ->where('videoid', $video_id)
             ->where('isdel', 0)
             ->update(['isdel' => 1]);
-        $url = $db->url;
-        $len = strlen($url);
-        $name = '';
-        $times = 0;
-        for ($i = $len - 1; $i >= 0; --$i) {
-            if ($times == 1 && $url[$i] == '/') {
-                break;
-            }
-            if ($url[$i] == '/') {
-                ++$times;
-            }
-            $name = $url[$i] . $name;
-        }
-        if (file_exists(Base::$LTPP_public_path . Video::$video_root_path . $name)) {
-            unlink(Base::$LTPP_public_path . Video::$video_root_path . $name);
-        }
         if ($info) {
             return json(['code' => 1, 'data' => $info, 'msg' => '视频删除成功']);
         }
@@ -500,7 +477,6 @@ class Video
         Db::table('videocomment')
             ->where('isdel', 0)
             ->update(['isdel' => 1]);
-        Base::deleteAllFile(Base::$LTPP_public_path . Video::$video_root_path);
         return json(['code' => 1, 'msg' => '清空视频成功']);
     }
 
