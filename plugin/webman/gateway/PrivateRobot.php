@@ -649,6 +649,7 @@ class PrivateRobot
     static private function resetUserHeadimage(&$reply)
     {
         $user_db = Db::table('user')
+            ->orderBy('id', 'asc')
             ->select('id', 'email')
             ->get();
         $image_list = Db::table('image')
@@ -942,9 +943,11 @@ class PrivateRobot
                 PrivateRobot::resetUserHeadimage($reply);
                 break;
             case '15':
-                Db::table('user')->update([
-                    'isusemusic' => 0
-                ]);
+                Db::table('user')
+                    ->orderBy('id', 'asc')
+                    ->update([
+                        'isusemusic' => 0
+                    ]);
                 Base::updateAllUserDataRedis();
                 $reply = '关闭成功';
                 break;

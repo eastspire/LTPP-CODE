@@ -176,6 +176,7 @@ class Setting extends Image
             return;
         }
         $err = Db::table('article')
+            ->orderBy('id', 'desc')
             ->select('id')
             ->get();
         foreach ($err as &$tem) {
