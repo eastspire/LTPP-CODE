@@ -10,12 +10,6 @@ use support\Db;
 class Video
 {
     /**
-     * 视频文件夹路径
-     * @var string $video_root_path 视频文件夹路径
-     */
-    static $video_root_path = 'static/video/';
-
-    /**
      * @var array $video_db_key 数据库展示视频字段
      */
     static $video_db_key = [
@@ -125,9 +119,6 @@ class Video
         if (!$isroot) {
             return json(['code' => -1, 'msg' => '权限不足']);
         }
-        $md5month = md5(date("Y-m", time()));
-        $path = Base::$LTPP_public_path . Video::$video_root_path . $md5month;
-        Base::judgeCreatPath($path);
         $file = $request->file('file');
         $file_extion = $file->getUploadExtension();
         if ($file_extion != 'mp4') {

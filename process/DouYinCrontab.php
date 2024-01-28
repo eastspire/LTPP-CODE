@@ -61,14 +61,9 @@ class DouYinCrontab
      */
     private function getSaveFilePath()
     {
-        $md5month = md5(date("Y-m", time()));
-        $path = Base::$LTPP_public_path . Video::$video_root_path . $md5month;
-        Base::judgeCreatPath($path);
-        do {
-            $name = md5(uniqid() . mt_rand(1, 100000) . time()) . '.mp4';
-        } while (file_exists($path . '/' . $name));
+        $path = Base::creatFilePath('mp4');
         Base::$GLOBlinuxurl = Base::getGLOBlinuxurl();
-        return [$path . '/' . $name, Base::$GLOBlinuxurl . '/' . Video::$video_root_path . $md5month . '/' . $name];
+        return [$path, Base::$GLOBlinuxurl . $path];
     }
 
     /**
@@ -197,7 +192,7 @@ class DouYinCrontab
                                 $path_arr = $this->getSaveFilePath();
                                 $local_path = $path_arr[0];
                                 // 保存视频到本地
-                                Base::saveNetworkFile($video_url, $local_path);
+                                Base::saveNetworkDouYinFileToDb(Base::getRobotId(), $video_url, $local_path);
                                 // 替换视频地址为本地地址
                                 $video_url = $path_arr[1];
                                 // 已经保存本地，所以不是抖音

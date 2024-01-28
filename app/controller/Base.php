@@ -916,11 +916,11 @@ class Base
      * LTPP公开文件夹绝对路径
      * @var string $LTPP_public_path LTPP公开文件夹绝对路径
      */
-    static $LTPP_public_path = '/home/LTPP/public/';
+    static $LTPP_public_path = '/home/LTPP/public';
 
     /**
-     * LTPP static文件夹绝对路径
-     * @var string $LTPP_public_path LTPP公开文件夹绝对路径
+     * LTPP static文件夹路径
+     * @var string $LTPP_public_static_path LTPP static文件夹路径
      */
     static $LTPP_public_static_path = '/static';
 
@@ -969,7 +969,7 @@ class Base
             if ($redis23->get($key)) {
                 return $redis23->get($key);
             }
-            $path = Base::$LTPP_public_path . '404.html';
+            $path = Base::$LTPP_public_path . '/404.html';
             if (!$path) {
                 $redis23->set($key, '');
                 return '';
@@ -1769,7 +1769,7 @@ class Base
      */
     static public function getCss($name)
     {
-        $path = Base::$LTPP_public_path . 'css/' . $name . '.css';
+        $path = Base::$LTPP_public_path . '/css/' . $name . '.css';
         $redis18 = Redis::connection('db18');
         $css = $redis18->get($path);
         if ($css) {
@@ -1792,7 +1792,7 @@ class Base
      */
     static public function getJs($name)
     {
-        $path = Base::$LTPP_public_path . 'js/' . $name . '.js';
+        $path = Base::$LTPP_public_path . '/js/' . $name . '.js';
         $redis18 = Redis::connection('db18');
         $js = $redis18->get($path);
         if ($js) {
@@ -2095,6 +2095,32 @@ class Base
             file_put_contents($save_path, $file_data);
         } catch (Exception $e) {
             Robot::sendChatToOneUserMsg(Base::getRootId(), '保存网络文件到本地出错：' . $e->getMessage());
+        }
+    }
+
+    /**
+     * 从URL下载抖音视频文件到数据库
+     */
+    static public function saveNetworkDouYinFileToDb($my_aid, $url, $save_path, $is_post = false, $header = [], $body = [], $body_type_is_json = false)
+    {
+        $file_data = '';
+        try {
+            if ($is_post) {
+                $file_data = Base::postRequest($url, $header, $body, $body_type_is_json);
+            } else {
+                $file_data = Base::getRequest($url, $header);
+            }
+            $id = Base::insertToDb('file_data', [
+                'data' => $file_data
+            ]);
+            Base::insertToDb('file_path', [
+                'path' => $save_path,
+                'file_id' => $id,
+                'userid' => $my_aid,
+                'time' => date('Y-m-d H:i:s', time())
+            ]);
+        } catch (Exception $e) {
+            Robot::sendChatToOneUserMsg(Base::getRootId(), '保存抖音视频文件到数据库出错：' . $e->getMessage());
         }
     }
 

@@ -197,7 +197,7 @@ class Setting extends Image
         if (!$isroot) {
             return;
         }
-        $testpath = Base::$LTPP_public_path . 'static/dbimage/';
+        $testpath = Base::$LTPP_public_path . Base::$LTPP_public_static_path . '/dbimage/';
         foreach (Cloudfile::$photo as &$t_img) {
             $file = glob($testpath . '*.' . $t_img);
             foreach ($file as &$tem) {
@@ -222,7 +222,7 @@ class Setting extends Image
         if (!$isroot) {
             return json(['code' => -1, 'msg' => '无权限']);
         }
-        $testpath = Base::$LTPP_public_static_path . 'dbimage/';
+        $testpath = Base::$LTPP_public_path . Base::$LTPP_public_static_path . '/dbimage/';
         // 清空数据库
         Db::table('image')
             ->where('isdel', 0)
@@ -271,9 +271,9 @@ class Setting extends Image
                 ->where('isdel', 0)
                 ->update(['isdel' => 1]);
             $this->articleImage($my_aid);
-            return json(['code' => -1, 'msg' => '暂无图片已跳过更新']);
+            return json(['code' => 1, 'msg' => '网站图片更新完成']);
         }
-        return json(['code' => 1, 'msg' => '网站图片更新完成']);
+        return json(['code' => -1, 'msg' => '暂无图片已跳过更新']);
     }
 
     /**
