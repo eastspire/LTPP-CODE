@@ -83,7 +83,6 @@ class DeleteContest implements Consumer
                     $redis_key = $redis31->get($key);
                     if ($redis_key) {
                         $redis31->del($key);
-                        Base::deleteAllFile(Base::$LTPP_public_path . Base::$LTPP_public_static_path . '/contest/' . $redis_key);
                     }
                     // 删除ContestRank代码缓存
                     $redis29 = Redis::connection('db29');
