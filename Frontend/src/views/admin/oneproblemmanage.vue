@@ -407,11 +407,15 @@ export default {
     };
 
     this.head = {
-      authorization: "Bearer " + window.localStorage.getItem("authorization"),
-      key: window.localStorage.getItem("key"),
+      Authorization: "Bearer " + window.localStorage.getItem("authorization"),
+      Key: window.localStorage.getItem("key"),
+      Requestid : this.Base64Encode(new Date().getTime())
     };
-    this.linuxbkurl = window.sessionStorage.getItem("linuxurl");
-    if (!this.linuxbkurl) {
+    this.requestid_timer = setInterval(() => {
+        this.head.Requestid = this.Base64Encode(new Date().getTime())
+    }, 10000);
+    const tem_linuxbkurl = window.sessionStorage.getItem("linuxurl"); 
+    if (!tem_linuxbkurl) {
       this.getlinuxbkurl();
     } else {
       this.linuxbkurl += "/Testupload/savetest";
@@ -467,9 +471,12 @@ export default {
   },
   deactivated() {
     this.show_ide = false;
+    clearInterval(this.requestid_timer);
+    this.requestid_timer = null;
   },
   data() {
     return {
+      requestid_timer: null,
       issendfinish: true,
       show_ide: true,
       testin: "",
@@ -493,10 +500,7 @@ export default {
         katex_js: () => "md/katex/katex.min.js",
       },
       linuxbkurl: "",
-      head: {
-        authorization: "Bearer " + window.localStorage.getItem("authorization"),
-        key: window.localStorage.getItem("key"),
-      },
+      head: {},
       passparam: {
         id: "",
       },
@@ -543,7 +547,6 @@ export default {
       },
     };
   },
-
   methods: {
     updateTestin() {
       this.testin = 0;
@@ -791,7 +794,6 @@ export default {
         });
       }
     },
-
     async getlinuxbkurl() {
       const res = await this.getBackurl();
       this.linuxbkurl = res + "/Testupload/saveTest";

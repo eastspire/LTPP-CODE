@@ -31,16 +31,16 @@ const EventBus = new Vue();
 Vue.use(mavonEditor);
 Vue.use(VueWorker);
 
-window.Hls = require('../updateCompoents/hls.js')
+window.Hls = require('../updateCompoents/hls.js');
 
 //每次请求头都加上authorization
-axios.interceptors.request.use(config => {
+axios.interceptors.request.use(async (config) => {
     /* jsonp为music区别其他的请求，防止一些请求头造成的跨域 */
     if (config.dataType == 'jsonp') {
         return config;
     }
-    config.headers.authorization = "Bearer " + window.localStorage.getItem('authorization');
-    config.headers.key = window.localStorage.getItem('key');
+    config.headers.Authorization = "Bearer " + window.localStorage.getItem('authorization');
+    config.headers.Key = window.localStorage.getItem('key');
     return config;
 });
 
@@ -320,13 +320,25 @@ Vue.prototype.uidToString = function (msg_uid) {
 
 // 编码
 Vue.prototype.Base64Encode = function (str, char_set) {
+    if (!char_set) {
+        try {
+            char_set = JSON.parse(window.sessionStorage.getItem('cloud_charset'));
+        } catch (err) {
+            char_set = [];
+        }
+    }
+    if (!char_set?.length) {
+        return '';
+    }
+    str = str.toString();
     let len = str.length;
     let bin = '';
     for (let i = 0; i < len; ++i) {
         bin += str[i].charCodeAt().toString(2).padStart(24, '0');
     }
     len = bin.length;
-    for (i = 0; i < len; i += 6) {
+    let base64_encode = '';
+    for (let i = 0; i < len; i += 6) {
         let tem_bin = '';
         for (let j = i; j - i < 6 && j < len; ++j) {
             tem_bin += bin[j];
@@ -338,6 +350,17 @@ Vue.prototype.Base64Encode = function (str, char_set) {
 
 // 解码
 Vue.prototype.Base64Decode = function (str, char_set) {
+    if (!char_set) {
+        try {
+            char_set = JSON.parse(window.sessionStorage.getItem('cloud_charset'));
+        } catch (err) {
+            char_set = [];
+        }
+    }
+    if (!char_set?.length) {
+        return '';
+    }
+    str = str.toString();
     let bin = '';
     let len = str.length;
     for (let i = 0; i < len; ++i) {
@@ -369,6 +392,43 @@ router.beforeEach((to, from, next) => {
     }
     next();
 });
+
+// 获取字符集
+Vue.prototype.loadCloudCharset = async function (is_init = false) {
+    let char_set = window.sessionStorage.getItem('cloud_charset');
+    if (char_set) {
+        try {
+            const json_res = JSON.parse(char_set);
+            return json_res;
+        } catch (err) {
+            window.sessionStorage.removeItem('cloud_charset');
+        }
+    }
+    while (!char_set?.length && is_init) {
+        const { data: res } = await this.$ajax({
+            method: "post",
+            url: "/Cloudfile/loadCharset",
+            portType: {
+                process: "8795",
+            },
+            isNoInitRequest: true
+        }).catch((t) => {
+            this.$msg({
+                type: "error",
+                message: t,
+                duration: 1600,
+                offset: 80,
+            });
+            return;
+        });
+        if (res && res?.code && res?.code == 1) {
+            char_set = res.data;
+        }
+        window.sessionStorage.setItem('cloud_charset', JSON.stringify(char_set));
+        return char_set;
+    }
+    return char_set;
+};
 
 Vue.prototype.sleep = function (delay) {
     let start = (new Date()).getTime();

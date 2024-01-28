@@ -84,11 +84,11 @@
               };margin-top:0.46rem;`"
               @contextmenu.prevent="
                 showdelete(
-                  tem[0],
-                  base64_decode(tem[0])
+                  tem[4],
+                  tem[0]
                 )
               "
-              @dblclick="tolookcode(tem[0])"
+              @dblclick="tolookcode(tem[0], tem[4])"
             >
               <div>
                 <div>
@@ -229,7 +229,7 @@
                         margin: 0rem 0rem;
                         float: left;
                       "
-                      @click="downloadonefile(filename)"
+                      @click="downloadonefile()"
                       >点击下载</el-button
                     >
                     <el-button
@@ -245,10 +245,7 @@
                       class="el-icon-share pulse-enter-active"
                       @click="
                         copy(
-                          linuxurl +
-                            '/static/cloudfile/' +
-                            $store.state.my_id +
-                            filename
+                          linuxurl + base64_decode(filepath)
                         )
                       "
                       >分享</el-button
@@ -436,7 +433,7 @@
                           margin: 0rem 0rem;
                           float: left;
                         "
-                        @click="downloadonefile(filename)"
+                        @click="downloadonefile()"
                         >点击下载</el-button
                       >
                     </div>
@@ -466,10 +463,7 @@
                         class="el-icon-share pulse-enter-active"
                         @click="
                           copy(
-                            linuxurl +
-                              '/static/cloudfile/' +
-                              $store.state.my_id +
-                              filename
+                            linuxurl + base64_decode(filepath)
                           )
                         "
                         >分享</el-button
@@ -566,19 +560,30 @@ export default {
   },
   deactivated() {
     this.isseetip = false;
+    clearInterval(this.requestid_timer);
+    this.requestid_timer = null;
   },
   destroyed() {
     this.isseetip = false;
   },
   activated() {
     this.isseetip = true;
+    this.head = {
+      Authorization: "Bearer " + window.localStorage.getItem("authorization"),
+      Key: window.localStorage.getItem("key"),
+      Requestid : this.Base64Encode(new Date().getTime())
+    };
+    this.requestid_timer = setInterval(() => {
+        this.head.Requestid = this.Base64Encode(new Date().getTime())
+    }, 10000);
   },
   async created() {
     this.isseetip = true;
-    this.linuxurl = window.sessionStorage.getItem("linuxurl");
-    if (!this.linuxurl) {
+    const tem_linuxurl = window.sessionStorage.getItem("linuxurl");
+    if (!tem_linuxurl) {
       await this.getlinuxurl();
     } else {
+      this.linuxurl = tem_linuxurl;
       this.cloudfileurl = this.linuxurl + "/Cloudfile/upFile";
     }
     this.IsShowCode = false;
@@ -586,17 +591,14 @@ export default {
     this.iscloseFile = false;
     this.IsShowUp = false;
     this.Isnew = false;
-    this.height = window.innerHeight - 198 + "px";
-    this.head = {
-      authorization: "Bearer " + window.localStorage.getItem("authorization"),
-      key: window.localStorage.getItem("key"),
-    };
+    this.height = window.innerHeight - 198 + "px";   
     await this.loadCharset();
     this.getlist();
     this.getPercentage();
   },
   data() {
     return {
+      requestid_timer: null,
       ide_code: "",
       is_code_file: false,
       language: "cpp",
@@ -668,12 +670,10 @@ export default {
       IsShowUp: false,
       code: "",
       list: [],
-      filename: "", //文本路径加文本名称
+      filename: '', 
+      filepath:'',
       onetheme: "monokai",
-      head: {
-        authorization: "Bearer " + window.localStorage.getItem("authorization"),
-        key: window.localStorage.getItem("key"),
-      },
+      head: {},
       Isnew: false,
       newname: "",
       isfile: false,
@@ -953,9 +953,9 @@ export default {
       });
       this.list = res?.data;
     },
-
-    async tolookcode(path) {
-      this.filename = path;
+    async tolookcode(name,path) {
+      this.filename = name;
+      this.filepath = path;
       this.IsShowCode = false;
       this.IsShowStaticFile = false;
       this.is_code_file = false;
@@ -996,7 +996,6 @@ export default {
         this.ShowStaticDialog();
       }
     },
-
     async savacode() {
       if (this.is_code_file) {
         this.code = this.ide_code;
@@ -1005,7 +1004,7 @@ export default {
         method: "post",
         url: "/Cloudfile/updataCode",
         data: {
-          path: this.filename,
+          path: this.filepath,
           code: this.code,
         },
       }).catch((t) => {
@@ -1041,19 +1040,12 @@ export default {
       ) {
         this.ShowStaticFileUrl =
           this.linuxurl +
-          "/static/cloudfile/" +
-          this.$store.state.my_id +
-          this.filename;
-
-        return;
+          this.base64_decode(this.filepath);
       } else {
         this.$store.commit("updateObj", { my_id: this.getMyId() });
         this.ShowStaticFileUrl =
           this.linuxurl +
-          "/static/cloudfile/" +
-          this.$store.state.my_id +
-          this.filename;
-        return;
+        this.base64_decode(this.filepath);
       }
     },
     async lookfile() {
@@ -1065,9 +1057,7 @@ export default {
       ) {
         let url =
           this.linuxurl +
-          "/static/cloudfile/" +
-          this.$store.state.my_id +
-          this.filename;
+          this.base64_decode(this.filepath);
         this.IsShowCode = false;
         this.IsShowStaticFile = false;
         this.$router.push({
@@ -1081,9 +1071,7 @@ export default {
         this.$store.commit("updateObj", { my_id: this.getMyId() });
         let url =
           this.linuxurl +
-          "/static/cloudfile/" +
-          this.$store.state.my_id +
-          this.filename;
+          this.base64_decode(this.filepath);
         this.IsShowCode = false;
         this.IsShowStaticFile = false;
         this.$router.push({
@@ -1103,19 +1091,15 @@ export default {
         this.$store.state.my_id != 0
       ) {
         let url =
-          this.linuxurl +
-          "/Filehtml/lookView?path=" +
-          this.$store.state.my_id +
-          this.filename;
-        window.open(url);
-        return;
+          this.linuxurl + "/Filehtml/lookView?path=" + this.filepath;
+          window.open(url);
+          return;
       }
       this.$store.commit("updateObj", { my_id: this.getMyId() });
       let url =
         this.linuxurl +
         "/Filehtml/lookView?path=" +
-        this.$store.state.my_id +
-        this.filename;
+        this.filepath;
       window.open(url);
     },
     async deletefile(path) {
@@ -1151,9 +1135,9 @@ export default {
       this.refreshlist();
       this.getPercentage();
     },
-
-    showdelete(path, name = "") {
-      this.$alert(`此操作将永久删除【${name}】, 是否继续?`, "提示", {
+    showdelete(path, name = "") {      
+      name = this.base64_decode(name);
+      this.$alert(`此操作将永久把【${name}】隐藏（文件依然存在）`, "提示", {
         confirmButtonText: "确定",
         type: "warning",
       })
@@ -1170,7 +1154,7 @@ export default {
         });
     },
     //下载单个文件
-    async downloadonefile(downloadpath) {
+    async downloadonefile() {
       this.$msg({
         type: "success",
         message: "开始下载",
@@ -1185,46 +1169,16 @@ export default {
           "Content-Type": "application/json; application/octet-stream;",
         },
         data: {
-          path: downloadpath,
+          path: this.filepath,
         },
       })
-        .then((res) => {
-          this.$msg({
-            type: "success",
-            message: "下载完成",
-            duration: 1600,
-            offset: 80,
-          });
-
-          let slanting_bar = 0;
-          let point_loc = downloadpath.length;
-          let first_name = "";
-          let last_name = "";
-          let len = downloadpath.length;
-          for (let i = len - 1; i >= 0; --i) {
-            if (downloadpath[i] == "/") {
-              slanting_bar = i;
-              break;
-            }
-          }
-          for (let i = len - 1; i >= 0; --i) {
-            if (downloadpath[i] == ".") {
-              point_loc = i;
-              last_name = downloadpath[i] + last_name;
-              break;
-            }
-            last_name = downloadpath[i] + last_name;
-          }
-          for (let i = slanting_bar + 1; i < point_loc; ++i) {
-            first_name += downloadpath[i];
-          }
-
-          let Name = this.Base64Decode(first_name, this.char_set) + last_name;
+        .then((res) => {          
+          let name = this.Base64Decode(this.filename, this.char_set);
           if (window.navigator && window.navigator.msSaveOrOpenBlob) {
             const blob = new Blob([res?.data], {
               type: "application/octet-stream;application/zip",
             });
-            window.navigator.msSaveOrOpenBlob(blob, Name);
+            window.navigator.msSaveOrOpenBlob(blob, name);
           } else {
             /* 火狐谷歌的文件下载方式 */
             const blob = new Blob([res?.data], {
@@ -1233,10 +1187,16 @@ export default {
             let url = window.URL.createObjectURL(blob);
             const link = document.createElement("a"); // 创建a标签
             link.href = url;
-            link.download = Name; // 重命名文件
+            link.download = name; // 重命名文件
             link.click();
             URL.revokeObjectURL(url); // 释放内存
           }
+          this.$msg({
+            type: "success",
+            message: "下载完成",
+            duration: 1600,
+            offset: 80,
+          });          
         })
         .catch((t) => {
           this.$msg({

@@ -33,37 +33,54 @@ var musicbkurl = '';
 
 _axios.interceptors.request.use(
     async function (config) {
-        config.baseURL = store.state.is_public_network ? public_network_url : private_network_url;
-        // Do something before request is sent
-        /* 存在则不进行请求后端音乐地址 */
-        if (config.portType && config.portType.process && config.portType.process) {
-            // 端口前统一加4与后端对应
-            // let T_port = ":4" + config.portType.process;
-            // config.baseURL += T_port;
-            return config;
-        } else {
-            // config.baseURL += ":48787";
-            if (config.dataType == 'jsonp') {
-                musicbkurl = window.sessionStorage.getItem("musicbkurl");
-                if (!musicbkurl) {
-                    const { data: res } = await axios({
-                        method: 'post',
-                        url: config.baseURL + '/Url/getMusicBkUrl',
-                        dataType: 'jsonp'
-                    }).catch((e) => {
+        try {
+            config.baseURL = store.state.is_public_network ? public_network_url : private_network_url;
+            // Do something before request is sent
+            let char_set = [];
+            try {
+                char_set = window.sessionStorage('cloud_charset');
+                char_set = JSON.parse(char_set);
+            } catch (err) {
+                char_set = [];
+            }
+            if (!char_set?.length) {
+                char_set = await Vue.prototype.loadCloudCharset(!config?.isNoInitRequest);
+            }
+            // 精确到毫秒
+            const now = new Date().getTime();
+            config.headers.Requestid = Vue.prototype.Base64Encode(now, char_set);
+            /* 存在则不进行请求后端音乐地址 */
+            if (config.portType && config.portType.process && config.portType.process) {
+                // 端口前统一加4与后端对应
+                // let T_port = ":4" + config.portType.process;
+                // config.baseURL += T_port;
+                return config;
+            } else {
+                // config.baseURL += ":48787";
+                if (config.dataType == 'jsonp') {
+                    musicbkurl = window.sessionStorage.getItem("musicbkurl");
+                    if (!musicbkurl) {
+                        const { data: res } = await axios({
+                            method: 'post',
+                            url: config.baseURL + '/Url/getMusicBkUrl',
+                            dataType: 'jsonp'
+                        }).catch((e) => {
+                            return config;
+                        });
+                        if (res?.code == 1) {
+                            config.baseURL = res?.data;
+                            musicbkurl = res?.data;
+                            window.sessionStorage.setItem("musicbkurl", res?.data);
+                        }
                         return config;
-                    });
-                    if (res?.code == 1) {
-                        config.baseURL = res?.data;
-                        musicbkurl = res?.data;
-                        window.sessionStorage.setItem("musicbkurl", res?.data);
+                    } else {
+                        config.baseURL = musicbkurl;
+                        return config;
                     }
-                    return config;
-                } else {
-                    config.baseURL = musicbkurl;
-                    return config;
                 }
             }
+        } catch (err) {
+            console.log(err);
         }
         return config;
     },
@@ -77,7 +94,7 @@ _axios.interceptors.request.use(
 _axios.interceptors.response.use(
     function (response) {
         if (response?.data?.code == 500) {
-            Vue.prototype.logoutRemove(true);
+            // Vue.prototype.logoutRemove(true);
         }
         return response;
     },

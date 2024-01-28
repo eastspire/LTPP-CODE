@@ -256,10 +256,20 @@ class PrivateRobot
         $alltestpath =  Base::$tmp_path . 'testdata/' . $md5_problem_id . '/';
         $test_data_list = Base::getOjTestDataList($problem_id);
         Base::writeOjDataInToFile($problem_id, $alltestpath, $test_data_list);
-        //获取所有输入输出样例文件名称
-        $testfilein = glob($alltestpath . '*.in');
         if (sizeof($test_data_list) <= 0) {
             return '题目 **【' . $problem_name . '】** 无测试样例！';
+        }
+        // 获取所有输入输出样例文件名称
+        $testfilein = glob($alltestpath . '*.in');
+        $alltestnum = sizeof($testfilein);
+        if ($alltestnum <= 0) {
+            Base::deleteAllFile($problem_id);
+            Base::writeOjDataInToFile($problem_id, $alltestpath, $test_data_list);
+            $testfilein = glob($alltestpath . '*.in');
+            $alltestnum = sizeof($testfilein);
+            if ($alltestnum <= 0) {
+                return '题目 **【' . $problem_name . '】** 无测试样例！';
+            }
         }
         foreach ($contest_list as &$contest_id) {
             $contest_db = Db::table('contest')
@@ -311,10 +321,6 @@ class PrivateRobot
                     $onetestscore = 100 / $alltestnum;
                 }
 
-                Db::table('oj')
-                    ->where('id', $problem_id)
-                    ->where('isdel', 0)
-                    ->increment('ALLSubmitNum', 1);
                 Base::updateOjDataRedis($problem_id);
                 //代码所在路径+前缀名称main
                 $runcodefilepath = $filepath . 'main';
@@ -374,14 +380,21 @@ class PrivateRobot
                     $testname = $one_oj_test_data_db->id;
                     //运行
                     $out = [];
-                    $out = Base::run($userlanguage, $filepath, $alltestpath . $testname . '.in ', $outpath, $errpath, $runcodefilepath, $limittime, $limitmemory);
-
+                    $out = Base::run($userlanguage, $filepath, $alltestpath . $testname . '.in', $outpath, $errpath, $runcodefilepath, $limittime, $limitmemory);
                     if (!$out || empty($out)) {
+                        RedisQueue::send(Base::$redis_queue_update_oj_name, [
+                            'problem_id' => $problem_id,
+                            'is_ac' => false
+                        ]);
                         continue;
                     }
                     $out = $out[0];
                     $run_resource_consumption = Base::getCodeTimeMemory($out);
                     if (!$run_resource_consumption || !isset($run_resource_consumption['status'])) {
+                        RedisQueue::send(Base::$redis_queue_update_oj_name, [
+                            'problem_id' => $problem_id,
+                            'is_ac' => false
+                        ]);
                         continue;
                     }
 
@@ -390,6 +403,10 @@ class PrivateRobot
                     $memory_used = $run_resource_consumption['memory_used'] ?? 0;
 
                     if ($status == Base::$judge_server_error) {
+                        RedisQueue::send(Base::$redis_queue_update_oj_name, [
+                            'problem_id' => $problem_id,
+                            'is_ac' => false
+                        ]);
                         continue;
                     }
 
@@ -421,6 +438,10 @@ class PrivateRobot
                             'code' => $code,
                             'language' => $userlanguage,
                             'contestid' => $contest_id
+                        ]);
+                        RedisQueue::send(Base::$redis_queue_update_oj_name, [
+                            'problem_id' => $problem_id,
+                            'is_ac' => false
                         ]);
                         continue;
                     }
@@ -456,6 +477,10 @@ class PrivateRobot
                             'code' => $code,
                             'language' => $userlanguage,
                             'contestid' => $contest_id
+                        ]);
+                        RedisQueue::send(Base::$redis_queue_update_oj_name, [
+                            'problem_id' => $problem_id,
+                            'is_ac' => false
                         ]);
                         continue;
                     }

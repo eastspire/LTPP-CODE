@@ -9,6 +9,117 @@
     <div class="shadow ltpp-list-box" style="border-width: 0rem">
       <div style="margin-left: 1.4rem; margin-right: 1.4rem">
         <div style="height: 0.8rem"></div>
+          <p
+            style="
+              font-size: 1.06rem;
+              text-align: left;
+              font-weight: bold;
+              margin: 1rem 0rem 1rem 0rem;
+            "
+          >
+            IP黑名单
+          </p>
+          <el-input
+            style="font-size: 1.06rem"
+            placeholder="请输入需要搜索的IP名称"
+            v-model.lazy="keyip"
+            @keyup.enter.native="search()"
+          >
+            <el-button slot="append" icon="el-icon-search" @click="search()"
+              >搜索</el-button
+            >
+          </el-input>
+          <div style="height: 2rem"></div>
+          <div style="text-align: center">
+            <el-button
+              type="text"
+              icon="el-icon-circle-plus"
+              class="pulse-enter-active"
+              style="font-size: 1.06rem; margin: 0.4rem 10rem; color: red"
+              @click="showadd = true"
+              >添加IP黑名单</el-button
+            >
+            <el-button
+              type="text"
+              icon="el-icon-s-platform"
+              class="pulse-enter-active"
+              style="font-size: 1.06rem; margin: 0.4rem 10rem; color: red"
+              @click="
+                showlinux = true;
+                lookbase();
+              "
+              >查看服务器信息</el-button
+            >
+          </div>
+          <div style="height: 1rem"></div>
+          <div v-if="iplist.length > 0">
+            <el-table
+              :cell-style="cellStyle"
+              :header-cell-style="{
+                color: '#FFFFFF',
+                'font-size': '1.06rem',
+              }"
+              :data="iplist"
+              style="width: 100%"
+            >
+              <el-table-column label="ip" width="400">
+                <template slot-scope="scope">
+                  <a
+                    style="
+                      font-weight: bold;
+                      font-size: 1.06rem;
+                      color: var(--ltpp-box-text-color);
+                      color: #409eff;
+                    "
+                    >{{ scope.row.ip.substr(0, 20) }}</a
+                  >
+                </template>
+              </el-table-column>
+              <el-table-column label="用户名" width="400" align="center">
+                <template slot-scope="scope">
+                  <a
+                    style="
+                      font-weight: bold;
+                      font-size: 1.06rem;
+                      color: deeppink;
+                    "
+                    >{{ scope.row.username.substr(0, 20) }}</a
+                  >
+                </template>
+              </el-table-column>
+              <el-table-column label="删除" width="auto" align="center">
+                <template slot-scope="scope">
+                  <el-button
+                    type="text"
+                    class="pulse-enter-active"
+                    style="
+                      font-weight: bold;
+                      font-size: 1rem;
+                      color: red;
+                      margin-right: 2rem;
+                    "
+                    @click="deleteip(scope.row.id)"
+                  >
+                    删除
+                  </el-button>
+                </template>
+              </el-table-column>
+            </el-table>
+
+            <div style="height: 3.4rem"></div>
+            <el-pagination
+              background
+              v-show="total"
+              style="text-align: center"
+              @size-change="handleSizeChange"
+              @current-change="handleCurrentChange"
+              :current-page="page"
+              :page-sizes="[1, 2, 6, 10, 20, 50]"
+              :page-size="limit"
+              layout="total, sizes, prev, pager, next, jumper"
+              :total="total"
+            ></el-pagination>
+          </div>
         <div style="margin-left: 1rem; margin-right: 1rem">
           <p
             style="
@@ -1103,118 +1214,7 @@
             >
           </el-input>
 
-          <p
-            style="
-              font-size: 1.06rem;
-              text-align: left;
-              font-weight: bold;
-              margin: 1rem 0rem 1rem 0rem;
-            "
-          >
-            IP黑名单
-          </p>
-
-          <el-input
-            style="font-size: 1.06rem"
-            placeholder="请输入需要搜索的IP名称"
-            v-model.lazy="keyip"
-            @keyup.enter.native="search()"
-          >
-            <el-button slot="append" icon="el-icon-search" @click="search()"
-              >搜索</el-button
-            >
-          </el-input>
-          <div style="height: 2rem"></div>
-          <div style="text-align: center">
-            <el-button
-              type="text"
-              icon="el-icon-circle-plus"
-              class="pulse-enter-active"
-              style="font-size: 1.06rem; margin: 0.4rem 10rem; color: red"
-              @click="showadd = true"
-              >添加IP黑名单</el-button
-            >
-            <el-button
-              type="text"
-              icon="el-icon-s-platform"
-              class="pulse-enter-active"
-              style="font-size: 1.06rem; margin: 0.4rem 10rem; color: red"
-              @click="
-                showlinux = true;
-                lookbase();
-              "
-              >查看服务器信息</el-button
-            >
-          </div>
-          <div style="height: 2rem"></div>
-          <div v-if="iplist.length > 0">
-            <el-table
-              :cell-style="cellStyle"
-              :header-cell-style="{
-                color: '#FFFFFF',
-                'font-size': '1.06rem',
-              }"
-              :data="iplist"
-              style="width: 100%"
-            >
-              <el-table-column label="ip" width="400">
-                <template slot-scope="scope">
-                  <a
-                    style="
-                      font-weight: bold;
-                      font-size: 1.06rem;
-                      color: var(--ltpp-box-text-color);
-                      color: #409eff;
-                    "
-                    >{{ scope.row.ip.substr(0, 20) }}</a
-                  >
-                </template>
-              </el-table-column>
-              <el-table-column label="用户名" width="400" align="center">
-                <template slot-scope="scope">
-                  <a
-                    style="
-                      font-weight: bold;
-                      font-size: 1.06rem;
-                      color: deeppink;
-                    "
-                    >{{ scope.row.username.substr(0, 20) }}</a
-                  >
-                </template>
-              </el-table-column>
-              <el-table-column label="删除" width="auto" align="center">
-                <template slot-scope="scope">
-                  <el-button
-                    type="text"
-                    class="pulse-enter-active"
-                    style="
-                      font-weight: bold;
-                      font-size: 1rem;
-                      color: red;
-                      margin-right: 2rem;
-                    "
-                    @click="deleteip(scope.row.id)"
-                  >
-                    删除
-                  </el-button>
-                </template>
-              </el-table-column>
-            </el-table>
-
-            <div style="height: 3.4rem"></div>
-            <el-pagination
-              background
-              v-show="total"
-              style="text-align: center"
-              @size-change="handleSizeChange"
-              @current-change="handleCurrentChange"
-              :current-page="page"
-              :page-sizes="[1, 2, 6, 10, 20, 50]"
-              :page-size="limit"
-              layout="total, sizes, prev, pager, next, jumper"
-              :total="total"
-            ></el-pagination>
-          </div>
+          
           <!-- IP对话框 -->
           <el-dialog
             :close-on-click-modal="false"

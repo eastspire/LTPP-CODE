@@ -224,7 +224,7 @@ class Ojjudge
         $contest_id = Base::getIdByUid($contest_uid) ?? 0;
         $problem_uid = $request->post('problem_id') ?? '';
         $problem_id = Base::getIdByUid($problem_uid) ?? '';
-        if (!$my_aid || !$problem_id || !$code || !$userlanguage) {
+        if (!$my_aid || !$problem_id || !$userlanguage) {
             return json([
                 'code' => -1,
                 'code_id' => '',
@@ -400,9 +400,6 @@ class Ojjudge
         $md5_problem_id = Base::doubleMd5($problem_id);
         $alltestpath = Base::$tmp_path . 'testdata/' . $md5_problem_id . '/';
         $test_data_list = Base::getOjTestDataList($problem_id);
-        Base::writeOjDataInToFile($problem_id, $alltestpath, $test_data_list);
-        //获取所有输入输出样例文件名称
-        $testfilein = glob($alltestpath . '*.in');
         if (sizeof($test_data_list) <= 0) {
             Ojjudge::updateCodeStatus($code_id, '运行出错', 0, 0);
             return [
@@ -412,7 +409,25 @@ class Ojjudge
                 'usetime' => 0
             ];
         }
+        Base::writeOjDataInToFile($problem_id, $alltestpath, $test_data_list);
+        // 获取所有输入输出样例文件名称
+        $testfilein = glob($alltestpath . '*.in');
         $alltestnum = sizeof($testfilein);
+        if ($alltestnum <= 0) {
+            Base::deleteAllFile($problem_id);
+            Base::writeOjDataInToFile($problem_id, $alltestpath, $test_data_list);
+            $testfilein = glob($alltestpath . '*.in');
+            $alltestnum = sizeof($testfilein);
+            if ($alltestnum <= 0) {
+                Ojjudge::updateCodeStatus($code_id, '运行出错', 0, 0);
+                return [
+                    'code' => -1,
+                    'result' => '题目测试样例不存在！',
+                    'usememory' => 0,
+                    'usetime' => 0
+                ];
+            }
+        }
         $actestnum = 0;
         $onetestscore = 0;
         if ($alltestnum > 0) {
@@ -499,7 +514,7 @@ class Ojjudge
             $testname = $one_oj_test_data_db->id;
             $out = [];
             //运行
-            $out = Base::run($userlanguage, $filepath, $alltestpath . $testname . '.in ', $outpath, $errpath, $runcodefilepath, $limittime, $limitmemory);
+            $out = Base::run($userlanguage, $filepath, $alltestpath . $testname . '.in', $outpath, $errpath, $runcodefilepath, $limittime, $limitmemory);
 
             if (!$out || empty($out)) {
                 Ojjudge::updateCodeStatus($code_id, '运行出错', 0, 0);

@@ -1093,7 +1093,6 @@ export default {
         data: formdata,
         headers: {
           "Content-Type": "multipart/form-data",
-          id: this.question_id,
         },
       })
         .then((res) => {
@@ -1120,7 +1119,6 @@ export default {
         data: formdata,
         headers: {
           "Content-Type": "multipart/form-data",
-          id: this.question_id,
         },
       })
         .then((res) => {

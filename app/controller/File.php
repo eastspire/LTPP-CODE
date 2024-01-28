@@ -1035,36 +1035,6 @@ class File
     ];
 
     /**
-     * 保存文件
-     * @param Request $request 请求
-     * @return string $res json
-     */
-    public function saveFile(Request $request)
-    {
-        $my_uid = JwtToken::getCurrentId();
-        $my_aid = Base::getIdByUid($my_uid);
-        $file = $request->file('image');
-        $file_extion = $file->getUploadExtension();
-
-        if ($file && $file->isValid()) {
-            $data = file_get_contents($file->getRealPath());
-            Base::$GLOBlinuxurl = Base::getSettingKeyData('GLOBlinuxurl');
-            $id = Base::insertToDb('file_data', [
-                'data' => $data
-            ]);
-            $file_path = Base::creatFilePath($file_extion);
-            Base::insertToDb('file_path', [
-                'path' => $file_path,
-                'file_id' => $id,
-                'userid' => $my_aid,
-                'time' => date('Y-m-d H:i:s', time())
-            ]);
-            return \json(['url' => Base::$GLOBlinuxurl . $file_path]);
-        }
-        return \json(['url' => "error"]);
-    }
-
-    /**
      * 上传图片
      */
     public function saveImage(Request $request)

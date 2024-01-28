@@ -140,7 +140,7 @@ class Cloudfile
                 'userid' => $my_aid,
                 'time' => date('Y-m-d H:i:s', time())
             ]);
-            Base::insertToDb('chat_file_path', [
+            Base::insertToDb('cloud_file_path', [
                 'name' => $file_name,
                 'path' => $new_path,
                 'file_id' => $id,
@@ -180,18 +180,20 @@ class Cloudfile
             ->where('userid', $my_aid)
             ->where('isdel', 0)
             ->orderBy('id', 'desc')
-            ->select('id', 'name', 'path', 'time', 'size')
+            ->select('name', 'path', 'time', 'size')
             ->get();
         $res = [];
         foreach ($path_list as &$one_data) {
+            $temarray = [];
             $temarray[] = Base::Base64Encode($one_data->name);
-            $path = $one_data->path;
-            $file_extion = Base::getDbFileExtion($path);
+            $path = Base::Base64Encode($one_data->path);
+            $file_extion = Base::getDbFileExtion($one_data->path);
             $temarray[] = Base::fileExtionToNumberType($file_extion);
             $size = $one_data->size;
             Base::getChineseSize($size);
             $temarray[] = $size;
             $temarray[] = $one_data->time;
+            $temarray[] = $path;
             $res[] = $temarray;
         }
         if (empty($res)) {
@@ -208,6 +210,7 @@ class Cloudfile
     public function lookCode(Request $request)
     {
         $path = $request->post('path');
+        $path = Base::Base64Decode($path);
         if (isset(Cloudfile::$unsupport[Base::getDbFileExtion($path)])) {
             return json(['code' => -1, 'msg' => '该格式不支持访问']);
         }
@@ -223,10 +226,11 @@ class Cloudfile
     public function deleteFile(Request $request)
     {
         $path = $request->post('path');
+        $path = Base::Base64Decode($path);
         $my_uid = JwtToken::getCurrentId();
         $my_aid = Base::getIdByUid($my_uid);
         Base::deleteCloudFileData($my_aid, $path);
-        return json(['code' => 1, 'msg' => '文件删除成功']);
+        return json(['code' => 1, 'msg' => '操作成功']);
     }
 
     /**
@@ -237,6 +241,7 @@ class Cloudfile
     public function updataCode(Request $request)
     {
         $path = $request->post('path');
+        $path = Base::Base64Decode($path);
         $code = $request->post('code');
         $my_uid = JwtToken::getCurrentId();
         $my_aid = Base::getIdByUid($my_uid);
@@ -270,7 +275,7 @@ class Cloudfile
             return 1;
         }
         $db = Db::table('cloud_file_path')
-            ->while('userid', $my_aid)
+            ->where('userid', $my_aid)
             ->where('isdel', 0)
             ->select('size')
             ->get();
@@ -311,6 +316,7 @@ class Cloudfile
     public function downloadFile(Request $request)
     {
         $path = $request->post('path');
+        $path = Base::Base64Decode($path);
         if (!$path) {
             return json(['code' => -1, 'msg' => '参数错误']);
         }
@@ -351,7 +357,7 @@ class Cloudfile
             'userid' => $my_aid,
             'time' => date('Y-m-d H:i:s', time())
         ]);
-        Base::insertToDb('chat_file_path', [
+        Base::insertToDb('cloud_file_path', [
             'name' => $file_name,
             'path' => $new_path,
             'file_id' => $id,
@@ -371,7 +377,7 @@ class Cloudfile
         $my_uid = JwtToken::getCurrentId();
         $my_aid = Base::getIdByUid($my_uid);
         $db = Db::table('cloud_file_path')
-            ->while('userid', $my_aid)
+            ->where('userid', $my_aid)
             ->where('isdel', 0)
             ->select('size')
             ->get();

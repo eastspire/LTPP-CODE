@@ -534,6 +534,14 @@ export default {
     await this.getlinuxurl();
   },
   async activated() {
+    this.head = {
+      Authorization: "Bearer " + window.localStorage.getItem("authorization"),
+      Key: window.localStorage.getItem("key"),
+      Requestid : this.Base64Encode(new Date().getTime())
+    };
+    this.requestid_timer = setInterval(() => {
+        this.head.Requestid = this.Base64Encode(new Date().getTime())
+    }, 10000);
     this.isseetip = true;
     if (this.total != 0) {
       if (this.issearch) {
@@ -547,16 +555,16 @@ export default {
   },
   deactivated() {
     this.isseetip = false;
+    clearInterval(this.requestid_timer);
+    this.requestid_timer = null;
   },
   destroyed() {
     this.isseetip = false;
   },
   data() {
     return {
-      head: {
-        authorization: "Bearer " + window.localStorage.getItem("authorization"),
-        key: window.localStorage.getItem("key"),
-      },
+      requestid_timer: null,
+      head: {},
       passparam: {
         id: 0,
       },

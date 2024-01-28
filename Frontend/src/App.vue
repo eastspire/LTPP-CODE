@@ -24,6 +24,7 @@ export default {
   data() {
     return {
       version: '1.8.2',
+      get_version_lock: false,
     };
   },
   beforeCreate() {
@@ -32,7 +33,7 @@ export default {
     if (!authorization || !key) {
       this.logoutRemove();
       return;
-    }
+    }    
   },
   async mounted() {
     try {
@@ -89,7 +90,10 @@ export default {
       }
     },
     async getVersion(is_electron = false) {
-      while (true) {
+        if(this.get_version_lock){
+          return;
+        }
+        this.get_version_lock = true;
         const { data: res } = await this.$ajax({
           method: "post",
           url: "/Version/getVersion",
@@ -104,7 +108,10 @@ export default {
               path: "/maintenance",
               replace: true,
             });
+            this.get_version_lock = false;
+            return;
         });
+        this.get_version_lock = false;
         if (res?.code == 1) {
           err_times = 0;
           if (this.$route.path === "/maintenance") {
@@ -136,7 +143,6 @@ export default {
               window.open(res.url, "_blank");
             }
           }
-          return;
         } else {
           ++err_times;
           err_times > max_err_times &&
@@ -144,9 +150,8 @@ export default {
             this.$router.replace({
               path: "/maintenance",
               replace: true,
-            });
-        }
-      }
+            });          
+        }        
     },
   },
 };

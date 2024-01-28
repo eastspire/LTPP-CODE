@@ -22,7 +22,7 @@ class Chatfile
      * @param Request $request 请求
      * @return string $res json
      */
-    public function upFile(Request $request)
+    public function chatUpFile(Request $request)
     {
         $my_uid = JwtToken::getCurrentId();
         $my_aid = Base::getIdByUid($my_uid);
@@ -31,29 +31,9 @@ class Chatfile
         if (!$my_aid || $user_id == '') {
             return json(['code' => -1, 'msg' => '参数错误！']);
         }
-        $file = $request->file('image');
+        $file = $request->file('file');
         $text = Base::uploadChatFileToDb($my_aid, $user_id, $file);
         return json(['code' => 1, 'msg' => '上传成功', 'filename' => $text]);
-    }
-
-    /**
-     * 私聊文件上传
-     * @param Request $request 请求
-     * @return string $res json
-     */
-    public function privateUpFile(Request $request)
-    {
-        return $this->upFile($request);
-    }
-
-    /**
-     * 群聊文件上传
-     * @param Request $request 请求
-     * @return string $res json
-     */
-    public function groupUpFile(Request $request)
-    {
-        return $this->upFile($request);
     }
 
     /**
@@ -74,14 +54,16 @@ class Chatfile
         $chat_path_list = Base::loadChatFileList($my_aid, $user_id);
         $res = [];
         foreach ($chat_path_list as &$one_data) {
+            $temarray = [];
             $temarray[] = Base::Base64Encode($one_data->name);
-            $path = $one_data->path;
+            $path = Base::Base64Encode($one_data->path);
             $file_extion = Base::getDbFileExtion($path);
             $temarray[] = Base::fileExtionToNumberType($file_extion);
             $size = $one_data->size;
             Base::getChineseSize($size);
             $temarray[] = $size;
             $temarray[] = $one_data->time;
+            $temarray[] = $path;
             $res[] = $temarray;
         }
         if (empty($res)) {
@@ -98,6 +80,7 @@ class Chatfile
     public function downloadFile(Request $request)
     {
         $path = $request->post('path');
+        $path = Base::Base64Decode($path);
         if (!$path) {
             return json(['code' => -1, 'msg' => '参数错误']);
         }

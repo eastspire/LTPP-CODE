@@ -102,9 +102,13 @@ export default {
   name: "photomanage",
   async activated() {
     this.head = {
-      authorization: "Bearer " + window.localStorage.getItem("authorization"),
-      key: window.localStorage.getItem("key"),
+      Authorization: "Bearer " + window.localStorage.getItem("authorization"),
+      Key: window.localStorage.getItem("key"),
+      Requestid : this.Base64Encode(new Date().getTime())
     };
+    this.requestid_timer = setInterval(() => {
+        this.head.Requestid = this.Base64Encode(new Date().getTime())
+    }, 10000);
     this.linuxurl = window.sessionStorage.getItem("linuxurl");
     this.backurl = window.sessionStorage.getItem("linuxurl");
     if (!this.linuxurl) {
@@ -114,22 +118,19 @@ export default {
     }
     this.photo_list = [];
     await this.getlist();
-    this.head = {
-      authorization: "Bearer " + window.localStorage.getItem("authorization"),
-      key: window.localStorage.getItem("key"),
-    };
+  },
+  deactivated() {
+    clearInterval(this.requestid_timer);
+    this.requestid_timer = null;
   },
   data() {
     return {
+      requestid_timer: null, 
       isadd: false,
       linuxurl: "",
-      head: {
-        authorization: "Bearer " + window.localStorage.getItem("authorization"),
-        key: window.localStorage.getItem("key"),
-      },
+      head: {},
       photo_list: [],
       backurl: "",
-      head: {},
       photo_path: "",
     };
   },

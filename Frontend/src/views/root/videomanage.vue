@@ -332,9 +332,13 @@ export default {
   async activated() {
     this.issearch = false; //判断是否搜索，从而进行分页查找
     this.head = {
-      authorization: "Bearer " + window.localStorage.getItem("authorization"),
-      key: window.localStorage.getItem("key"),
+      Authorization: "Bearer " + window.localStorage.getItem("authorization"),
+      Key: window.localStorage.getItem("key"),
+      Requestid : this.Base64Encode(new Date().getTime())
     };
+    this.requestid_timer = setInterval(() => {
+        this.head.Requestid = this.Base64Encode(new Date().getTime())
+    }, 10000);
     this.bkvideourl = window.sessionStorage.getItem("linuxurl");
     if (!this.bkvideourl) {
       await this.getlinuxurl();
@@ -353,9 +357,13 @@ export default {
       await this.getlist();
     }
   },
-
+  deactivated() {
+    clearInterval(this.requestid_timer);
+    this.requestid_timer = null;
+  },
   data() {
     return {
+      requestid_timer: null,
       tag: "",
       lastkey: "",
       bkvideourl: "",

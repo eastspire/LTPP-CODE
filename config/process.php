@@ -52,10 +52,6 @@ return [
         'handler' => process\DayproblemCrontab::class,
         'count' => 1
     ],
-    'GitcodeCrontab' => [
-        'handler' => process\GitcodeCrontab::class,
-        'count' => 1
-    ],
     'RobotContestCrontab' => [
         'handler' => process\RobotContestCrontab::class,
         'count' => 1

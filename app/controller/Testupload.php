@@ -43,10 +43,9 @@ class Testupload extends Oj
         if ($file->getUploadExtension() === 'zip') {
             exec('unzip -d ' . $alltestpath . ' ' . $file->getRealPath() . ' 2>&1', $out);
             //获取所有输入输出样例文件名称
-            $testfileout = glob($alltestpath . '*.out');
-            if (sizeof($testfileout) == 0) {
-                // 兼容ICPC测试样例
-                $testfileout = glob($alltestpath . '*.ans');
+            $testfilein = glob($alltestpath . '*.in');
+            if (sizeof($testfilein) == 0) {
+                return \json(['code' => -1, 'msg' => '样例压缩包不能为空！']);
             }
             Db::table('oj_test_data')
                 ->where('problem_id', $problem_id)
@@ -54,8 +53,8 @@ class Testupload extends Oj
                 ->update([
                     'isdel' => 1
                 ]);
-            foreach ($testfileout as $temout) {
-                $path_parts = pathinfo($temout);
+            foreach ($testfilein as &$temin) {
+                $path_parts = pathinfo($temin);
                 //文件全名
                 $fullname = $path_parts['basename'];
                 //文件前缀名
@@ -64,11 +63,12 @@ class Testupload extends Oj
                 $out = '';
                 if (file_exists($alltestpath . $testname . '.in')) {
                     $in = Base::getFileText($alltestpath . $testname . '.in');
-                } else if (file_exists($alltestpath . $testname . '.ans')) {
-                    $in = Base::getFileText($alltestpath . $testname . '.ans');
                 }
                 if (file_exists($alltestpath . $testname . '.out')) {
                     $out = Base::getFileText($alltestpath . $testname . '.out');
+                } else if (file_exists($alltestpath . $testname . '.ans')) {
+                    // 兼容ICPC样例
+                    $out = Base::getFileText($alltestpath . $testname . '.ans');
                 }
                 Base::insertToDb('oj_test_data', [
                     'problem_id' => $problem_id,
@@ -76,6 +76,11 @@ class Testupload extends Oj
                     'test_out' => $out,
                 ]);
             }
+            // 删除解压的文件
+            Base::deleteAllFile($alltestpath);
+            // 重新写入输入样例
+            Base::writeOjDataInToFile($problem_id, $alltestpath);
+            // 更新样例缓存
             Base::updateOjTestDataListRedis($problem_id);
         } else {
             //删除上传的临时文件

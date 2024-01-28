@@ -19,65 +19,63 @@ class AuthCheckTest implements MiddlewareInterface
      * 公开方法
      */
     static $safe_func = [
-        'judgeLogin',
-        'judgeRegister',
-        'lookView',
-        'getMusicBkurl',
-        'send',
-        'sendPassword',
-        'getVersion',
-        'getClassUrl',
-        'getSocketUrl',
-        'getBackUrl',
-        'getFrontUrl',
-        'getMusicBkUrl',
-        'publicContestRank',
-        'loadCharset',
-        'oneArticle',
-        'lookContestProblemCode'
+        'judgeLogin' => true,
+        'judgeRegister' => true,
+        'lookView' => true,
+        'getMusicBkurl' => true,
+        'send' => true,
+        'sendPassword' => true,
+        'getVersion' => true,
+        'getClassUrl' => true,
+        'getSocketUrl' => true,
+        'getBackUrl' => true,
+        'getFrontUrl' => true,
+        'getMusicBkUrl' => true,
+        'publicContestRank' => true,
+        'loadCharset' => true,
+        'oneArticle' => true,
+        'lookContestProblemCode' => true,
     ];
 
     /**
      * 禁止访问的方法
      */
     static $danger_func = [
-        'contestIdGetRankEcharts',
-        'contestIdGetRank',
-        'creatFile',
-        'sendUpdateRankMQ',
-        'contestIdGetRank',
-        'judgeLimitIsSafe',
-        'mailto',
-        'randImage',
-        'judgeIsMyProblem',
-        'run',
-        'sendChatToOneUserMsgAndEmail',
-        'sendChatToOneUserMsg',
-        'judgeHasBuy',
-        'buy',
-        'sendLogin',
-        'judgeHasJudgeContest',
-        'updateNoLookNum',
-        'judgeIsMyContest'
+        'contestIdGetRankEcharts' => true,
+        'contestIdGetRank' => true,
+        'creatFile' => true,
+        'sendUpdateRankMQ' => true,
+        'judgeLimitIsSafe' => true,
+        'mailto' => true,
+        'randImage' => true,
+        'judgeIsMyProblem' => true,
+        'run' => true,
+        'sendChatToOneUserMsgAndEmail' => true,
+        'sendChatToOneUserMsg' => true,
+        'judgeHasBuy' => true,
+        'buy' => true,
+        'sendLogin' => true,
+        'judgeHasJudgeContest' => true,
+        'updateNoLookNum' => true,
+        'judgeIsMyContest' => true,
     ];
 
     /**
      * 私有
      */
     static $danger_path = [
-        'app\controller\Base',
-        'app\controller\Robot',
-        'app\controller\ChatBase',
-        'app\controller\Robot',
-        'app\controller\Image',
-        'app\controller\Ssh',
-        'plugin\webman\gateway\Events',
-        'plugin\webman\gateway\ChatBase',
-        'plugin\webman\gateway\ClassMsg',
-        'plugin\webman\gateway\GlobalNotice',
-        'plugin\webman\gateway\GroupChat',
-        'plugin\webman\gateway\PrivateChat',
-        'plugin\webman\gateway\PrivateRobot',
+        'app\controller\Base' => true,
+        'app\controller\Robot' => true,
+        'app\controller\ChatBase' => true,
+        'app\controller\Image' => true,
+        'app\controller\Ssh' => true,
+        'plugin\webman\gateway\Events' => true,
+        'plugin\webman\gateway\ChatBase' => true,
+        'plugin\webman\gateway\ClassMsg' => true,
+        'plugin\webman\gateway\GlobalNotice' => true,
+        'plugin\webman\gateway\GroupChat' => true,
+        'plugin\webman\gateway\PrivateChat' => true,
+        'plugin\webman\gateway\PrivateRobot' => true,
     ];
 
     public function process(Request $request, callable $handler): Response
@@ -102,31 +100,35 @@ class AuthCheckTest implements MiddlewareInterface
         }
         //判断是否需要鉴权
         $func = $request->action;
-        foreach (AuthCheckTest::$safe_func as &$tem) {
-            if ($func === $tem) {
-                return $handler($request);
-            }
+        if (isset(AuthCheckTest::$safe_func[$func])) {
+            return $handler($request);
         }
         // 禁止访问的内容
-        foreach (AuthCheckTest::$danger_func as &$tem) {
-            if ($func === $tem) {
-                return response(Base::notFoundPage(), 404);
-            }
+        if (isset(AuthCheckTest::$danger_func[$func])) {
+            return response(Base::notFoundPage(), 404);
         }
-
-        foreach (AuthCheckTest::$danger_path as &$tem) {
-            if ($request->controller === $tem) {
-                return response(Base::notFoundPage(), 404);
-            }
+        if (isset(AuthCheckTest::$danger_path[$request->controller])) {
+            return response(Base::notFoundPage(), 404);
         }
-
-        //鉴权
-        //获取authorization
+        //鉴权，获取authorization
         $header = $request->header();
-        //判断authorization是否存在或为空
+        $now_time = time();
+        $now = date('Y-m-d H:i:s', $now_time);
+        //判断请求是否过期
+        if (!isset($header['requestid']) || empty($header['requestid'])) {
+            return json(['code' => 500, 'msg' => '非法访问！']);
+        }
+        // 获取请求时间
+        $request_id = (int)Base::Base64Decode($header['requestid']);
+        // 毫秒换成秒
+        $request_id = (int)($request_id / 1000);
+        if ($request_id > $now_time || $request_id + Base::$request_timout < $now_time) {
+            return json(['code' => -1, 'msg' => '系统检测到请求异常！', 'data' => []]);
+        }
         if (!isset($header['authorization']) || empty($header['authorization'])) {
             return json(['code' => 500, 'msg' => '非法访问！']);
         }
+        //判断authorization是否存在或为空
         // 判断是否有单点登录信息
         if (!isset($header['key']) || empty($header['key'])) {
             return json(['code' => 500, 'msg' => '登录信息错误！请重新登录！']);
@@ -192,9 +194,7 @@ class AuthCheckTest implements MiddlewareInterface
                     ->where('isdel', 0)
                     ->exists();
                 if (!$isblack) {
-
                     $msg = '';
-                    $now = date('Y-m-d H:i:s', time());
                     if (!$user_db) {
                         $msg = '非法用户（伪造id：' . $my_aid . '）于北京时间' . $now . '请求过快，系统已拉黑，可在设置中删除该用户黑名单';
                     } else {
@@ -214,7 +214,6 @@ class AuthCheckTest implements MiddlewareInterface
                     if ($requestnum == $GLOBiplimit) {
                         // 通知一次即可
                         $msg = '';
-                        $now = date('Y-m-d H:i:s', time());
                         if (!$user_db) {
                             $msg = '非法用户（伪造ID：' . $my_aid . '）于北京时间' . $now . '请求过快，系统已对该用户限速处理';
                         } else {

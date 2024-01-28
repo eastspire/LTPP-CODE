@@ -23,6 +23,11 @@ class Base
     static $redis_db_num = 38;
 
     /**
+     * 请求过期时间
+     */
+    static $request_timout = 86400;
+
+    /**
      * 代码提交成功提示
      */
     static $code_up_success_msg = '代码提交成功';
@@ -2965,7 +2970,7 @@ class Base
         if (!$code) {
             return [
                 'code' => -1,
-                'msg' => '请编写后再次提交哦！',
+                'msg' => '请编写代码后再次提交哦！',
                 'code_id' => 0
             ];
         }
@@ -3513,7 +3518,7 @@ class Base
     }
 
     /**
-     * 生成文件路径
+     * 生成数据库文件路径
      */
     static public function creatFilePath($file_upload_extension = '')
     {
@@ -3555,7 +3560,7 @@ class Base
             $redis36->setEx($problem_id, Base::$redis_timeout, json_encode($list));
             return $list;
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsg(Base::getRootId(), '**【getOjTestData】** 运行错误：' . $e->getMessage());
+            Robot::sendChatToOneUserMsg(Base::getRootId(), '**【getOjTestDataList】** 运行错误：' . $e->getMessage());
         }
         return [];
     }
@@ -3576,7 +3581,7 @@ class Base
             $redis36->setEx($problem_id, Base::$redis_timeout, json_encode($list));
             return $list;
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsg(Base::getRootId(), '**【getOjTestData】** 运行错误：' . $e->getMessage());
+            Robot::sendChatToOneUserMsg(Base::getRootId(), '**【updateOjTestDataListRedis】** 运行错误：' . $e->getMessage());
         }
         return [];
     }
@@ -3584,7 +3589,7 @@ class Base
     /**
      * 将输入用例写入本地
      */
-    static public function writeOjDataInToFile($problem_id = 0, $path = '/tmp/', $test_data_list = [])
+    static public function writeOjDataInToFile($problem_id = 0, $path = '/tmp/testdata/', $test_data_list = [])
     {
         try {
             if (Base::judgeCreatPath($path)) {
@@ -3705,7 +3710,7 @@ class Base
                     ->where('isdel', 0);
             })
             ->orderBy('id', 'desc')
-            ->select('name', 'path', 'time')
+            ->select('name', 'path', 'time', 'size')
             ->get();
         return $db;
     }
@@ -3790,7 +3795,7 @@ class Base
                     'userid' => $my_aid,
                     'time' => date('Y-m-d H:i:s', time())
                 ]);
-                Base::insertToDb('chat_file_path', [
+                Base::insertToDb('cloud_file_path', [
                     'name' => $file_name,
                     'path' => $new_path,
                     'file_id' => $id,
@@ -3846,7 +3851,7 @@ class Base
                 return;
             }
             $redis35 = Redis::connection('db35');
-            $db = Db::table('file_path')
+            $db = Db::table('cloud_file_path')
                 ->where('userid', $userid)
                 ->where('path', $file_path)
                 ->where('isdel', 0)
@@ -3854,7 +3859,7 @@ class Base
             if (!$db) {
                 return;
             }
-            Db::table('file_path')
+            Db::table('cloud_file_path')
                 ->where('userid', $userid)
                 ->where('path', $file_path)
                 ->where('isdel', 0)
@@ -3862,6 +3867,26 @@ class Base
             $redis35->del($file_path);
         } catch (Exception $e) {
             Robot::sendChatToOneUserMsg(Base::getRootId(), '**【deleteCloudFileData】** 运行错误：' . $e->getMessage());
+        }
+    }
+
+    /**
+     * 获取数据库文件的文件名称
+     */
+    static public function getDbFileNameOfPath($path = '')
+    {
+        try {
+            $len = strlen($path);
+            $file_name = '';
+            for ($i = 0; $i < $len; ++$i) {
+                if ($path[$i] == '.') {
+                    break;
+                }
+                $file_name .= $path[$i];
+            }
+            return $file_name;
+        } catch (Exception $e) {
+            Robot::sendChatToOneUserMsg(Base::getRootId(), '**【getDbFileNameOfPath】** 运行错误：' . $e->getMessage());
         }
     }
 };

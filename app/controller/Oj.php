@@ -766,7 +766,11 @@ class Oj
             return json(['code' => -1, 'msg' => '题目不存在！']);
         }
         $data = Base::getOjTestDataList($problem_id);
+        if (!sizeof($data)) {
+            return json(['code' => -1, 'msg' => '题目测试样例不存在！']);
+        }
         $path = Base::$tmp_path . 'testdata/' . $md5_problem_id . '/';
+        Base::deleteAllFile($path);
         Base::judgeCreatPath($path);
         $i = 1;
         foreach ($data as &$tem) {

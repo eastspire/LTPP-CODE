@@ -230,22 +230,21 @@ class Setting extends Image
         $this->renameImage($my_aid);
         Base::$GLOBlinuxurl = Base::getSettingKeyData('GLOBlinuxurl');
         $data = [];
-        Db::table('image')
-            ->where('isdel', 0)
-            ->update(['isdel' => 1]);
+
         foreach (Cloudfile::$photo as &$t_img) {
             $i = 0;
             $file = glob($testpath . '*.' . $t_img);
             foreach ($file as &$tem) {
-                $loc = strpos($tem, 'dbimage/') + 8;
+                $find_str = Base::$LTPP_public_static_path + '/';
+                $loc = strpos($tem, $find_str) + strlen($find_str) + 1;
                 $ts = '';
                 for ($i = $loc; $i < strlen($tem); ++$i) {
                     $ts .= $tem[$i];
                 }
+                $path = Base::creatFilePath(Base::getDbFileExtion($ts));
                 $data[] = [
-                    'url' => Base::$GLOBlinuxurl . '/static/dbimage/' . $ts
+                    'url' => Base::$GLOBlinuxurl . $path
                 ];
-                $path = Base::$LTPP_public_static_path . 'dbimage/' . $ts;
                 $id = Base::insertToDb('file_data', [
                     'data' => file_get_contents($path),
                 ]);
@@ -265,7 +264,14 @@ class Setting extends Image
                 $data = [];
             }
         }
-        $this->articleImage($my_aid);
+        // 有图片再更新
+        if ($i) {
+            Db::table('image')
+                ->where('isdel', 0)
+                ->update(['isdel' => 1]);
+            $this->articleImage($my_aid);
+            return json(['code' => -1, 'msg' => '暂无图片已跳过更新']);
+        }
         return json(['code' => 1, 'msg' => '网站图片更新完成']);
     }
 
@@ -302,7 +308,7 @@ class Setting extends Image
         if (!$isroot) {
             return json(['code' => -1, 'msg' => '无权限']);
         }
-        for ($i = 0; $i <= 36; ++$i) {
+        for ($i = 0; $i < Base::$redis_db_num; ++$i) {
             if ($i == 14) {
                 // 用户单点登录缓存
                 continue;

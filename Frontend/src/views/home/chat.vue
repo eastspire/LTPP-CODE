@@ -41,7 +41,7 @@
                 now_user = tem;
                 chat_msg_list = [];
                 isSeeLastBtn = true;
-                passparam.path = tem.id;
+                passparam.user_id = tem.id;
                 clearNolookNum();
                 getLatestChatData();
               "
@@ -444,11 +444,7 @@
             ref="upload_file"
             :auto-upload="true"
             :data="passparam"
-            :action="
-              this.now_user.type == 'private_chat'
-                ? linuxurl + '/Chatfile/privateUpFile'
-                : linuxurl + '/Chatfile/groupUpFile'
-            "
+            :action="linuxurl + '/Chatfile/chatUpFile'"
             :on-success="uploadFinish"
             multiple
           >
@@ -476,7 +472,7 @@
           <div>
             <div
               style="margin: 1rem; cursor: pointer"
-              @dblclick="downloadonefile(tem[0])"
+              @dblclick="downloadonefile(tem[0], tem[4])"
             >
               <div :class="gitclass[tem[1] - 1]"></div>
               <div>
@@ -562,6 +558,7 @@ export default {
   name: "chat",
   data() {
     return {
+      requestid_timer: null,
       char_set: [],
       toolbars: {
         bold: true, // 粗体
@@ -617,7 +614,7 @@ export default {
       filelist: [],
       linuxurl: "",
       passparam: {
-        path: "",
+        user_id: 0,
       },
       isSeeChatFile: false,
       isSeeUpload: false,
@@ -668,16 +665,20 @@ export default {
     this.linuxurl = window.sessionStorage.getItem("linuxurl");
     if (!this.linuxurl) {
       await this.getlinuxurl();
-    }
-    this.head = {
-      authorization: "Bearer " + window.localStorage.getItem("authorization"),
-      key: window.localStorage.getItem("key"),
-    };
+    }    
     await this.loadCharset();
     // 获取聊天列表
     await this.getUserAndGroupList();
   },
   activated() {
+    this.head = {
+      Authorization: "Bearer " + window.localStorage.getItem("authorization"),
+      Key: window.localStorage.getItem("key"),
+      Requestid : this.Base64Encode(new Date().getTime())
+    };
+    this.requestid_timer = setInterval(() => {
+        this.head.Requestid = this.Base64Encode(new Date().getTime())
+    }, 10000);
     let list = document.getElementById("list");
     list.addEventListener("click", this.onclicklist);
     this.to_scroll_bottom(1);
@@ -690,6 +691,8 @@ export default {
     }
   },
   deactivated() {
+    clearInterval(this.requestid_timer);
+    this.requestid_timer = null;
     let list = document.getElementById("list");
     try {
       list && list.removeEventListener("click", this.onclicklist);
@@ -780,7 +783,6 @@ export default {
         data: formdata,
         headers: {
           "Content-Type": "multipart/form-data",
-          id: this.$store.state.my_id,
         },
       })
         .then((res) => {
@@ -850,7 +852,7 @@ export default {
         });
     },
     //下载单个文件
-    async downloadonefile(file_name) {
+    async downloadonefile(file_name, file_path) {
       this.$msg({
         type: "success",
         message: "开始下载",
@@ -865,9 +867,7 @@ export default {
           "Content-Type": "application/json; application/octet-stream;",
         },
         data: {
-          path: this.passparam.path,
-          name: file_name,
-          is_private: this.now_user.type == "private_chat" ? true : false,
+          path: file_path
         },
       })
         .then((res) => {
@@ -877,25 +877,7 @@ export default {
             duration: 1600,
             offset: 80,
           });
-          let point_loc = file_name.length;
-          let first_name = "";
-          let last_name = "";
-          let len = file_name.length;
-
-          for (let i = len - 1; i >= 0; --i) {
-            if (file_name[i] == ".") {
-              point_loc = i;
-              last_name = file_name[i] + last_name;
-              break;
-            }
-            last_name = file_name[i] + last_name;
-          }
-          for (let i = 0; i < point_loc; ++i) {
-            first_name += file_name[i];
-          }
-
-          let Name = this.Base64Decode(first_name, this.char_set) + last_name;
-
+          file_name = this.Base64Decode(file_name, this.char_set);
           /* 火狐谷歌的文件下载方式 */
           const blob = new Blob([res?.data], {
             type: "application/octet-stream;application/zip",
@@ -903,11 +885,10 @@ export default {
           let url = window.URL.createObjectURL(blob);
           const link = document.createElement("a"); // 创建a标签
           link.href = url;
-          link.download = Name; // 重命名文件
+          link.download = file_name; // 重命名文件
           link.click();
           URL.revokeObjectURL(url); // 释放内存
-        })
-        .catch((t) => {
+        }).catch((t) => {
           this.$msg({
             type: "error",
             message: t,
@@ -940,61 +921,19 @@ export default {
       name = first_name + last_name;
       return name;
     },
-    // 目录解码
-    get_dir_name(str) {
-      let name = "";
-      let len = str.length;
-      let one_name = "";
-      for (let i = 0; i < len; ++i) {
-        if (str[i] == ".") {
-          return "错误：不是文件夹！";
-        }
-        if (str[i] == "/") {
-          name = name + this.Base64Decode(one_name, this.char_set) + "/";
-          one_name = "";
-        } else {
-          one_name += str[i];
-          if (i == len - 1) {
-            name = name + this.Base64Decode(one_name, this.char_set) + "/";
-            one_name = "";
-          }
-        }
-      }
-      return name;
-    },
     base64_decode(str) {
       return this.get_name(str);
     },
     // 获取字符集
     async loadCharset() {
-      while (!this.char_set.length) {
-        const { data: res } = await this.$ajax({
-          method: "post",
-          url: "/Cloudfile/loadCharset",
-          portType: {
-            process: "8797",
-          },
-        }).catch((t) => {
-          this.$msg({
-            type: "error",
-            message: t,
-            duration: 1600,
-            offset: 80,
-          });
-        });
-        if (res && res?.code && res?.code == 1) {
-          this.char_set = res?.data;
-          return;
-        }
-      }
+      this.char_set = await this.loadCloudCharset();
     },
     async loadFileList() {
       const { data: res } = await this.$ajax({
         method: "post",
         url: "/Chatfile/loadList",
         data: {
-          path: this.passparam.path,
-          is_private: this.now_user.type == "private_chat" ? true : false,
+          user_id: this.passparam.user_id,
         },
       }).catch((t) => {
         this.$msg({
@@ -1016,10 +955,7 @@ export default {
           duration: 1600,
           offset: 80,
         });
-        this.mymessage =
-          "我刚刚上传" +
-          this.base64_decode(response.filename) +
-          "到云文件，快去看看吧。";
+        this.mymessage = "我刚刚上传" + response.filename + "到云文件，快去看看吧。";
         this.postmessage();
         this.mymessage = "";
       } else {
@@ -1180,7 +1116,7 @@ export default {
             } else if (this.now_user.type == "private_chat") {
               this.now_post_type = "private_chat";
             }
-            this.passparam.path = this.now_user.id;
+            this.passparam.user_id = this.now_user.id;
             for (let i = 1; i < this.now_user.length; ++i) {
               list.children[i].style = this.user_no_deep_color;
             }
@@ -1266,7 +1202,7 @@ export default {
       this.now_user = item;
       this.chat_msg_list = [];
       this.isSeeLastBtn = true;
-      this.passparam.path = item.id;
+      this.passparam.user_id = item.id;
       this.clearNolookNum();
       await this.getLatestChatData();
       setTimeout(() => {

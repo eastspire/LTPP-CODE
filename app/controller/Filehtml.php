@@ -23,17 +23,11 @@ class Filehtml
     public function lookView()
     {
         try {
-            $path = Base::$LTPP_public_static_path . '/cloudfile/' . request()->input('path');
-
-            $ill = strpos($path, '../');
-            if ($ill !== false || !file_exists($path) || is_dir($path)) {
-                return Base::notFoundPage();
-            }
-
-            $txt = file_get_contents($path);
+            $path = request()->input('path');
+            $path = Base::Base64Decode($path);
+            $txt = Base::getStaticFileData($path);
             $iscode = false;
             $language = 'cpp';
-
             foreach (Base::$map_language_file as $key => $val) {
                 $iscode = str_ends_with($path, $key);
                 if ($iscode) {
@@ -41,16 +35,13 @@ class Filehtml
                     break;
                 }
             }
-
             // 对于HTML代码文件不拦截
             if ($iscode && $language != 'html') {
                 return Base::codeToHTML($txt, $language);
             }
-
             if (str_ends_with($path, 'md')) {
                 return Base::markdownToHTML($txt);
             }
-
             return Base::strToHTML($txt);
         } catch (Exception $e) {
             return Base::notFoundPage();
