@@ -94,9 +94,9 @@
                 <div>
                   <div
                     :class="gitclass[tem[1] - 1]"
-                    style="margin-left: 1rem"
+                    style="margin-left: 1rem;"
                   ></div>
-                  <div>
+                  <div style="white-space:nowrap;text-overflow:ellipsis;float:left;margin:2rem 1rem 1rem 0rem;overflow:hidden;width:46%;">
                     <el-tooltip
                       class="item;"
                       effect="dark"
@@ -105,13 +105,11 @@
                     >
                       <p
                         style="
-                          float: left;
-                          margin: 2rem 1rem 1rem 2rem;
                           font-size: 1.06rem;
-                          color: deepskyblue;
+                          color: deepskyblue;                          
                         "
                       >
-                        {{ base64_decode(tem[0]).substr(0, 16) }}
+                        {{ base64_decode(tem[0]) }}
                       </p>
                     </el-tooltip>
                   </div>
@@ -120,7 +118,7 @@
                     <p
                       style="
                         float: left;
-                        margin: 2rem 1rem 1rem 2rem;
+                        margin: 2rem 1rem 1rem 1rem;
                         font-size: 1.06rem;
                         color: deepskyblue;
                       "
@@ -132,7 +130,7 @@
                     <p
                       style="
                         float: left;
-                        margin: 2rem 1rem 1rem 2rem;
+                        margin: 2rem 1rem 1rem 1rem;
                         font-size: 1.06rem;
                         color: deeppink;
                       "
