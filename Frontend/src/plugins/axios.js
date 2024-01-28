@@ -94,7 +94,7 @@ _axios.interceptors.request.use(
 _axios.interceptors.response.use(
     function (response) {
         if (response?.data?.code == 500) {
-            // Vue.prototype.logoutRemove(true);
+            Vue.prototype.logoutRemove(true);
         }
         return response;
     },

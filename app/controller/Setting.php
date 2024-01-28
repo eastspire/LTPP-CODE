@@ -231,12 +231,12 @@ class Setting extends Image
         $this->renameImage($my_aid);
         Base::$GLOBlinuxurl = Base::getSettingKeyData('GLOBlinuxurl');
         $data = [];
-
+        $has_image = false;
         foreach (Cloudfile::$photo as &$t_img) {
             $i = 0;
             $file = glob($testpath . '*.' . $t_img);
             foreach ($file as &$tem) {
-                $find_str = Base::$LTPP_public_static_path + '/';
+                $find_str = Base::$LTPP_public_static_path . '/';
                 $loc = strpos($tem, $find_str) + strlen($find_str) + 1;
                 $ts = '';
                 for ($i = $loc; $i < strlen($tem); ++$i) {
@@ -247,7 +247,7 @@ class Setting extends Image
                     'url' => Base::$GLOBlinuxurl . $path
                 ];
                 $id = Base::insertToDb('file_data', [
-                    'data' => file_get_contents($path),
+                    'data' => file_get_contents(realpath($tem)),
                 ]);
                 Base::insertToDb('file_path', [
                     'path' => $path,
@@ -259,6 +259,7 @@ class Setting extends Image
                     Db::table('image')->insert($data);
                     $data = [];
                 }
+                $has_image = true;
             }
             if (sizeof($data) >= 0) {
                 Db::table('image')->insert($data);
@@ -266,7 +267,7 @@ class Setting extends Image
             }
         }
         // 有图片再更新
-        if ($i) {
+        if ($has_image) {
             Db::table('image')
                 ->where('isdel', 0)
                 ->update(['isdel' => 1]);

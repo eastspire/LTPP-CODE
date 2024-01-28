@@ -1551,6 +1551,12 @@ export default {
       this.getsettinglist();
     },
     async updateimage() {
+      this.$msg({
+        type: "success",
+        message: '开始更新',
+        duration: 1600,
+        offset: 80,
+      });
       const { data: res } = await this.$ajax({
         method: "post",
         url: "/Setting/updateImage",
@@ -1643,7 +1649,7 @@ export default {
         });
       }
     },
-    async delredisaidip() {
+    async delredisaidip() {      
       const { data: res } = await this.$ajax({
         method: "post",
         url: "/Setting/deleteRedisIdIp",
