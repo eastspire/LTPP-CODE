@@ -26,8 +26,8 @@ class CodeStatusCorrectCrontab
 {
     public function onWorkerStart()
     {
-        // 每分钟执行一次
-        new Crontab('0 */1 * * * *', function () {
+        // 每天凌晨一点执行一次
+        new Crontab('00 1 * * *', function () {
             try {
                 $time = max(0, time() - max(Base::$redis_timeout, (int) Base::getSettingKeyData('idemaxtime')));
                 $db = Db::table('codehistory')

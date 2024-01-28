@@ -458,7 +458,10 @@ Vue.prototype.logoutRemove = function (is_force = false) {
         }
         window.sessionStorage.clear();
         EventBus.$emit('closeWs');
-        if (router?.history?.current?.fullPath != '/login') {
+        if (
+            router?.history?.current?.fullPath != '/login' &&
+            router?.history?.current?.fullPath != '/register'
+        ) {
             router.replace({
                 path: "/login",
                 replace: true,

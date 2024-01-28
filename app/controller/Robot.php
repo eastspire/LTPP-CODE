@@ -32,40 +32,9 @@ class Robot extends Email
         if (!$get_user_id || !$msg) {
             return;
         }
-        $redis5 = Redis::connection('db5');
         $user_db = Base::getUserData(Base::getRobotId());
         if (!$user_db) {
-            // 机器人账号不存在，立即发送root邮件通知
-            $root_id = Base::getRootId();
-            $user_db = Base::getUserData($root_id);
-            $email = '1491579574@qq.com';
-            $data = [
-                'name' => '机器人',
-                'password' => Base::passwordEncryption(rand(1, 100000)),
-                'sex' => '男',
-                'registertime' => date('Y-m-d H:i:s', time()),
-                'headimage' => 'https://q1.qlogo.cn/headimg_dl?dst_uin=' . $email . '&spec=640',
-                'fans' => 0,
-                'follow' => 0,
-                'grade' => 1,
-                'email' => $email
-            ];
-            $res_id = Base::insertToDb('user', $data);
-            if (!$user_db) {
-                return;
-            }
-            $title = '紧急通知';
-            $content = '系统机器人的账号不存在，系统已自动重新生成！机器人账号最新id:' . $res_id;
-            $redis5->set('robotid', $res_id);
-            $offline = (int) Base::getSettingKeyData('offline');
-            if ($offline == 0) {
-                RedisQueue::send(Base::$redis_queue_send_mail_name, [
-                    'to' => $user_db->email,
-                    'title' => $title,
-                    'content' => $content
-                ]);
-            }
-            return;
+            $post_user_id = Base::creatRobot();
         }
         $post_user_id = $user_db->id ?? 0;
         $now = date('Y-m-d H:i:s', time());
@@ -122,30 +91,9 @@ class Robot extends Email
         if (!$get_user_id || !$msg) {
             return;
         }
-        $redis5 = Redis::connection('db5');
         $user_db = Base::getUserData(Base::getRobotId());
         if (!$user_db) {
-            // 机器人账号不存在，立即发送root邮件通知
-            $root_id = Base::getRootId();
-            $user_db = Base::getUserData($root_id);
-            $email = '1491579574@qq.com';
-            $data = [
-                'name' => '机器人',
-                'password' => Base::passwordEncryption(rand(1, 100000)),
-                'sex' => '男',
-                'registertime' => date('Y-m-d H:i:s', time()),
-                'headimage' => 'https://q1.qlogo.cn/headimg_dl?dst_uin=' . $email . '&spec=640',
-                'fans' => 0,
-                'follow' => 0,
-                'grade' => 1,
-                'email' => $email
-            ];
-            $res_id = Base::insertToDb('user', $data);
-            if (!$user_db) {
-                return;
-            }
-            $redis5->set('robotid', $res_id);
-            return;
+            $post_user_id = Base::creatRobot();
         }
         $post_user_id = $user_db->id ?? 0;
         $now = date('Y-m-d H:i:s', time());

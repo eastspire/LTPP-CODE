@@ -156,7 +156,7 @@ export default {
         this.isup = false;
         this.$msg({
           type: "error",
-          message: "邮箱不存在",
+          message: "注册失败",
           duration: 2000,
           offset: 80,
         });

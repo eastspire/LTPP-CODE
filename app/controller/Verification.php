@@ -40,7 +40,7 @@ class Verification extends Email
         $hasname = Db::table('user')
             ->where('name', $name)
             ->where('isdel', 0)
-            ->first();
+            ->exists();
         if ($hasname) {
             return \json(['code' => -1, 'msg' => '用户名已存在']);
         }

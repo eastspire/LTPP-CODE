@@ -44,10 +44,6 @@ return [
         'handler' => process\CreatContestCrontab::class,
         'count' => 1
     ],
-    'ChatfileCrontab' => [
-        'handler' => process\ChatfileCrontab::class,
-        'count' => 1
-    ],
     'DayproblemCrontab' => [
         'handler' => process\DayproblemCrontab::class,
         'count' => 1

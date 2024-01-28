@@ -506,10 +506,7 @@
           <el-button
             v-if="$store.state.root && $store.state.my_name === 'root'"
             type="success"
-            @click="
-              dialogFormVisible = false;
-              updateuser();
-            "
+            @click="updateuser();"
             width="auto"
             class="el-icon-upload2"
             style="font-size: 1.06rem; margin-right: 2rem; font-weight: bold"
@@ -617,11 +614,7 @@
       <div style="text-align: right">
         <el-button
           type="success"
-          @click="
-            adduser();
-            addclick = false;
-            dialogFormVisible = false;
-          "
+          @click="adduser();"
           style="font-size: 1.06rem; margin-right: 2rem; font-weight: bold"
           width="auto"
           class="el-icon-upload2"
@@ -799,6 +792,7 @@ export default {
           duration: 1600,
           offset: 80,
         });
+        this.addclick = false;
       } else {
         this.$msg({
           type: "error",
@@ -959,7 +953,6 @@ export default {
           offset: 80,
         });
       });
-
       if (res?.code == 1) {
         this.$msg({
           type: "success",
@@ -967,6 +960,7 @@ export default {
           duration: 1600,
           offset: 80,
         });
+        this.dialogFormVisible = false;
       } else
         this.$msg({
           type: "error",

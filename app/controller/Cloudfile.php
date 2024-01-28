@@ -129,7 +129,11 @@ class Cloudfile
         try {
             $data = Base::getSettingKeyData('cloud_file_readme_txt');
             $file_name = Base::getSettingKeyData('cloud_file_readme_txt_file_name');
-            $file_size = mb_strlen($data, Base::$str_encoding);
+            $encoding = mb_detect_encoding($data);
+            if (!$encoding) {
+                $encoding = Base::$str_encoding;
+            }
+            $file_size = mb_strlen($data, $encoding);
             $new_path = Base::creatFilePath(Base::getDbFileExtion($file_name));
             $id = Base::insertToDb('file_data', [
                 'data' => $data
@@ -148,7 +152,6 @@ class Cloudfile
                 'time' => date('Y-m-d H:i:s', time()),
                 'size' => $file_size
             ]);
-            Base::$GLOBlinuxurl = Base::getSettingKeyData('GLOBlinuxurl');
         } catch (\Exception $e) {
             Robot::sendChatToOneUserMsg(Base::getRootId(), '**【creatFile】** 运行错误：' . $e->getMessage());
         }

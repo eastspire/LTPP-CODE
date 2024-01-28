@@ -2266,44 +2266,55 @@ class Base
      */
     static public function creatRobot()
     {
-        $redis5 = Redis::connection('db5');
-        if ($redis5->get('robotid')) {
-            return;
-        }
+        try {
+            $redis5 = Redis::connection('db5');
+            if ($redis5->exists('robotid')) {
+                return $redis5->get('robotid');
+            }
+            $robot_db = Db::table('user')
+                ->where('name', Base::$robot_name)
+                ->where('isdel', 0)
+                ->select('id')
+                ->first();
+            $redis5->set('robotid', $robot_db->id);
+            if ($robot_db) {
+                return $robot_db->id;
+            }
+            // 机器人账号不存在，立即发送root邮件通知
+            $root_id = Base::getRootId();
+            $root_db = Base::getUserData($root_id);
+            if (!$root_db) {
+                return $root_id;
+            }
 
-        $robot_db = Db::table('user')
-            ->where('name', Base::$robot_name)
-            ->where('isdel', 0)
-            ->select('id')
-            ->first();
-        if ($robot_db) {
-            return;
+            $data = [
+                'name' => '机器人',
+                'password' => Base::passwordEncryption(rand(1, 100000) . time()),
+                'sex' => '男',
+                'registertime' => date('Y-m-d H:i:s', time()),
+                'headimage' => 'https://q1.qlogo.cn/headimg_dl?dst_uin=' . Base::$robot_email . '&spec=640',
+                'fans' => 0,
+                'follow' => 0,
+                'grade' => 1,
+                'email' => Base::$robot_email,
+                'school' => '无',
+                'enrollment_year' => 0,
+                'subject' => '无',
+                'class' => '无',
+                'money' => 1
+            ];
+            $res_id = Base::insertToDb('user', $data);
+            $content = '系统机器人的账号不存在，系统已自动重新生成！机器人账号用户名：' . Base::$robot_name;
+            $redis5->set('robotid', $res_id);
+            $offline = (int) Base::getSettingKeyData('offline');
+            if ($offline == 0) {
+                Robot::sendChatToOneUserMsgAndEmail($root_id, $content);
+            }
+            return $res_id;
+        } catch (Exception $e) {
+            Robot::sendChatToOneUserMsg(Base::getRootId(), '**【creatRobot】** 运行错误：' . $e->getMessage());
         }
-        // 机器人账号不存在，立即发送root邮件通知
-        $root_id = Base::getRootId();
-        $root_db = Base::getUserData($root_id);
-        if (!$root_db) {
-            return;
-        }
-
-        $data = [
-            'name' => '机器人',
-            'password' => Base::passwordEncryption(rand(1, 100000) . time()),
-            'sex' => '男',
-            'registertime' => date('Y-m-d H:i:s', time()),
-            'headimage' => 'https://q1.qlogo.cn/headimg_dl?dst_uin=' . Base::$robot_email . '&spec=640',
-            'fans' => 0,
-            'follow' => 0,
-            'grade' => 1,
-            'email' => Base::$robot_email
-        ];
-        $res_id = Base::insertToDb('user', $data);
-        $content = '系统机器人的账号不存在，系统已自动重新生成！机器人账号用户名：' . Base::$robot_name;
-        $redis5->set('robotid', $res_id);
-        $offline = (int) Base::getSettingKeyData('offline');
-        if ($offline == 0) {
-            Robot::sendChatToOneUserMsgAndEmail($root_id, $content);
-        }
+        return 0;
     }
 
     /**
