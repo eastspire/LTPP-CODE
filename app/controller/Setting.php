@@ -183,7 +183,7 @@ class Setting extends Image
             $resurl = Image::randimage();
             Db::table('article')
                 ->where('id', $tem->id)
-                ->update(['Image' => $resurl]);
+                ->update(['image' => $resurl]);
         }
     }
 
@@ -233,16 +233,9 @@ class Setting extends Image
         $data = [];
         $has_image = false;
         foreach (Cloudfile::$photo as &$t_img) {
-            $i = 0;
             $file = glob($testpath . '*.' . $t_img);
             foreach ($file as &$tem) {
-                $find_str = Base::$LTPP_public_static_path . '/';
-                $loc = strpos($tem, $find_str) + strlen($find_str) + 1;
-                $ts = '';
-                for ($i = $loc; $i < strlen($tem); ++$i) {
-                    $ts .= $tem[$i];
-                }
-                $path = Base::creatFilePath(Base::getDbFileExtion($ts));
+                $path = Base::creatFilePath($t_img);
                 $data[] = [
                     'url' => Base::$GLOBlinuxurl . $path
                 ];
@@ -268,9 +261,6 @@ class Setting extends Image
         }
         // 有图片再更新
         if ($has_image) {
-            Db::table('image')
-                ->where('isdel', 0)
-                ->update(['isdel' => 1]);
             $this->articleImage($my_aid);
             return json(['code' => 1, 'msg' => '网站图片更新完成']);
         }
