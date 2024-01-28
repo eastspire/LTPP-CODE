@@ -439,37 +439,74 @@
               margin: 1rem 0rem 1rem 0rem;
             "
           >
-            用户批量生成（仅支持数字类型的名称）
+            Windows客户端安装地址
           </p>
           <el-input
-            style="font-size: 1.06rem; width: 42%"
-            placeholder="请输入起始数字"
-            v-model.lazy="userbeginnum"
+            type="password"
+            show-password
+            style="font-size: 1.06rem"
+            placeholder="Windows客户端安装地址"
+            v-model.lazy="resdata.ltpp_win_download_url"
+            @keyup.enter.native="updatesetting()"
           >
+            <el-button
+              slot="append"
+              icon="el-icon-upload"
+              @click="updatesetting()"
+              >更新</el-button
+            >
           </el-input>
-          <el-input
-            style="font-size: 1.06rem; width: 42%; margin-left: 1%"
-            placeholder="请输入终止数字（包含终止数字）"
-            v-model.lazy="userendnum"
-          >
-          </el-input>
-          <el-button
-            type="success"
-            size="medium"
+          <p
             style="
-              border-radius: 0.2rem;
               font-size: 1.06rem;
-              width: 14%;
-              overflow: hidden;
-              margin-left: 1%;
-              background-color: rgba(var(--ltpp-main-bk-color), 1);
-              border-width: 0rem;
+              text-align: left;
+              font-weight: bold;
+              margin: 1rem 0rem 1rem 0rem;
             "
-            icon="el-icon-upload"
-            :disabled="isadd"
-            @click="largeadduser()"
-            >生成</el-button
           >
+            	Mac客户端安装地址
+          </p>
+          <el-input
+            type="password"
+            show-password
+            style="font-size: 1.06rem"
+            placeholder="Mac客户端安装地址"
+            v-model.lazy="resdata.ltpp_mac_download_url"
+            @keyup.enter.native="updatesetting()"
+          >
+            <el-button
+              slot="append"
+              icon="el-icon-upload"
+              @click="updatesetting()"
+              >更新</el-button
+            >
+          </el-input>
+          <p
+            style="
+              font-size: 1.06rem;
+              text-align: left;
+              font-weight: bold;
+              margin: 1rem 0rem 1rem 0rem;
+            "
+          >
+            安卓客户端安装地址
+          </p>
+          <el-input
+            type="password"
+            show-password
+            style="font-size: 1.06rem"
+            placeholder="安卓客户端安装地址"
+            v-model.lazy="resdata.ltpp_apk_download_url"
+            @keyup.enter.native="updatesetting()"
+          >
+            <el-button
+              slot="append"
+              icon="el-icon-upload"
+              @click="updatesetting()"
+              >更新</el-button
+            >
+          </el-input>
+          
           <p
             style="
               font-size: 1.06rem;
@@ -672,6 +709,47 @@
               >更新</el-button
             >
           </el-input>
+
+          <p
+            style="
+              font-size: 1.06rem;
+              text-align: left;
+              font-weight: bold;
+              margin: 1rem 0rem 1rem 0rem;
+            "
+          >
+            用户批量生成（仅支持数字类型的名称）
+          </p>
+          <el-input
+            style="font-size: 1.06rem; width: 42%"
+            placeholder="请输入起始数字"
+            v-model.lazy="userbeginnum"
+          >
+          </el-input>
+          <el-input
+            style="font-size: 1.06rem; width: 42%; margin-left: 1%"
+            placeholder="请输入终止数字（包含终止数字）"
+            v-model.lazy="userendnum"
+          >
+          </el-input>
+          <el-button
+            type="success"
+            size="medium"
+            style="
+              border-radius: 0.2rem;
+              font-size: 1.06rem;
+              width: 14%;
+              overflow: hidden;
+              margin-left: 1%;
+              background-color: rgba(var(--ltpp-main-bk-color), 1);
+              border-width: 0rem;
+            "
+            icon="el-icon-upload"
+            :disabled="isadd"
+            @click="largeadduser()"
+            >生成</el-button
+          >
+          
           <p
             style="
               font-size: 1.06rem;

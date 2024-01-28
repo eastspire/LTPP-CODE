@@ -21,18 +21,7 @@ class Version
      * 软件版本
      * @var string $version 软件版本
      */
-    static $version = '1.8.6';
-
-    /**
-     * 安装包路径
-     * @var string $install_root_path tauri安装包路径
-     */
-    static $install_root_path = 'static/version/';
-
-    /**
-     * 文件名称
-     */
-    static $file_name = 'LTPP(InstallFile).exe';
+    static $version = '1.8.8';
 
     /**
      * 获取版本
@@ -41,17 +30,23 @@ class Version
     public function getVersion(Request $request)
     {
         try {
-            $url = Base::getGLOBlinuxurl();
+            $ltpp_win_download_url = Base::getSettingKeyData('ltpp_win_download_url');
+            $ltpp_mac_download_url = Base::getSettingKeyData('ltpp_mac_download_url');
+            $ltpp_apk_download_url = Base::getSettingKeyData('ltpp_apk_download_url');
             return json([
                 'code' => 1,
                 'version' => Version::$version,
-                'url' => $url . '/' . Version::$install_root_path . Version::$file_name
+                'ltpp_win_download_url' => $ltpp_win_download_url,
+                'ltpp_mac_download_url' => $ltpp_mac_download_url,
+                'ltpp_apk_download_url' => $ltpp_apk_download_url,
             ]);
         } catch (Exception $e) {
             return json([
                 'code' => 0,
                 'version' => '',
-                'url' => ''
+                'ltpp_win_download_url' => '',
+                'ltpp_mac_download_url' => '',
+                'ltpp_apk_download_url' => '',
             ]);
         }
     }

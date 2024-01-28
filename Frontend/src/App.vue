@@ -23,7 +23,7 @@ export default {
   name: "app",
   data() {
     return {
-      version: '1.8.6',
+      version: '1.8.8',
       get_version_lock: false,
     };
   },
@@ -140,7 +140,11 @@ export default {
                 duration: 0,
                 offset: 80,
               });
-              window.open(res.url, "_blank");
+              if(this.judgeSystemIsWin()){
+                res?.ltpp_win_download_url && window.open(res.ltpp_win_download_url, "_blank");
+              }else{
+                res?.ltpp_mac_download_url && window.open(res.ltpp_mac_download_url, "_blank");
+              }
             }
           }
         } else {

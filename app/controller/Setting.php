@@ -411,6 +411,33 @@ class Setting extends Image
         if ($db) {
             $redis5 = Redis::connection('db5');
 
+            if ($data['ltpp_win_download_url'] != $redis5->get('ltpp_win_download_url')) {
+                Db::table('setting')
+                    ->where('id', $db->id)
+                    ->where('isdel', 0)
+                    ->update(['ltpp_win_download_url' => $data['ltpp_win_download_url']]);
+                $redis5->del('ltpp_win_download_url');
+                $redis5->set('ltpp_win_download_url', $data['ltpp_win_download_url']);
+            }
+
+            if ($data['ltpp_mac_download_url'] != $redis5->get('ltpp_mac_download_url')) {
+                Db::table('setting')
+                    ->where('id', $db->id)
+                    ->where('isdel', 0)
+                    ->update(['ltpp_mac_download_url' => $data['ltpp_mac_download_url']]);
+                $redis5->del('ltpp_mac_download_url');
+                $redis5->set('ltpp_mac_download_url', $data['ltpp_mac_download_url']);
+            }
+
+            if ($data['ltpp_apk_download_url'] != $redis5->get('ltpp_apk_download_url')) {
+                Db::table('setting')
+                    ->where('id', $db->id)
+                    ->where('isdel', 0)
+                    ->update(['ltpp_apk_download_url' => $data['ltpp_apk_download_url']]);
+                $redis5->del('ltpp_apk_download_url');
+                $redis5->set('ltpp_apk_download_url', $data['ltpp_apk_download_url']);
+            }
+
             if ($data['cloud_file_readme_txt_file_name'] != $redis5->get('cloud_file_readme_txt_file_name')) {
                 Db::table('setting')
                     ->where('id', $db->id)

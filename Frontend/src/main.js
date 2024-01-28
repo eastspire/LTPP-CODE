@@ -471,6 +471,28 @@ Vue.prototype.logoutRemove = function (is_force = false) {
     }
 };
 
+Vue.prototype.judgeSystemIsWin = function () {
+    const user_agent = window.navigator.userAgent.toLowerCase();
+    if (user_agent.indexOf('win') != -1) {
+        return true;
+    }
+    return false;
+}
+
+Vue.prototype.judgeSystemIsMac = function () {
+    const user_agent = window.navigator.userAgent.toLowerCase();
+    if (user_agent.indexOf('mac') != -1) {
+        return true;
+    }
+    return false;
+}
+
+Vue.prototype.judgeSystemIsPhone = function () {
+    const user_agent = window.navigator.userAgent.toLowerCase();
+    const is_mobile = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(user_agent);
+    return is_mobile;
+}
+
 Vue.prototype.downloadNoUrlContent = async function (type = 'text/html', data, download_name = '') {
     this.$msg({
         type: "success",
