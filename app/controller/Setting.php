@@ -179,11 +179,17 @@ class Setting extends Image
             ->orderBy('id', 'desc')
             ->select('id')
             ->get();
+        $db = Db::table('image')
+            ->where('isdel', 0)
+            ->limit(1000)
+            ->pluck('url')
+            ->toArray();
+        $len = sizeof($db);
         foreach ($err as &$tem) {
-            $resurl = Image::randimage();
+            $loc = rand(0, $len - 1);
             Db::table('article')
                 ->where('id', $tem->id)
-                ->update(['image' => $resurl]);
+                ->update(['image' => $db[$loc]]);
         }
     }
 
