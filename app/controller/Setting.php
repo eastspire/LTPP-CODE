@@ -175,22 +175,25 @@ class Setting extends Image
         if (!$isroot) {
             return;
         }
-        $err = Db::table('article')
+        $db = Db::table('article')
             ->orderBy('id', 'desc')
             ->select('id')
             ->get();
-        $db = Db::table('image')
+        $image_db = Db::table('image')
             ->where('isdel', 0)
             ->limit(1000)
             ->pluck('url')
             ->toArray();
-        $len = sizeof($db);
-        foreach ($err as &$tem) {
+        $len = sizeof($image_db);
+        foreach ($db as &$tem) {
             $loc = rand(0, $len - 1);
             Db::table('article')
                 ->where('id', $tem->id)
-                ->update(['image' => $db[$loc]]);
+                ->update(['image' => $image_db[$loc]]);
         }
+        // 删除缓存
+        $redis25 = Redis::connection('db25');
+        $redis25->flushdb();
     }
 
     /**
