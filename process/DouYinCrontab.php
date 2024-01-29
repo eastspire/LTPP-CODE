@@ -5,7 +5,6 @@ namespace process;
 use app\controller\Robot;
 use Workerman\Crontab\Crontab;
 use app\controller\Base;
-use app\controller\Video;
 use Exception;
 use support\Db;
 

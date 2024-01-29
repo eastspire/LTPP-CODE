@@ -56,6 +56,10 @@ return [
         'handler' => process\ContestRankCrontab::class,
         'count' => 1
     ],
+    'CleanRobotDb' => [
+        'handler' => process\CleanRobotDb::class,
+        'count' => 1
+    ],
     // File update detection and automatic reload
     // 'monitor' => [
     //     'handler' => process\Monitor::class,

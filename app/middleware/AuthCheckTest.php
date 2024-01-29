@@ -114,9 +114,21 @@ class AuthCheckTest implements MiddlewareInterface
         $header = $request->header();
         $now_time = time();
         $now = date('Y-m-d H:i:s', $now_time);
+
+        if (!isset($header['authorization']) || empty($header['authorization'])) {
+            return json(['code' => 500, 'msg' => '非法访问！', 'data' => []]);
+        }
+        //判断authorization是否存在或为空
+        // 判断是否有单点登录信息
+        if (!isset($header['key']) || empty($header['key'])) {
+            return json(['code' => 500, 'msg' => '登录信息错误！请重新登录！', 'data' => []]);
+        }
+        if ($is_logout) {
+            return \json(['code' => 500, 'msg' => '您已下线！请重新登录！', 'data' => []]);
+        }
         //判断请求是否过期
         if (!isset($header['requestid']) || empty($header['requestid'])) {
-            return json(['code' => 500, 'msg' => '非法访问！']);
+            return json(['code' => 500, 'msg' => '非法访问！', 'data' => []]);
         }
         // 获取请求时间
         $request_id = (int)Base::Base64Decode($header['requestid']);
@@ -125,17 +137,6 @@ class AuthCheckTest implements MiddlewareInterface
         if ($request_id > $now_time || $request_id + Base::$request_timout < $now_time) {
             return json(['code' => -1, 'msg' => '系统检测到请求异常！', 'data' => []]);
         }
-        if (!isset($header['authorization']) || empty($header['authorization'])) {
-            return json(['code' => 500, 'msg' => '非法访问！']);
-        }
-        //判断authorization是否存在或为空
-        // 判断是否有单点登录信息
-        if (!isset($header['key']) || empty($header['key'])) {
-            return json(['code' => 500, 'msg' => '登录信息错误！请重新登录！']);
-        }
-        if ($is_logout) {
-            return \json(['code' => 500, 'msg' => '您已下线！请重新登录！']);
-        }
         $my_aid = Base::getIdByUid($my_uid);
         $redis0 = Redis::connection('db0');
         $redis14 = Redis::connection('db14');
@@ -143,7 +144,7 @@ class AuthCheckTest implements MiddlewareInterface
         $onekey = $header['key'];
         // 判断单点登录
         if ($onekey != $redis14->get($my_aid . 'login')) {
-            return \json(['code' => 500, 'msg' => '您已下线！请重新登录！']);
+            return \json(['code' => 500, 'msg' => '您已下线！请重新登录！', 'data' => []]);
         }
 
         // 是root用户直接放行，不限速
@@ -154,7 +155,7 @@ class AuthCheckTest implements MiddlewareInterface
         }
 
         if ($redis0->get('BlackIP' . $loc) || $redis0->get('BlackID' . $my_aid)) {
-            return \json(['code' => 500, 'msg' => '您已被拉黑！请联系管理员解除黑名单！']);
+            return \json(['code' => 500, 'msg' => '您已被拉黑！请联系管理员解除黑名单！', 'data' => []]);
         } else {
             $black_aid_db = Db::table('blackip')
                 ->where('user_id', $my_aid)
@@ -162,7 +163,7 @@ class AuthCheckTest implements MiddlewareInterface
                 ->exists();
             if ($black_aid_db) {
                 $redis0->set('BlackID' . $my_aid, 1);
-                return \json(['code' => 500, 'msg' => '您已被拉黑！请联系管理员解除黑名单！']);
+                return \json(['code' => 500, 'msg' => '您已被拉黑！请联系管理员解除黑名单！', 'data' => []]);
             }
             $black_ip_db = Db::table('blackip')
                 ->where('ip', $loc)
@@ -170,7 +171,7 @@ class AuthCheckTest implements MiddlewareInterface
                 ->exists();
             if ($black_ip_db) {
                 $redis0->set('BlackIP' . $loc, 1);
-                return \json(['code' => 500, 'msg' => '您已被拉黑！请联系管理员解除黑名单！']);
+                return \json(['code' => 500, 'msg' => '您已被拉黑！请联系管理员解除黑名单！', 'data' => []]);
             }
         }
 
@@ -182,7 +183,7 @@ class AuthCheckTest implements MiddlewareInterface
         $redisip = 'ip' . $loc . 'id' . $my_aid;
         $user_db = Base::getUserData($my_aid);
         if (!$user_db) {
-            return \json(['code' => 500, 'msg' => '账号不存在！请重新登录！']);
+            return \json(['code' => 500, 'msg' => '账号不存在！请重新登录！', 'data' => []]);
         }
         if ($redis1->get($redisip)) {
             $requestnum = $redis1->get($redisip);
@@ -207,7 +208,7 @@ class AuthCheckTest implements MiddlewareInterface
                     ]);
                 }
                 $redis1->set('BlackIP' . $loc, 1);
-                return \json(['code' => 500, 'msg' => '您已被拉黑！请联系管理员解除黑名单！']);
+                return \json(['code' => 500, 'msg' => '您已被拉黑！请联系管理员解除黑名单！', 'data' => []]);
             } else {
                 //频率过快，屏蔽
                 if ($requestnum >= $GLOBiplimit) {
@@ -221,7 +222,7 @@ class AuthCheckTest implements MiddlewareInterface
                         }
                         Robot::sendChatToOneUserMsg($root_id, $msg);
                     }
-                    return \json(['code' => 400, 'msg' => '系统检测到访问异常！已拒绝该请求！']);
+                    return \json(['code' => 400, 'msg' => '系统检测到访问异常！已拒绝该请求！', 'data' => []]);
                 }
                 //自增
                 $redis1->incr($redisip);
