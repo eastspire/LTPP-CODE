@@ -18,6 +18,7 @@ use GatewayWorker\Lib\Gateway;
 use support\Db;
 use app\controller\Base;
 use app\controller\Robot;
+use app\controller\Cloudfile;
 use support\Redis;
 use Webman\RedisQueue\Redis as RedisQueue;
 
@@ -263,7 +264,7 @@ class PrivateRobot
         $testfilein = glob($alltestpath . '*.in');
         $alltestnum = sizeof($testfilein);
         if ($alltestnum <= 0) {
-            Base::deleteAllFile($problem_id);
+            Base::deleteAllFile($alltestpath);
             Base::writeOjDataInToFile($problem_id, $alltestpath, $test_data_list);
             $testfilein = glob($alltestpath . '*.in');
             $alltestnum = sizeof($testfilein);
@@ -648,34 +649,78 @@ class PrivateRobot
      */
     static private function resetUserHeadimage(&$reply)
     {
-        $user_db = Db::table('user')
-            ->orderBy('id', 'asc')
-            ->select('id', 'email')
-            ->get();
         $image_list = Db::table('image')
             ->where('isdel', 0)
-            ->select('url')
-            ->get();
+            ->pluck('url')
+            ->toArray();
         if (!$image_list) {
-            $reply = '图片为空！全站用户头像设置成默认头像失败！';
-            return;
+            $testpath = Base::$LTPP_public_path . Base::$LTPP_public_static_path . '/dbimage/';
+            // 清空数据库
+            Db::table('image')
+                ->where('isdel', 0)
+                ->update(['isdel' => 1]);
+            Base::$GLOBlinuxurl = Base::getSettingKeyData('GLOBlinuxurl');
+            $data = [];
+            $root_id = Base::getRootId();
+            foreach (Cloudfile::$photo as &$t_img) {
+                $file = glob($testpath . '*.' . $t_img);
+                foreach ($file as &$tem) {
+                    $path = Base::creatFilePath($t_img);
+                    $data[] = [
+                        'url' => Base::$GLOBlinuxurl . $path
+                    ];
+                    $id = Base::insertToDb('file_data', [
+                        'data' => file_get_contents(realpath($tem)),
+                    ]);
+                    Base::insertToDb('file_path', [
+                        'path' => $path,
+                        'file_id' => $id,
+                        'userid' => $root_id,
+                        'time' => date('Y-m-d H:i:s', time())
+                    ]);
+                    if (sizeof($data) % 888 == 0) {
+                        Db::table('image')->insert($data);
+                        $data = [];
+                    }
+                }
+                if (sizeof($data) >= 0) {
+                    Db::table('image')->insert($data);
+                    $data = [];
+                }
+            }
+            $image_list = Db::table('image')
+                ->where('isdel', 0)
+                ->pluck('url')
+                ->toArray();
         }
         $image_count = sizeof($image_list);
+        if (!$image_count) {
+            $reply = '暂无图片已跳过更新!';
+            return;
+        }
         $headimage = '';
+        for ($i = 0; $i < $image_count; ++$i) {
+            Db::table('user')
+                ->where('email', Base::$robot_email)
+                ->whereRaw('id % ? = ?', [$image_count, $i])
+                ->update([
+                    'headimage' => $image_list[rand(0, $image_count - 1)]
+                ]);
+        }
+        $user_db = Db::table('user')
+            ->where('email', '!=', Base::$robot_email)
+            ->orderBy('id', 'desc')
+            ->select(['id', 'email'])
+            ->get();
         foreach ($user_db as &$tem) {
-            if ($tem->email == Base::$robot_email) {
-                $headimage = $image_list[rand(0, $image_count - 1)]->url;
-            } else {
-                $headimage = 'https://q1.qlogo.cn/headimg_dl?dst_uin=' . $tem->email . '&spec=640';
-            }
+            $headimage = 'https://q1.qlogo.cn/headimg_dl?dst_uin=' . $tem->email . '&spec=640';
             Db::table('user')
                 ->where('id', $tem->id)
                 ->update([
                     'headimage' => $headimage
                 ]);
-            Base::updateUserDataRedis($tem->id);
         }
-        Base::deleteAllFile(Base::$LTPP_public_static_path . '/headimage');
+        Base::clearAllUserDataRedis();
         $reply = '全站用户头像已设置成默认头像';
     }
 
@@ -690,10 +735,7 @@ class PrivateRobot
             $url = '';
         }
         Db::table('user')->update(['bkimage' => $url]);
-        Base::updateAllUserDataRedis();
-        $path = Base::$LTPP_public_static_path . '/background/image';
-        Base::deleteAllFile($path);
-        Base::judgeCreatPath($path);
+        Base::clearAllUserDataRedis();
         $reply = '全站用户图片背景设置完成';
     }
 
@@ -708,10 +750,7 @@ class PrivateRobot
             $url = '';
         }
         Db::table('user')->update(['bkvideo' => $url]);
-        Base::updateAllUserDataRedis();
-        $path = Base::$LTPP_public_static_path . '/background/video';
-        Base::deleteAllFile($path);
-        Base::judgeCreatPath($path);
+        Base::clearAllUserDataRedis();
         $reply = '全站用户视频背景设置完成';
     }
 
@@ -881,7 +920,7 @@ class PrivateRobot
                 Db::table('user')->update([
                     'isusemusic' => 1
                 ]);
-                Base::updateAllUserDataRedis();
+                Base::clearAllUserDataRedis();
                 $reply = '开启成功';
                 break;
             case '11':
@@ -948,7 +987,7 @@ class PrivateRobot
                     ->update([
                         'isusemusic' => 0
                     ]);
-                Base::updateAllUserDataRedis();
+                Base::clearAllUserDataRedis();
                 $reply = '关闭成功';
                 break;
             case '16':

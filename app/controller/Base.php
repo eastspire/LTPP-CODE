@@ -398,6 +398,11 @@ class Base
     ];
 
     /**
+     * 测试用例路径
+     */
+    static $testdata_path = '/tmp/testdata/';
+
+    /**
      * 需要加密的key
      */
     static $to_safe_key = [
@@ -1915,85 +1920,6 @@ class Base
         return json_encode(['first_name' => $first_name, 'last_name' => $last_name]);
     }
 
-
-    /**
-     * 文件(夹)名解码，目录结尾不含/
-     * @param string $dir 文件（夹）目录
-     * @param int [$root_file_len] 默认为0
-     * @return void
-     */
-    static public function decodeFile($dir, $root_file_len = 0)
-    {
-        if (!file_exists($dir)) {
-            return;
-        }
-        if (is_dir($dir)) {
-            $diearr = scandir($dir);
-            foreach ($diearr as &$tem) {
-                if ($tem == '.' || $tem == '..') {
-                    continue;
-                } else {
-                    Base::decodeFile($dir . '/' . $tem, $root_file_len);
-                }
-            }
-            if (strlen($dir) <= $root_file_len) {
-                // 防止根目录被重命名
-                return;
-            }
-            // 文件夹重命名
-            $len = strlen($dir);
-            $slantingbar_loc = 0;
-            $path = '';
-            for ($i = $len - 1; $i >= 0; --$i) {
-                if ($dir[$i] == '/') {
-                    $slantingbar_loc = $i;
-                    break;
-                }
-            }
-            for ($i = 0; $i <= $slantingbar_loc; ++$i) {
-                $path .= $dir[$i];
-            }
-            $first_name = "";
-            for ($i = $slantingbar_loc + 1; $i < $len; ++$i) {
-                $first_name .= $dir[$i];
-            }
-            rename($dir, $path . Base::Base64Decode($first_name));
-        } else {
-            // 文件重命名
-            $len = strlen($dir);
-            $point_loc = $len;
-            $slantingbar_loc = 0;
-            $path = '';
-
-            for ($i = $len - 1; $i >= 0; --$i) {
-                if ($dir[$i] == '/') {
-                    $slantingbar_loc = $i;
-                    break;
-                }
-            }
-            for ($i = $len - 1; $i >= 0; --$i) {
-                if ($dir[$i] == '.') {
-                    $point_loc = $i;
-                    break;
-                }
-            }
-            for ($i = 0; $i <= $slantingbar_loc; ++$i) {
-                $path .= $dir[$i];
-            }
-            $first_name = "";
-            $last_name = "";
-            for ($i = $slantingbar_loc + 1; $i < $point_loc; ++$i) {
-                $first_name .= $dir[$i];
-            }
-            for ($i = $point_loc; $i < $len; ++$i) {
-                $last_name .= $dir[$i];
-            }
-            rename($dir, $path . Base::Base64Decode($first_name) . $last_name);
-        }
-
-        return;
-    }
-
     /**
      * 字符串类似Base64方式编码
      * @param string $str 待编码字符串
@@ -2927,18 +2853,12 @@ class Base
     }
 
     /**
-     * 更新全部用户用户缓存信息
+     * 删除全部用户用户缓存信息
      */
-    static public function updateAllUserDataRedis()
+    static public function clearAllUserDataRedis()
     {
         $redis8 = Redis::connection('db8');
         $redis8->flushdb();
-        $user_db = Db::table('user')
-            ->select('id')
-            ->get();
-        foreach ($user_db as &$tem) {
-            Base::updateUserDataRedis($tem->id);
-        }
     }
 
     /**
@@ -3618,9 +3538,12 @@ class Base
     /**
      * 将输入用例写入本地
      */
-    static public function writeOjDataInToFile($problem_id = 0, $path = '/tmp/testdata/', $test_data_list = [])
+    static public function writeOjDataInToFile($problem_id = 0, $path = '', $test_data_list = [])
     {
         try {
+            if (!$path) {
+                $path = Base::$testdata_path;
+            }
             if (Base::judgeCreatPath($path)) {
                 return;
             }

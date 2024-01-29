@@ -414,7 +414,7 @@ class Ojjudge
         $testfilein = glob($alltestpath . '*.in');
         $alltestnum = sizeof($testfilein);
         if ($alltestnum <= 0) {
-            Base::deleteAllFile($problem_id);
+            Base::deleteAllFile($alltestpath);
             Base::writeOjDataInToFile($problem_id, $alltestpath, $test_data_list);
             $testfilein = glob($alltestpath . '*.in');
             $alltestnum = sizeof($testfilein);

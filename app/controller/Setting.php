@@ -169,53 +169,26 @@ class Setting extends Image
      * 更新数据库博客图片链接
      * @param Request $request 请求
      */
-    public function articleImage($id)
+    private function articleImage($id)
     {
         $isroot = Base::judgeIsRoot($id);
         if (!$isroot) {
             return;
         }
-        $db = Db::table('article')
-            ->orderBy('id', 'desc')
-            ->select('id')
-            ->get();
         $image_db = Db::table('image')
             ->where('isdel', 0)
             ->limit(1000)
             ->pluck('url')
             ->toArray();
         $len = sizeof($image_db);
-        foreach ($db as &$tem) {
-            $loc = rand(0, $len - 1);
+        for ($i = 0; $i < $len; ++$i) {
             Db::table('article')
-                ->where('id', $tem->id)
-                ->update(['image' => $image_db[$loc]]);
+                ->whereRaw('id % ? = ?', [$len, $i])
+                ->update(['image' => $image_db[$i]]);
         }
         // 删除缓存
         $redis25 = Redis::connection('db25');
         $redis25->flushdb();
-    }
-
-    /**
-     * 本地图片重命名
-     * @param Request $request 请求
-     */
-    protected function renameImage($id)
-    {
-        $isroot = Base::judgeIsRoot($id);
-        if (!$isroot) {
-            return;
-        }
-        $testpath = Base::$LTPP_public_path . Base::$LTPP_public_static_path . '/dbimage/';
-        foreach (Cloudfile::$photo as &$t_img) {
-            $file = glob($testpath . '*.' . $t_img);
-            foreach ($file as &$tem) {
-                do {
-                    $newName = md5(uniqid() . mt_rand(1, 100000) . time()) . '.' . $t_img;
-                } while (file_exists($testpath . $newName));
-                rename($tem, $testpath . $newName);
-            }
-        }
     }
 
     /**
@@ -237,8 +210,6 @@ class Setting extends Image
             Db::table('image')
                 ->where('isdel', 0)
                 ->update(['isdel' => 1]);
-            // 重命名
-            $this->renameImage($my_aid);
             Base::$GLOBlinuxurl = Base::getSettingKeyData('GLOBlinuxurl');
             $data = [];
             $has_image = false;
