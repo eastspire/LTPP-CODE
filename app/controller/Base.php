@@ -179,6 +179,11 @@ class Base
     static $redis_password = 'SQS';
 
     /**
+     * Redis MQ数据库
+     */
+    static $redis_mq_db = 19;
+
+    /**
      * MySQL用户名
      */
     static $mysql_username = 'ltpp';
