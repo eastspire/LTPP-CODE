@@ -222,53 +222,57 @@ class Setting extends Image
      */
     public function updateImage(Request $request)
     {
-        $my_uid = JwtToken::getCurrentId();
-        $my_aid = Base::getIdByUid($my_uid);
-        $isroot = Base::judgeIsRoot($my_aid);
-        if (!$isroot) {
-            return json(['code' => -1, 'msg' => '无权限']);
-        }
-        $testpath = Base::$LTPP_public_path . Base::$LTPP_public_static_path . '/dbimage/';
-        // 清空数据库
-        Db::table('image')
-            ->where('isdel', 0)
-            ->update(['isdel' => 1]);
-        // 重命名
-        $this->renameImage($my_aid);
-        Base::$GLOBlinuxurl = Base::getSettingKeyData('GLOBlinuxurl');
-        $data = [];
-        $has_image = false;
-        foreach (Cloudfile::$photo as &$t_img) {
-            $file = glob($testpath . '*.' . $t_img);
-            foreach ($file as &$tem) {
-                $path = Base::creatFilePath($t_img);
-                $data[] = [
-                    'url' => Base::$GLOBlinuxurl . $path
-                ];
-                $id = Base::insertToDb('file_data', [
-                    'data' => file_get_contents(realpath($tem)),
-                ]);
-                Base::insertToDb('file_path', [
-                    'path' => $path,
-                    'file_id' => $id,
-                    'userid' => $my_aid,
-                    'time' => date('Y-m-d H:i:s', time())
-                ]);
-                if (sizeof($data) % 888 == 0) {
+        try {
+            $my_uid = JwtToken::getCurrentId();
+            $my_aid = Base::getIdByUid($my_uid);
+            $isroot = Base::judgeIsRoot($my_aid);
+            if (!$isroot) {
+                return json(['code' => -1, 'msg' => '无权限']);
+            }
+            $testpath = Base::$LTPP_public_path . Base::$LTPP_public_static_path . '/dbimage/';
+            // 清空数据库
+            Db::table('image')
+                ->where('isdel', 0)
+                ->update(['isdel' => 1]);
+            // 重命名
+            $this->renameImage($my_aid);
+            Base::$GLOBlinuxurl = Base::getSettingKeyData('GLOBlinuxurl');
+            $data = [];
+            $has_image = false;
+            foreach (Cloudfile::$photo as &$t_img) {
+                $file = glob($testpath . '*.' . $t_img);
+                foreach ($file as &$tem) {
+                    $path = Base::creatFilePath($t_img);
+                    $data[] = [
+                        'url' => Base::$GLOBlinuxurl . $path
+                    ];
+                    $id = Base::insertToDb('file_data', [
+                        'data' => file_get_contents(realpath($tem)),
+                    ]);
+                    Base::insertToDb('file_path', [
+                        'path' => $path,
+                        'file_id' => $id,
+                        'userid' => $my_aid,
+                        'time' => date('Y-m-d H:i:s', time())
+                    ]);
+                    if (sizeof($data) % 888 == 0) {
+                        Db::table('image')->insert($data);
+                        $data = [];
+                    }
+                    $has_image = true;
+                }
+                if (sizeof($data) >= 0) {
                     Db::table('image')->insert($data);
                     $data = [];
                 }
-                $has_image = true;
             }
-            if (sizeof($data) >= 0) {
-                Db::table('image')->insert($data);
-                $data = [];
+            // 有图片再更新
+            if ($has_image) {
+                $this->articleImage($my_aid);
+                return json(['code' => 1, 'msg' => '网站图片更新完成']);
             }
-        }
-        // 有图片再更新
-        if ($has_image) {
-            $this->articleImage($my_aid);
-            return json(['code' => 1, 'msg' => '网站图片更新完成']);
+        } catch (Exception $e) {
+            return json(['code' => -1, 'msg' => '图片更新失败']);
         }
         return json(['code' => -1, 'msg' => '暂无图片已跳过更新']);
     }

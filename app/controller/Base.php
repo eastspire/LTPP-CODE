@@ -3514,19 +3514,6 @@ class Base
     }
 
     /**
-     * 删除文件
-     */
-    static public function deleteStaticFile($file_path = '')
-    {
-        $redis35 = Redis::connection('db35');
-        $redis35->del($file_path);
-        Db::table('file_path')
-            ->where('path', $file_path)
-            ->where('isdel', 0)
-            ->update(['isdel' => 0]);
-    }
-
-    /**
      * 判断文件是否存在
      */
     static public function judgeFileExist($file_path)

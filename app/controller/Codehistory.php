@@ -38,6 +38,23 @@ class Codehistory
     ];
 
     /**
+     * CodeHistory数据库展示用户代码列表的字段（含具体代码，竞赛id，题目id）
+     * @var array $code_history_db_key_has_code_has_contestid_has_problemid CodeHistory数据库展示用户代码列表的字段（含具体代码，竞赛id，题目id）
+     */
+    static $code_history_db_key_has_code_has_contestid_has_problemid = [
+        'id',
+        'userid',
+        'contestid',
+        'problemid',
+        'language',
+        'status',
+        'code',
+        'time',
+        'usetime',
+        'usememory'
+    ];
+
+    /**
      * 个人代码提交记录
      * @param Request $request 请求
      * @return string $res json

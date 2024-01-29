@@ -61,7 +61,7 @@ class WebcodeCrontab
                 ->where('status', '!=', Base::$code_up_running)
                 ->where('isdel', 0)
                 ->orderBy('id', 'asc')
-                ->select(Codehistory::$code_history_db_key_has_code)
+                ->select(Codehistory::$code_history_db_key_has_code_has_contestid_has_problemid)
                 ->first();
             if (!$db) {
                 return '';
