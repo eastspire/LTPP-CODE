@@ -456,6 +456,7 @@ class Contest
                 ->where('isdel', 0)
                 ->count();
         }
+        Base::dataToSafe($db);
         return json(['code' => 1, 'msg' => '搜索到' . $allnum . '条信息', 'data' => $db, 'allnum' => $allnum]);
     }
 

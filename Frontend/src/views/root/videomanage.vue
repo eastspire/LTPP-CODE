@@ -65,18 +65,25 @@
           >
             <el-table-column label="视频名称" width="360">
               <template slot-scope="scope">
-                <p
-                  @click="lookvideo(scope.row.url)"
-                  style="
-                    font-weight: bold;
-                    font-size: 1.06rem;
-                    color: #409eff;
-                    cursor: pointer;
-                  "
-                  type="success"
+                <el-tooltip
+                  class="item;"
+                  effect="dark"
+                  :content="scope.row.name"
+                  placement="right"
                 >
-                  {{ scope.row.name.substr(0, 20) }}
-                </p>
+                  <p
+                    @click="lookvideo(scope.row.url)"
+                    :style="`
+                      font-weight: bold;
+                      font-size: 1.06rem;
+                      color: #409eff;
+                      cursor: ${reg.test(scope.row.url) ? 'pointer' : 'default'};
+                    `"
+                    type="success"
+                  >
+                    {{ scope.row.name.substr(0, 20) }}
+                  </p>
+                </el-tooltip>
               </template>
             </el-table-column>
             <el-table-column label="视频url" width="auto" align="center">
@@ -329,8 +336,10 @@ import urlencode from "../../../updateCompoents/urlencode";
 
 export default {
   name: "videomanage",
-  async activated() {
+  created() {
     this.issearch = false; //判断是否搜索，从而进行分页查找
+  },
+  async activated() {    
     this.head = {
       Authorization: "Bearer " + window.localStorage.getItem("authorization"),
       Key: window.localStorage.getItem("key"),
@@ -363,6 +372,7 @@ export default {
   },
   data() {
     return {
+      reg: /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\*\+,;=.]+$/,
       requestid_timer: null,
       tag: "",
       lastkey: "",
@@ -393,9 +403,8 @@ export default {
       }
       this.videoList = tem_list;
     },
-    lookvideo(url) {
-      const reg = /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\*\+,;=.]+$/;
-      reg.test(url) && this.$router.push({
+    lookvideo(url) {      
+      this.reg.test(url) && this.$router.push({
         path: "/staticfile",
         query: {
           path: urlencode(url, "gbk"),
