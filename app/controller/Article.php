@@ -133,11 +133,11 @@ class Article extends Image
         try {
             $article_uid = $request->get('path');
             if (!$article_uid) {
-                return response(Base::notFoundPage(), 404);
+                return Base::notFoundPage();
             }
             return Base::getHTMLArticle($article_uid);
         } catch (Exception $e) {
-            return response(Base::notFoundPage(), 404);
+            return Base::notFoundPage();
         }
     }
 

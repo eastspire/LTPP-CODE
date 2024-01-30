@@ -28,6 +28,11 @@ class Base
     static $request_timout = 86400;
 
     /**
+     * gzip压缩率
+     */
+    static $gzip_num = 5;
+
+    /**
      * 代码提交成功提示
      */
     static $code_up_success_msg = '代码提交成功';
@@ -970,27 +975,61 @@ class Base
     /**
      * 返回404页面
      */
-    static public function notFoundPage()
+    static public function notFoundPage($path = '', $file_extion = '')
     {
+        if (!$path) {
+            $file_extion = '';
+            $path = '';
+        } else {
+            if (!$file_extion) {
+                $file_extion = Base::getDbFileExtion($path);
+            }
+        }
         try {
             $not_found = '';
             $redis23 = Redis::connection('db23');
             $key = '404_PAGE';
             if ($redis23->get($key)) {
-                return $redis23->get($key);
+                $not_found = $redis23->get($key);
+                return response($not_found, 404, [
+                    'Content-Type' => Base::getContentType('html'),
+                    'Accept-Ranges' => 'bytes',
+                    'Content-Length' => strlen($not_found),
+                    'File-Content-Type' => Base::getContentType($not_found),
+                    'Content-Encoding' => 'gzip',
+                    'File-Path' => $path,
+                    'File-Extion' => $file_extion,
+                ]);
             }
             $path = Base::$LTPP_public_path . '/404.html';
             if (!$path) {
-                $redis23->set($key, '');
-                return '';
+                $not_found = gzencode($not_found, Base::$gzip_num);
+                $redis23->set($key, $not_found);
+                return response($not_found, 404, [
+                    'Content-Type' => Base::getContentType('html'),
+                    'Accept-Ranges' => 'bytes',
+                    'Content-Length' => strlen($not_found),
+                    'File-Content-Type' => Base::getContentType($not_found),
+                    'Content-Encoding' => 'gzip',
+                    'File-Path' => $path,
+                    'File-Extion' => $file_extion,
+                ]);
             }
             $not_found = file_get_contents($path);
+            $not_found = gzencode($not_found, Base::$gzip_num);
+            $redis23->set($key, $not_found);
         } catch (Exception $e) {
             $redis23->set($key, $not_found);
-            return $not_found;
         }
-        $redis23->set($key, $not_found);
-        return $not_found;
+        return response($not_found, 404, [
+            'Content-Type' => Base::getContentType('html'),
+            'Accept-Ranges' => 'bytes',
+            'Content-Length' => strlen($not_found),
+            'File-Content-Type' => Base::getContentType($not_found),
+            'Content-Encoding' => 'gzip',
+            'File-Path' => $path,
+            'File-Extion' => $file_extion,
+        ]);
     }
 
     /**
@@ -998,15 +1037,32 @@ class Base
      * @param string $md
      * @return string $html
      */
-    static public function markdownToHTML($md = '')
+    static public function markdownToHTML($md = '', $path = '', $file_extion = '')
     {
+        if (!$path) {
+            $file_extion = '';
+            $path = '';
+        } else {
+            if (!$file_extion) {
+                $file_extion = Base::getDbFileExtion($path);
+            }
+        }
         $md = addslashes($md);
         $md = preg_replace('/[`$<>]/', '\\\\$0', $md);
         $highlight_css = Base::getCss('highlight');
         $highlight_js = Base::getJs('highlight');
         $markdown_it_js = Base::getJs('markdown-it');
         $html = '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html;charset=utf-8"><title>' . Base::$LTPP_name . '</title><style>' . $highlight_css . '</style><script>' . $highlight_js . '</script><script>' . $markdown_it_js . '</script></head><body><div id="loading-main"><div class=\'loading-body\'><span><span></span><span></span><span></span><span></span></span><div class=\'loading-base\'><span></span><div class=\'loading-face\'></div></div></div><div class=\'loading-longfazers\'><span></span><span></span><span></span><span></span></div><h1 class="loading-h1">LOADING</h1></div><div id="LTPP"></div><script>const md=window.markdownit({html:true,xhtmlOut:true,linkify:true,typographer:true,html_blocks:{allowed:\'all\'},allowedTags:[\'script\',\'style\']});const code=`' . $md . '`;const result=md.render(code);document.getElementById("LTPP").innerHTML=result;</script></body></html>';
-        return $html;
+        $html = gzencode($html, Base::$gzip_num);
+        return response($html, 200, [
+            'Content-Type' => Base::getContentType('html'),
+            'Accept-Ranges' => 'bytes',
+            'Content-Length' => strlen($html),
+            'File-Content-Type' => Base::getContentType($html),
+            'Content-Encoding' => 'gzip',
+            'File-Path' => $path,
+            'File-Extion' => $file_extion,
+        ]);
     }
 
     /**
@@ -1015,13 +1071,21 @@ class Base
      * @param string $language
      * @return string $html
      */
-    static public function codeToHTML($code = '', $language = 'cpp')
+    static public function codeToHTML($code = '', $language = 'cpp', $path = '', $file_extion = '')
     {
+        if (!$path) {
+            $file_extion = '';
+            $path = '';
+        } else {
+            if (!$file_extion) {
+                $file_extion = Base::getDbFileExtion($path);
+            }
+        }
         if (!$language) {
             $language = 'cpp';
         }
         $code = "```$language\n" . $code . "\n```";
-        return Base::markdownToHTML($code);
+        return Base::markdownToHTML($code, $path, $file_extion);
     }
 
     /**
@@ -1029,18 +1093,34 @@ class Base
      * @param string $str
      * @return string $html
      */
-    static public function strToHTML($str = '')
+    static public function strToHTML($str = '', $path = '', $file_extion = '')
     {
+        if (!$path) {
+            $file_extion = '';
+            $path = '';
+        } else {
+            if (!$file_extion) {
+                $file_extion = Base::getDbFileExtion($path);
+            }
+        }
         $html = '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html;charset=utf-8"><title>' . Base::$LTPP_name . '</title></head><body>' . $str . '</body></html>';
-        return $html;
+        return response($html, 200, [
+            'Content-Type' => Base::getContentType('html'),
+            'Accept-Ranges' => 'bytes',
+            'Content-Length' => strlen($html),
+            'File-Content-Type' => Base::getContentType($html),
+            'Content-Encoding' => 'gzip',
+            'File-Path' => $path,
+            'File-Extion' => $file_extion,
+        ]);
     }
 
     /**
-     * url假面
+     * url编码
      * @param string $str
      * @return string $res
      */
-    static public function url_encode($str)
+    static public function urlEncode($str)
     {
         if (!$str || !is_string($str)) {
             return '';
@@ -1060,14 +1140,11 @@ class Base
         try {
             $article_id = Base::getIdByUid($article_uid);
             if (!$article_id) {
-                return response(Base::notFoundPage(), 404);
+                return Base::notFoundPage();
             }
             $data = Base::getArticleData($article_id);
-            if (!$data || empty($data)) {
-                return response(Base::notFoundPage(), 404);
-            }
-            if ($data->public != 1) {
-                return response(Base::notFoundPage(), 404);
+            if (!$data || empty($data) || $data->public != 1) {
+                return Base::notFoundPage();
             }
             $name = $data->name ?? '';
             $article = $data->article ?? '';
@@ -1077,7 +1154,7 @@ class Base
             $releasetime = $data->releasetime ?? '';
             $lastchangetime = $data->lastchangetime ?? '';
             $image = $data->image ?? '';
-            $url = Base::getSettingKeyData('GLOBfronturl') . '/onearticle?path=' . Base::url_encode($article_uid);
+            $url = Base::getSettingKeyData('GLOBfronturl') . '/onearticle?path=' . Base::urlEncode($article_uid);
             $res = '# ' . $name . "\n" .
                 '[原文链接](' . $url . ')' . "\n***\n" .
                 '> 版权声明：本文为LTPP作者「' . $writer . '」的文章，著作权归作者所有，商业转载请联系作者获得授权，非商业转载请注明出处。' . "\n***\n" .
@@ -1087,10 +1164,10 @@ class Base
                 '> 收藏数：' . $collection . "\n***\n" .
                 '<div style="display:flex;justify-content:center;"><img src="' . $image . '" alt="" style="margin:0px 0px 8px 0px;"></div>' . "\n\n" .
                 $article;
-            return response(Base::markdownToHTML($res), 200);
+            return Base::markdownToHTML($res);
         } catch (Exception $e) {
-            return response(Base::notFoundPage(), 404);
         }
+        return Base::notFoundPage();
     }
 
     /**
@@ -3411,6 +3488,7 @@ class Base
 
     /**
      * 获取文件数据
+     * @param string $file_path 路径
      * @return string|bool data
      */
     static public function getStaticFileData($file_path = '')
@@ -3433,6 +3511,9 @@ class Base
             ->first();
         if (!$db) {
             return false;
+        }
+        if (Base::judgeIsOpenGzip(Base::getDbFileExtion($file_path))) {
+            $db->data = gzencode($db->data, Base::$gzip_num);
         }
         $redis35->setEx($file_path, Base::$redis_timeout, $db->data);
         return $db->data;
@@ -3481,6 +3562,7 @@ class Base
 
     /**
      * 根据文件类型获取Content-Type
+     * @param string $file_extion 文件扩展名
      */
     static public function getContentType($file_extion = '')
     {
@@ -3488,6 +3570,59 @@ class Base
             return File::$file_extion_content_type_map[$file_extion];
         }
         return 'application/octet-stream';
+    }
+
+    /**
+     * 是否是不支持编辑的类型文件
+     * @param string $file_extion 文件扩展名
+     */
+    static public function isNotSupportEditTypeFile($file_extion)
+    {
+        if (
+            isset(Base::$extion_map_number[$file_extion]) &&
+            Base::$extion_map_number[$file_extion] !== 4
+        ) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 判断是否启用前端强制缓存
+     * @param string $file_extion 文件扩展名
+     */
+    static public function judgeIsOpenCacheControl($file_extion = '')
+    {
+        // 不可编辑类型文件前端缓存
+        if (Base::isNotSupportEditTypeFile($file_extion)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 判断是否启用gzip
+     * @param string $file_extion 文件扩展名
+     */
+    static public function judgeIsOpenGzip($file_extion = '')
+    {
+        if (
+            !isset(File::$file_extion_content_type_map[$file_extion])
+        ) {
+            return false;
+        }
+        $type = File::$file_extion_content_type_map[$file_extion];
+        // 文本类型启用gzip
+        $list = [
+            'text/',
+            'application/'
+        ];
+        foreach ($list as &$tem) {
+            if (stripos($type, $tem) !== false) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

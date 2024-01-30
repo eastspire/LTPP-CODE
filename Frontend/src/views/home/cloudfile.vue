@@ -947,13 +947,14 @@ export default {
       });
       this.list = res?.data;
     },
-    async tolookcode(name,path) {
+    async tolookcode(name, path) {
       this.filename = name;
       this.filepath = path;
       this.IsShowCode = false;
       this.IsShowStaticFile = false;
       this.is_code_file = false;
       let is_code = false;
+      path = this.base64_decode(path);
       for (const key in this.$SqsGlobal.map_language_file) {
         if (
           Object.hasOwnProperty.call(this.$SqsGlobal.map_language_file, key) &&
@@ -967,7 +968,7 @@ export default {
         method: "post",
         url: "/Cloudfile/lookCode",
         data: {
-          path: path,
+          path: this.filepath,
         },
       }).catch((t) => {
         this.$msg({

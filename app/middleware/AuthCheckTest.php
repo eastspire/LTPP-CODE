@@ -105,10 +105,10 @@ class AuthCheckTest implements MiddlewareInterface
         }
         // 禁止访问的内容
         if (isset(AuthCheckTest::$danger_func[$func])) {
-            return response(Base::notFoundPage(), 404);
+            return Base::notFoundPage();
         }
         if (isset(AuthCheckTest::$danger_path[$request->controller])) {
-            return response(Base::notFoundPage(), 404);
+            return Base::notFoundPage();
         }
         //鉴权，获取authorization
         $header = $request->header();

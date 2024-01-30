@@ -9,6 +9,7 @@
  * QQ:1491579574
  * Copyright (c) 2023 by ${git_name_email}, All Rights Reserved. 
  */
+
 /**
  * @desc app.php 描述信息
  *
@@ -17,7 +18,7 @@
  */
 
 return [
-    'enable' => true,
+    'enable' => false,
     'storage' => [
         'default' => 'local',
         // local：本地 oss：阿里云 cos：腾讯云 qos：七牛云

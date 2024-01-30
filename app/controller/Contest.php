@@ -1584,11 +1584,11 @@ class Contest
         try {
             $key = $request->get('path');
             if (!$key) {
-                return response(Base::notFoundPage(), 404);
+                return Base::notFoundPage();
             }
             $redis29 = Redis::connection('db29');
             if (!$redis29->exists($key)) {
-                return response(Base::notFoundPage(), 404);
+                return Base::notFoundPage();
             }
             // 查询ID
             $id = $redis29->get($key);
@@ -1597,10 +1597,9 @@ class Contest
                 $contestrank_db->language = Base::$map_language_to_markdown[$contestrank_db->language ?? 'C++'];
                 return Base::codeToHTML($contestrank_db->code ?? '', $contestrank_db->language);
             }
-            return response(Base::notFoundPage(), 404);
         } catch (Exception $e) {
-            return response(Base::notFoundPage(), 404);
         }
+        return Base::notFoundPage();
     }
 
     /**
@@ -1896,7 +1895,13 @@ class Contest
             $html = $redis4->get($key);
             if (!$is_redis_queue && $html) {
                 // 非消息队列获取排名，排名在缓存
-                return $html;
+                return response($html, 200, [
+                    'Content-Type' => Base::getContentType('html'),
+                    'Accept-Ranges' => 'bytes',
+                    'Content-Length' => strlen($html),
+                    'File-Content-Type' => Base::getContentType($html),
+                    'Content-Encoding' => 'gzip'
+                ]);
             } else if (!$is_redis_queue) {
                 // 非消息队列获取排名，排名不在缓存
                 return '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><title>LTPP【' . $contest_db->name . '】竞赛排名</title><style>' . $msg_css . '</style><script>' . $js . '</script></head><body><h1>竞赛排名计算中</h1></body></html>';
@@ -1921,13 +1926,20 @@ class Contest
             $data = json_decode($redis4->get('Contest' . $contest_id . 'resarray') ?? '');
             $problems = json_decode($redis4->get('Contest' . $contest_id . 'problemIndex') ?? '');
             $html = Contest::calculateContestRank($problems, $data, $contest_db);
+            $html = gzencode($html, Base::$gzip_num);
             if ($html) {
                 $redis4->set($key, $html);
             }
         } catch (Exception $e) {
-            $html = Base::notFoundPage();
+            return Base::notFoundPage();
         }
-        return $html;
+        return response($html, 200, [
+            'Content-Type' => Base::getContentType('html'),
+            'Accept-Ranges' => 'bytes',
+            'Content-Length' => strlen($html),
+            'File-Content-Type' => Base::getContentType($html),
+            'Content-Encoding' => 'gzip'
+        ]);
     }
 
     /**

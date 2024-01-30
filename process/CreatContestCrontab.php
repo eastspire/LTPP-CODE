@@ -27,8 +27,7 @@ class CreatContestCrontab
      */
     private function getProblemList()
     {
-        $has_ac_pro_list = Db::table('codehistory')
-            ->where('status', 'AC')
+        $has_ac_pro_list = Db::table('solveproblem')
             ->where('isdel', 0)
             ->select('problemid')
             ->inRandomOrder()

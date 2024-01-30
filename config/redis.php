@@ -13,9 +13,6 @@ $data = [
 $list['default'] = $data;
 
 for ($i = 0; $i < Base::$redis_db_num; $i++) {
-    if ($i == Base::$redis_mq_db) {
-        continue;
-    }
     $data['database'] = $i;
     $list['db' . $i] = $data;
 }

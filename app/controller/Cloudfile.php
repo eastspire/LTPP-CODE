@@ -129,12 +129,20 @@ class Cloudfile
      */
     public function lookCode(Request $request)
     {
-        $path = $request->post('path');
-        $path = Base::Base64Decode($path);
-        if (isset(Base::$extion_map_number[Base::getDbFileExtion($path)]) && Base::$extion_map_number[Base::getDbFileExtion($path)] != 4) {
-            return json(['code' => -1, 'msg' => '该格式不支持访问']);
+        $data = '';
+        try {
+            $path = $request->post('path');
+            $path = Base::Base64Decode($path);
+            if (Base::isNotSupportEditTypeFile(Base::getDbFileExtion($path))) {
+                return json(['code' => -1, 'msg' => '该格式不支持访问']);
+            }
+            $data = Base::getStaticFileData($path);
+            if (Base::judgeIsOpenGzip(Base::getDbFileExtion($path))) {
+                // 数据使用gzip需要在取消gzip
+                $data = zlib_decode($data);
+            }
+        } catch (\Exception $e) {
         }
-        $data = Base::getStaticFileData($path);
         return json(['code' => 1, 'msg' => '文件获取成功', 'data' => $data]);
     }
 

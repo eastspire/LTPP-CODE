@@ -9,7 +9,10 @@
  * QQ:1491579574
  * Copyright (c) 2023 by ${git_name_email}, All Rights Reserved. 
  */
+// 运行内存限制
 ini_set('memory_limit', '102400M');
+// gzip
+ob_start("ob_gzhandler");
 /**
  * Here is your custom functions.
  */

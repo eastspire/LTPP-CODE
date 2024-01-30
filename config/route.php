@@ -19,6 +19,8 @@ use app\controller\Robot;
 use support\Request;
 
 Route::any(Base::$LTPP_public_static_path . '[/{path:.+}]', function (Request $request) {
+    $path = '';
+    $file_extion = '';
     try {
         $path = $request->path();
         // 匹配到访问静态资源
@@ -40,37 +42,34 @@ Route::any(Base::$LTPP_public_static_path . '[/{path:.+}]', function (Request $r
         // 文件
         $file_data = Base::getStaticFileData($path);
         if ($file_data === false) {
-            return response(Base::notFoundPage(), 404, [
-                'File-Path' => $path,
-                'File-Extion' => $file_extion,
-                'File-Content-Type' => Base::getContentType($file_extion),
-            ]);
+            return Base::notFoundPage($path, $file_extion);
         }
         if ($iscode && $language) {
-            return response(Base::codeToHTML($file_data, $language), 200, [
-                'File-Path' => $path,
-                'File-Extion' => $file_extion,
-                'File-Content-Type' => Base::getContentType($file_extion),
-            ]);
+            return Base::codeToHTML($file_data, $language, $path, $file_extion);
         }
         // md文件
         if ($file_extion == 'md') {
-            return response(Base::markdownToHTML($file_data), 200, [
-                'File-Path' => $path,
-                'File-Extion' => $file_extion,
-                'File-Content-Type' => Base::getContentType($file_extion),
-            ]);
+            return Base::markdownToHTML($file_data, $path, $file_extion);
         }
-        return Response($file_data, 200, [
+        $is_open_gzip = Base::judgeIsOpenGzip($file_extion);
+        $is_use_cache_control = Base::judgeIsOpenCacheControl($file_extion);
+        $response_header = [
             'Content-Type' => Base::getContentType($file_extion),
             'Accept-Ranges' => 'bytes',
             'Content-Length' => strlen($file_data),
             'File-Path' => $path,
             'File-Extion' => $file_extion,
-            'File-Content-Type' => Base::getContentType($file_extion),
-        ]);
+            'File-Content-Type' => Base::getContentType($file_extion)
+        ];
+        if ($is_open_gzip) {
+            $response_header['Content-Encoding'] = 'gzip';
+        }
+        if ($is_use_cache_control) {
+            $response_header['Cache-Control'] = 'public,max-age=88888888';
+        }
+        return Response($file_data, 200, $response_header);
     } catch (Exception $e) {
         Robot::sendChatToOneUserMsg(Base::getRootId(), '文件服务 **【StaticFile】** 运行错误：' . $e->getMessage());
-        return response(Base::notFoundPage(), 404);
+        return Base::notFoundPage($path, $file_extion);
     }
 });
