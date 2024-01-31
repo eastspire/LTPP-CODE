@@ -1104,6 +1104,7 @@ class Base
             }
         }
         $html = '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html;charset=utf-8"><title>' . Base::$LTPP_name . '</title></head><body>' . $str . '</body></html>';
+        $html = gzencode($html, Base::$gzip_num);
         return response($html, 200, [
             'Content-Type' => Base::getContentType('html'),
             'Accept-Ranges' => 'bytes',
