@@ -9,6 +9,6 @@
  # QQ:1491579574
  # Copyright (c) 2023 by SQS, All Rights Reserved. 
 ###
-scp -rp -P 40022 ./build/LTPP.bin root@ltpp.vip:/
+scp -rp -P 40022 ../build/LTPP.bin root@ltpp.vip:/
 echo "按回车键继续..."
 read -n 1

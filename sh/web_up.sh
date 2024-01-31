@@ -9,6 +9,6 @@
  # QQ:1491579574
  # Copyright (c) 2023 by SQS, All Rights Reserved. 
 ###
-scp -P 22 -rp -i C:\\Users\\14915\\.ssh\\LTPP\\id_rsa ./Frontend/frontend root@ltpp.vip:/home/LTPP/Frontend
+scp -P 22 -rp -i C:\\Users\\14915\\.ssh\\LTPP\\id_rsa ../Frontend/frontend root@ltpp.vip:/home/LTPP/Frontend
 echo "按回车键继续..."
 read -n 1
