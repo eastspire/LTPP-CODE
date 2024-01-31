@@ -1,3 +1,3 @@
 #!/bin/bash
-./bin_build.sh
-./web_build.sh
+./sh/bin_build.sh
+./sh/web_build.sh

@@ -1783,7 +1783,7 @@ class Contest
         $redis30->setNx(Base::$redis_contest_code_list_key_name . $contest_id, json_encode($contestrank_code_safe_id_list));
 
         $similarity_css = Base::getCss('table');
-        $res = '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><title>LTPP ' . $contest_db->name . ' 代码查重</title><style>' . $similarity_css . '</style></head><body>';
+        $res = '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><link rel="icon" href="https://ltpp.vip/LTPPlogo.png" type="image/x-icon"><title>LTPP ' . $contest_db->name . ' 代码查重</title><style>' . $similarity_css . '</style></head><body>';
         krsort($percentage_list);
         foreach ($percentage_list as $key => $value) {
             if (!($key * 100)) {
@@ -1873,21 +1873,21 @@ class Contest
             $contest_db = Base::getContestData($contest_id);
 
             if (!$contest_db) {
-                return '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><title>LTPP【' . $contest_db->name . '】竞赛排名</title><style>' . $msg_css . '</style></head><body><h1>竞赛不存在</h1></body></html>';
+                return '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><link rel="icon" href="https://ltpp.vip/LTPPlogo.png" type="image/x-icon"><title>LTPP【' . $contest_db->name . '】竞赛排名</title><style>' . $msg_css . '</style></head><body><h1>竞赛不存在</h1></body></html>';
             }
             if ($contest_db->type != 'ACM' && $contest_db->type != 'SQS' && $contest_db->type != 'OI' && $contest_db->type != 'IOI') {
-                return '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><title>LTPP【' . $contest_db->name . '】竞赛排名</title><style>' . $msg_css . '</style></head><body><h1>竞赛类型错误</h1></body></html>';
+                return '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><link rel="icon" href="https://ltpp.vip/LTPPlogo.png" type="image/x-icon"><title>LTPP【' . $contest_db->name . '】竞赛排名</title><style>' . $msg_css . '</style></head><body><h1>竞赛类型错误</h1></body></html>';
             }
             $begintime = strtotime($contest_db->begin);
             $endtime = strtotime($contest_db->end);
             $js = Base::getJs('rank');
             // 未开始
             if (time() < $begintime) {
-                return '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><title>LTPP【' . $contest_db->name . '】竞赛排名</title><style>' . $msg_css . '</style><script>' . $js . '</script></head><body><h1>竞赛开始可查看排名</h1></body></html>';
+                return '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><link rel="icon" href="https://ltpp.vip/LTPPlogo.png" type="image/x-icon"><title>LTPP【' . $contest_db->name . '】竞赛排名</title><style>' . $msg_css . '</style><script>' . $js . '</script></head><body><h1>竞赛开始可查看排名</h1></body></html>';
             }
             // OI赛制
             if ($contest_db->type == 'OI' && time() <= $endtime && !$is_redis_queue) {
-                return '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><title>LTPP【' . $contest_db->name . '】竞赛排名</title><style>' . $msg_css . '</style><script>' . $js . '</script></head><body><h1>OI赛制竞赛结束可查看排名</h1></body></html>';
+                return '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><link rel="icon" href="https://ltpp.vip/LTPPlogo.png" type="image/x-icon"><title>LTPP【' . $contest_db->name . '】竞赛排名</title><style>' . $msg_css . '</style><script>' . $js . '</script></head><body><h1>OI赛制竞赛结束可查看排名</h1></body></html>';
             }
             $redis4 = Redis::connection('db4');
             $key = 'Contest' . $contest_id . 'HtmlRank';
@@ -1904,11 +1904,11 @@ class Contest
                 ]);
             } else if (!$is_redis_queue) {
                 // 非消息队列获取排名，排名不在缓存
-                return '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><title>LTPP【' . $contest_db->name . '】竞赛排名</title><style>' . $msg_css . '</style><script>' . $js . '</script></head><body><h1>竞赛排名计算中</h1></body></html>';
+                return '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><link rel="icon" href="https://ltpp.vip/LTPPlogo.png" type="image/x-icon"><title>LTPP【' . $contest_db->name . '】竞赛排名</title><style>' . $msg_css . '</style><script>' . $js . '</script></head><body><h1>竞赛排名计算中</h1></body></html>';
             }
             $lockone = 'contestranklock' . $contest_id;
             if ($redis4->exists($lockone)) {
-                return '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><title>LTPP【' . $contest_db->name . '】竞赛排名</title><style>' . $msg_css . '</style><script>' . $js . '</script></head><body><h1>竞赛排名计算中</h1></body></html>';
+                return '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><link rel="icon" href="https://ltpp.vip/LTPPlogo.png" type="image/x-icon"><title>LTPP【' . $contest_db->name . '】竞赛排名</title><style>' . $msg_css . '</style><script>' . $js . '</script></head><body><h1>竞赛排名计算中</h1></body></html>';
             }
             $is_end = $is_redis_queue ? false : true;
             if (
@@ -1964,7 +1964,7 @@ class Contest
             $endtime = strtotime($contest_db->end);
             // OI赛制HTML排名竞赛未结束不显示
             if ($contest_db->type == 'OI' && time() <= $endtime) {
-                return '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><title>LTPP【' . $contest_db->name . '】竞赛排名</title><style>' . $rank_css . '</style><script>' . $js . '</script></head><body><h1>OI赛制竞赛结束可查看排名</h1></body></html>';
+                return '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><link rel="icon" href="https://ltpp.vip/LTPPlogo.png" type="image/x-icon"><title>LTPP【' . $contest_db->name . '】竞赛排名</title><style>' . $rank_css . '</style><script>' . $js . '</script></head><body><h1>OI赛制竞赛结束可查看排名</h1></body></html>';
             }
             if ($contest_db->type == 'ACM' || $contest_db->type == 'SQS') {
                 $table_title = '<th>排名</th><th>用户</th><th>总AC数</th><th>总用时</th>';
@@ -2015,7 +2015,7 @@ class Contest
                     $table_body = '<tr>' . $table_body . '</tr>';
                 }
             }
-            $html = '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><title>LTPP【' . $contest_db->name . '】竞赛排名</title><style>' . $rank_css . '</style><script>' . $js . '</script></head><body><table class="CONTEST"><tr><th class="CONTEST-NAME" colspan="' . ($problems_len + 4) . '">LTPP【' . $contest_db->name . '】实时竞赛排名</th></tr>' . $table_title . $table_body . '</body></html>';
+            $html = '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><link rel="icon" href="https://ltpp.vip/LTPPlogo.png" type="image/x-icon"><title>LTPP【' . $contest_db->name . '】竞赛排名</title><style>' . $rank_css . '</style><script>' . $js . '</script></head><body><table class="CONTEST"><tr><th class="CONTEST-NAME" colspan="' . ($problems_len + 4) . '">LTPP【' . $contest_db->name . '】实时竞赛排名</th></tr>' . $table_title . $table_body . '</body></html>';
         } catch (Exception $e) {
             return $html;
         }

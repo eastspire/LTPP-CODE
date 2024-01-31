@@ -44,7 +44,7 @@ class Filehtml
             }
             return Base::strToHTML($txt);
         } catch (Exception $e) {
-            return Base::notFoundPage();
         }
+        return Base::notFoundPage();
     }
 }

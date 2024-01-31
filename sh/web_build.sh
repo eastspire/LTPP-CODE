@@ -9,7 +9,7 @@
  # QQ:1491579574
  # Copyright (c) 2023 by SQS, All Rights Reserved. 
 ###
-cd ../Frontend
+cd ./Frontend
 npm run build
 npm run build
 cd ../sh

@@ -1052,7 +1052,7 @@ class Base
         $highlight_css = Base::getCss('highlight');
         $highlight_js = Base::getJs('highlight');
         $markdown_it_js = Base::getJs('markdown-it');
-        $html = '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html;charset=utf-8"><title>' . Base::$LTPP_name . '</title><style>' . $highlight_css . '</style><script>' . $highlight_js . '</script><script>' . $markdown_it_js . '</script></head><body><div id="loading-main"><div class=\'loading-body\'><span><span></span><span></span><span></span><span></span></span><div class=\'loading-base\'><span></span><div class=\'loading-face\'></div></div></div><div class=\'loading-longfazers\'><span></span><span></span><span></span><span></span></div><h1 class="loading-h1">LOADING</h1></div><div id="LTPP"></div><script>const md=window.markdownit({html:true,xhtmlOut:true,linkify:true,typographer:true,html_blocks:{allowed:\'all\'},allowedTags:[\'script\',\'style\']});const code=`' . $md . '`;const result=md.render(code);document.getElementById("LTPP").innerHTML=result;</script></body></html>';
+        $html = '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html;charset=utf-8"><link rel="icon" href="https://ltpp.vip/LTPPlogo.png" type="image/x-icon"><title>' . Base::$LTPP_name . '</title><style>' . $highlight_css . '</style><script>' . $highlight_js . '</script><script>' . $markdown_it_js . '</script></head><body><div id="loading-main"><div class=\'loading-body\'><span><span></span><span></span><span></span><span></span></span><div class=\'loading-base\'><span></span><div class=\'loading-face\'></div></div></div><div class=\'loading-longfazers\'><span></span><span></span><span></span><span></span></div><h1 class="loading-h1">LOADING</h1></div><div id="LTPP"></div><script>const md=window.markdownit({html:true,xhtmlOut:true,linkify:true,typographer:true,html_blocks:{allowed:\'all\'},allowedTags:[\'script\',\'style\']});const code=`' . $md . '`;const result=md.render(code);document.getElementById("LTPP").innerHTML=result;</script></body></html>';
         $html = gzencode($html, Base::$gzip_num);
         return response($html, 200, [
             'Content-Type' => Base::getContentType('html'),
@@ -1103,7 +1103,7 @@ class Base
                 $file_extion = Base::getDbFileExtion($path);
             }
         }
-        $html = '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html;charset=utf-8"><title>' . Base::$LTPP_name . '</title></head><body>' . $str . '</body></html>';
+        $html = '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html;charset=utf-8"><link rel="icon" href="https://ltpp.vip/LTPPlogo.png" type="image/x-icon"><title>' . Base::$LTPP_name . '</title></head><body>' . $str . '</body></html>';
         $html = gzencode($html, Base::$gzip_num);
         return response($html, 200, [
             'Content-Type' => Base::getContentType('html'),
@@ -3512,9 +3512,6 @@ class Base
             ->first();
         if (!$db) {
             return false;
-        }
-        if (Base::judgeIsOpenGzip(Base::getDbFileExtion($file_path))) {
-            $db->data = gzencode($db->data, Base::$gzip_num);
         }
         $redis35->setEx($file_path, Base::$redis_timeout, $db->data);
         return $db->data;
