@@ -63,6 +63,7 @@ Route::any(Base::$LTPP_public_static_path . '[/{path:.+}]', function (Request $r
         ];
         if ($is_open_gzip) {
             $response_header['Content-Encoding'] = 'gzip';
+            $file_data = gzencode($file_data, Base::$gzip_num);
         }
         if ($is_use_cache_control) {
             $response_header['Cache-Control'] = 'public,max-age=88888888';
