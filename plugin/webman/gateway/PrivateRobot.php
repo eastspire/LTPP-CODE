@@ -1007,6 +1007,7 @@ class PrivateRobot
                 break;
             case '20':
                 $reply = '【' . $now . '】在线客户端总数：' . Gateway::getAllUidCount();
+                break;
             case '帮助':
                 $reply = PrivateChat::$robot_root_default . '（仅限购一个，价格' . Ssh::$price . '学虫币）';
                 break;
