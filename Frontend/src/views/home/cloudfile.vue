@@ -88,7 +88,7 @@
                   tem[0]
                 )
               "
-              @dblclick="tolookcode(tem[0], tem[4])"
+              @dblclick="tolookcode(tem[0], tem[4], index)"
             >
               <div>
                 <div>
@@ -595,6 +595,7 @@ export default {
   },
   data() {
     return {
+      file_idx: 0,
       requestid_timer: null,
       ide_code: "",
       is_code_file: false,
@@ -947,7 +948,8 @@ export default {
       });
       this.list = res?.data;
     },
-    async tolookcode(name, path) {
+    async tolookcode(name, path, index) {
+      this.file_idx = index;
       this.filename = name;
       this.filepath = path;
       this.IsShowCode = false;
@@ -1017,6 +1019,9 @@ export default {
           duration: 600,
           offset: 80,
         });
+        try{
+          this.list[this.file_idx][2] = res?.data;
+        }catch(err){}
       } else {
         this.$msg({
           type: "error",

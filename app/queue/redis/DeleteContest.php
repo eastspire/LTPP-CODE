@@ -31,28 +31,30 @@ class DeleteContest implements Consumer
             $contest_id = $data['contest_id'] ?? '';
             while (1) {
                 try {
-                    $joinuser = Db::table('joincontest')
-                        ->where('contestid', $contest_id)
+                    //删除竞赛
+                    $db = Db::table('contest')
+                        ->where('id', $contest_id)
                         ->where('isdel', 0)
-                        ->select('userid')
-                        ->get();
-                    $redis4 = Redis::connection('db4');
-                    //竞赛删除清空该竞赛全部用户缓存
-                    foreach ($joinuser as &$tem) {
-                        $redis4->del('Contest' . $contest_id . 'problemdata' . $tem->userid);
-                    }
+                        ->update(['isdel' => 1]);
+
                     //删除竞赛缓存信息
+                    $redis4 = Redis::connection('db4');
                     $redis4->del('Contest' . $contest_id . 'resarray');
                     $redis4->del('ContestRank' . $contest_id . 'echartsrank');
                     $redis4->del('ContestRank' . $contest_id . 'peopledata');
                     $redis4->del('ContestRank' . $contest_id . 'timedata');
                     $redis4->del('Contest' . $contest_id . 'problemIndex');
                     $redis4->del('Contest' . $contest_id . 'HtmlRank');
-                    //删除竞赛
-                    $db = Db::table('contest')
-                        ->where('id', $contest_id)
+
+                    //竞赛删除清空该竞赛全部用户缓存
+                    $joinuser = Db::table('joincontest')
+                        ->where('contestid', $contest_id)
                         ->where('isdel', 0)
-                        ->update(['isdel' => 1]);
+                        ->select('userid')
+                        ->get();
+                    foreach ($joinuser as &$tem) {
+                        $redis4->del('Contest' . $contest_id . 'problemdata' . $tem->userid);
+                    }
 
                     //删除该竞赛题目
                     Db::table('contestproblem')

@@ -469,13 +469,20 @@
               @dblclick="downloadonefile(tem[0], tem[4])"
             >
               <div :class="gitclass[tem[1] - 1]"></div>
-              <div>
-                <p style="font-size: 1rem; color: deepskyblue">
-                  {{ base64_decode(tem[0]).substr(0, 36) }}
-                </p>
+              <div style="white-space:nowrap;text-overflow:ellipsis;overflow:hidden;width:84%;">
+                <el-tooltip
+                  class="item;"
+                  effect="dark"
+                  :content="base64_decode(tem[0])"
+                  placement="top"
+                >
+                  <p style="font-size: 1rem; color: deepskyblue">
+                    {{ base64_decode(tem[0]).substr(0, 36) }}
+                  </p>
+                </el-tooltip>
               </div>
               <div>
-                <p style="font-size: 1rem; color: deeppink">
+                <p style="font-size: 0.78rem; color: deeppink">
                   ({{ tem[3] }}) {{ tem[2] }}
                 </p>
               </div>

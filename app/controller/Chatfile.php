@@ -57,7 +57,7 @@ class Chatfile
             $temarray = [];
             $temarray[] = Base::Base64Encode($one_data->name);
             $path = Base::Base64Encode($one_data->path);
-            $file_extion = Base::getDbFileExtion($path);
+            $file_extion = Base::getDbFileExtion($one_data->path);
             $temarray[] = Base::fileExtionToNumberType($file_extion);
             $size = $one_data->size;
             Base::getChineseSize($size);

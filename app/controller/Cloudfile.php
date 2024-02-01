@@ -173,8 +173,7 @@ class Cloudfile
         $code = $request->post('code');
         $my_uid = JwtToken::getCurrentId();
         $my_aid = Base::getIdByUid($my_uid);
-        $msg =  Base::updateCloudFileData($my_aid, $path, $code);
-        return json(['code' => 1, 'msg' => $msg]);
+        return Base::updateCloudFileData($size, $my_aid, $path, $code);
     }
 
     /**
