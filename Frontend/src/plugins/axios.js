@@ -46,9 +46,11 @@ _axios.interceptors.request.use(
             if (!char_set?.length) {
                 char_set = await Vue.prototype.loadCloudCharset(!config?.isNoInitRequest);
             }
-            // 精确到毫秒
-            const now = new Date().getTime();
-            config.headers.Requestid = Vue.prototype.Base64Encode(now, char_set);
+            if (config?.dataType !== 'jsonp') {
+                // 精确到毫秒
+                const now = new Date().getTime();
+                config.headers.Requestid = Vue.prototype.Base64Encode(now, char_set);
+            }
             /* 存在则不进行请求后端音乐地址 */
             if (config.portType && config.portType.process && config.portType.process) {
                 // 端口前统一加4与后端对应
