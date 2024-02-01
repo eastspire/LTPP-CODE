@@ -8,6 +8,10 @@
       :style="`height:${$store.state.no_scroll_height}vh; border: 1px solid rgba(0,0,0,0.1);`"
     >
       <el-aside
+        v-loading.lock="!chat_list_loadfinish"
+        element-loading-text="拼命加载中"
+        element-loading-spinner="el-icon-loading"
+        element-loading-background="background-color:rgba(var(--ltpp-main-bk-color),var(--ltpp-list-box-bk-opacity))"          
         width="200px"
         style="background-color: rgba(var(--ltpp-main-bk-color), 0.16)"
         id="scroll"
@@ -559,6 +563,7 @@ export default {
   name: "chat",
   data() {
     return {
+      chat_list_loadfinish: false,
       load_msg_list_finish: false,
       requestid_timer: null,
       char_set: [],
@@ -1095,8 +1100,11 @@ export default {
           duration: 1600,
           offset: 80,
         });
+        this.chat_list_loadfinish = true;
+        return;
       });
       this.user_list = res?.data;
+      this.chat_list_loadfinish = true;
       // 初始化显示第一个用户聊天框
       setTimeout(() => {
         this.$nextTick(async () => {
@@ -1330,15 +1338,15 @@ export default {
           });
         }
         this.load_msg_list_finish = true;
+        this.getHistoryChatData(true);
       }catch(err){
         this.load_msg_list_finish = true;
       }
     },
-
     // 加载历史消息
-    async getHistoryChatData() {
+    async getHistoryChatData(is_init = false) {
       if (!this.now_user.id || !this.now_user.type) {
-        this.$msg({
+        !is_init && this.$msg({
           type: "error",
           message: "用户加载出错",
           duration: 1600,
@@ -1359,7 +1367,7 @@ export default {
 
       if (!this.id) {
         this.isSeeLastBtn = false;
-        this.$msg({
+        !is_init && this.$msg({
           type: "success",
           message: "没有更久远的历史记录啦",
           duration: 1600,
@@ -1384,20 +1392,21 @@ export default {
           msg_id: this.id,
           user_id: this.now_user.id,
         },
-      }).catch((t) => {
-        this.$msg({
+      }).catch((t) => {        
+        !is_init && this.$msg({
           type: "error",
           message: t,
           duration: 1600,
           offset: 80,
         });
+        return;
       });
 
       if (res?.code == 1) {
         let len = res?.data.length;
         if (len <= 0) {
           this.isSeeLastBtn = false;
-          this.$msg({
+          !is_init && this.$msg({
             type: "success",
             message: "没有更久远的历史记录啦",
             duration: 1600,
@@ -1409,7 +1418,7 @@ export default {
         this.chat_msg_list = [...res?.data, ...this.chat_msg_list];
         this.to_last_scroll();
       } else {
-        tthis.$msg({
+        !is_init && tthis.$msg({
           type: "error",
           message: res?.msg,
           duration: 1600,

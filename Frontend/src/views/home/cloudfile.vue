@@ -2,6 +2,10 @@
   <div v-show="isseetip">
     <div @contextmenu.prevent="" style="margin-left: auto; margin-right: auto">
       <div
+        v-loading.lock="!loadfinish"
+        element-loading-text="拼命加载中"
+        element-loading-spinner="el-icon-loading"
+        element-loading-background="background-color:rgba(var(--ltpp-main-bk-color),var(--ltpp-list-box-bk-opacity))"          
         class="shadow ltpp-list-box"
         :style="`min-height:${$store.state.no_scroll_height}vh`"
       >
@@ -595,6 +599,7 @@ export default {
   },
   data() {
     return {
+      loadfinish:false,
       file_idx: 0,
       requestid_timer: null,
       ide_code: "",
@@ -896,8 +901,11 @@ export default {
           duration: 1600,
           offset: 80,
         });
+        this.loadfinish = true;
+        return;
       });
       this.list = res?.data;
+      this.loadfinish = true;
     },
     //上传文件自动刷新
     async reloadList(response, file, file_list) {
