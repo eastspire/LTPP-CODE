@@ -183,8 +183,10 @@ class Setting extends Image
         $len = sizeof($image_db);
         for ($i = 0; $i < $len; ++$i) {
             Db::table('article')
-                ->whereRaw('id % ? = ?', [$len, $i])
-                ->update(['image' => $image_db[$i]]);
+                ->where('id', '%' . $len, $i)
+                ->update([
+                    'image' => $image_db[$i]
+                ]);
         }
         // 删除缓存
         $redis25 = Redis::connection('db25');

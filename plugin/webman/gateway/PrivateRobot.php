@@ -66,7 +66,8 @@ class PrivateRobot
         '|16|设置全站用户图片背景|16 http://xxx.com/x.png（PS：序号后第一个空格后为图片URL）|' . "\n" .
         '|17|设置全站用户视频背景|17 http://xxx.com/x.mp4（PS：序号后第一个空格后为视频URL）|' . "\n" .
         '|18|重判题目在竞赛中的代码|18 A+B（PS：序号后第一个空格后为重判的题目完整标题）|' . "\n" .
-        '|19|购买私人轻量云服务器，系统自带多种编程语言的运行环境和在线VSCODE|19 LTPP（PS：序号后第一个空格后为SSH登录密码，若不设置系统会自动生成随机密码，若已购买可查看登录命令和密码）|';
+        '|19|购买私人轻量云服务器，系统自带多种编程语言的运行环境和在线VSCODE|19 LTPP（PS：序号后第一个空格后为SSH登录密码，若不设置系统会自动生成随机密码，若已购买可查看登录命令和密码）|' . "\n" .
+        '|20|查询当前在线客户端总数|';
 
     static $robot_admin_default =
     '#### 您可以输入以下单个序号来进行操作' . "\n" .
@@ -332,6 +333,7 @@ class PrivateRobot
                     continue;
                 }
                 $out = $compiler_res_json['result'];
+                $now = date('Y-m-d H:i:s', time());
                 if (!empty($out)) {
                     Base::deleteAllFile($filepath);
                     $code = $code . "\n\n\n报错详情：\n";
@@ -356,7 +358,7 @@ class PrivateRobot
                         'userid' => $user_id,
                         'status' => '编译出错',
                         'problemid' => $problem_id,
-                        'time' => date('Y-m-d H:i:s', time()),
+                        'time' => $now,
                         'usetime' => 0,
                         'usememory' => 0,
                         'code' => $code,
@@ -433,7 +435,7 @@ class PrivateRobot
                             'userid' => $user_id,
                             'status' => '运行出错',
                             'problemid' => $problem_id,
-                            'time' => date('Y-m-d H:i:s', time()),
+                            'time' => $now,
                             'usetime' => $time_used,
                             'usememory' => $memory_used,
                             'code' => $code,
@@ -472,7 +474,7 @@ class PrivateRobot
                             'userid' => $user_id,
                             'status' => $tips,
                             'problemid' => $problem_id,
-                            'time' => date('Y-m-d H:i:s', time()),
+                            'time' => $now,
                             'usetime' => $maxtime,
                             'usememory' => $maxmemory,
                             'code' => $code,
@@ -531,7 +533,7 @@ class PrivateRobot
                     Db::table('solveproblem')->insert([
                         'userid' => $user_id,
                         'problemid' => $problem_id,
-                        'time' => date('Y-m-d H:i:s', time()),
+                        'time' => $now,
                         'code' => $code,
                         'language' => $userlanguage
                     ]);
@@ -542,7 +544,7 @@ class PrivateRobot
                         'userid' => $user_id,
                         'status' => 'AC',
                         'problemid' => $problem_id,
-                        'time' => date('Y-m-d H:i:s', time()),
+                        'time' => $now,
                         'usetime' => $maxtime,
                         'usememory' => $maxmemory,
                         'code' => $code,
@@ -554,7 +556,7 @@ class PrivateRobot
                         'userid' => $user_id,
                         'status' => '答案错误',
                         'problemid' => $problem_id,
-                        'time' => date('Y-m-d H:i:s', time()),
+                        'time' => $now,
                         'usetime' => $maxtime,
                         'usememory' => $maxmemory,
                         'code' => $code,
@@ -564,7 +566,6 @@ class PrivateRobot
                 }
                 $user_db = Base::getUserData($user_id);
                 $msg = '用户 **【' . ($user_db->name ?? '') . '】** 在竞赛 **【' . $contest_db->name . '】** 中的赛题 **【' . $problem_db->problemName . '】** 中得 **' . $resscore . '** 分';
-                $now = date('Y-m-d H:i:s', time());
                 $msg_id = Base::insertToDb(
                     'privatechat',
                     [
@@ -944,7 +945,7 @@ class PrivateRobot
                     'msgtype' => 'notice',
                     'name' => $user_db->name,
                     'msg' => $reply,
-                    'time' => date('Y-m-d H:i:s', time())
+                    'time' => $now
                 ]));
                 foreach ($all_user as &$tem) {
                     ++$i;
@@ -1004,6 +1005,8 @@ class PrivateRobot
             case '19':
                 $reply = Ssh::buy($db_my->id, $reply);
                 break;
+            case '20':
+                $reply = '【' . $now . '】在线客户端总数：' . Gateway::getAllUidCount();
             case '帮助':
                 $reply = PrivateChat::$robot_root_default . '（仅限购一个，价格' . Ssh::$price . '学虫币）';
                 break;
