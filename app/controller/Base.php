@@ -3935,7 +3935,7 @@ class Base
     {
         try {
             if (!$file_path || !$userid) {
-                return;
+                return '文件不存在';
             }
             $redis35 = Redis::connection('db35');
             $db = Db::table('file_path')
@@ -3945,15 +3945,39 @@ class Base
                 ->select('file_id')
                 ->first();
             if (!$db) {
-                return;
+                return '文件不存在';
+            }
+            $size = strlen($data);
+            $db = Db::table('cloud_file_path')
+                ->where('userid', $userid)
+                ->where('path', '!=', $file_path)
+                ->where('isdel', 0)
+                ->select('size')
+                ->get();
+            foreach ($db as &$tem) {
+                $size += (int)$tem->size;
+            }
+            $usercloudfilememory = Base::getSettingKeyData('usercloudfilememory');
+            if (!$usercloudfilememory) {
+                $usercloudfilememory = 50;
+            }
+            // 换算成字节
+            $all = $usercloudfilememory * 1024 * 1024;
+            if ($size > $all) {
+                return '更新失败！您的剩余容量不足！';
             }
             Db::table('file_data')
                 ->where('id', $db->file_id)
-                ->update(['data' => $data]);
+                ->update([
+                    'data' => $data,
+                    'size' => $size
+                ]);
             $redis35->setEx($file_path, Base::$redis_timeout, $data);
+            return '更新成功';
         } catch (Exception $e) {
             Robot::sendChatToOneUserMsg(Base::getRootId(), '**【updateCloudFileData】** 运行错误：' . $e->getMessage());
         }
+        return '更新失败';
     }
 
     /**
