@@ -1029,7 +1029,7 @@ export default {
           }
         }
         if (scrollElem && sign_dom && scrollElem.scrollHeight) {
-          scrollElem.scrollTop = sign_dom.offsetTop;
+          scrollElem.scrollTop = sign_dom.offsetTop - 148.6;
         }
       });
     },
@@ -1337,7 +1337,7 @@ export default {
           });
         }
         this.load_msg_list_finish = true;
-        await this.getHistoryChatData(true);
+        this.getHistoryChatData(true);
         this.to_scroll_bottom(1);
       }catch(err){
         this.load_msg_list_finish = true;
@@ -1414,9 +1414,11 @@ export default {
           });
           return;
         }
-        res.data = res?.data.reverse();
-        this.chat_msg_list = [...res?.data, ...this.chat_msg_list];
-        this.to_last_scroll();
+        if(!is_init){        
+          res.data = res?.data.reverse();
+          this.chat_msg_list = [...res?.data, ...this.chat_msg_list];
+          this.to_last_scroll();
+        }
       } else {
         !is_init && tthis.$msg({
           type: "error",
@@ -1425,6 +1427,7 @@ export default {
           offset: 80,
         });
       }
+      !is_init && this.getHistoryChatData(true);
     },
     // 累加未读消息
     addNoLookNum(id) {
