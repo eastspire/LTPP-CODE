@@ -1327,8 +1327,7 @@ export default {
           window.localStorage.setItem(
             "Chat " + this.now_user.type + " " + this.now_user.id,
             JSON.stringify(res?.data)
-          );
-          this.to_scroll_bottom(1);
+          );          
         } else {
           this.$msg({
             type: "error",
@@ -1338,7 +1337,8 @@ export default {
           });
         }
         this.load_msg_list_finish = true;
-        this.getHistoryChatData(true);
+        await this.getHistoryChatData(true);
+        this.to_scroll_bottom(1);
       }catch(err){
         this.load_msg_list_finish = true;
       }
