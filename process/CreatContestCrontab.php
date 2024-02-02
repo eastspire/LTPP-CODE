@@ -30,8 +30,8 @@ class CreatContestCrontab
         $has_ac_pro_list = Db::table('solveproblem')
             ->where('isdel', 0)
             ->select('problemid')
-            ->distinct()
             ->inRandomOrder()
+            ->distinct()
             ->limit(Base::getSettingKeyData('default_contest_problem_num'))
             ->get();
         $res = [];

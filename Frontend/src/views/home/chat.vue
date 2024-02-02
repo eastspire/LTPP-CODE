@@ -647,7 +647,7 @@ export default {
       isSeeCreatGroup: false,
       timeout: null,
       search_user: "",
-      isSeeLastBtn: true,
+      isSeeLastBtn: false,
       url: "",
       mymessage: "",
       now_user: {}, //当前窗口的用户个人信息
@@ -678,17 +678,28 @@ export default {
     await this.getUserAndGroupList();
   },
   activated() {
-    this.head = {
-      Authorization: "Bearer " + window.localStorage.getItem("authorization"),
-      Key: window.localStorage.getItem("key"),
-      Requestid : this.Base64Encode(new Date().getTime())
-    };
-    this.requestid_timer = setInterval(() => {
-        this.head.Requestid = this.Base64Encode(new Date().getTime())
-    }, 10000);
-    let list = document.getElementById("list");
-    list.addEventListener("click", this.onclicklist);
-    this.to_scroll_bottom(1);
+    try{
+      this.isSeeLastBtn = false;
+      this.head = {
+        Authorization: "Bearer " + window.localStorage.getItem("authorization"),
+        Key: window.localStorage.getItem("key"),
+        Requestid : this.Base64Encode(new Date().getTime())
+      };
+      this.requestid_timer = setInterval(() => {
+          this.head.Requestid = this.Base64Encode(new Date().getTime())
+      }, 10000);
+      let list = document.getElementById("list");
+      list.addEventListener("click", this.onclicklist);
+      this.chat_msg_list = this.chat_msg_list.slice(-50);  
+      window.localStorage.setItem(
+        "Chat " + this.now_user.type + " " + this.now_user.id,
+        JSON.stringify(this.chat_msg_list.slice(-50))
+      );
+      this.getHistoryChatData(true);
+    }catch(err){}
+    this.$nextTick(() => {
+      this.to_scroll_bottom(1);
+    });
   },
   async mounted() {
     let authorization = window.localStorage.getItem("authorization");
@@ -725,7 +736,7 @@ export default {
       this.now_post_type = tem.type;
       this.now_user = tem;
       this.chat_msg_list = [];
-      this.isSeeLastBtn = true;
+      this.isSeeLastBtn = false;
       this.passparam.user_id = tem.id;
       this.clearNolookNum();
       await this.getLatestChatData();
@@ -1034,7 +1045,7 @@ export default {
       });
     },
     // 滚动到底部
-    to_scroll_bottom(is_init) {
+    to_scroll_bottom(is_init = 0) {
       this.$nextTick(() => {
         let scrollElem = document.getElementById("chatDataScrollDiv");
         if (scrollElem && scrollElem.scrollHeight) {
@@ -1130,7 +1141,9 @@ export default {
             }
             await this.getLatestChatData();
           }
-          this.to_scroll_bottom(1);
+          this.$nextTick(() => {
+            this.to_scroll_bottom(1);
+          });
         });
       }, 0);
       return res;
@@ -1209,7 +1222,7 @@ export default {
       this.now_post_type = item.type;
       this.now_user = item;
       this.chat_msg_list = [];
-      this.isSeeLastBtn = true;
+      this.isSeeLastBtn = false;
       this.passparam.user_id = item.id;
       this.clearNolookNum();
       await this.getLatestChatData();
@@ -1338,7 +1351,9 @@ export default {
         }
         this.load_msg_list_finish = true;
         this.getHistoryChatData(true);
-        this.to_scroll_bottom(1);
+        this.$nextTick(() => {
+          this.to_scroll_bottom(1);
+        });
       }catch(err){
         this.load_msg_list_finish = true;
       }
@@ -1401,11 +1416,18 @@ export default {
         });
         return;
       });
-
       if (res?.code == 1) {
         let len = res?.data.length;
+        if(!is_init){
+          if(len < 50){
+            this.isSeeLastBtn = false;
+          }
+        }else{
+          if(len > 0){
+            this.isSeeLastBtn = true;
+          }
+        }
         if (len <= 0) {
-          this.isSeeLastBtn = false;
           !is_init && this.$msg({
             type: "success",
             message: "没有更久远的历史记录啦",
@@ -1474,7 +1496,9 @@ export default {
               "Chat " + temdata.type + " " + tem_id,
               JSON.stringify(this.chat_msg_list.slice(-50))
             );
-            this.to_scroll_bottom();
+            this.$nextTick(() => {
+              this.to_scroll_bottom(0);
+            });
           }
           // 判断用户是否在用户列表
           if (!this.judge_user_list_has_persion(tem_id)) {
