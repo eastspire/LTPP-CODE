@@ -78,10 +78,10 @@ class Testupload extends Oj
             }
             // 删除解压的文件
             Base::deleteAllFile($alltestpath);
-            // 重新写入输入样例
-            Base::writeOjDataInToFile($problem_id, $alltestpath);
             // 更新样例缓存
             Base::updateOjTestDataListRedis($problem_id);
+            // 重新写入输入样例
+            Base::writeOjDataInToFile($problem_id, $alltestpath);
         } else {
             //删除上传的临时文件
             Base::deleteAllFile($file->getRealPath());

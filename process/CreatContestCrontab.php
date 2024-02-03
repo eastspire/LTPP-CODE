@@ -139,7 +139,7 @@ class CreatContestCrontab
                 Db::table('contestproblem')
                     ->insert($insert_pro_list);
                 $insert_pro_list = [];
-                $cnt_i = 0;
+                $cnt_i = 1;
             }
         }
         if (!empty($insert_pro_list)) {

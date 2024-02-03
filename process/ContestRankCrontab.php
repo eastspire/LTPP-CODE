@@ -58,6 +58,7 @@ class ContestRankCrontab
                         // 发布任务
                         RedisQueue::send(Base::$redis_queue_contest_rank_name, ['contest_id' => $contest_id]);
                     }
+                    ContestRankCrontab::$times = 1;
                 }
                 ContestRankCrontab::$times++;
             } catch (Exception $e) {
