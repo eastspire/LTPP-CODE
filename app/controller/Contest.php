@@ -794,6 +794,7 @@ class Contest
                 if ($cnt_i % 1000 == 0 && !empty($insert_user)) {
                     Db::table('joincontest')->insert($insert_user);
                     $insert_user = [];
+                    $cnt_i = 0;
                 }
             }
             if (!empty($insert_user)) {

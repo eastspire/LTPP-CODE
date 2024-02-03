@@ -289,7 +289,7 @@ class RobotContest implements Consumer
             $one_contest_id = $data['contest_id'] ?? 0;
             $redis27 = Redis::connection('db27');
             // 判断是否加锁，防止机器人重复执行一场竞赛
-            if (\app\queue\redis\RobotContest::judgeHasJudgeContest($redis27, $one_contest_id)) {
+            if (RobotContest::judgeHasJudgeContest($redis27, $one_contest_id)) {
                 return;
             }
             $contest_db = Base::getContestData($one_contest_id);
@@ -297,6 +297,12 @@ class RobotContest implements Consumer
             $start_seconds = $now_time - strtotime($contest_db->begin);
             if ($start_seconds < 0) {
                 // 竞赛未开始
+                return;
+            }
+            // 竞赛距离结束剩余的秒数
+            $contest_run_time_seconds = strtotime($contest_db->end) - $now_time;
+            if ($contest_run_time_seconds < 0) {
+                // 竞赛结束不进行提交
                 return;
             }
             // 加锁，防止机器人重复执行一场竞赛
@@ -315,12 +321,6 @@ class RobotContest implements Consumer
             $this_contest_is_end = false;
             // 提交次数
             $submit_times = rand(4, 6);
-            // 竞赛距离结束剩余的秒数
-            $contest_run_time_seconds = strtotime($contest_db->end) - $now_time;
-            if ($contest_run_time_seconds < 0) {
-                // 竞赛结束不进行提交
-                return;
-            }
             // 提交用户数目
             $people_list = $this->getPeopleList($one_contest_id);
             $people_length = sizeof($people_list);

@@ -139,6 +139,7 @@ class CreatContestCrontab
                 Db::table('contestproblem')
                     ->insert($insert_pro_list);
                 $insert_pro_list = [];
+                $cnt_i = 0;
             }
         }
         if (!empty($insert_pro_list)) {
@@ -155,6 +156,7 @@ class CreatContestCrontab
     private function addUser($contest_id, $user_list)
     {
         $cnt_i = 0;
+        $insert_user = [];
         foreach ($user_list as &$tem) {
             ++$cnt_i;
             $insert_user[] = [
@@ -171,6 +173,7 @@ class CreatContestCrontab
         if (!empty($insert_user)) {
             Db::table('joincontest')
                 ->insert($insert_user);
+            $insert_user = [];
         }
     }
 
