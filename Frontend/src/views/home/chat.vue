@@ -687,7 +687,7 @@ export default {
       };
       this.requestid_timer = setInterval(() => {
           this.head.Requestid = this.Base64Encode(new Date().getTime())
-      }, 10000);
+      }, 1000);
       let list = document.getElementById("list");
       list.addEventListener("click", this.onclicklist);
       this.chat_msg_list = this.chat_msg_list.slice(-50);  

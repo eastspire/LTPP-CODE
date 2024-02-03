@@ -489,22 +489,32 @@ export default {
     this.headimage = this.linuxurl + "/User/saveheadimage";
     this.bkimage = this.linuxurl + "/User/saveBkImage";
     this.videoimage = this.linuxurl + "/User/saveVideoBkImage";
+    this.head = {
+      Authorization: "Bearer " + window.localStorage.getItem("authorization"),
+      Key: window.localStorage.getItem("key"),
+      Requestid : this.Base64Encode(new Date().getTime())
+    };
+    this.requestid_timer = setInterval(() => {
+        this.head.Requestid = this.Base64Encode(new Date().getTime())
+    }, 1000);
     if (!this.linuxurl) {
       await this.getlinuxurl();
     }
-    await this.loaddata();
-    this.head = {
-      authorization: "Bearer " + window.localStorage.getItem("authorization"),
-      key: window.localStorage.getItem("key"),
-    };
+    await this.loaddata();    
+  },
+  deactivated() {
+    clearInterval(this.requestid_timer);
+    this.requestid_timer = null;
   },
   data() {
     return {
+      requestid_timer: null,
       isup: false,
       userdata: [],
       head: {
         authorization: "Bearer " + window.localStorage.getItem("authorization"),
         key: window.localStorage.getItem("key"),
+        Requestid : this.Base64Encode(new Date().getTime())
       },
       linuxurl: "",
       bkimage: "",

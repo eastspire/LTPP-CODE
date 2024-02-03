@@ -541,7 +541,7 @@ export default {
     };
     this.requestid_timer = setInterval(() => {
         this.head.Requestid = this.Base64Encode(new Date().getTime())
-    }, 10000);
+    }, 1000);
     this.isseetip = true;
     if (this.total != 0) {
       if (this.issearch) {

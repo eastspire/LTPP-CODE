@@ -413,7 +413,7 @@ export default {
     };
     this.requestid_timer = setInterval(() => {
         this.head.Requestid = this.Base64Encode(new Date().getTime())
-    }, 10000);
+    }, 1000);
     const tem_linuxbkurl = window.sessionStorage.getItem("linuxurl"); 
     if (!tem_linuxbkurl) {
       this.getlinuxbkurl();

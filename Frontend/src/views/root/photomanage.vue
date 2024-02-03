@@ -108,7 +108,7 @@ export default {
     };
     this.requestid_timer = setInterval(() => {
         this.head.Requestid = this.Base64Encode(new Date().getTime())
-    }, 10000);
+    }, 1000);
     this.linuxurl = window.sessionStorage.getItem("linuxurl");
     this.backurl = window.sessionStorage.getItem("linuxurl");
     if (!this.linuxurl) {

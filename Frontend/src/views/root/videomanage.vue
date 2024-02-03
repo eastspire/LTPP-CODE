@@ -347,7 +347,7 @@ export default {
     };
     this.requestid_timer = setInterval(() => {
         this.head.Requestid = this.Base64Encode(new Date().getTime())
-    }, 10000);
+    }, 1000);
     this.bkvideourl = window.sessionStorage.getItem("linuxurl");
     if (!this.bkvideourl) {
       await this.getlinuxurl();
