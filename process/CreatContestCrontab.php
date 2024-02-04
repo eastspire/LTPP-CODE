@@ -32,10 +32,14 @@ class CreatContestCrontab
             ->select('problemid')
             ->inRandomOrder()
             ->distinct()
-            ->limit(Base::getSettingKeyData('default_contest_problem_num'))
             ->get();
         $res = [];
+        $i = 0;
+        $limit = Base::getSettingKeyData('default_contest_problem_num');
         foreach ($has_ac_pro_list as &$tem) {
+            if ($i++ >= $limit) {
+                break;
+            }
             $res[] = $tem->problemid;
         }
         return $res;
