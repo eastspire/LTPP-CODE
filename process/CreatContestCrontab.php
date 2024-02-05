@@ -37,10 +37,15 @@ class CreatContestCrontab
         $i = 0;
         $limit = Base::getSettingKeyData('default_contest_problem_num');
         foreach ($has_ac_pro_list as &$tem) {
-            if ($i++ >= $limit) {
+            if ($i >= $limit) {
                 break;
             }
+            $problem_db = Base::getOjData($tem->problemid);
+            if (!$problem_db) {
+                continue;
+            }
             $res[] = $tem->problemid;
+            ++$i;
         }
         return $res;
     }

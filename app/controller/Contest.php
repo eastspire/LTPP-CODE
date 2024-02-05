@@ -632,9 +632,7 @@ class Contest
                     $temdb->hasac = 0;
                 }
             }
-            if ($temdb) {
-                $res[] = $temdb;
-            }
+            $res[] = $temdb;
         }
         Base::dataToSafe($res);
         //存入缓存
