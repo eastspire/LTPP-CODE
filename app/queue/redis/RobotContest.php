@@ -86,29 +86,23 @@ class RobotContest implements Consumer
             return;
         }
         if (!isset(RobotContest::$code_all_ac_code_db[$problem_id]) || !RobotContest::$code_all_ac_code_db[$problem_id]) {
-            RobotContest::$code_all_ac_code_db[$problem_id] = Db::table('codehistory')
+            RobotContest::$code_all_ac_code_db[$problem_id] = Db::table('solveproblem')
                 ->where('problemid', $problem_id)
                 ->where('time', '<', $contest_begin)
-                ->where('status', 'AC')
                 ->where('isdel', 0)
                 ->orderBy('id', 'desc')
                 ->first();
         }
         if (!isset(RobotContest::$code_all_no_ac_code_db[$problem_id]) || !RobotContest::$code_all_no_ac_code_db[$problem_id]) {
-            RobotContest::$code_all_no_ac_code_db[$problem_id] = Db::table('codehistory')
-                ->where('problemid', $problem_id)
+            RobotContest::$code_all_no_ac_code_db[$problem_id] = Db::table('solveproblem')
+                ->where('problemid', '!=', $problem_id)
                 ->where('time', '<', $contest_begin)
-                ->where('status', '!=', Base::$code_up_waiting)
-                ->where('status', '!=', Base::$code_up_running)
-                ->where('status', '!=', 'AC')
                 ->where('isdel', 0)
                 ->orderBy('id', 'desc')
                 ->first();
         }
         if (!isset(RobotContest::$code_all_code_db[$problem_id]) || !RobotContest::$code_all_code_db[$problem_id]) {
-            RobotContest::$code_all_code_db[$problem_id] = Db::table('codehistory')
-                ->where('status', '!=', Base::$code_up_waiting)
-                ->where('status', '!=', Base::$code_up_running)
+            RobotContest::$code_all_code_db[$problem_id] = Db::table('solveproblem')
                 ->where('isdel', 0)
                 ->orderBy('id', 'desc')
                 ->first();

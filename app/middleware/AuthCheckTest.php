@@ -134,7 +134,7 @@ class AuthCheckTest implements MiddlewareInterface
         $request_id = (int)Base::Base64Decode($header['requestid']);
         // 毫秒换成秒
         $request_id = (int)($request_id / 1000);
-        if ($request_id > $now_time || $request_id + Base::$request_timout < $now_time) {
+        if ($request_id > $now_time + Base::$request_timout || $request_id + Base::$request_timout < $now_time) {
             return json(['code' => -1, 'msg' => '系统检测到请求异常！', 'data' => []]);
         }
         $my_aid = Base::getIdByUid($my_uid);
