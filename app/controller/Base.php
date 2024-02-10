@@ -1444,7 +1444,7 @@ class Base
                 $resid = Db::table($db_name)->insertGetId($data);
             }
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsg(Base::getRootId(), '插入数据' . json_encode($data ?? []) . '到数据表' . $db_name . '出错（该任务即将重新运行）:' . $e->getMessage());
+            Robot::sendChatToOneUserMsg(Base::getRootId(), '插入数据' . json_encode($data ?? []) . '到数据表' . $db_name . '出错:' . $e->getMessage());
         }
         return $resid;
     }

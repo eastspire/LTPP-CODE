@@ -212,7 +212,7 @@ export default {
       this.websocket.onerror = function (e) {
         func_this.$msg({
           type: "error",
-          message: "发生错误",
+          message: "课堂聊天服务器连接错误",
           duration: 1600,
           offset: 80,
         });
