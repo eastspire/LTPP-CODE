@@ -26,6 +26,8 @@ class DouYinCrontab
             $preview_title = preg_replace("/[^\w\x{4e00}-\x{9fa5}]/u", '', $preview_title);
             // 符号替换
             $preview_title = preg_replace("/[:+\s]/", '-', $preview_title);
+            // 长度限制
+            $preview_title = Base::utfsubstr($preview_title, 0, Base::$video_name_limit);
         } catch (Exception $e) {
             Robot::sendChatToOneUserMsg(Base::getRootId(), '定时任务进程 **【DouYinCrontab】** 运行错误：' . $e->getMessage());
         }
@@ -48,10 +50,10 @@ class DouYinCrontab
             if (empty($preview_title)) {
                 $preview_title = md5(time());
             }
+            $preview_title = Base::utfsubstr($preview_title, 0, Base::$video_name_limit);
         } catch (Exception $e) {
             Robot::sendChatToOneUserMsg(Base::getRootId(), '定时任务进程 **【DouYinCrontab】** 运行错误：' . $e->getMessage());
         }
-        $preview_title = substr($preview_title, 0, Base::$video_name_limit);
         return $preview_title;
     }
 

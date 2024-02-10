@@ -1437,17 +1437,14 @@ class Base
             return 0;
         }
         $resid = 0;
-        while (!$resid) {
-            try {
-                if ($db_name == 'file_path') {
-                    $resid = Db::table($db_name)->insert($data);
-                } else {
-                    $resid = Db::table($db_name)->insertGetId($data);
-                }
-            } catch (Exception $e) {
-                Robot::sendChatToOneUserMsg(Base::getRootId(), '插入数据' . json_encode($data ?? []) . '到数据表' . $db_name . '出错（该任务即将重新运行）:' . $e->getMessage());
-                continue;
+        try {
+            if ($db_name == 'file_path') {
+                $resid = Db::table($db_name)->insert($data);
+            } else {
+                $resid = Db::table($db_name)->insertGetId($data);
             }
+        } catch (Exception $e) {
+            Robot::sendChatToOneUserMsg(Base::getRootId(), '插入数据' . json_encode($data ?? []) . '到数据表' . $db_name . '出错（该任务即将重新运行）:' . $e->getMessage());
         }
         return $resid;
     }
@@ -1822,6 +1819,7 @@ class Base
      * @param int [$getlen] 获取的字符串长度
      * @return string $res 截取后的字符串 
      * @param bool $is_has_br 是否保留换行符（默认false）
+     * @return string res
      */
     static public function utfsubstr(string $str = '', $index = 0, $getlen = 0, $is_has_br = false)
     {
