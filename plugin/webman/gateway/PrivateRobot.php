@@ -22,7 +22,7 @@ use app\controller\Cloudfile;
 use support\Redis;
 use Webman\RedisQueue\Redis as RedisQueue;
 
-class PrivateRobot
+class PrivateRobot extends ChatBase
 {
     /**
      * GPT 异常消息

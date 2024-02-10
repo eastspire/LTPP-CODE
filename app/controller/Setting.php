@@ -167,14 +167,9 @@ class Setting extends Image
 
     /**
      * 更新数据库博客图片链接
-     * @param Request $request 请求
      */
-    private function articleImage($id)
+    private function articleImage()
     {
-        $isroot = Base::judgeIsRoot($id);
-        if (!$isroot) {
-            return;
-        }
         $image_db = Db::table('image')
             ->where('isdel', 0)
             ->limit(1000)
@@ -183,7 +178,7 @@ class Setting extends Image
         $len = sizeof($image_db);
         for ($i = 0; $i < $len; ++$i) {
             Db::table('article')
-                ->where('id', '%' . $len, $i)
+                ->whereRaw('id % ? = ?', [$len, $i])
                 ->update([
                     'image' => $image_db[$i]
                 ]);
@@ -245,7 +240,7 @@ class Setting extends Image
             }
             // 有图片再更新
             if ($has_image) {
-                $this->articleImage($my_aid);
+                $this->articleImage();
                 return json(['code' => 1, 'msg' => '网站图片更新完成']);
             }
         } catch (Exception $e) {
