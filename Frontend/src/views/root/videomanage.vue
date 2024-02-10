@@ -71,7 +71,7 @@
                   :content="scope.row.name"
                   placement="right"
                 >
-                  <p
+                  <span
                     @click="lookvideo(scope.row.url)"
                     :style="`
                       font-weight: bold;
@@ -82,7 +82,7 @@
                     type="success"
                   >
                     {{ scope.row.name.substr(0, 20) }}
-                  </p>
+                  </span>
                 </el-tooltip>
               </template>
             </el-table-column>
