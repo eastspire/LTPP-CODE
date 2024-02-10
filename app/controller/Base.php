@@ -528,6 +528,12 @@ class Base
     static $article_name_limit = 40;
 
     /**
+     * 视频标题长度限制
+     * @var int $video_name_limit 视频标题长度限制
+     */
+    static $video_name_limit = 40;
+
+    /**
      * 代码输出内容长度限制
      * @var int $code_out_limit 文章内容长度限制
      */

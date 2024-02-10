@@ -128,6 +128,7 @@ class Video
         $url = Base::uploadFileToDb('file_path', $my_aid, $file, $file_extion);
         $tag = '';
         $up_name = str_replace('.' . $file_extion, '', $file->getUploadName());
+        $up_name = substr($up_name, 0, Base::$video_name_limit);
         for ($i = 0; $i < strlen($up_name);) {
             if ($up_name[$i] == '#') {
                 $tem = '';
@@ -167,6 +168,7 @@ class Video
             return json(['code' => -1, 'msg' => '权限不足']);
         }
         $tabledata = $request->post('tabledata');
+        $tabledata['name'] = substr($tabledata['name'], 0, Base::$video_name_limit);
         $data = [
             'name' => $tabledata['name'],
             'isdouyin' => 0,

@@ -51,6 +51,7 @@ class DouYinCrontab
         } catch (Exception $e) {
             Robot::sendChatToOneUserMsg(Base::getRootId(), '定时任务进程 **【DouYinCrontab】** 运行错误：' . $e->getMessage());
         }
+        $preview_title = substr($preview_title, 0, Base::$video_name_limit);
         return $preview_title;
     }
 
