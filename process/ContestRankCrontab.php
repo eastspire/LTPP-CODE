@@ -24,19 +24,11 @@ use Webman\RedisQueue\Redis as RedisQueue;
 
 class ContestRankCrontab
 {
-    static $times = 0;
-
-    static $limit = 60;
-
     public function onWorkerStart()
     {
-        // 每天凌晨2点执行一次
-        new Crontab('00 2 * * *', function () {
+        // 每一秒钟执行一次
+        new Crontab('*/1 * * * * *', function () {
             try {
-                if (ContestRankCrontab::$times > ContestRankCrontab::$limit) {
-                    ContestRankCrontab::$times = 0;
-                }
-                $redis4 = Redis::connection('db4');
                 $redis24 = Redis::connection('db24');
                 $arr = $redis24->lrange(Contest::$redis_array_name, 0, -1);
                 $redis24->del(Contest::$redis_array_name);
@@ -50,20 +42,28 @@ class ContestRankCrontab
                     RedisQueue::send(Base::$redis_queue_contest_rank_name, ['contest_id' => $key]);
                 }
                 $obj = null;
-                if (ContestRankCrontab::$times % ContestRankCrontab::$limit == 0) {
-                    $contest_list = Db::table('contest')
-                        ->where('isdel', 0)
-                        ->pluck('id')
-                        ->toArray();
-                    foreach ($contest_list as &$contest_id) {
-                        $lockonerank = 'contestranklock' . $contest_id;
-                        $redis4->del($lockonerank);
-                        // 发布任务
-                        RedisQueue::send(Base::$redis_queue_contest_rank_name, ['contest_id' => $contest_id]);
-                    }
-                    ContestRankCrontab::$times = 1;
+            } catch (Exception $e) {
+                // 发送通知
+                Robot::sendChatToOneUserMsg(Base::getRootId(), '定时任务进程 **【ContestRankCrontab】** 运行错误：' . $e->getMessage());
+            }
+        });
+
+        // 每天凌晨2点执行一次
+        new Crontab('00 2 * * *', function () {
+            try {
+                $redis4 = Redis::connection('db4');
+                $redis24 = Redis::connection('db24');
+                $redis24->del(Contest::$redis_array_name);
+                $contest_list = Db::table('contest')
+                    ->where('isdel', 0)
+                    ->pluck('id')
+                    ->toArray();
+                foreach ($contest_list as &$contest_id) {
+                    $lockonerank = 'contestranklock' . $contest_id;
+                    $redis4->del($lockonerank);
+                    // 发布任务
+                    RedisQueue::send(Base::$redis_queue_contest_rank_name, ['contest_id' => $contest_id]);
                 }
-                ContestRankCrontab::$times++;
             } catch (Exception $e) {
                 // 发送通知
                 Robot::sendChatToOneUserMsg(Base::getRootId(), '定时任务进程 **【ContestRankCrontab】** 运行错误：' . $e->getMessage());
