@@ -75,12 +75,12 @@ class RobotContest implements Consumer
     }
 
     /**
-     * 获取CodeHistory代码ID
+     * 获取Solveproblem代码ID
      * @param int $contest_begin
      * @param int $problem_id
      * @param int $my_id
      */
-    private function getCodeFromCodeHistory($contest_begin = null, $problem_id = 0, $my_id = 0)
+    private function getCodeFromSolveproblem($contest_begin = null, $problem_id = 0, $my_id = 0)
     {
         if (!$contest_begin || !$problem_id || !$my_id) {
             return;
@@ -107,29 +107,7 @@ class RobotContest implements Consumer
                 ->orderBy('id', 'desc')
                 ->first();
         }
-        // 没有题目的提交记录，就生成一个错误的答案提交记录
-        if (!RobotContest::$code_all_code_db[$problem_id]) {
-            $now = date('Y-m-d H:i:s', time());
-            $language = rand(0, 1) ? 'C' : 'C++';
-            $code_id = Base::insertToDb('codehistory', [
-                'userid' => $my_id,
-                'problemid' => $problem_id,
-                'language' => $language,
-                'status' => '答案错误',
-                'time' => $now,
-                'usetime' => rand(10, 100),
-                'usememory' => rand(10, 100),
-                'code' => '',
-                'contestid' => 0,
-            ]);
-            RobotContest::$code_all_code_db[$problem_id] = Db::table('codehistory')
-                ->where('id', $code_id)
-                ->where('status', '!=', Base::$code_up_waiting)
-                ->where('status', '!=', Base::$code_up_running)
-                ->where('isdel', 0)
-                ->first();
-        }
-        if (!RobotContest::$code_all_code_db[$problem_id]) {
+        if (!RobotContest::$code_all_code_db[$problem_id] || !RobotContest::$code_all_code_db[$problem_id]) {
             return;
         }
         if (!RobotContest::$code_all_ac_code_db[$problem_id]) {
@@ -141,12 +119,12 @@ class RobotContest implements Consumer
     }
 
     /**
-     * 从CodeHistory获取的代码提交代码
+     * 从Solveproblem获取提交代码
      * @param int $contest_id
      * @param int $problem_id
      * @param int $my_id
      */
-    private function addCodeFromCodeHistory($contest_id = 0, $problem_id = 0, $my_id = 0)
+    private function addCodeFromSolveproblem($contest_id = 0, $problem_id = 0, $my_id = 0)
     {
         if (!$contest_id || !$problem_id || !$my_id) {
             return;
@@ -190,7 +168,6 @@ class RobotContest implements Consumer
                 }
             }
         }
-        $now = date('Y-m-d H:i:s', time());
         if ($now >= $contest_db->begin && $now <= $contest_db->end) {
             Db::table('contestrank')
                 ->insert([
@@ -344,8 +321,8 @@ class RobotContest implements Consumer
                         }
                         if (rand(0, 100) <= 88) {
                             // 从代码历史查询记录，没有记录会自带生成一个记录
-                            $this->getCodeFromCodeHistory($contest_db->begin, $one_problem_id, $one_person_id);
-                            $this->addCodeFromCodeHistory($one_contest_id, $one_problem_id, $one_person_id);
+                            $this->getCodeFromSolveproblem($contest_db->begin, $one_problem_id, $one_person_id);
+                            $this->addCodeFromSolveproblem($one_contest_id, $one_problem_id, $one_person_id);
                             Contest::sendUpdateRankMQ($one_contest_id);
                         }
                         // 休眠微秒数
