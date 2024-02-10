@@ -3604,9 +3604,7 @@ class Base
     static public function isNotSupportEditTypeFile($file_extion)
     {
         $has = isset(Base::$extion_map_number[$file_extion]);
-        if (
-            !$has ||  ($has && Base::$extion_map_number[$file_extion] !== 4)
-        ) {
+        if ($has && Base::$extion_map_number[$file_extion] !== 4) {
             return true;
         }
         return false;
