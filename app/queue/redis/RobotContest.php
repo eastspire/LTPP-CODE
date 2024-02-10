@@ -142,7 +142,7 @@ class RobotContest implements Consumer
             return;
         }
         $now = date('Y-m-d H:i:s', time());
-        if ($db->status == 'AC') {
+        if ($is_ac) {
             Db::table('user')
                 ->where('id', $my_id)
                 ->where('isdel', 0)
@@ -174,7 +174,7 @@ class RobotContest implements Consumer
                     'userid' => $my_id,
                     'problemid' => $db->problemid,
                     'language' => $db->language,
-                    'score' => $db->status == 'AC' ? 100 : 0,
+                    'score' => $is_ac ? 100 : 0,
                     'submittime' => $now,
                     'code' => $db->code,
                     'contestid' => $contest_id,
@@ -185,7 +185,7 @@ class RobotContest implements Consumer
                 'userid' => $my_id,
                 'problemid' => $db->problemid,
                 'language' => $db->language,
-                'status' => $db->status == '正常运行' ? '答案错误' : $db->status,
+                'status' => $is_ac ? '正常运行' : '答案错误',
                 'time' => $now,
                 'usetime' => rand(10, 100),
                 'usememory' => rand(10, 100),
