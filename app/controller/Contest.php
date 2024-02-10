@@ -1196,7 +1196,7 @@ class Contest
         $respeople = array();
         $resdata = array();
         foreach ($joinpeople as &$tem) {
-            $temdb = Base::getUserData($tem->userid);
+            $temdb = Base::getUserDataFromDb($tem->userid);
             if ($temdb) {
                 $respeople[] = $temdb->name;
             }
@@ -1765,9 +1765,9 @@ class Contest
                     $msg =
                         '<tr><td>题目：【<span class="title">' . $problem_name[$t] . '</span>】</td><td>用户：【<a class="user" href="' .
                         $user_code_url_1 . '" target="_blank">' .
-                        Base::getUserData($user_list[$i])->name . '</a>】和用户：【<a class="user" href="' .
+                        Base::getUserDataFromDb($user_list[$i])->name . '</a>】和用户：【<a class="user" href="' .
                         $user_code_url_2 . '" target="_blank">' .
-                        Base::getUserData($user_list[$j])->name . '</a>】</td><td>代码相似度达到：<span class="duplication">' .
+                        Base::getUserDataFromDb($user_list[$j])->name . '</a>】</td><td>代码相似度达到：<span class="duplication">' .
                         $duplication * 100 . '%</span></td></div></tr>';
                     $loc = number_format(floor($duplication * 10) / 10, 1);
                     if (isset($percentage_list[$loc])) {
@@ -2137,7 +2137,7 @@ class Contest
                 return json(['code' => 1, 'data' => [], 'problemIndex' => []]);
             }
             $ta = [];
-            $db = Base::getUserData($tem->userid);
+            $db = Base::getUserDataFromDb($tem->userid);
             if (!$db || empty($db)) {
                 continue;
             }
@@ -2372,7 +2372,7 @@ class Contest
                 return json(['code' => 1, 'data' => [], 'problemIndex' => []]);
             }
             $ta = [];
-            $db = Base::getUserData($tem->userid);
+            $db = Base::getUserDataFromDb($tem->userid);
             if (!$db || empty($db)) {
                 continue;
             }

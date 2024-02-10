@@ -2827,6 +2827,29 @@ class Base
     }
 
     /**
+     * 获取DB中用户信息
+     * @param int $user_id
+     */
+    static public function getUserDataFromDb($user_id)
+    {
+        try {
+            if (!is_numeric($user_id)) {
+                return [];
+            }
+            $db = Db::table('user')
+                ->where('id', $user_id)
+                ->where('isdel', 0)
+                ->first();
+            if (!$db) {
+                return [];
+            }
+            return $db;
+        } catch (Exception $e) {
+            return [];
+        }
+    }
+
+    /**
      * 根据ID更新用户缓存信息
      * @param int $user_id
      */
@@ -3582,9 +3605,9 @@ class Base
      */
     static public function isNotSupportEditTypeFile($file_extion)
     {
+        $has = isset(Base::$extion_map_number[$file_extion]);
         if (
-            isset(Base::$extion_map_number[$file_extion]) &&
-            Base::$extion_map_number[$file_extion] !== 4
+            !$has ||  ($has && Base::$extion_map_number[$file_extion] !== 4)
         ) {
             return true;
         }
