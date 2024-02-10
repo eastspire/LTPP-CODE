@@ -30,12 +30,13 @@ class ContestRankCrontab
 
     public function onWorkerStart()
     {
-        // 每一秒钟执行一次
-        new Crontab('*/1 * * * * *', function () {
+        // 每天凌晨2点执行一次
+        new Crontab('00 2 * * *', function () {
             try {
                 if (ContestRankCrontab::$times > ContestRankCrontab::$limit) {
                     ContestRankCrontab::$times = 0;
                 }
+                $redis4 = Redis::connection('db4');
                 $redis24 = Redis::connection('db24');
                 $arr = $redis24->lrange(Contest::$redis_array_name, 0, -1);
                 $redis24->del(Contest::$redis_array_name);
@@ -55,6 +56,8 @@ class ContestRankCrontab
                         ->pluck('id')
                         ->toArray();
                     foreach ($contest_list as &$contest_id) {
+                        $lockonerank = 'contestranklock' . $contest_id;
+                        $redis4->del($lockonerank);
                         // 发布任务
                         RedisQueue::send(Base::$redis_queue_contest_rank_name, ['contest_id' => $contest_id]);
                     }

@@ -28,12 +28,12 @@ class ContestRank implements Consumer
     {
         try {
             $contest_id = $data['contest_id'] ?? 0;
-            Contest::contestIdGetRankEcharts($contest_id, true);
+            Contest::contestIdGetRankEcharts($contest_id);
             Contest::contestIdGetRank($contest_id, true);
         } catch (Exception $e) {
             $title = 'ContestRank消息队列异常';
             $content = $e->getMessage();
-            Robot::sendChatToOneUserMsg(Base::getRootId(), '#### ' . $title . "\n" . $content);          
+            Robot::sendChatToOneUserMsg(Base::getRootId(), '#### ' . $title . "\n" . $content);
         }
     }
 }

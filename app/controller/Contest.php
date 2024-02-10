@@ -1152,10 +1152,9 @@ class Contest
     /**
      * 计算Echarts实时排名
      * @param Request $request 请求
-     * @param bool $is_redis_queue 是否来自消息队列
      * @return void
      */
-    static public function contestIdGetRankEcharts($contest_id = 0, $is_redis_queue = false)
+    static public function contestIdGetRankEcharts($contest_id = 0)
     {
         //x轴时间分成几块
         $div = 20;
@@ -1909,9 +1908,8 @@ class Contest
             if ($redis4->exists($lockone)) {
                 return '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><link rel="icon" href="https://ltpp.vip/LTPPlogo.png" type="image/x-icon"><title>LTPP【' . $contest_db->name . '】竞赛排名</title><style>' . $msg_css . '</style><script>' . $js . '</script></head><body><h1>竞赛排名计算中</h1></body></html>';
             }
-            $is_end = $is_redis_queue ? false : true;
             if (
-                !$is_end ||
+                $is_redis_queue ||
                 !$redis4->exists('Contest' . $contest_id . 'resarray') ||
                 !$redis4->exists('Contest' . $contest_id . 'problemIndex')
             ) {
@@ -1920,7 +1918,6 @@ class Contest
                 } else if ($contest_db->type == 'OI' || $contest_db->type == 'IOI') {
                     Contest::lookHtmlOiExcelRank(0, $contest_id, $contest_db, $redis4, 1, 50, false, $is_redis_queue);
                 }
-                $is_end = true;
             }
             $data = json_decode($redis4->get('Contest' . $contest_id . 'resarray') ?? '');
             $problems = json_decode($redis4->get('Contest' . $contest_id . 'problemIndex') ?? '');
