@@ -246,6 +246,8 @@ class Video
         }
         $tabledata = $request->post('tabledata');
         $tabledata['id'] = Base::getIdByUid($tabledata['id']);
+        $tabledata['name'] = substr($tabledata['name'], 0, Base::$video_name_limit);
+        $tabledata['tag'] = substr($tabledata['tag'], 0, Base::$video_name_limit);
         $info = Db::table('video')
             ->where('id', $tabledata['id'])
             ->update([
@@ -253,7 +255,6 @@ class Video
                 'name' => $tabledata['name'],
                 'tag' => $tabledata['tag']
             ]);
-
         return json(['code' => 1, 'data' => $info, 'msg' => '视频更新成功']);
     }
 
