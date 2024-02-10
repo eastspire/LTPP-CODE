@@ -238,6 +238,7 @@ class Setting extends Image
                     $has_image = true;
                 }
                 if (sizeof($data) >= 0) {
+                    $has_image = true;
                     Db::table('image')->insert($data);
                     $data = [];
                 }

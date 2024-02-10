@@ -341,7 +341,7 @@ class Question
         $question_id = Base::getIdByUid($question_uid);
         if ($question_id) {
             $db = Db::table('question')
-                ->where('name', 'like', '%' . $key . '%')
+                ->where('name', $key)
                 ->where('id', '<', $question_id)
                 ->where('isdel', 0)
                 ->limit(Question::$limit)
@@ -350,7 +350,7 @@ class Question
                 ->get();
         } else {
             $db = Db::table('question')
-                ->where('name', 'like', '%' . $key . '%')
+                ->where('name', $key)
                 ->where('isdel', 0)
                 ->orderBy('id', 'desc')
                 ->limit(Question::$limit)

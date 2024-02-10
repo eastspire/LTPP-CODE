@@ -950,7 +950,7 @@ class Article extends Image
                     return json(['code' => 1, 'data' => []]);
                 } else if ($do == 'down') {
                     $info = Db::table('article')
-                        ->where('name', 'like', '%' . $key . '%')
+                        ->where('name', $key)
                         ->where('isdel', 0)
                         ->select(Article::$article_db_key)
                         ->orderBy('id', 'desc')
@@ -960,7 +960,7 @@ class Article extends Image
             } else {
                 if ($do == 'up') {
                     $info = Db::table('article')
-                        ->where('name', 'like', '%' . $key . '%')
+                        ->where('name', $key)
                         ->where('id', '>', $article_id)
                         ->where('isdel', 0)
                         ->select(Article::$article_db_key)
@@ -969,7 +969,7 @@ class Article extends Image
                         ->get();
                 } else if ($do == 'down') {
                     $info = Db::table('article')
-                        ->where('name', 'like', '%' . $key . '%')
+                        ->where('name', $key)
                         ->where('id', '<', $article_id)
                         ->where('isdel', 0)
                         ->select(Article::$article_db_key)
@@ -984,7 +984,7 @@ class Article extends Image
                     return json(['code' => 1, 'data' => []]);
                 } else if ($do == 'down') {
                     $info = Db::table('article')
-                        ->where('name', 'like', '%' . $key . '%')
+                        ->where('name', $key)
                         ->where('public', 1)
                         ->where('isdel', 0)
                         ->select(Article::$article_db_key)
@@ -995,7 +995,7 @@ class Article extends Image
             } else {
                 if ($do == 'up') {
                     $info = Db::table('article')
-                        ->where('name', 'like', '%' . $key . '%')
+                        ->where('name', $key)
                         ->where('public', 1)
                         ->where('isdel', 0)
                         ->where('id', '>', $article_id)
@@ -1005,7 +1005,7 @@ class Article extends Image
                         ->get();
                 } else if ($do == 'down') {
                     $info = Db::table('article')
-                        ->where('name', 'like', '%' . $key . '%')
+                        ->where('name', $key)
                         ->where('public', 1)
                         ->where('isdel', 0)
                         ->where('id', '<', $article_id)

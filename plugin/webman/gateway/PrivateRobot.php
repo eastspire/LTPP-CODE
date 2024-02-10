@@ -949,7 +949,7 @@ class PrivateRobot
                 ]));
                 foreach ($all_user as &$tem) {
                     ++$i;
-                    if ($i % 1000 == 0) {
+                    if ($i % 888 == 0) {
                         Db::table('privatechat')->insert($insert_data);
                         $insert_data = [];
                     }

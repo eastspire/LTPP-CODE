@@ -144,7 +144,7 @@ class CreatContestCrontab
                 'contestid' => $contest_id,
                 'problemid' => $problem_id
             ];
-            if ($cnt_i % 1000 == 0 && !empty($insert_pro_list)) {
+            if ($cnt_i % 888 == 0 && !empty($insert_pro_list)) {
                 Db::table('contestproblem')
                     ->insert($insert_pro_list);
                 $insert_pro_list = [];
@@ -173,7 +173,7 @@ class CreatContestCrontab
                 'contestid' => $contest_id,
                 'totaltime' => 0,
             ];
-            if ($cnt_i % 1000 == 0 && !empty($insert_user)) {
+            if ($cnt_i % 888 == 0 && !empty($insert_user)) {
                 Db::table('joincontest')
                     ->insert($insert_user);
                 $insert_user = [];
