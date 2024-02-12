@@ -1208,7 +1208,7 @@ class Base
             curl_setopt($ch, CURLOPT_PROXY, 'http://172.17.0.1:7890');
             $res = curl_exec($ch);
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsg(Base::getRootId(), '发送POST请求异常信息：' . "\n" . $e->getMessage());
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '发送POST请求异常信息：' . "\n" . $e->getMessage());
         }
         return $res;
     }
@@ -1234,7 +1234,7 @@ class Base
             curl_setopt($ch, CURLOPT_PROXY, 'http://172.17.0.1:7890');
             $res = curl_exec($ch);
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsg(Base::getRootId(), '发送GET请求异常信息：' . "\n" . $e->getMessage());
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '发送GET请求异常信息：' . "\n" . $e->getMessage());
         } finally {
             curl_close($ch);
         }
@@ -1444,7 +1444,7 @@ class Base
                 $resid = Db::table($db_name)->insertGetId($data);
             }
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsg(Base::getRootId(), '插入数据' . json_encode($data ?? []) . '到数据表' . $db_name . '出错:' . $e->getMessage());
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '插入数据' . json_encode($data ?? []) . '到数据表' . $db_name . '出错:' . $e->getMessage());
         }
         return $resid;
     }
@@ -1806,7 +1806,7 @@ class Base
             closedir($handle);
             @rmdir($dir);
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsg(Base::getRootId(), 'deleteAllFile执行出错：' . $e->getMessage());
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), 'deleteAllFile执行出错：' . $e->getMessage());
             return false;
         }
         return true;
@@ -2107,7 +2107,7 @@ class Base
             }
             file_put_contents($save_path, $file_data);
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsg(Base::getRootId(), '保存网络文件到本地出错：' . $e->getMessage());
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '保存网络文件到本地出错：' . $e->getMessage());
         }
     }
 
@@ -2133,7 +2133,7 @@ class Base
                 'time' => date('Y-m-d H:i:s', time())
             ]);
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsg(Base::getRootId(), '保存抖音视频文件到数据库出错：' . $e->getMessage());
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '保存抖音视频文件到数据库出错：' . $e->getMessage());
         }
     }
 
@@ -2325,7 +2325,7 @@ class Base
             }
             return $res_id;
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsg(Base::getRootId(), '**【creatRobot】** 运行错误：' . $e->getMessage());
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【creatRobot】** 运行错误：' . $e->getMessage());
         }
         return 0;
     }
@@ -3100,11 +3100,11 @@ class Base
                 foreach ($out as $tem) {
                     $res .= $tem . "\n";
                 }
-                Robot::sendChatToOneUserMsg(Base::getRootId(), '判题机安装出错：' . $res);
+                Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '判题机安装出错：' . $res);
                 return false;
             }
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsg(Base::getRootId(), '判题机安装出错：' . $e->getMessage());
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '判题机安装出错：' . $e->getMessage());
             return false;
         }
         return true;
@@ -3317,7 +3317,7 @@ class Base
             $text = mb_convert_encoding($text, 'UTF-8', $encoding);
             return $text;
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsg(Base::getRootId(), '**【textToSafeText】** 运行错误：' . $e->getMessage());
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【textToSafeText】** 运行错误：' . $e->getMessage());
             return '';
         }
     }
@@ -3395,7 +3395,7 @@ class Base
             $list = preg_split("/[\s]+/", $list_str);
             return $list;
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsg(Base::getRootId(), '获取GPT KEY LIST出错：' . $e->getMessage());
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '获取GPT KEY LIST出错：' . $e->getMessage());
         }
         return [];
     }
@@ -3409,7 +3409,7 @@ class Base
             $url = Base::getSettingKeyData('chatgpt_api_url') ?? '';
             return $url;
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsg(Base::getRootId(), '获取GPT接口地址出错：' . $e->getMessage());
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '获取GPT接口地址出错：' . $e->getMessage());
         }
         return '';
     }
@@ -3510,7 +3510,7 @@ class Base
             ]);
             return Base::$GLOBlinuxurl . $file_path;
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsg(Base::getRootId(), '**【writeNewStaticFile】** 运行错误：' . $e->getMessage());
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【writeNewStaticFile】** 运行错误：' . $e->getMessage());
         }
     }
 
@@ -3667,7 +3667,7 @@ class Base
             $redis36->setEx($problem_id, Base::$redis_timeout, json_encode($list));
             return $list;
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsg(Base::getRootId(), '**【getOjTestDataList】** 运行错误：' . $e->getMessage());
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【getOjTestDataList】** 运行错误：' . $e->getMessage());
         }
         return [];
     }
@@ -3688,7 +3688,7 @@ class Base
             $redis36->setEx($problem_id, Base::$redis_timeout, json_encode($list));
             return $list;
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsg(Base::getRootId(), '**【updateOjTestDataListRedis】** 运行错误：' . $e->getMessage());
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【updateOjTestDataListRedis】** 运行错误：' . $e->getMessage());
         }
         return [];
     }
@@ -3713,7 +3713,7 @@ class Base
                 Base::writeToFile($file_in_path, $tem->test_in);
             }
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsg(Base::getRootId(), '**【writeOjDataInToFile】** 运行错误：' . $e->getMessage());
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【writeOjDataInToFile】** 运行错误：' . $e->getMessage());
         }
     }
 
@@ -3751,7 +3751,7 @@ class Base
                 return Base::$GLOBlinuxurl . $new_path;
             }
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsg(Base::getRootId(), '**【uploadFileToDb】** 运行错误：' . $e->getMessage());
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【uploadFileToDb】** 运行错误：' . $e->getMessage());
         }
         return '';
     }
@@ -3781,7 +3781,7 @@ class Base
                 return $new_path;
             }
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsg(Base::getRootId(), '**【uploadFileToDb】** 运行错误：' . $e->getMessage());
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【uploadFileToDb】** 运行错误：' . $e->getMessage());
         }
         return '';
     }
@@ -3823,7 +3823,7 @@ class Base
                 return '[' . $file_name . '](' . Base::$GLOBlinuxurl . $new_path . ')';
             }
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsg(Base::getRootId(), '**【uploadChatFileToDb】** 运行错误：' . $e->getMessage());
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【uploadChatFileToDb】** 运行错误：' . $e->getMessage());
         }
         return '';
     }
@@ -3867,7 +3867,7 @@ class Base
             $data = Base::getStaticFileData($path);
             $res = strlen(Base::textToSafeText($data));
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsg(Base::getRootId(), '**【getDbFileSize】** 运行错误：' . $e->getMessage());
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【getDbFileSize】** 运行错误：' . $e->getMessage());
         }
         return $res;
     }
@@ -3892,7 +3892,7 @@ class Base
                 }
             }
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsg(Base::getRootId(), '**【getDbFileExtion】** 运行错误：' . $e->getMessage());
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【getDbFileExtion】** 运行错误：' . $e->getMessage());
         }
         return $file_extion;
     }
@@ -3907,7 +3907,7 @@ class Base
                 return Base::$extion_map_number[$file_extion];
             }
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsg(Base::getRootId(), '**【fileExtionToNumberType】** 运行错误：' . $e->getMessage());
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【fileExtionToNumberType】** 运行错误：' . $e->getMessage());
         }
         return 9;
     }
@@ -3948,7 +3948,7 @@ class Base
                 return '[' . $file_name . '](' . Base::$GLOBlinuxurl . $new_path . ')';
             }
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsg(Base::getRootId(), '**【uploadCloudFileToDb】** 运行错误：' . $e->getMessage());
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【uploadCloudFileToDb】** 运行错误：' . $e->getMessage());
         }
         return '';
     }
@@ -4010,7 +4010,7 @@ class Base
             Base::getChineseSize($size);
             return json(['code' => 1, 'msg' => '更新成功', 'data' => $size]);
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsg(Base::getRootId(), '**【updateCloudFileData】** 运行错误：' . $e->getMessage());
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【updateCloudFileData】** 运行错误：' . $e->getMessage());
         }
         return json(['code' => -1, 'msg' => '更新成功']);
     }
@@ -4040,7 +4040,7 @@ class Base
                 ->update(['isdel' => 1]);
             $redis35->del($file_path);
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsg(Base::getRootId(), '**【deleteCloudFileData】** 运行错误：' . $e->getMessage());
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【deleteCloudFileData】** 运行错误：' . $e->getMessage());
         }
     }
 
@@ -4060,7 +4060,7 @@ class Base
             }
             return $file_name;
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsg(Base::getRootId(), '**【getDbFileNameOfPath】** 运行错误：' . $e->getMessage());
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【getDbFileNameOfPath】** 运行错误：' . $e->getMessage());
         }
     }
 
@@ -4074,7 +4074,7 @@ class Base
                 return '';
             }
             $db = Db::table('contestrankcache')
-                ->where('coontestid', $contest_id)
+                ->where('contestid', $contest_id)
                 ->where('isdel', 0)
                 ->select('json')
                 ->first();
@@ -4083,7 +4083,7 @@ class Base
             }
             return json_decode($db->json, true);
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsg(Base::getRootId(), '**【getContestRankJsonData】** 运行错误：' . $e->getMessage());
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【getContestRankJsonData】** 运行错误：' . $e->getMessage());
         }
         return '';
     }
@@ -4098,7 +4098,7 @@ class Base
                 return '';
             }
             $db = Db::table('contestrankcache')
-                ->where('coontestid', $contest_id)
+                ->where('contestid', $contest_id)
                 ->where('isdel', 0)
                 ->select('echarts')
                 ->first();
@@ -4107,7 +4107,7 @@ class Base
             }
             return json_decode($db->echarts, true);
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsg(Base::getRootId(), '**【getContestRankEchartsData】** 运行错误：' . $e->getMessage());
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【getContestRankEchartsData】** 运行错误：' . $e->getMessage());
         }
         return '';
     }
@@ -4122,7 +4122,7 @@ class Base
                 return '';
             }
             $db = Db::table('contestrankcache')
-                ->where('coontestid', $contest_id)
+                ->where('contestid', $contest_id)
                 ->where('isdel', 0)
                 ->select('html')
                 ->first();
@@ -4131,7 +4131,7 @@ class Base
             }
             return $db->html;
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsg(Base::getRootId(), '**【getContestRankHtml】** 运行错误：' . $e->getMessage());
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【getContestRankHtml】** 运行错误：' . $e->getMessage());
         }
         return '';
     }
@@ -4153,7 +4153,7 @@ class Base
             Db::table('contestrankcache')
                 ->updateOrInsert(
                     [
-                        'coontestid' => $contest_id,
+                        'contestid' => $contest_id,
                         'isdel' => 0
                     ],
                     [
@@ -4162,7 +4162,7 @@ class Base
                 );
             return true;
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsg(Base::getRootId(), '**【updateContestRankJson】** 运行错误：' . $e->getMessage());
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【updateContestRankJson】** 运行错误：' . $e->getMessage());
         }
         return false;
     }
@@ -4183,7 +4183,7 @@ class Base
             Db::table('contestrankcache')
                 ->updateOrInsert(
                     [
-                        'coontestid' => $contest_id,
+                        'contestid' => $contest_id,
                         'isdel' => 0
                     ],
                     [
@@ -4192,7 +4192,7 @@ class Base
                 );
             return true;
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsg(Base::getRootId(), '**【updateContestRankHtml】** 运行错误：' . $e->getMessage());
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【updateContestRankHtml】** 运行错误：' . $e->getMessage());
         }
         return false;
     }
@@ -4214,7 +4214,7 @@ class Base
             Db::table('contestrankcache')
                 ->updateOrInsert(
                     [
-                        'coontestid' => $contest_id,
+                        'contestid' => $contest_id,
                         'isdel' => 0
                     ],
                     [
@@ -4223,7 +4223,7 @@ class Base
                 );
             return true;
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsg(Base::getRootId(), '**【updateContestRankEcharts】** 运行错误：' . $e->getMessage());
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【updateContestRankEcharts】** 运行错误：' . $e->getMessage());
         }
         return false;
     }

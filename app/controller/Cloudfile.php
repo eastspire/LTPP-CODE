@@ -70,7 +70,7 @@ class Cloudfile
                 'size' => $file_size
             ]);
         } catch (\Exception $e) {
-            Robot::sendChatToOneUserMsg(Base::getRootId(), '**【creatFile】** 运行错误：' . $e->getMessage());
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【creatFile】** 运行错误：' . $e->getMessage());
         }
     }
 

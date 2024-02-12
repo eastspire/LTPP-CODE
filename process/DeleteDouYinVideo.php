@@ -23,7 +23,7 @@ class DeleteDouYinVideo
                     ->where('time', '<', date('Y-m-d H:i:s', time() - $noupdate_limit_seconds))
                     ->update(['isdel' => 1]);
             } catch (Exception $e) {
-                Robot::sendChatToOneUserMsg(Base::getRootId(), '定时任务进程 **【DeleteDouYinVideo】** 运行错误：' . $e->getMessage());
+                Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '定时任务进程 **【DeleteDouYinVideo】** 运行错误：' . $e->getMessage());
             }
         });
     }

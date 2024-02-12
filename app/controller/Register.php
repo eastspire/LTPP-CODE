@@ -116,12 +116,12 @@ class Register extends Email
                     ]);
                 }
                 Robot::sendChatToOneUserMsg($my_aid, '## LTPP账号注册成功' . "\n" . $content);
-                Robot::sendChatToOneUserMsg(Base::getRootId(), '**【' . $now . '】** 用户 **【' . $name . '】** 注册成功');
+                Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【' . $now . '】** 用户 **【' . $name . '】** 注册成功');
                 return json(['code' => 1, 'msg' => '账号注册成功']);
             }
             return json(['code' => 0, 'msg' => '账号注册失败']);
         } catch (\Exception $e) {
-            Robot::sendChatToOneUserMsg(Base::getRootId(), '**【judgeRegister】** 运行错误：' . $e->getMessage());
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【judgeRegister】** 运行错误：' . $e->getMessage());
         }
         return json(['code' => 0, 'msg' => '账号注册失败']);
     }

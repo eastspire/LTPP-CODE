@@ -37,7 +37,7 @@ class GlobalNotice extends ChatBase
             ]));
         } catch (Exception $e) {
             ChatBase::sendToOneError($client_id, '系统错误');
-            Robot::sendChatToOneUserMsg(Base::getRootId(), '全局通知下发错误：' . $e->getMessage());
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '全局通知下发错误：' . $e->getMessage());
             return;
         }
     }

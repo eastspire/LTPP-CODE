@@ -41,7 +41,7 @@ class RobotContestCrontab
                 ->get();
             return $db;
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsg(Base::getRootId(), '定时任务进程 **【RobotContestCrontab】** 运行错误：' . $e->getMessage());
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '定时任务进程 **【RobotContestCrontab】** 运行错误：' . $e->getMessage());
         }
         return [];
     }
@@ -74,7 +74,7 @@ class RobotContestCrontab
                     ]);
                 }
             } catch (Exception $e) {
-                Robot::sendChatToOneUserMsg(Base::getRootId(), '定时任务进程 **【RobotContestCrontab】** 运行错误：' . $e->getMessage());
+                Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '定时任务进程 **【RobotContestCrontab】** 运行错误：' . $e->getMessage());
             }
         });
     }

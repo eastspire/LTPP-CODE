@@ -44,7 +44,7 @@ class ContestRankCrontab
                 $obj = null;
             } catch (Exception $e) {
                 // 发送通知
-                Robot::sendChatToOneUserMsg(Base::getRootId(), '定时任务进程 **【ContestRankCrontab】** 运行错误：' . $e->getMessage());
+                Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '定时任务进程 **【ContestRankCrontab】** 运行错误：' . $e->getMessage());
             }
         });
 
@@ -61,7 +61,7 @@ class ContestRankCrontab
                 // 已有缓存
                 $has_id = Db::table('contestrankcache')
                     ->where('isdel', 0)
-                    ->pluck('id')
+                    ->pluck('contestid')
                     ->toArray();
                 $has_map = [];
                 foreach ($has_id as &$id) {
@@ -80,7 +80,7 @@ class ContestRankCrontab
                 }
             } catch (Exception $e) {
                 // 发送通知
-                Robot::sendChatToOneUserMsg(Base::getRootId(), '定时任务进程 **【ContestRankCrontab】** 运行错误：' . $e->getMessage());
+                Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '定时任务进程 **【ContestRankCrontab】** 运行错误：' . $e->getMessage());
             }
         });
     }

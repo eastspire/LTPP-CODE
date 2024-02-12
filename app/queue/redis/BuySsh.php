@@ -153,7 +153,7 @@ class BuySsh implements Consumer
                 } catch (Exception $e) {
                     $title = '用户【' . $my_data->name . '】购买LTPP-SSH异常';
                     $content = $e->getMessage();
-                    Robot::sendChatToOneUserMsg(Base::getRootId(), '#### ' . $title . "\n" . $content);
+                    Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '#### ' . $title . "\n" . $content);
                     return;
                 }
             }
@@ -172,11 +172,11 @@ class BuySsh implements Consumer
                 $redis22->del($key);
                 $msg = '购买失败！请重试！';
                 Robot::sendChatToOneUserMsg($my_aid, '#### ' . $title . "\n" . $msg);
-                Robot::sendChatToOneUserMsg(Base::getRootId(), '**【' . $now . '】** 用户 **【' . $my_data->name . '】** 购买LTPP-SSH失败' . "\n" . $msg);
+                Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【' . $now . '】** 用户 **【' . $my_data->name . '】** 购买LTPP-SSH失败' . "\n" . $msg);
                 return;
             }
 
-            Robot::sendChatToOneUserMsg(Base::getRootId(), '**【' . $now . '】** 用户 **【' . $my_data->name . '】** 购买LTPP-SSH成功' . "\n" . json_encode($data));
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【' . $now . '】** 用户 **【' . $my_data->name . '】** 购买LTPP-SSH成功' . "\n" . json_encode($data));
 
             $res = Db::table('user')
                 ->where('id', $my_aid)
@@ -195,7 +195,7 @@ class BuySsh implements Consumer
         } catch (Exception $e) {
             $title = '用户【' . ($my_data->name ?? '') . '】购买LTPP-SSH异常';
             $content = $e->getMessage();
-            Robot::sendChatToOneUserMsg(Base::getRootId(), '#### ' . $title . "\n" . $content);
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '#### ' . $title . "\n" . $content);
             $redis22->del($key);
         }
     }

@@ -29,7 +29,7 @@ class DouYinCrontab
             // 长度限制
             $preview_title = Base::utfsubstr($preview_title, 0, Base::$video_name_limit);
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsg(Base::getRootId(), '定时任务进程 **【DouYinCrontab】** 运行错误：' . $e->getMessage());
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '定时任务进程 **【DouYinCrontab】** 运行错误：' . $e->getMessage());
         }
         return $preview_title;
     }
@@ -52,7 +52,7 @@ class DouYinCrontab
             }
             $preview_title = Base::utfsubstr($preview_title, 0, Base::$video_name_limit);
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsg(Base::getRootId(), '定时任务进程 **【DouYinCrontab】** 运行错误：' . $e->getMessage());
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '定时任务进程 **【DouYinCrontab】** 运行错误：' . $e->getMessage());
         }
         return $preview_title;
     }
@@ -93,7 +93,7 @@ class DouYinCrontab
             ];
             $res = json_decode(Base::postRequest($url, $headers, $data), true);
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsg(Base::getRootId(), '定时任务进程 **【DouYinCrontab】** 运行错误：' . $e->getMessage());
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '定时任务进程 **【DouYinCrontab】** 运行错误：' . $e->getMessage());
         }
         return $res;
     }
@@ -216,7 +216,7 @@ class DouYinCrontab
                 }
             }
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsg(Base::getRootId(), '定时任务进程 **【DouYinCrontab】** 运行错误：' . $e->getMessage());
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '定时任务进程 **【DouYinCrontab】** 运行错误：' . $e->getMessage());
         }
     }
 
@@ -227,7 +227,7 @@ class DouYinCrontab
             try {
                 $this->run();
             } catch (Exception $e) {
-                Robot::sendChatToOneUserMsg(Base::getRootId(), '定时任务进程 **【DouYinCrontab】** 运行错误：' . $e->getMessage());
+                Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '定时任务进程 **【DouYinCrontab】** 运行错误：' . $e->getMessage());
             }
         });
     }

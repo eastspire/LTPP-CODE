@@ -37,7 +37,7 @@ class Monitor implements Consumer
         } catch (Exception $e) {
             $title = 'Monitor消息队列异常';
             $content = $e->getMessage();
-            Robot::sendChatToOneUserMsg(Base::getRootId(), '#### ' . $title . "\n" . $content);
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '#### ' . $title . "\n" . $content);
         }
     }
 }

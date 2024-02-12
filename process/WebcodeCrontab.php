@@ -103,7 +103,7 @@ class WebcodeCrontab
     private function runTask()
     {
         if (!Base::judgeJudgeInstall()) {
-            Robot::sendChatToOneUserMsg(Base::getRootId(), '定时任务进程 **【WebcodeCrontab】** 判题机检测异常：判题机未安装！');
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '定时任务进程 **【WebcodeCrontab】** 判题机检测异常：判题机未安装！');
             return;
         }
         $testin = '';
@@ -113,7 +113,7 @@ class WebcodeCrontab
         //代码检测
         $check_safe_json = Base::judgeCodeSafe($code, $userlanguage);
         if (!isset($check_safe_json['code']) || $check_safe_json['code'] != 1) {
-            Robot::sendChatToOneUserMsg(Base::getRootId(), '定时任务进程 **【WebcodeCrontab】** 用户代码校验未通过：' . json($check_safe_json));
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '定时任务进程 **【WebcodeCrontab】** 用户代码校验未通过：' . json($check_safe_json));
             return;
         }
         $code_id = Base::insertToDb('codehistory', [
@@ -146,7 +146,7 @@ class WebcodeCrontab
             try {
                 $this->runTask();
             } catch (Exception $e) {
-                Robot::sendChatToOneUserMsg(Base::getRootId(), '定时任务进程 **【WebcodeCrontab】** 运行错误：' . $e->getMessage());
+                Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '定时任务进程 **【WebcodeCrontab】** 运行错误：' . $e->getMessage());
             }
         });
     }

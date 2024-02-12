@@ -104,7 +104,7 @@ class DeleteContest implements Consumer
                     if ($db) {
                         $title = 'DeleteContest消息队列运行结果';
                         $content = '竞赛ID为' . $contest_id . '的竞赛已删除！';
-                        Robot::sendChatToOneUserMsg(Base::getRootId(), '#### ' . $title . "\n" . $content);
+                        Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '#### ' . $title . "\n" . $content);
                         break;
                     }
                 } catch (Exception $e) {
@@ -114,7 +114,7 @@ class DeleteContest implements Consumer
         } catch (Exception $e) {
             $title = 'DeleteContest消息队列异常';
             $content = $e->getMessage();
-            Robot::sendChatToOneUserMsg(Base::getRootId(), '#### ' . $title . "\n" . $content);
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '#### ' . $title . "\n" . $content);
         }
     }
 }

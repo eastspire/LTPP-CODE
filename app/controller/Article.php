@@ -562,7 +562,7 @@ class Article extends Image
     {
         $writerid = Base::getRobotId();
         if (!$writerid) {
-            Robot::sendChatToOneUserMsg(Base::getRootId(), '机器人账号不存在！');
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '机器人账号不存在！');
             $writerid = Base::getRobotId();
         }
         $db = Db::table('article')
