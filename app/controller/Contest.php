@@ -827,6 +827,7 @@ class Contest
             $redis4->set('Contest' . $res_id . 'problemdata' . $tem->userid, json_encode($proary));
         }
         Base::updateContestDataRedis($res_id);
+        Contest::sendUpdateRankMQ($res_id);
         return json(['code' => 1, 'msg' => '竞赛添加成功']);
     }
 
@@ -966,12 +967,6 @@ class Contest
         foreach ($joinuser as &$tem) {
             $redis4->del('Contest' . $contest_id . 'problemdata' . $tem->userid);
         }
-        $redis4->del('ContestRank' . $contest_id . 'peopledata');
-        $redis4->del('ContestRank' . $contest_id . 'timedata');
-        $redis4->del('ContestRank' . $contest_id . 'echartsrank');
-        $redis4->del('Contest' . $contest_id . 'resarray');
-        $redis4->del('Contest' . $contest_id . 'problemIndex');
-        $redis4->del('Contest' . $contest_id . 'HtmlRank');
         Base::updateContestDataRedis($contest_id);
         return json(['code' => 1, 'msg' => '竞赛更新成功']);
     }
@@ -1123,29 +1118,36 @@ class Contest
      */
     public function getContestRank(Request $request)
     {
-        $contest_uid = $request->post('contest_id');
-        $contest_id = Base::getIdByUid($contest_uid);
-        $redis4 = Redis::connection('db4');
-        $contest_db = Base::getContestData($contest_id);
-        if (!$contest_db) {
-            return json(['code' => -1, 'peopledata' => [], 'timedata' => [], 'data' => [], 'msg' => '竞赛不存在！']);
+        try {
+            $contest_uid = $request->post('contest_id');
+            $contest_id = Base::getIdByUid($contest_uid);
+            $contest_db = Base::getContestData($contest_id);
+            if (!$contest_db) {
+                return json(['code' => -1, 'peopledata' => [], 'timedata' => [], 'data' => [], 'msg' => '竞赛不存在！']);
+            }
+            if ($contest_db->type == 'OI') {
+                return json(['code' => -1, 'peopledata' => [], 'timedata' => [], 'data' => [], 'msg' => 'OI赛制无法查看可视化排名!']);
+            }
+            $begintime = strtotime($contest_db->begin);
+            $isbegin = false;
+            if (time() >= $begintime) {
+                $isbegin = true;
+            }
+            if (!$isbegin) {
+                // 未开始
+                return json(['code' => -1, 'peopledata' => [], 'timedata' => [], 'data' => [], 'msg' => '竞赛未开始！无法查看排名!']);
+            }
+            $json = Base::getContestRankEchartsData($contest_id);
+            if (!$json) {
+                return json(['code' => -1, 'peopledata' => [], 'timedata' => [], 'data' => [], 'msg' => '暂无排名！']);
+            }
+            $peopledata = $json['peopledata'];
+            $timedata = $json['timedata'];
+            $data = $json['data'];
+            return json(['code' => 1, 'peopledata' => $peopledata, 'timedata' => $timedata, 'data' => $data, 'msg' => '统计信息完成！']);
+        } catch (Exception $e) {
+            Robot::sendChatToOneUserMsg(Base::getRootId(), '**【getContestRank】** 运行错误：' . $e->getMessage());
         }
-        if ($contest_db->type == 'OI') {
-            return json(['code' => -1, 'peopledata' => [], 'timedata' => [], 'data' => [], 'msg' => 'OI赛制无法查看可视化排名!']);
-        }
-        //缓存存在读取缓存
-        if (
-            $redis4->get('ContestRank' . $contest_id . 'peopledata') &&
-            $redis4->get('ContestRank' . $contest_id . 'timedata') &&
-            $redis4->get('ContestRank' . $contest_id . 'echartsrank')
-        ) {
-            $redispeo = json_decode($redis4->get('ContestRank' . $contest_id . 'peopledata') ?? '', true);
-            $redistime = json_decode($redis4->get('ContestRank' . $contest_id . 'timedata') ?? '', true);
-            $redisdata = json_decode($redis4->get('ContestRank' . $contest_id . 'echartsrank') ?? '', true);
-            return json(['code' => 1, 'peopledata' => $redispeo, 'timedata' => $redistime, 'data' => $redisdata, 'msg' => '统计信息完成！']);
-        }
-        // 下达计算任务
-        Contest::sendUpdateRankMQ($contest_id);
         return json(['code' => 1, 'peopledata' => [], 'timedata' => [], 'data' => [], 'msg' => '信息计算中！']);
     }
 
@@ -1184,9 +1186,6 @@ class Contest
             ->get();
         $arr_joinpeople = $joinpeople->toArray();
         if (sizeof($arr_joinpeople) > 40) {
-            $redis4->set('ContestRank' . $contest_id . 'peopledata', json_encode([]));
-            $redis4->set('ContestRank' . $contest_id . 'timedata', json_encode([]));
-            $redis4->set('ContestRank' . $contest_id . 'echartsrank', json_encode([]));
             // 解锁
             $redis4->del($lockoneecharts);
             return;
@@ -1239,14 +1238,15 @@ class Contest
                 }
                 $resdata[] = $temdata;
             }
-
-            //竞赛未开始存入缓存
             Base::dataToSafe($respeople);
-            Base::dataToSafe($restimedata);
             Base::dataToSafe($resdata);
-            $redis4->set('ContestRank' . $contest_id . 'peopledata', json_encode($respeople));
-            $redis4->set('ContestRank' . $contest_id . 'timedata', json_encode($restimedata));
-            $redis4->set('ContestRank' . $contest_id . 'echartsrank', json_encode($resdata));
+            // 竞赛未开始存入缓存
+            $json = [
+                'peopledata' => $respeople,
+                'timedata' => $restimedata,
+                'data' => $resdata,
+            ];
+            Base::updateContestRankEcharts($contest_id, $json);
             // 解锁
             $redis4->del($lockoneecharts);
             return;
@@ -1332,11 +1332,14 @@ class Contest
 
         //排名存入缓存
         Base::dataToSafe($respeople);
-        Base::dataToSafe($restimedata);
         Base::dataToSafe($resdata);
-        $redis4->set('ContestRank' . $contest_id . 'peopledata', json_encode($respeople));
-        $redis4->set('ContestRank' . $contest_id . 'timedata', json_encode($restimedata));
-        $redis4->set('ContestRank' . $contest_id . 'echartsrank', json_encode($resdata));
+        // 竞赛未开始存入缓存
+        $json = [
+            'peopledata' => $respeople,
+            'timedata' => $restimedata,
+            'data' => $resdata,
+        ];
+        Base::updateContestRankEcharts($contest_id, $json);
         $redis4->del($lockoneecharts);
     }
 
@@ -1347,15 +1350,51 @@ class Contest
      */
     public function lookAcmExcelRank(Request $request)
     {
-        $my_uid = JwtToken::getCurrentId();
-        $my_aid = Base::getIdByUid($my_uid);
-        $contest_uid = $request->post('contest_id');
-        $page = $request->post('page');
-        $limit = $request->post('limit');
-        $contest_id = Base::getIdByUid($contest_uid);
-        $redis4 = Redis::connection('db4');
-        $contest_db = Base::getContestData($contest_id);
-        return Contest::lookHtmlAcmExcelRank($my_aid, $contest_id, $contest_db, $redis4, $page, $limit);
+        try {
+            $my_uid = JwtToken::getCurrentId();
+            $my_aid = Base::getIdByUid($my_uid);
+            $contest_uid = $request->post('contest_id');
+            $page = $request->post('page');
+            $limit = $request->post('limit');
+            $contest_id = Base::getIdByUid($contest_uid);
+            $contest_db = Base::getContestData($contest_id);
+            if (!$contest_db) {
+                return json(['code' => -1, 'msg' => '竞赛不存在！', 'data' => [], 'problemIndex' => []]);
+            }
+            if ($contest_db->type != 'ACM' && $contest_db->type != 'SQS') {
+                return json(['code' => -1, 'msg' => '竞赛类型与预期不匹配！', 'data' => [], 'problemIndex' => []]);
+            }
+            $begintime = strtotime($contest_db->begin);
+            $isbegin = false;
+            if (time() >= $begintime) {
+                $isbegin = true;
+            }
+            if (!$isbegin) {
+                // 未开始
+                return json(['code' => 1, 'data' => [], 'problemIndex' => [], 'msg' => '竞赛未开始！无法查看排名！']);
+            }
+            $json = Base::getContestRankJsonData($contest_id);
+            if (!$json) {
+                return json(['code' => 1, 'data' => [], 'problemIndex' => [], 'msg' => '暂无排名！']);
+            }
+            $data = $json['data'];
+            $problemIndex = $json['problemIndex'];
+            $myrank = 1;
+            $total = $json['total'];
+            foreach ($data as &$tem) {
+                if (Base::getIdByUid($tem['id']) == $my_aid) {
+                    $myrank = $tem['index'];
+                    break;
+                }
+            }
+            $data = Base::paging($page, $limit, $data);
+            Base::dataToSafe($data, true);
+            Base::dataToSafe($problemIndex);
+            return json(['code' => 1, 'data' => $data, 'problemIndex' => $problemIndex, 'myrank' => $myrank, 'total' => $total]);
+        } catch (Exception $e) {
+            Robot::sendChatToOneUserMsg(Base::getRootId(), '**【lookAcmExcelRank】** 运行错误：' . $e->getMessage());
+        }
+        return json(['code' => 1, 'data' => [], 'problemIndex' => [], 'msg' => '服务器异常！无法查看排名！']);
     }
 
     /**
@@ -1365,15 +1404,57 @@ class Contest
      */
     public function lookOiExcelRank(Request $request)
     {
-        $my_uid = JwtToken::getCurrentId();
-        $my_aid = Base::getIdByUid($my_uid);
-        $contest_uid = $request->post('contest_id');
-        $page = $request->post('page');
-        $limit = $request->post('limit');
-        $contest_id = Base::getIdByUid($contest_uid);
-        $redis4 = Redis::connection('db4');
-        $contest_db = Base::getContestData($contest_id);
-        return Contest::lookHtmlOiExcelRank($my_aid, $contest_id, $contest_db, $redis4, $page, $limit, Contest::judgeIsMyContest($contest_id, $my_aid));
+        try {
+            $my_uid = JwtToken::getCurrentId();
+            $my_aid = Base::getIdByUid($my_uid);
+            $contest_uid = $request->post('contest_id');
+            $page = $request->post('page');
+            $limit = $request->post('limit');
+            $contest_id = Base::getIdByUid($contest_uid);
+            $contest_db = Base::getContestData($contest_id);
+            if (!$contest_db) {
+                return json(['code' => -1, 'msg' => '竞赛不存在！', 'data' => [], 'problemIndex' => []]);
+            }
+            if ($contest_db->type != 'OI' && $contest_db->type != 'IOI') {
+                return json(['code' => -1, 'msg' => '竞赛类型与预期不匹配！', 'data' => [], 'problemIndex' => []]);
+            }
+            //判断竞赛是否开始或结束
+            $begintime = strtotime($contest_db->begin);
+            $endtime = strtotime($contest_db->end);
+            $isbegin = false;
+            if (time() >= $begintime) {
+                $isbegin = true;
+            }
+            if (!$isbegin) {
+                return json(['code' => 1, 'data' => [], 'problemIndex' => [], 'msg' => 'OI赛制竞赛结束可查看排名！']);
+            }
+            $is_mycontest = Contest::judgeIsMyContest($contest_id, $my_aid);
+            // OI赛制未结束，非管理员不可看
+            if ($contest_db->type == 'OI' && time() <= $endtime && !$is_mycontest) {
+                return json(['code' => 1, 'data' => [], 'problemIndex' => [], 'msg' => 'OI赛制竞赛结束可查看排名！']);
+            }
+            $json = Base::getContestRankJsonData($contest_id);
+            if (!$json) {
+                return json(['code' => 1, 'data' => [], 'problemIndex' => [], 'msg' => '暂无排名！']);
+            }
+            $data = $json['data'];
+            $problemIndex = $json['problemIndex'];
+            $myrank = 1;
+            $total = $json['total'];
+            foreach ($data as &$tem) {
+                if (Base::getIdByUid($tem['id']) == $my_aid) {
+                    $myrank = $tem['index'];
+                    break;
+                }
+            }
+            $data = Base::paging($page, $limit, $data);
+            Base::dataToSafe($data, true);
+            Base::dataToSafe($problemIndex);
+            return json(['code' => 1, 'data' => $data, 'problemIndex' => $problemIndex, 'myrank' => $myrank, 'total' => $total]);
+        } catch (Exception $e) {
+            Robot::sendChatToOneUserMsg(Base::getRootId(), '**【lookOiExcelRank】** 运行错误：' . $e->getMessage());
+        }
+        return json(['code' => 1, 'data' => [], 'problemIndex' => [], 'msg' => '服务器异常！无法查看排名！']);
     }
 
     /**
@@ -1392,13 +1473,6 @@ class Contest
             return json(['code' => -1, 'msg' => '权限不足！']);
         }
         $redis4 = Redis::connection('db4');
-        $redis4->del('Contest' . $contest_id . 'resarray');
-        $redis4->del('Contest' . $contest_id . 'problemIndex');
-        $redis4->del('ContestRank' . $contest_id . 'peopledata');
-        $redis4->del('ContestRank' . $contest_id . 'timedata');
-        $redis4->del('ContestRank' . $contest_id . 'echartsrank');
-        $redis4->del('Contest' . $contest_id . 'HtmlRank');
-        $redis4->del('Contest' . $contest_id . 'HtmlRankLock');
         // 解锁
         $lockonerank = 'contestranklock' . $contest_id;
         $redis4->del($lockonerank);
@@ -1744,8 +1818,18 @@ class Contest
         foreach ($problem_list as &$t) {
             for ($i = 0; $i < $len; ++$i) {
                 $code1 = $map[$user_list[$i]][$t];
+                if (!$code1) {
+                    $code1 = new stdClass();
+                    $code1->id = '';
+                    $code1->code = '';
+                }
                 for ($j = $i + 1; $j < $len; ++$j) {
                     $code2 = $map[$user_list[$j]][$t];
+                    if (!$code2) {
+                        $code2 = new stdClass();
+                        $code2->id = '';
+                        $code2->code = '';
+                    }
                     $duplication = $this->codeDuplicationCheck($code1->code, $code2->code);
                     if (!($duplication * 100)) {
                         continue;
@@ -1761,12 +1845,22 @@ class Contest
                     // 地址
                     $user_code_url_1 = Base::$GLOBlinuxurl . '/Contest/lookContestProblemCode?path=' . $code1_safe_id;
                     $user_code_url_2 = Base::$GLOBlinuxurl . '/Contest/lookContestProblemCode?path=' . $code2_safe_id;
+                    $user_i_db = Base::getUserDataFromDb($user_list[$i]);
+                    $user_j_db = Base::getUserDataFromDb($user_list[$j]);
+                    if (!$user_i_db) {
+                        $user_i_db = new stdClass();
+                        $user_i_db->name = '未知用户';
+                    }
+                    if (!$user_j_db) {
+                        $user_j_db = new stdClass();
+                        $user_j_db->name = '未知用户';
+                    }
                     $msg =
                         '<tr><td>题目：【<span class="title">' . $problem_name[$t] . '</span>】</td><td>用户：【<a class="user" href="' .
                         $user_code_url_1 . '" target="_blank">' .
-                        Base::getUserDataFromDb($user_list[$i])->name . '</a>】和用户：【<a class="user" href="' .
+                        $user_i_db->name . '</a>】和用户：【<a class="user" href="' .
                         $user_code_url_2 . '" target="_blank">' .
-                        Base::getUserDataFromDb($user_list[$j])->name . '</a>】</td><td>代码相似度达到：<span class="duplication">' .
+                        $user_j_db->name . '</a>】</td><td>代码相似度达到：<span class="duplication">' .
                         $duplication * 100 . '%</span></td></div></tr>';
                     $loc = number_format(floor($duplication * 10) / 10, 1);
                     if (isset($percentage_list[$loc])) {
@@ -1856,86 +1950,40 @@ class Contest
     {
         $contest_uid = $request->get('contest_id');
         $contest_id = Base::getIdByUid($contest_uid);
-        return Contest::contestIdGetRank($contest_id);
+        $html = Base::getContestRankHtml($contest_id);
+        if (!$html) {
+            $js = Base::getJs('rank');
+            $msg_css = Base::getCss('msg');
+            $contest_db = Base::getContestData($contest_id);
+            // 非消息队列获取排名，排名不在缓存
+            return '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><link rel="icon" href="https://ltpp.vip/LTPPlogo.png" type="image/x-icon"><title>LTPP【' . $contest_db->name . '】竞赛排名</title><style>' . $msg_css . '</style><script>' . $js . '</script></head><body><h1>竞赛排名计算中</h1></body></html>';
+        }
+        return $html;
     }
 
     /**
      * 获取排名
      * @param int $contest_id 竞赛id
-     * @param bool $is_redis_queue 是否是消息队列（消息队列则强制计算排名）
      */
-    static public function contestIdGetRank($contest_id, $is_redis_queue = false)
+    static public function contestIdGetRank($contest_id)
     {
         try {
-            $msg_css = Base::getCss('msg');
+            $my_aid = Base::getRootId();
             $contest_db = Base::getContestData($contest_id);
-
-            if (!$contest_db) {
-                return '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><link rel="icon" href="https://ltpp.vip/LTPPlogo.png" type="image/x-icon"><title>LTPP【' . $contest_db->name . '】竞赛排名</title><style>' . $msg_css . '</style></head><body><h1>竞赛不存在</h1></body></html>';
-            }
-            if ($contest_db->type != 'ACM' && $contest_db->type != 'SQS' && $contest_db->type != 'OI' && $contest_db->type != 'IOI') {
-                return '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><link rel="icon" href="https://ltpp.vip/LTPPlogo.png" type="image/x-icon"><title>LTPP【' . $contest_db->name . '】竞赛排名</title><style>' . $msg_css . '</style></head><body><h1>竞赛类型错误</h1></body></html>';
-            }
-            $begintime = strtotime($contest_db->begin);
-            $endtime = strtotime($contest_db->end);
-            $js = Base::getJs('rank');
-            // 未开始
-            if (time() < $begintime) {
-                return '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><link rel="icon" href="https://ltpp.vip/LTPPlogo.png" type="image/x-icon"><title>LTPP【' . $contest_db->name . '】竞赛排名</title><style>' . $msg_css . '</style><script>' . $js . '</script></head><body><h1>竞赛开始可查看排名</h1></body></html>';
-            }
-            // OI赛制
-            if ($contest_db->type == 'OI' && time() <= $endtime && !$is_redis_queue) {
-                return '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><link rel="icon" href="https://ltpp.vip/LTPPlogo.png" type="image/x-icon"><title>LTPP【' . $contest_db->name . '】竞赛排名</title><style>' . $msg_css . '</style><script>' . $js . '</script></head><body><h1>OI赛制竞赛结束可查看排名</h1></body></html>';
-            }
             $redis4 = Redis::connection('db4');
-            $key = 'Contest' . $contest_id . 'HtmlRank';
-            //缓存存在读取缓存
-            $html = $redis4->get($key);
-            if (!$is_redis_queue && $html) {
-                // 非消息队列获取排名，排名在缓存
-                return response($html, 200, [
-                    'Content-Type' => Base::getContentType('html'),
-                    'Accept-Ranges' => 'bytes',
-                    'Content-Length' => strlen($html),
-                    'File-Content-Type' => Base::getContentType($html),
-                    'Content-Encoding' => 'gzip'
-                ]);
-            } else if (!$is_redis_queue) {
-                // 非消息队列获取排名，排名不在缓存
-                return '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><link rel="icon" href="https://ltpp.vip/LTPPlogo.png" type="image/x-icon"><title>LTPP【' . $contest_db->name . '】竞赛排名</title><style>' . $msg_css . '</style><script>' . $js . '</script></head><body><h1>竞赛排名计算中</h1></body></html>';
+            if (!$contest_db) {
+                return;
             }
-            $lockone = 'contestranklock' . $contest_id;
-            if ($redis4->exists($lockone)) {
-                return '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><link rel="icon" href="https://ltpp.vip/LTPPlogo.png" type="image/x-icon"><title>LTPP【' . $contest_db->name . '】竞赛排名</title><style>' . $msg_css . '</style><script>' . $js . '</script></head><body><h1>竞赛排名计算中</h1></body></html>';
-            }
-            if (
-                $is_redis_queue ||
-                !$redis4->exists('Contest' . $contest_id . 'resarray') ||
-                !$redis4->exists('Contest' . $contest_id . 'problemIndex')
-            ) {
-                if ($contest_db->type == 'ACM' || $contest_db->type == 'SQS') {
-                    Contest::lookHtmlAcmExcelRank(0, $contest_id, $contest_db, $redis4, 1, 50, $is_redis_queue);
-                } else if ($contest_db->type == 'OI' || $contest_db->type == 'IOI') {
-                    Contest::lookHtmlOiExcelRank(0, $contest_id, $contest_db, $redis4, 1, 50, false, $is_redis_queue);
-                }
-            }
-            $data = json_decode($redis4->get('Contest' . $contest_id . 'resarray') ?? '');
-            $problems = json_decode($redis4->get('Contest' . $contest_id . 'problemIndex') ?? '');
-            $html = Contest::calculateContestRank($problems, $data, $contest_db);
-            $html = gzencode($html, Base::$gzip_num);
-            if ($html) {
-                $redis4->set($key, $html);
+            if ($contest_db->type == 'ACM' || $contest_db->type == 'SQS') {
+                Contest::lookHtmlAcmExcelRank($my_aid, $contest_id, $contest_db, $redis4);
+            } else if ($contest_db->type != 'OI' && $contest_db->type != 'IOI') {
+                Contest::lookHtmlOiExcelRank($my_aid, $contest_id, $contest_db, $redis4);
             }
         } catch (Exception $e) {
-            return Base::notFoundPage();
+            $title = 'contestIdGetRank运行异常';
+            $content = $e->getMessage();
+            Robot::sendChatToOneUserMsg(Base::getRootId(), '#### ' . $title . "\n" . $content);
         }
-        return response($html, 200, [
-            'Content-Type' => Base::getContentType('html'),
-            'Accept-Ranges' => 'bytes',
-            'Content-Length' => strlen($html),
-            'File-Content-Type' => Base::getContentType($html),
-            'Content-Encoding' => 'gzip'
-        ]);
     }
 
     /**
@@ -1956,11 +2004,12 @@ class Contest
             $pro_index = 1;
             $problems_len = sizeof($problems);
             $rank_css = Base::getCss('table');
+            $msg_css = Base::getCss('msg');
             $js = Base::getJs('rank');
             $endtime = strtotime($contest_db->end);
             // OI赛制HTML排名竞赛未结束不显示
             if ($contest_db->type == 'OI' && time() <= $endtime) {
-                return '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><link rel="icon" href="https://ltpp.vip/LTPPlogo.png" type="image/x-icon"><title>LTPP【' . $contest_db->name . '】竞赛排名</title><style>' . $rank_css . '</style><script>' . $js . '</script></head><body><h1>OI赛制竞赛结束可查看排名</h1></body></html>';
+                return '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><link rel="icon" href="https://ltpp.vip/LTPPlogo.png" type="image/x-icon"><title>LTPP【' . $contest_db->name . '】竞赛排名</title><style>' . $msg_css . '</style><script>' . $js . '</script></head><body><h1>OI赛制竞赛结束可查看排名</h1></body></html>';
             }
             if ($contest_db->type == 'ACM' || $contest_db->type == 'SQS') {
                 $table_title = '<th>排名</th><th>用户</th><th>总AC数</th><th>总用时</th>';
@@ -1969,18 +2018,18 @@ class Contest
                 }
                 $table_title = '<tr>' . $table_title . '</tr>';
                 foreach ($data as &$tem) {
-                    $hour = floor($tem->totaltime / 3600);
-                    $tem->totaltime = $hour . ':' . floor(floor($tem->totaltime - $hour * 3600) / 60) . ':' . floor($tem->totaltime % 60);
-                    $table_body .= '<td class="RANK">' . $tem->index . '</td><td class="USER-NAME">' . $tem->name . '</td><td class="ACM-ACNUM">' . $tem->acnum . '</td><td class="TOTALTIME">' . $tem->totaltime . '</td>';
-                    foreach ($tem->res as &$tem_pro) {
-                        if ($tem_pro->firstAcTime != -1) {
-                            if ($tem_pro->waNum == 0) {
-                                $table_body .= '<td><div class="ACM-ONE-TIME-AC">✔</div><div class="FIRST-AC-TIME">( ' . $tem_pro->firstAcTime . ' )</div></td>';
+                    $hour = floor($tem['totaltime'] / 3600);
+                    $tem['totaltime'] = $hour . ':' . floor(floor($tem['totaltime'] - $hour * 3600) / 60) . ':' . floor($tem['totaltime'] % 60);
+                    $table_body .= '<td class="RANK">' . $tem['index'] . '</td><td class="USER-NAME">' . $tem['name'] . '</td><td class="ACM-ACNUM">' . $tem['acnum'] . '</td><td class="TOTALTIME">' . $tem['totaltime'] . '</td>';
+                    foreach ($tem['res'] as &$tem_pro) {
+                        if ($tem_pro['firstAcTime'] != -1) {
+                            if ($tem_pro['waNum'] == 0) {
+                                $table_body .= '<td><div class="ACM-ONE-TIME-AC">✔</div><div class="FIRST-AC-TIME">( ' . $tem_pro['firstAcTime'] . ' )</div></td>';
                             } else {
-                                $table_body .= '<td><div class="ACM-MORE-TIMES-AC">-' . $tem_pro->waNum . '</div><div class="FIRST-AC-TIME">(' . $tem_pro->firstAcTime . ')</div></td>';
+                                $table_body .= '<td><div class="ACM-MORE-TIMES-AC">-' . $tem_pro['waNum'] . '</div><div class="FIRST-AC-TIME">(' . $tem_pro['firstAcTime'] . ')</div></td>';
                             }
-                        } else if ($tem_pro->waNum != 0) {
-                            $table_body .= '<td><div class="ACM-NO-AC">-' . $tem_pro->waNum . '</div></td>';
+                        } else if ($tem_pro['waNum'] != 0) {
+                            $table_body .= '<td><div class="ACM-NO-AC">-' . $tem_pro['waNum'] . '</div></td>';
                         } else {
                             $table_body .= '<td></td>';
                         }
@@ -1994,15 +2043,15 @@ class Contest
                 }
                 $table_title = '<tr>' . $table_title . '</tr>';
                 foreach ($data as &$tem) {
-                    $hour = floor($tem->totaltime / 3600);
-                    $tem->totaltime = $hour . ':' . floor(floor($tem->totaltime - $hour * 3600) / 60) . ':' . floor($tem->totaltime % 60);
-                    $table_body .= '<td class="RANK">' . $tem->index . '</td><td class="USER-NAME">' . $tem->name . '</td><td class="ACM-ALLSCORE">' . $tem->allscore . '</td><td class="TOTALTIME">' . $tem->totaltime . '</td>';
-                    foreach ($tem->res as &$tem_pro) {
-                        if ($tem_pro->firstAcTime != -1) {
-                            if ($tem_pro->score == 100) {
-                                $table_body .= '<td><div class="IOI-AC">' . $tem_pro->score . '</div><div class="FIRST-AC-TIME">( ' . $tem_pro->firstAcTime . ' )</div></td>';
+                    $hour = floor($tem['totaltime'] / 3600);
+                    $tem['totaltime'] = $hour . ':' . floor(floor($tem['totaltime'] - $hour * 3600) / 60) . ':' . floor($tem['totaltime'] % 60);
+                    $table_body .= '<td class="RANK">' . $tem['index'] . '</td><td class="USER-NAME">' . $tem['name'] . '</td><td class="ACM-ALLSCORE">' . $tem['allscore'] . '</td><td class="TOTALTIME">' . $tem['totaltime'] . '</td>';
+                    foreach ($tem['res'] as &$tem_pro) {
+                        if ($tem_pro['firstAcTime'] != -1) {
+                            if ($tem_pro['score'] == 100) {
+                                $table_body .= '<td><div class="IOI-AC">' . $tem_pro['score'] . '</div><div class="FIRST-AC-TIME">( ' . $tem_pro['firstAcTime'] . ' )</div></td>';
                             } else {
-                                $table_body .= '<td><div class="IOI-NO-AC">' . $tem_pro->score . '</div><div class="FIRST-AC-TIME">( ' . $tem_pro->firstAcTime . ' )</div></td>';
+                                $table_body .= '<td><div class="IOI-NO-AC">' . $tem_pro['score'] . '</div><div class="FIRST-AC-TIME">( ' . $tem_pro['firstAcTime'] . ' )</div></td>';
                             }
                         } else {
                             $table_body .= '<td></td>';
@@ -2013,6 +2062,7 @@ class Contest
             }
             $html = '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><link rel="icon" href="https://ltpp.vip/LTPPlogo.png" type="image/x-icon"><title>LTPP【' . $contest_db->name . '】竞赛排名</title><style>' . $rank_css . '</style><script>' . $js . '</script></head><body><table class="CONTEST"><tr><th class="CONTEST-NAME" colspan="' . ($problems_len + 4) . '">LTPP【' . $contest_db->name . '】实时竞赛排名</th></tr>' . $table_title . $table_body . '</body></html>';
         } catch (Exception $e) {
+            Robot::sendChatToOneUserMsg(Base::getRootId(), '**【calculateContestRank】** 运行错误：' . $e->getMessage());
             return $html;
         }
         return $html;
@@ -2036,66 +2086,28 @@ class Contest
      * @param int $contest_id 竞赛ID
      * @param {*} $contest_db 竞赛数据库信息
      * @param {*} $redis4 数据库连接
-     * @param {*} $page 页数
-     * @param {*} $limit 条数
-     * @param bool $is_redis_queue 是否是MQ
      */
-    static private function lookHtmlAcmExcelRank($my_aid, $contest_id, $contest_db, $redis4, $page = 1, $limit = 50, $is_redis_queue = false)
+    static private function lookHtmlAcmExcelRank($my_aid, $contest_id, $contest_db, $redis4)
     {
         if (!$my_aid) {
             $my_aid = 0;
         }
         if (!$contest_db) {
-            return json(['code' => -1, 'msg' => '竞赛不存在！', 'data' => [], 'problemIndex' => []]);
+            return;
         }
         if ($contest_db->type != 'ACM' && $contest_db->type != 'SQS') {
-            return json(['code' => -1, 'msg' => '竞赛类型与预期不匹配！', 'data' => [], 'problemIndex' => []]);
+            return;
         }
         $begintime = strtotime($contest_db->begin);
         $endtime = strtotime($contest_db->end);
-        $isbegin = false;
-        if (time() >= $begintime) {
-            $isbegin = true;
-        }
-        if (!$isbegin) {
-            // 未开始
-            return json(['code' => 1, 'data' => [], 'problemIndex' => [], 'msg' => '竞赛未开始！无法查看排名！']);
-        }
-        Contest::judgeLimitIsSafe($limit);
-        if (
-            !$is_redis_queue &&
-            $redis4->exists('Contest' . $contest_id . 'resarray') &&
-            $redis4->exists('Contest' . $contest_id . 'problemIndex')
-        ) {
-            try {
-                $rediscon = json_decode($redis4->get('Contest' . $contest_id . 'resarray') ?? '', true);
-                $redispro = json_decode($redis4->get('Contest' . $contest_id . 'problemIndex') ?? '', true);
-            } catch (Exception $e) {
-                return json(['code' => -1, 'msg' => '竞赛缓存异常！', 'data' => [], 'problemIndex' => []]);
-            }
-            $my_loc = 1;
-            $total = sizeof($rediscon);
-            if ($my_aid) {
-                foreach ($rediscon as &$tem) {
-                    if (Base::getIdByUid($tem['id']) == $my_aid) {
-                        $my_loc = $tem['index'];
-                        break;
-                    }
-                }
-                $rediscon = Base::paging($page, $limit, $rediscon);
-            }
-            return json(['code' => 1, 'data' => $rediscon, 'problemIndex' => $redispro, 'myrank' => $my_loc, 'total' => $total]);
-        }
-        if (!$is_redis_queue) {
-            return json(['code' => -1, 'msg' => '竞赛排名计算中！', 'data' => [], 'problemIndex' => []]);
-        }
+
         //排名锁
         $lockone = 'contestranklock' . $contest_id;
         $now_key_value = Base::randString();
         //加锁
         $lock_res = $redis4->setNx($lockone, $now_key_value);
         if (!$lock_res) {
-            return json(['code' => -1, 'msg' => '竞赛排名计算中！', 'data' => [], 'problemIndex' => []]);
+            return;
         }
         // 题目
         $prolist = Db::table('contestproblem')
@@ -2235,30 +2247,16 @@ class Contest
                 $last_totaltime = $tem['totaltime'];
             }
         }
-        //存入缓存
-        Base::dataToSafe($resarray, true);
-        Base::dataToSafe($problemIndex);
-        $redis4->set('Contest' . $contest_id . 'resarray', json_encode($resarray));
-        $redis4->set('Contest' . $contest_id . 'problemIndex', json_encode($problemIndex));
         $redis4->del($lockone);
+        // 更新JSON缓存，顺序不可换，因为HTML更新传递引用，会导致数组总时间格式化
+        $total = sizeof($resarray);
+        $json = ['data' => $resarray, 'problemIndex' => $problemIndex, 'total' => $total];
+        Base::updateContestRankJson($contest_id, $json);
         // 更新HTML缓存
-        $key = 'Contest' . $contest_id . 'HtmlRank';
         $html = Contest::calculateContestRank($problemIndex, $resarray, $contest_db);
         if ($html) {
-            $redis4->set($key, $html);
+            Base::updateContestRankHtml($contest_id, $html);
         }
-        $my_loc = 1;
-        $total = sizeof($resarray);
-        if ($my_aid) {
-            foreach ($resarray as &$tem) {
-                if (Base::getIdByUid($tem['id']) == $my_aid) {
-                    $my_loc = $tem['index'];
-                    break;
-                }
-            }
-            $resarray = Base::paging($page, $limit, $resarray);
-        }
-        return json(['code' => 1, 'data' => $resarray, 'problemIndex' => $problemIndex, 'myrank' => $my_loc, 'total' => $total]);
     }
 
     /**
@@ -2267,74 +2265,28 @@ class Contest
      * @param int $contest_id 竞赛ID
      * @param {*} $contest_db 竞赛数据库信息
      * @param {*} $redis4 数据库连接
-     * @param {*} $page 页数
-     * @param {*} $limit 条数
-     * @param bool $is_mycontest 是否是我创建的竞赛
-     * @param bool $is_redis_queue 是否是MQ
      */
-    static private function lookHtmlOiExcelRank($my_aid, $contest_id, $contest_db, $redis4, $page = 1, $limit = 50, $is_mycontest = false, $is_redis_queue = false)
+    static private function lookHtmlOiExcelRank($my_aid, $contest_id, $contest_db, $redis4)
     {
         if (!$my_aid) {
             $my_aid = 0;
         }
-        Contest::judgeLimitIsSafe($limit);
         if (!$contest_db) {
-            return json(['code' => -1, 'msg' => '竞赛不存在！', 'data' => [], 'problemIndex' => []]);
+            return;
         }
         if ($contest_db->type != 'OI' && $contest_db->type != 'IOI') {
-            return json(['code' => -1, 'msg' => '竞赛类型与预期不匹配！', 'data' => [], 'problemIndex' => []]);
+            return;
         }
-        //判断竞赛是否开始或结束
         $begintime = strtotime($contest_db->begin);
         $endtime = strtotime($contest_db->end);
-        $isbegin = false;
-        if (time() >= $begintime) {
-            $isbegin = true;
-        }
-        if (!$isbegin) {
-            // 未开始
-            return json(['code' => -1, 'data' => [], 'problemIndex' => [], 'msg' => '竞赛未开始！无法查看排名！']);
-        }
-        // OI赛制未结束，非管理员不可看
-        if ($contest_db->type == 'OI' && time() <= $endtime && !$is_mycontest && !$is_redis_queue) {
-            return json(['code' => -1, 'data' => [], 'problemIndex' => [], 'msg' => '竞赛未结束！无法查看排名！']);
-        }
 
-        if (
-            !$is_redis_queue &&
-            $redis4->exists('Contest' . $contest_id . 'resarray') &&
-            $redis4->exists('Contest' . $contest_id . 'problemIndex')
-        ) {
-            try {
-                $rediscon = json_decode($redis4->get('Contest' . $contest_id . 'resarray') ?? '', true);
-                $redispro = json_decode($redis4->get('Contest' . $contest_id . 'problemIndex') ?? '', true);
-            } catch (Exception $e) {
-                return json(['code' => -1, 'msg' => '竞赛缓存异常！', 'data' => [], 'problemIndex' => []]);
-            }
-            $my_loc = 1;
-            $total = sizeof($rediscon);
-            if ($my_aid) {
-                foreach ($rediscon as &$tem) {
-                    if (Base::getIdByUid($tem['id']) == $my_aid) {
-                        $my_loc = $tem['index'];
-                        break;
-                    }
-                }
-                $rediscon = Base::paging($page, $limit, $rediscon);
-            }
-            return json(['code' => 1, 'data' => $rediscon, 'problemIndex' => $redispro, 'myrank' => $my_loc, 'total' => $total]);
-        }
-        if (!$is_redis_queue) {
-            // 没有缓存且不是消息队列就返回
-            return json(['code' => -1, 'data' => [], 'problemIndex' => [], 'msg' => '竞赛排名计算中！']);
-        }
         $lockone = 'contestranklock' . $contest_id;
         $now_key_value = Base::randString();
         //加锁
         $lock_res = $redis4->setNx($lockone, $now_key_value);
         if (!$lock_res) {
             // 未抢到锁
-            return json(['code' => -1, 'data' => [], 'problemIndex' => [], 'msg' => '竞赛排名计算中！']);
+            return;
         }
         // 题目
         $prolist = Db::table('contestproblem')
@@ -2473,30 +2425,16 @@ class Contest
                 $last_totaltime = $tem['totaltime'];
             }
         }
-        //存入缓存
-        Base::dataToSafe($resarray, true);
-        Base::dataToSafe($problemIndex);
-        $redis4->set('Contest' . $contest_id . 'resarray', json_encode($resarray));
-        $redis4->set('Contest' . $contest_id . 'problemIndex', json_encode($problemIndex));
         $redis4->del($lockone);
+        // 更新JSON缓存，顺序不可换，因为HTML更新传递引用，会导致数组总时间格式化
+        $total = sizeof($resarray);
+        $json = ['data' => $resarray, 'problemIndex' => $problemIndex, 'total' => $total];
+        Base::updateContestRankJson($contest_id, $json);
         // 更新HTML缓存
-        $key = 'Contest' . $contest_id . 'HtmlRank';
         $html = Contest::calculateContestRank($problemIndex, $resarray, $contest_db);
         if ($html) {
-            $redis4->set($key, $html);
+            Base::updateContestRankHtml($contest_id, $html);
         }
-        $my_loc = 1;
-        $total = sizeof($resarray);
-        if ($my_aid) {
-            foreach ($resarray as &$tem) {
-                if (Base::getIdByUid($tem['id']) == $my_aid) {
-                    $my_loc = $tem['index'];
-                    break;
-                }
-            }
-            $resarray = Base::paging($page, $limit, $resarray);
-        }
-        return json(['code' => 1, 'data' => $resarray, 'problemIndex' => $problemIndex, 'myrank' => $my_loc, 'total' => $total]);
     }
 
     /**

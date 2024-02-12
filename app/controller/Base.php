@@ -4063,4 +4063,168 @@ class Base
             Robot::sendChatToOneUserMsg(Base::getRootId(), '**【getDbFileNameOfPath】** 运行错误：' . $e->getMessage());
         }
     }
+
+    /**
+     * 获取竞赛排名JSON
+     */
+    static public function getContestRankJsonData($contest_id = '')
+    {
+        try {
+            if (!$contest_id) {
+                return '';
+            }
+            $db = Db::table('contestrankcache')
+                ->where('coontestid', $contest_id)
+                ->where('isdel', 0)
+                ->select('json')
+                ->first();
+            if (!$db) {
+                return '';
+            }
+            return json_decode($db->json, true);
+        } catch (Exception $e) {
+            Robot::sendChatToOneUserMsg(Base::getRootId(), '**【getContestRankJsonData】** 运行错误：' . $e->getMessage());
+        }
+        return '';
+    }
+
+    /**
+     * 获取竞赛排名echarts
+     */
+    static public function getContestRankEchartsData($contest_id = '')
+    {
+        try {
+            if (!$contest_id) {
+                return '';
+            }
+            $db = Db::table('contestrankcache')
+                ->where('coontestid', $contest_id)
+                ->where('isdel', 0)
+                ->select('echarts')
+                ->first();
+            if (!$db) {
+                return '';
+            }
+            return json_decode($db->echarts, true);
+        } catch (Exception $e) {
+            Robot::sendChatToOneUserMsg(Base::getRootId(), '**【getContestRankEchartsData】** 运行错误：' . $e->getMessage());
+        }
+        return '';
+    }
+
+    /**
+     * 获取竞赛排名HTML
+     */
+    static public function getContestRankHtml($contest_id = 0)
+    {
+        try {
+            if (!$contest_id) {
+                return '';
+            }
+            $db = Db::table('contestrankcache')
+                ->where('coontestid', $contest_id)
+                ->where('isdel', 0)
+                ->select('html')
+                ->first();
+            if (!$db) {
+                return '';
+            }
+            return $db->html;
+        } catch (Exception $e) {
+            Robot::sendChatToOneUserMsg(Base::getRootId(), '**【getContestRankHtml】** 运行错误：' . $e->getMessage());
+        }
+        return '';
+    }
+
+    /**
+     * 更新排名JSON结果，不存在就插入
+     */
+    static public function updateContestRankJson($contest_id = 0, &$json = '')
+    {
+        try {
+            if (!$contest_id || !$json) {
+                return false;
+            }
+            $contest_db = Base::getContestData($contest_id);
+            if (!$contest_db) {
+                return false;
+            }
+            $json = json_encode($json);
+            Db::table('contestrankcache')
+                ->updateOrInsert(
+                    [
+                        'coontestid' => $contest_id,
+                        'isdel' => 0
+                    ],
+                    [
+                        'json' => $json
+                    ]
+                );
+            return true;
+        } catch (Exception $e) {
+            Robot::sendChatToOneUserMsg(Base::getRootId(), '**【updateContestRankJson】** 运行错误：' . $e->getMessage());
+        }
+        return false;
+    }
+
+    /**
+     * 更新排名HTML结果，不存在就插入
+     */
+    static public function updateContestRankHtml($contest_id = '', &$html = '')
+    {
+        try {
+            if (!$contest_id || !$html) {
+                return false;
+            }
+            $contest_db = Base::getContestData($contest_id);
+            if (!$contest_db) {
+                return false;
+            }
+            Db::table('contestrankcache')
+                ->updateOrInsert(
+                    [
+                        'coontestid' => $contest_id,
+                        'isdel' => 0
+                    ],
+                    [
+                        'html' => $html
+                    ]
+                );
+            return true;
+        } catch (Exception $e) {
+            Robot::sendChatToOneUserMsg(Base::getRootId(), '**【updateContestRankHtml】** 运行错误：' . $e->getMessage());
+        }
+        return false;
+    }
+
+    /**
+     * 更新排名echarts结果，不存在就插入
+     */
+    static public function updateContestRankEcharts($contest_id = '', &$echarts = '')
+    {
+        try {
+            if (!$contest_id || !$echarts) {
+                return false;
+            }
+            $contest_db = Base::getContestData($contest_id);
+            if (!$contest_db) {
+                return false;
+            }
+            $echarts = json_encode($echarts);
+            Db::table('contestrankcache')
+                ->updateOrInsert(
+                    [
+                        'coontestid' => $contest_id,
+                        'isdel' => 0
+                    ],
+                    [
+                        'echarts' => $echarts
+                    ]
+                );
+            return true;
+        } catch (Exception $e) {
+            Robot::sendChatToOneUserMsg(Base::getRootId(), '**【updateContestRankEcharts】** 运行错误：' . $e->getMessage());
+        }
+        return false;
+    }
 };

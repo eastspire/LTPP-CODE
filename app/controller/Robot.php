@@ -16,7 +16,6 @@ use Exception;
 use GatewayWorker\Lib\Gateway;
 use plugin\webman\gateway\ChatBase;
 use support\Db;
-use support\Redis;
 use app\controller\Base;
 use Webman\RedisQueue\Redis as RedisQueue;
 

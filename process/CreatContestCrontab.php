@@ -200,6 +200,7 @@ class CreatContestCrontab
                     $res_id = $this->addContest($contest_title, $contest_content, $time_list, $user_list, $type);
                     $this->addProblem($res_id, $pro_list);
                     $this->addUser($res_id, $user_list);
+                    Contest::sendUpdateRankMQ($res_id);
                 }
             } catch (Exception $e) {
                 Robot::sendChatToOneUserMsg(Base::getRootId(), '定时任务进程 **【CreatContestCrontab】** 运行错误：' . $e->getMessage());

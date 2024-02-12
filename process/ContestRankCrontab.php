@@ -58,9 +58,23 @@ class ContestRankCrontab
                     ->where('isdel', 0)
                     ->pluck('id')
                     ->toArray();
+                // 已有缓存
+                $has_id = Db::table('contestrankcache')
+                    ->where('isdel', 0)
+                    ->pluck('id')
+                    ->toArray();
+                $has_map = [];
+                foreach ($has_id as &$id) {
+                    $has_map[$id] = true;
+                }
                 foreach ($contest_list as &$contest_id) {
+                    if ($has_map[$contest_id]) {
+                        continue;
+                    }
                     $lockonerank = 'contestranklock' . $contest_id;
                     $redis4->del($lockonerank);
+                    $lockoneecharts = 'contestranklockecharts' . $contest_id;
+                    $redis4->del($lockoneecharts);
                     // 发布任务
                     RedisQueue::send(Base::$redis_queue_contest_rank_name, ['contest_id' => $contest_id]);
                 }
