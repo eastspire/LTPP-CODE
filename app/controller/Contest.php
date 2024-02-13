@@ -1145,7 +1145,7 @@ class Contest
             $data = $json['data'];
             return json(['code' => 1, 'peopledata' => $peopledata, 'timedata' => $timedata, 'data' => $data, 'msg' => '统计信息完成！']);
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【getContestRank】** 运行错误：' . $e->getMessage());
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '<strong>【getContestRank】</strong>运行错误：' . $e->getMessage());
         }
         return json(['code' => 1, 'peopledata' => [], 'timedata' => [], 'data' => [], 'msg' => '信息计算中！']);
     }
@@ -1391,7 +1391,7 @@ class Contest
             Base::dataToSafe($problemIndex);
             return json(['code' => 1, 'data' => $data, 'problemIndex' => $problemIndex, 'myrank' => $myrank, 'total' => $total]);
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【lookAcmExcelRank】** 运行错误：' . $e->getMessage());
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '<strong>【lookAcmExcelRank】</strong>运行错误：' . $e->getMessage());
         }
         return json(['code' => 1, 'data' => [], 'problemIndex' => [], 'msg' => '服务器异常！无法查看排名！']);
     }
@@ -1451,7 +1451,7 @@ class Contest
             Base::dataToSafe($problemIndex);
             return json(['code' => 1, 'data' => $data, 'problemIndex' => $problemIndex, 'myrank' => $myrank, 'total' => $total]);
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【lookOiExcelRank】** 运行错误：' . $e->getMessage());
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '<strong>【lookOiExcelRank】</strong>运行错误：' . $e->getMessage());
         }
         return json(['code' => 1, 'data' => [], 'problemIndex' => [], 'msg' => '服务器异常！无法查看排名！']);
     }
@@ -1971,7 +1971,7 @@ class Contest
         } catch (Exception $e) {
             $title = 'contestIdGetRank运行异常';
             $content = $e->getMessage();
-            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '#### ' . $title . "\n" . $content);
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '<h4>' . $title . "</h4>\n" . $content);
         }
     }
 
@@ -2051,7 +2051,7 @@ class Contest
             }
             $html = '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><link rel="icon" href="https://ltpp.vip/LTPPlogo.png" type="image/x-icon"><title>LTPP【' . $contest_db->name . '】竞赛排名</title><style>' . $rank_css . '</style><script>' . $js . '</script></head><body><table class="CONTEST"><tr><th class="CONTEST-NAME" colspan="' . ($problems_len + 4) . '">LTPP【' . $contest_db->name . '】实时竞赛排名</th></tr>' . $table_title . $table_body . '</body></html>';
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【calculateContestRank】** 运行错误：' . $e->getMessage());
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '<strong>【calculateContestRank】</strong>运行错误：' . $e->getMessage());
             return $html;
         }
         return $html;
@@ -2443,8 +2443,8 @@ class Contest
             ->where('isdel', 0)
             ->pluck('problemid')
             ->toArray();
-        $res_md = '# 【' . $contest_db->name . "】赛题\n\n<br>\n\n" . $contest_db->content . "\n\n<br><hr><br>\n\n";
-        $res_md .= '## 出题人 ' . "\n\n<br>\n\n> " . ($contest_db->creater ?? '无') . "\n\n<br><hr><br>\n\n";
+        $res_md = '<h1>【' . $contest_db->name . "】赛题</h1>\n\n<br>\n\n" . $contest_db->content . "\n\n<br><hr><br>\n\n";
+        $res_md .= '<h2>出题人</h2>' . "\n\n<br>\n\n> " . ($contest_db->creater ?? '无') . "\n\n<br><hr><br>\n\n";
         foreach ($problem_list as &$problem_id) {
             $problem_db = Db::table('oj')
                 ->where('id', $problem_id)
@@ -2454,19 +2454,19 @@ class Contest
                 continue;
             }
             // 题目
-            $res_md .= '### ' . $problem_db->problemName . "\n\n<br>\n\n";
+            $res_md .= '<h3>' . $problem_db->problemName . "</h3>\n\n<br>\n\n";
             // 内容
             $res_md .= $problem_db->problemContent . "\n\n<br>\n\n";
             // 输入样例
-            $res_md .= '##### 输入样例' . "\n> " . $problem_db->problemCinTest . "\n\n<br>\n\n";
+            $res_md .= '<h5>输入样例</h5>' . "\n\n > " . $problem_db->problemCinTest . "\n\n<br>\n\n";
             // 输出样例
-            $res_md .= '##### 输出样例' . "\n> " . $problem_db->problemCoutTest . "\n\n<br>\n\n";
+            $res_md .= '<h5>输出样例</h5>' . "\n\n > " . $problem_db->problemCoutTest . "\n\n<br>\n\n";
             // 时间限制
-            $res_md .= '##### 时间限制（单位：MS）' . "\n> " . $problem_db->Time . "\n\n<br>\n\n";
+            $res_md .= '<h5>时间限制（单位：MS）</h5>' . "\n\n > " . $problem_db->Time . "\n\n<br>\n\n";
             // 内存限制
-            $res_md .= '##### 内存限制（单位：MB）' . "\n> " . $problem_db->Memory . "\n\n<br>\n\n";
+            $res_md .= '<h5>内存限制（单位：MB）</h5>' . "\n\n > " . $problem_db->Memory . "\n\n<br>\n\n";
             // 题目来源
-            $res_md .= '##### 题目来源' . "\n> " . $problem_db->problemFrom . "\n\n<br><hr><br>\n\n";
+            $res_md .= '<h5>题目来源</h5>' . "\n\n > " . $problem_db->problemFrom . "\n\n<br><hr><br>\n\n";
         }
         return $res_md;
     }
@@ -2493,9 +2493,9 @@ class Contest
             ->where('isdel', 0)
             ->pluck('problemid')
             ->toArray();
-        $res_md = '# 【' . $contest_db->name . "】题解\n\n<br>\n\n" . $contest_db->content . "\n\n<br><hr><br>\n\n";
-        $res_md .= '## 出题人 ' . "\n\n<br>\n\n> " . ($contest_db->creater ?? '无') . "\n\n<br><hr><br>\n\n";
-        $res_md .= '## 题解编写人 ' . "\n\n<br>\n\n> " . ($contest_db->creater ?? '无') . "\n\n<br><hr><br>\n\n";
+        $res_md = '<h1>【' . $contest_db->name . "】题解</h1>\n\n<br>\n\n" . $contest_db->content . "\n\n<br><hr><br>\n\n";
+        $res_md .= '<h2>出题人</h2>' . "\n\n<br>\n\n> " . ($contest_db->creater ?? '无') . "\n\n<br><hr><br>\n\n";
+        $res_md .= '<h2>题解编写人</h2>' . "\n\n<br>\n\n> " . ($contest_db->creater ?? '无') . "\n\n<br><hr><br>\n\n";
         foreach ($problem_list as &$problem_id) {
             $problem_db = Db::table('oj')
                 ->where('id', $problem_id)
@@ -2507,7 +2507,7 @@ class Contest
             $code = '无';
             $language = 'cpp';
             $code_db = null;
-            if ($problem_db->code) {
+            if ($problem_db->code && $problem_db->code != Base::$oj_ac_code_default) {
                 $code = $problem_db->code;
                 $language = 'cpp';
             } else {
@@ -2571,29 +2571,29 @@ class Contest
                 }
             }
             // 题目
-            $res_md .= '### ' . $problem_db->problemName . "\n\n<br>\n\n";
+            $res_md .= '<h2>' . $problem_db->problemName . "</h2>\n\n<br>\n\n";
             // 内容
             $res_md .= $problem_db->problemContent . "\n\n<br>\n\n";
             // 输入样例
-            $res_md .= '##### 输入样例' . "\n> " . $problem_db->problemCinTest . "\n\n<br>\n\n";
+            $res_md .= '<h5>输入样例</h5>' . "\n\n > " . $problem_db->problemCinTest . "\n\n<br>\n\n";
             // 输出样例
-            $res_md .= '##### 输出样例' . "\n> " . $problem_db->problemCoutTest . "\n\n<br>\n\n";
+            $res_md .= '<h5>输出样例</h5>' . "\n\n > " . $problem_db->problemCoutTest . "\n\n<br>\n\n";
             // 时间限制
-            $res_md .= '##### 时间限制（单位：MS）' . "\n> " . $problem_db->Time . "\n\n<br>\n\n";
+            $res_md .= '<h5>时间限制（单位：MS）</h5>' . "\n\n > " . $problem_db->Time . "\n\n<br>\n\n";
             // 内存限制
-            $res_md .= '##### 内存限制（单位：MB）' . "\n> " . $problem_db->Memory . "\n\n<br>\n\n";
+            $res_md .= '<h5>内存限制（单位：MB）</h5>' . "\n\n > " . $problem_db->Memory . "\n\n<br>\n\n";
             // 题目来源
-            $res_md .= '##### 题目来源' . "\n> " . $problem_db->problemFrom . "\n\n<br>\n\n";
+            $res_md .= '<h5>题目来源</h5>' . "\n\n > " . $problem_db->problemFrom . "\n\n<br>\n\n";
             // 解题思路
             if (!$problem_db->think) {
                 $problem_db->think = '无';
             }
-            $res_md .= '##### 解题思路' . "\n > " . $problem_db->think . "\n\n<br>\n\n";
+            $res_md .= '<h5>解题思路</h5>' . "\n\n> " . $problem_db->think . "\n\n<br>\n\n";
             // AC代码
             if (!$code) {
                 $code = '无';
             }
-            $res_md .= '##### AC代码' . "\n```$language\n" . $code . "\n```\n\n<br><hr><br>\n\n";
+            $res_md .= '<h5>AC代码</h5>' . "\n\n```$language\n" . $code . "\n```\n\n<br><hr><br>\n\n";
         }
         return $res_md;
     }

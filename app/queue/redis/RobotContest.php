@@ -341,7 +341,7 @@ class RobotContest implements Consumer
         } catch (Exception $e) {
             $title = 'RobotContest消息队列异常';
             $content = $e->getMessage();
-            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '#### ' . $title . "\n" . $content);
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '<h4>' . $title . "</h4>\n" . $content);
         }
     }
 };

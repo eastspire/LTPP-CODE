@@ -70,7 +70,7 @@ class Email extends Image
                 ]);
             }
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '邮件异常信息：' . "\n" . $e->getMessage());
+            Robot::sendChatToOneUserMsg(Base::getRootId(), '邮件异常信息：' . "\n" . $e->getMessage());
         }
         return;
     }

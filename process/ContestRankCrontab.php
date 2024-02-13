@@ -44,7 +44,7 @@ class ContestRankCrontab
                 $obj = null;
             } catch (Exception $e) {
                 // 发送通知
-                Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '定时任务进程 **【ContestRankCrontab】** 运行错误：' . $e->getMessage());
+                Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '定时任务进程<strong>【ContestRankCrontab】</strong>运行错误：' . $e->getMessage());
             }
         });
 
@@ -80,7 +80,7 @@ class ContestRankCrontab
                 }
             } catch (Exception $e) {
                 // 发送通知
-                Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '定时任务进程 **【ContestRankCrontab】** 运行错误：' . $e->getMessage());
+                Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '定时任务进程<strong>【ContestRankCrontab】</strong>运行错误：' . $e->getMessage());
             }
         });
     }

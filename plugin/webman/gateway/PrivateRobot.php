@@ -45,7 +45,7 @@ class PrivateRobot extends ChatBase
     static $gpt_chat_history_limit = 6;
 
     static $robot_root_default =
-    '#### 您可以输入以下单个序号来进行操作' . "\n" .
+    '<h4>您可以输入以下单个序号来进行操作</h4>' . "\n" .
         '|序号|操作|示例|' . "\n" .
         '|-|-|-|' . "\n" .
         '|1|获取用户总数|1|' . "\n" .
@@ -70,14 +70,14 @@ class PrivateRobot extends ChatBase
         '|20|查询当前在线客户端总数|';
 
     static $robot_admin_default =
-    '#### 您可以输入以下单个序号来进行操作' . "\n" .
+    '<h4>您可以输入以下单个序号来进行操作</h4>' . "\n" .
         '|序号|操作|示例|' . "\n" .
         '|-|-|-|' . "\n" .
         '|1|重判题目在竞赛中的代码|1 A+B（PS：序号后第一个空格后为重判的题目完整标题）|' . "\n" .
         '|2|购买私人轻量云服务器，系统自带多种编程语言的运行环境和在线VSCODE|2 LTPP（PS：序号后第一个空格后为SSH登录密码，若不设置系统会自动生成随机密码，若已购买可查看登录命令和密码）|';
 
     static $robot_user_default =
-    '#### 您可以输入以下单个序号来进行操作' . "\n" .
+    '<h4>您可以输入以下单个序号来进行操作</h4>' . "\n" .
         '|序号|操作|示例|' . "\n" .
         '|-|-|-|' . "\n" .
         '|1|购买私人轻量云服务器，系统自带多种编程语言的运行环境和在线VSCODE|1 LTPP（PS：序号后第一个空格后为SSH登录密码，若不设置系统会自动生成随机密码，若已购买可查看登录命令和密码）|';
@@ -237,11 +237,11 @@ class PrivateRobot extends ChatBase
             ->select('id', 'problemName', 'Time', 'Memory', 'ACNum', 'ALLSubmitNum')
             ->first();
         if (!$problem_db) {
-            return '题目 **【' . $problem_name . '】** 不存在！';
+            return '题目<strong>【' . $problem_name . '】</strong>不存在！';
         }
         $problem_id = $problem_db->id;
         if (!$problem_id) {
-            return '题目 **【' . $problem_name . '】** 不存在！';
+            return '题目<strong>【' . $problem_name . '】</strong>不存在！';
         }
         $redis4 = Redis::connection('db4');
         $contest_list = Db::table('contestrank')
@@ -259,7 +259,7 @@ class PrivateRobot extends ChatBase
         $test_data_list = Base::getOjTestDataList($problem_id);
         Base::writeOjDataInToFile($problem_id, $alltestpath, $test_data_list);
         if (sizeof($test_data_list) <= 0) {
-            return '题目 **【' . $problem_name . '】** 无测试样例！';
+            return '题目<strong>【' . $problem_name . '】</strong>无测试样例！';
         }
         // 获取所有输入输出样例文件名称
         $testfilein = glob($alltestpath . '*.in');
@@ -270,7 +270,7 @@ class PrivateRobot extends ChatBase
             $testfilein = glob($alltestpath . '*.in');
             $alltestnum = sizeof($testfilein);
             if ($alltestnum <= 0) {
-                return '题目 **【' . $problem_name . '】** 无测试样例！';
+                return '题目<strong>【' . $problem_name . '】</strong>无测试样例！';
             }
         }
         foreach ($contest_list as &$contest_id) {
@@ -565,7 +565,7 @@ class PrivateRobot extends ChatBase
                     ]);
                 }
                 $user_db = Base::getUserData($user_id);
-                $msg = '用户 **【' . ($user_db->name ?? '') . '】** 在竞赛 **【' . $contest_db->name . '】** 中的赛题 **【' . $problem_db->problemName . '】** 中得 **' . $resscore . '** 分';
+                $msg = '用户<strong>【' . ($user_db->name ?? '') . '】</strong>在竞赛<strong>【' . $contest_db->name . '】</strong>中的赛题<strong>【' . $problem_db->problemName . '】</strong>中得 </strong>' . $resscore . '<strong> 分';
                 $msg_id = Base::insertToDb(
                     'privatechat',
                     [
@@ -599,7 +599,7 @@ class PrivateRobot extends ChatBase
                 $redis4->del('Contest' . $contest_id . 'problemdata' . $tem);
             }
 
-            $msg = '提醒：竞赛 **【' . $contest_db->name . '】** 重新计算排名任务已下达！';
+            $msg = '提醒：竞赛<strong>【' . $contest_db->name . '】</strong>重新计算排名任务已下达！';
 
             $msg_id = Base::insertToDb(
                 'privatechat',
@@ -623,7 +623,7 @@ class PrivateRobot extends ChatBase
             ]));
             ChatBase::updateNoLookNum(ChatBase::$type_private_chat_name, $robot_db->id, $my_aid);
         }
-        return '题目 **【' . $problem_name . '】** 所在竞赛均重判结束！';
+        return '题目<strong>【' . $problem_name . '】</strong>所在竞赛均重判结束！';
     }
 
     /**
@@ -855,7 +855,7 @@ class PrivateRobot extends ChatBase
                     'Authorization:Bearer ' . $api_key
                 ];
                 $result = Base::postRequest($gpt_api_url, $headers, $data, true);
-                Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**' . $time . ' ' . $user_name . ' 调用GPT结果**' . "\n```json\n" . ($result ? $result : '调用失败！') . "\n```");
+                Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '<strong>' . $time . ' ' . $user_name . ' 调用GPT结果</strong>' . "\n\n```json\n" . ($result ? $result : '调用失败！') . "\n```");
                 $result = json_decode($result, true);
                 if (isset($result['choices']) && sizeof($result['choices']) > 0 && isset($result['choices'][0]['message']) && isset($result['choices'][0]['message']['content'])) {
                     return $result['choices'][0]['message']['content'];

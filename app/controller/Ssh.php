@@ -91,7 +91,7 @@ class Ssh
                 $ssh_ip = Base::getIp($url);
                 $port = $has_buy->port ?? '';
                 $password = $has_buy->password ?? '';
-                $msg = '#### 您已购买过本产品！' . "\n" . '> 您的SSH登录命令为：ssh -p ' . $port . ' ltpp@' . $ssh_ip . "\n" .
+                $msg = '<h4>您已购买过本产品！</h4>' . "\n" . '> 您的SSH登录命令为：ssh -p ' . $port . ' ltpp@' . $ssh_ip . "\n" .
                     '> ltpp用户登录密码：' . $password . "\n" . '> root用户（默认关闭root用户远程登陆）密码：ltpp' . "\n\n" .
                     '> 在线版本VSCODE访问地址：http://' . $ssh_ip . ':' . ($port + 1) . "\n" . '> 在线版本VSCODE访问密码：' . $password;
                 return $msg;

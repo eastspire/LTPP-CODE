@@ -53,6 +53,11 @@ class Base
     static $code_up_running = '运行中';
 
     /**
+     * 题库AC代码默认提示词
+     */
+    static $oj_ac_code_default = '无';
+
+    /**
      * AC提示
      */
     static $ac_msg = '恭喜您AC了';
@@ -1162,7 +1167,7 @@ class Base
             $lastchangetime = $data->lastchangetime ?? '';
             $image = $data->image ?? '';
             $url = Base::getSettingKeyData('GLOBfronturl') . '/onearticle?path=' . Base::urlEncode($article_uid);
-            $res = '# ' . $name . "\n" .
+            $res = '<h1>' . $name . "</h1>\n" .
                 '[原文链接](' . $url . ')' . "\n***\n" .
                 '> 版权声明：本文为LTPP作者「' . $writer . '」的文章，著作权归作者所有，商业转载请联系作者获得授权，非商业转载请注明出处。' . "\n***\n" .
                 '> 发布时间：' . $releasetime . "\n***\n" .
@@ -1271,7 +1276,7 @@ class Base
         $rootPath = realpath($folder_path);
         $zip = new \ZipArchive();
         $zip->open($zip_path, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
-        /** @var \SplFileInfo[] $files */
+
         $files = new \RecursiveIteratorIterator(
             new \RecursiveDirectoryIterator($rootPath),
             \RecursiveIteratorIterator::LEAVES_ONLY
@@ -2325,7 +2330,7 @@ class Base
             }
             return $res_id;
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【creatRobot】** 运行错误：' . $e->getMessage());
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【creatRobot】</strong>运行错误：' . $e->getMessage());
         }
         return 0;
     }
@@ -2979,7 +2984,7 @@ class Base
             ->where('id', $my_aid)
             ->increment('money', Base::$ac_money);
         Base::updateUserDataRedis($my_aid);
-        Robot::sendChatToOneUserMsg($my_aid, '恭喜您使用' . $userlanguage . '编程语言AC **【' . $problem_name . '】** ，奖励您 **' . Base::$ac_money . '** 个学虫币！（北京时间： **' . date('Y-m-d H:i:s', time()) . '** ）');
+        Robot::sendChatToOneUserMsg($my_aid, '恭喜您使用' . $userlanguage . '编程语言AC<strong>【' . $problem_name . '】</strong>，奖励您<strong>' . Base::$ac_money . '</strong>个学虫币！（北京时间：<strong>' . date('Y-m-d H:i:s', time()) . '</strong>）');
     }
 
     /**
@@ -2998,7 +3003,7 @@ class Base
             ->increment('money', Base::$ak_money);
         Base::updateUserDataRedis($my_aid);
         $title = 'LTPP竞赛AK通知';
-        $content_robot = '恭喜您在LTPP平台的 **【' . $contestdb->name . '】** 中AK，给予 **' . Base::$ak_money . '** 学虫币奖励（北京时间： **' . date('Y-m-d H:i:s', time()) . '** ）';
+        $content_robot = '恭喜您在LTPP平台的<strong>【' . $contestdb->name . '】</strong>中AK，给予<strong>' . Base::$ak_money . '</strong>学虫币奖励（北京时间：<strong>' . date('Y-m-d H:i:s', time()) . '</strong>）';
         $content_email = '恭喜您在LTPP平台的【' . $contestdb->name . '】中AK，给予' . Base::$ak_money . '学虫币奖励（北京时间：' . date('Y-m-d H:i:s', time()) . '）';
         Robot::sendChatToOneUserMsg($my_aid, $content_robot);
         RedisQueue::send(Base::$redis_queue_send_mail_name, [
@@ -3009,7 +3014,7 @@ class Base
     }
 
     /**
-     * 判断是否是Docker环境     
+     * 判断是否是Docker环境
      */
     static public function judgeIsDocker()
     {
@@ -3315,7 +3320,7 @@ class Base
             $text = mb_convert_encoding($text, 'UTF-8', $encoding);
             return $text;
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【textToSafeText】** 运行错误：' . $e->getMessage());
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【textToSafeText】</strong>运行错误：' . $e->getMessage());
             return '';
         }
     }
@@ -3508,7 +3513,7 @@ class Base
             ]);
             return Base::$GLOBlinuxurl . $file_path;
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【writeNewStaticFile】** 运行错误：' . $e->getMessage());
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【writeNewStaticFile】</strong>运行错误：' . $e->getMessage());
         }
     }
 
@@ -3665,7 +3670,7 @@ class Base
             $redis31->setEx($problem_id, Base::$redis_timeout, json_encode($list));
             return $list;
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【getOjTestDataList】** 运行错误：' . $e->getMessage());
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【getOjTestDataList】</strong>运行错误：' . $e->getMessage());
         }
         return [];
     }
@@ -3686,7 +3691,7 @@ class Base
             $redis31->setEx($problem_id, Base::$redis_timeout, json_encode($list));
             return $list;
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【updateOjTestDataListRedis】** 运行错误：' . $e->getMessage());
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【updateOjTestDataListRedis】</strong>运行错误：' . $e->getMessage());
         }
         return [];
     }
@@ -3711,7 +3716,7 @@ class Base
                 Base::writeToFile($file_in_path, $tem->test_in);
             }
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【writeOjDataInToFile】** 运行错误：' . $e->getMessage());
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【writeOjDataInToFile】</strong>运行错误：' . $e->getMessage());
         }
     }
 
@@ -3749,7 +3754,7 @@ class Base
                 return Base::$GLOBlinuxurl . $new_path;
             }
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【uploadFileToDb】** 运行错误：' . $e->getMessage());
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【uploadFileToDb】</strong>运行错误：' . $e->getMessage());
         }
         return '';
     }
@@ -3779,7 +3784,7 @@ class Base
                 return $new_path;
             }
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【uploadFileToDb】** 运行错误：' . $e->getMessage());
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【uploadFileToDb】</strong>运行错误：' . $e->getMessage());
         }
         return '';
     }
@@ -3821,7 +3826,7 @@ class Base
                 return '[' . $file_name . '](' . Base::$GLOBlinuxurl . $new_path . ')';
             }
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【uploadChatFileToDb】** 运行错误：' . $e->getMessage());
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【uploadChatFileToDb】</strong>运行错误：' . $e->getMessage());
         }
         return '';
     }
@@ -3865,7 +3870,7 @@ class Base
             $data = Base::getStaticFileData($path);
             $res = strlen(Base::textToSafeText($data));
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【getDbFileSize】** 运行错误：' . $e->getMessage());
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【getDbFileSize】</strong>运行错误：' . $e->getMessage());
         }
         return $res;
     }
@@ -3890,7 +3895,7 @@ class Base
                 }
             }
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【getDbFileExtion】** 运行错误：' . $e->getMessage());
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【getDbFileExtion】</strong>运行错误：' . $e->getMessage());
         }
         return $file_extion;
     }
@@ -3905,7 +3910,7 @@ class Base
                 return Base::$extion_map_number[$file_extion];
             }
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【fileExtionToNumberType】** 运行错误：' . $e->getMessage());
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【fileExtionToNumberType】</strong>运行错误：' . $e->getMessage());
         }
         return 9;
     }
@@ -3946,7 +3951,7 @@ class Base
                 return '[' . $file_name . '](' . Base::$GLOBlinuxurl . $new_path . ')';
             }
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【uploadCloudFileToDb】** 运行错误：' . $e->getMessage());
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【uploadCloudFileToDb】</strong>运行错误：' . $e->getMessage());
         }
         return '';
     }
@@ -4008,7 +4013,7 @@ class Base
             Base::getChineseSize($size);
             return json(['code' => 1, 'msg' => '更新成功', 'data' => $size]);
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【updateCloudFileData】** 运行错误：' . $e->getMessage());
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【updateCloudFileData】</strong>运行错误：' . $e->getMessage());
         }
         return json(['code' => -1, 'msg' => '更新成功']);
     }
@@ -4038,7 +4043,7 @@ class Base
                 ->update(['isdel' => 1]);
             $redis35->del($file_path);
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【deleteCloudFileData】** 运行错误：' . $e->getMessage());
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【deleteCloudFileData】</strong>运行错误：' . $e->getMessage());
         }
     }
 
@@ -4058,7 +4063,7 @@ class Base
             }
             return $file_name;
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【getDbFileNameOfPath】** 运行错误：' . $e->getMessage());
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【getDbFileNameOfPath】</strong>运行错误：' . $e->getMessage());
         }
     }
 
@@ -4081,7 +4086,7 @@ class Base
             }
             return json_decode($db->json, true);
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【getContestRankJsonData】** 运行错误：' . $e->getMessage());
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【getContestRankJsonData】</strong>运行错误：' . $e->getMessage());
         }
         return '';
     }
@@ -4105,7 +4110,7 @@ class Base
             }
             return json_decode($db->echarts, true);
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【getContestRankEchartsData】** 运行错误：' . $e->getMessage());
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【getContestRankEchartsData】</strong>运行错误：' . $e->getMessage());
         }
         return '';
     }
@@ -4129,7 +4134,7 @@ class Base
             }
             return $db->html;
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【getContestRankHtml】** 运行错误：' . $e->getMessage());
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【getContestRankHtml】</strong>运行错误：' . $e->getMessage());
         }
         return '';
     }
@@ -4160,7 +4165,7 @@ class Base
                 );
             return true;
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【updateContestRankJson】** 运行错误：' . $e->getMessage());
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【updateContestRankJson】</strong>运行错误：' . $e->getMessage());
         }
         return false;
     }
@@ -4190,7 +4195,7 @@ class Base
                 );
             return true;
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【updateContestRankHtml】** 运行错误：' . $e->getMessage());
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【updateContestRankHtml】</strong>运行错误：' . $e->getMessage());
         }
         return false;
     }
@@ -4221,7 +4226,7 @@ class Base
                 );
             return true;
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【updateContestRankEcharts】** 运行错误：' . $e->getMessage());
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【updateContestRankEcharts】</strong>运行错误：' . $e->getMessage());
         }
         return false;
     }

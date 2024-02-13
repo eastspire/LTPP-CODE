@@ -93,7 +93,7 @@ class CleanRobotDb
                         'isdel' => 1
                     ]);
             } catch (Exception $e) {
-                Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '定时任务进程 **【CleanRobotDb】** 运行错误：' . $e->getMessage());
+                Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '定时任务进程<strong>【CleanRobotDb】</strong>运行错误：' . $e->getMessage());
             }
         });
     }

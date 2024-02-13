@@ -202,7 +202,7 @@ class CreatContestCrontab
                     Contest::sendUpdateRankMQ($res_id);
                 }
             } catch (Exception $e) {
-                Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '定时任务进程 **【CreatContestCrontab】** 运行错误：' . $e->getMessage());
+                Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '定时任务进程<strong>【CreatContestCrontab】</strong>运行错误：' . $e->getMessage());
             }
         });
     }

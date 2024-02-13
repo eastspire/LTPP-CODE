@@ -43,6 +43,14 @@ class Middleware
             if (!is_array($middlewares)) {
                 throw new RuntimeException('Bad middleware config');
             }
+            if ($appName === '@') {
+                $plugin = '';
+            }
+            if (strpos($appName, 'plugin.') !== false) {
+                $explode = explode('.', $appName, 4);
+                $plugin = $explode[1];
+                $appName = $explode[2] ?? '';
+            }
             foreach ($middlewares as $className) {
                 if (method_exists($className, 'process')) {
                     static::$instances[$plugin][$appName][] = [$className, 'process'];
@@ -62,12 +70,13 @@ class Middleware
      */
     public static function getMiddleware(string $plugin, string $appName, bool $withGlobalMiddleware = true)
     {
-        $globalMiddleware = $withGlobalMiddleware && isset(static::$instances[$plugin]['']) ? static::$instances[$plugin][''] : [];
+        $globalMiddleware = static::$instances['']['@'] ?? [];
+        $appGlobalMiddleware = $withGlobalMiddleware && isset(static::$instances[$plugin]['']) ? static::$instances[$plugin][''] : [];
         if ($appName === '') {
-            return array_reverse($globalMiddleware);
+            return array_reverse(array_merge($globalMiddleware, $appGlobalMiddleware));
         }
         $appMiddleware = static::$instances[$plugin][$appName] ?? [];
-        return array_reverse(array_merge($globalMiddleware, $appMiddleware));
+        return array_reverse(array_merge($globalMiddleware, $appGlobalMiddleware, $appMiddleware));
     }
 
     /**

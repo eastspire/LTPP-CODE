@@ -1352,10 +1352,10 @@ class User
             unset($info->musiclovelistid);
             unset($info->musicuid);
             unset($info->password);
-            $info->password = '******';
-            $info->grade = '******';
-            $info->email = '******';
-            $info->money = '******';
+            $info->password = '<strong>**</strong>';
+            $info->grade = '<strong>**</strong>';
+            $info->email = '<strong>**</strong>';
+            $info->money = '<strong>**</strong>';
         } else {
             $info->password = '';
             $info->user_aid = $info->id;

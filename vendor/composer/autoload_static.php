@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitea3923290d04a5271256a202bdb3efab
+class ComposerStaticInitd370021c63e84db2c28213ebd7c78c38
 {
     public static $files = array (
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
@@ -110,6 +110,7 @@ class ComposerStaticInitea3923290d04a5271256a202bdb3efab
         ),
         'C' => 
         array (
+            'Carbon\\Doctrine\\' => 16,
             'Carbon\\' => 7,
         ),
         'B' => 
@@ -277,9 +278,9 @@ class ComposerStaticInitea3923290d04a5271256a202bdb3efab
         ),
         'Illuminate\\Support\\' => 
         array (
-            0 => __DIR__ . '/..' . '/illuminate/collections',
+            0 => __DIR__ . '/..' . '/illuminate/macroable',
             1 => __DIR__ . '/..' . '/illuminate/conditionable',
-            2 => __DIR__ . '/..' . '/illuminate/macroable',
+            2 => __DIR__ . '/..' . '/illuminate/collections',
             3 => __DIR__ . '/..' . '/illuminate/support',
         ),
         'Illuminate\\Redis\\' => 
@@ -330,6 +331,10 @@ class ComposerStaticInitea3923290d04a5271256a202bdb3efab
         array (
             0 => __DIR__ . '/..' . '/doctrine/inflector/lib/Doctrine/Inflector',
         ),
+        'Carbon\\Doctrine\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/carbonphp/carbon-doctrine-types/src/Carbon/Doctrine',
+        ),
         'Carbon\\' => 
         array (
             0 => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon',
@@ -371,11 +376,11 @@ class ComposerStaticInitea3923290d04a5271256a202bdb3efab
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitea3923290d04a5271256a202bdb3efab::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitea3923290d04a5271256a202bdb3efab::$prefixDirsPsr4;
-            $loader->fallbackDirsPsr4 = ComposerStaticInitea3923290d04a5271256a202bdb3efab::$fallbackDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInitea3923290d04a5271256a202bdb3efab::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInitea3923290d04a5271256a202bdb3efab::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitd370021c63e84db2c28213ebd7c78c38::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitd370021c63e84db2c28213ebd7c78c38::$prefixDirsPsr4;
+            $loader->fallbackDirsPsr4 = ComposerStaticInitd370021c63e84db2c28213ebd7c78c38::$fallbackDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInitd370021c63e84db2c28213ebd7c78c38::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInitd370021c63e84db2c28213ebd7c78c38::$classMap;
 
         }, null, ClassLoader::class);
     }

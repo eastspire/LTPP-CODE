@@ -70,7 +70,7 @@ Route::any(Base::$LTPP_public_static_path . '[/{path:.+}]', function (Request $r
         }
         return Response($file_data, 200, $response_header);
     } catch (Exception $e) {
-        Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '文件服务 **【StaticFile】** 运行错误：' . $e->getMessage());
+        Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '文件服务<strong>【StaticFile】</strong>运行错误：' . $e->getMessage());
         return Base::notFoundPage($path, $file_extion);
     }
 });

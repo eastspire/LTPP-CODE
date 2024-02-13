@@ -21,7 +21,6 @@ use Tinywan\Jwt\Exception\JwtTokenException;
 use Tinywan\Jwt\Exception\JwtConfigException;
 use Tinywan\Jwt\Exception\JwtTokenExpiredException;
 use UnexpectedValueException;
-use function _PHPStan_c0c409264\RingCentral\Psr7\str;
 
 class JwtToken
 {
@@ -35,8 +34,10 @@ class JwtToken
      */
     private const REFRESH_TOKEN = 2;
 
+    /** WEB Client. */
     public const TOKEN_CLIENT_WEB = 'WEB';
 
+    /** Mobile Client. */
     public const TOKEN_CLIENT_MOBILE = 'MOBILE';
 
     /**
@@ -59,7 +60,7 @@ class JwtToken
     {
         $config = self::_getConfig();
         if (is_callable($config['user_model'])) {
-            return $config['user_model'](self::getCurrentId()) ?? [];
+            return $config['user_model'](self::getCurrentId());
         }
         return [];
     }
@@ -90,7 +91,6 @@ class JwtToken
      * @desc: 刷新令牌
      *
      * @return array|string[]
-     *
      * @throws JwtTokenException
      */
     public static function refreshToken(): array
@@ -121,7 +121,8 @@ class JwtToken
         }
         if ($config['is_single_device']) {
             $client = $extend['extend']['client'] ?? self::TOKEN_CLIENT_WEB;
-            RedisHandler::generateToken($config['cache_token_pre'],  (string) $client,  (string) $extend['extend']['id'], $extend['exp'], $newToken['access_token']);
+            RedisHandler::generateToken($config['cache_token_pre'], (string)$client, (string)$extend['extend']['id'], $config['access_exp'], $newToken['access_token']);
+            RedisHandler::refreshToken($config["cache_refresh_token_pre"], (string)$client, (string)$extend['extend']['id'], $config['refresh_exp'], $newToken['refresh_token']);
         }
         return $newToken;
     }
@@ -153,7 +154,12 @@ class JwtToken
         }
         if ($config['is_single_device']) {
             $client = $extend['client'] ?? self::TOKEN_CLIENT_WEB;
-            RedisHandler::generateToken($config['cache_token_pre'],  (string) $client,  (string) $extend['id'], $config['access_exp'], $token['access_token']);
+            RedisHandler::generateToken($config['cache_token_pre'], (string)$client, (string)$extend['id'], $config['access_exp'], $token['access_token']);
+            if (!isset($config['refresh_disable']) || (isset($config['refresh_disable']) && $config['refresh_disable'] === false)) {
+                if (isset($config["cache_refresh_token_pre"])) {
+                    RedisHandler::generateToken($config["cache_refresh_token_pre"], (string)$client, (string)$extend['id'], $config['refresh_exp'], $token['refresh_token']);
+                }
+            }
         }
         return $token;
     }
@@ -213,7 +219,15 @@ class JwtToken
     {
         $authorization = request()->header('authorization');
         if (!$authorization || 'undefined' == $authorization) {
-            throw new JwtTokenException('请求未携带authorization信息');
+            $config = self::_getConfig();
+            if (!isset($config['is_support_get_token']) || false === $config['is_support_get_token']) {
+                throw new JwtTokenException('请求未携带authorization信息');
+            }
+            $authorization = request()->get($config['is_support_get_token_key']);
+            if (empty($authorization)) {
+                throw new JwtTokenException('请求未携带authorization信息');
+            }
+            $authorization = 'Bearer '.$authorization;
         }
 
         if (self::REFRESH_TOKEN != substr_count($authorization, '.')) {
@@ -250,9 +264,13 @@ class JwtToken
 
         $decoded = JWT::decode($token, new Key($publicKey, $config['algorithms']));
         $decodeToken = json_decode(json_encode($decoded), true);
-        if ($config['is_single_device'] && self::ACCESS_TOKEN == $tokenType) {
+        if ($config['is_single_device']) {
+            $cacheTokenPre = $config['cache_token_pre'];
+            if ($tokenType == self::REFRESH_TOKEN) {
+                $cacheTokenPre = $config['cache_refresh_token_pre'];
+            }
             $client = $decodeToken['extend']['client'] ?? self::TOKEN_CLIENT_WEB;
-            RedisHandler::verifyToken($config['cache_token_pre'], $client, (string)$decodeToken['extend']['id'], $token);
+            RedisHandler::verifyToken($cacheTokenPre, $client, (string)$decodeToken['extend']['id'], $token);
         }
         return $decodeToken;
     }
@@ -365,7 +383,9 @@ class JwtToken
     {
         $config = self::_getConfig();
         if ($config['is_single_device']) {
-            return RedisHandler::clearToken($config['cache_token_pre'], $client, (string)self::getCurrentId());
+            $clearCacheRefreshTokenPre = RedisHandler::clearToken($config['cache_refresh_token_pre'], $client, (string)self::getCurrentId());
+            $clearCacheTokenPre = RedisHandler::clearToken($config['cache_token_pre'], $client, (string)self::getCurrentId());
+            return $clearCacheTokenPre && $clearCacheRefreshTokenPre;
         }
         return true;
     }
