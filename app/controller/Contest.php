@@ -1877,6 +1877,12 @@ class Contest
         $res .= '</body></html>';
         $url = Base::writeNewStaticFile($my_aid, $res, 'html');
         $redis32->del($contest_id);
+        $now = date('Y-m-d H:i:s', time());
+        Robot::sendChatToOneUserMsgAndEmail($my_aid, '<a href="' . $url . '" target="_blank"><h4>【' . $now . ' ' . $contest_db->name . '】查重结果（点击访问查重地址）</h4></a>');
+        $root_id = Base::getRootId();
+        if ($root_id != $my_aid) {
+            Robot::sendChatToOneUserMsgAndEmail($root_id, '<a href="' . $url . '" target="_blank"><h4>【' . $now . ' ' . $contest_db->name . '】查重结果（点击访问查重地址）</h4></a>');
+        }
         return json(['code' => 1, 'url' => $url, 'msg' => '查重完成']);
     }
 
@@ -1944,6 +1950,9 @@ class Contest
             $js = Base::getJs('rank');
             $msg_css = Base::getCss('msg');
             $contest_db = Base::getContestData($contest_id);
+            if (!$contest_db) {
+                return Base::notFoundPage();
+            }
             // 非消息队列获取排名，排名不在缓存
             return '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><link rel="icon" href="https://ltpp.vip/LTPPlogo.png" type="image/x-icon"><title>LTPP【' . $contest_db->name . '】竞赛排名</title><style>' . $msg_css . '</style><script>' . $js . '</script></head><body><h1>竞赛排名计算中</h1></body></html>';
         }
