@@ -717,7 +717,14 @@ class Ojjudge
                     ->select('problemid')
                     ->get()
                     ->toArray();
-                $pronum = sizeof($prolist);
+                $pronum = 0;
+                foreach ($prolist as &$tem) {
+                    $problem_db = Base::getOjData($tem->problemid);
+                    if (!$problem_db) {
+                        continue;
+                    }
+                    ++$pronum;
+                }
                 // AC数目
                 $acnum = 0;
                 $ac_list = Db::table('contestrank')

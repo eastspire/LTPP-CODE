@@ -787,7 +787,6 @@ class Contest
                 $insert_user[] = [
                     'userid' => $tem,
                     'contestid' => $res_id,
-                    'totaltime' => 0,
                 ];
                 if ($cnt_i % 888 == 0 && !empty($insert_user)) {
                     Db::table('joincontest')->insert($insert_user);
@@ -1491,13 +1490,9 @@ class Contest
         $redis27 = Redis::connection('db27');
         $key = Base::$robot_contest_redis_front . $contest_id;
         $redis27->del($key);
-        // 删除查重缓存
-        $redis31 = Redis::connection('db31');
-        $key = Base::$contest_similarity_id_redis_front . $contest_id;
-        $redis_key = $redis31->get($key);
-        if ($redis_key) {
-            $redis31->del($key);
-        }
+        // 删除查重缓存锁
+        $redis32 = Redis::connection('db32');
+        $redis32->del($contest_id);
         // 删除ContestRank代码缓存
         $redis29 = Redis::connection('db29');
         $redis30 = Redis::connection('db30');
@@ -1790,13 +1785,9 @@ class Contest
         $percentage_list = [];
         Base::$GLOBlinuxurl = Base::getSettingKeyData('GLOBlinuxurl');
 
-        // 删除查重缓存
-        $redis31 = Redis::connection('db31');
-        $key = Base::$contest_similarity_id_redis_front . $contest_id;
-        $redis_key = $redis31->get($key);
-        if ($redis_key) {
-            $redis31->del($key);
-        }
+        // 删除查重缓存锁
+        $redis32 = Redis::connection('db32');
+        $redis32->del($contest_id);
         // 删除旧的缓存
         $redis29 = Redis::connection('db29');
         $redis30 = Redis::connection('db30');
@@ -1884,9 +1875,7 @@ class Contest
             $res .= '<table><tr><th class="tips" colspan="3">代码相似度达到【 ' . $key * 100 . '% 】</th></tr>' . $value . '</table><br/><br/><br/><br/><br/><br/>';
         }
         $res .= '</body></html>';
-        $key = Base::getContestSimilarityId($contest_id);
-        $file_name = Base::getSafeUniqidByIdOnce($contest_id) . '.html';
-        $url = Base::writeNewStaticFile($my_aid, $res, Base::getDbFileExtion($file_name));
+        $url = Base::writeNewStaticFile($my_aid, $res, 'html');
         $redis32->del($contest_id);
         return json(['code' => 1, 'url' => $url, 'msg' => '查重完成']);
     }
@@ -2135,7 +2124,7 @@ class Contest
         $res = Db::table('joincontest')
             ->where('contestid', $contest_id)
             ->where('isdel', 0)
-            ->select('userid', 'totaltime')
+            ->select('userid')
             ->orderBy('id', 'desc')
             ->get();
         $resarray = array();
@@ -2160,11 +2149,11 @@ class Contest
             $endtime = min($endtime, max($begintime, time()));
             $acm_total_time = 0;
             //罚时加竞赛经过时间
-            foreach ($prolist as &$tp) {
+            foreach ($problemIndex as &$tp) {
                 $wa = 0;
                 $addtime = Db::table('contestrank')
                     ->where('contestid', $contest_id)
-                    ->where('problemid', $tp->problemid)
+                    ->where('problemid', $tp['problemid'])
                     ->where('userid', $tem->userid)
                     ->where('submittime', '>=', date('Y-m-d H:i:s', $begintime))
                     ->where('submittime', '<=', date('Y-m-d H:i:s', $endtime))
@@ -2185,7 +2174,7 @@ class Contest
                         $isac = true;
                         ++$acnum;
                         $userResProList[] = [
-                            'id' => $tp->problemid,
+                            'id' => $tp['problemid'],
                             'waNum' => $wa,
                             'firstAcTime' => "$hour:$minute:$seconds",
                             'score' => ''
@@ -2196,7 +2185,7 @@ class Contest
                 }
                 if (!$isac) {
                     $userResProList[] = [
-                        'id' => $tp->problemid,
+                        'id' => $tp['problemid'],
                         'waNum' => $wa,
                         'firstAcTime' => -1,
                         'score' => ''
@@ -2209,12 +2198,7 @@ class Contest
             if ($contest_db->type == 'SQS') {
                 // SQS赛制无罚时
                 // 没有AK
-                if ($acnum < $pronum) {
-                    $ta['totaltime'] = max(0, $endtime - $begintime);
-                } else {
-                    // 已经AK，取AK时间
-                    $ta['totaltime'] = $tem->totaltime;
-                }
+                $ta['totaltime'] = max(0, $acm_total_time);
             } else {
                 $ta['totaltime'] = max(0, $sumwa * 1200 + $acm_total_time);
             }
@@ -2331,13 +2315,13 @@ class Contest
             $ta['name'] = $db->name;
             $endtime = min($endtime, max($begintime, time()));
             $ioi_total_time = 0;
-            foreach ($prolist as &$tp) {
+            foreach ($problemIndex as &$tp) {
                 $addtime = null;
                 if ($contest_db->type == "OI") {
                     // 以最新的提交为准
                     $addtime = Db::table('contestrank')
                         ->where('contestid', $contest_id)
-                        ->where('problemid', $tp->problemid)
+                        ->where('problemid', $tp['problemid'])
                         ->where('userid', $tem->userid)
                         ->where('submittime', '>=', date('Y-m-d H:i:s', $begintime))
                         ->where('submittime', '<=', date('Y-m-d H:i:s', $endtime))
@@ -2349,7 +2333,7 @@ class Contest
                     // 取最高的分数，考虑时间需要从前开始枚举
                     $addtime = Db::table('contestrank')
                         ->where('contestid', $contest_id)
-                        ->where('problemid', $tp->problemid)
+                        ->where('problemid', $tp['problemid'])
                         ->where('userid', $tem->userid)
                         ->where('submittime', '>=', date('Y-m-d H:i:s', $begintime))
                         ->where('submittime', '<=', date('Y-m-d H:i:s', $endtime))
@@ -2367,7 +2351,7 @@ class Contest
                     $allscore += $one_pro_score;
                     if ($ftime == 0) {
                         $userResProList[] = [
-                            'id' => $tp->problemid,
+                            'id' => $tp['problemid'],
                             'waNum' => '',
                             'firstAcTime' => -1,
                             'score' => 0
@@ -2377,7 +2361,7 @@ class Contest
                         $minute = (int) (($ftime - $hour * 3600) / 60);
                         $seconds = $ftime - $hour * 3600 - $minute * 60;
                         $userResProList[] = [
-                            'id' => $tp->problemid,
+                            'id' => $tp['problemid'],
                             'waNum' => '',
                             'firstAcTime' => "$hour:$minute:$seconds",
                             'score' => $one_pro_score
@@ -2385,7 +2369,7 @@ class Contest
                     }
                 } else {
                     $userResProList[] = [
-                        'id' => $tp->problemid,
+                        'id' => $tp['problemid'],
                         'waNum' => '',
                         'firstAcTime' => -1,
                         'score' => 0

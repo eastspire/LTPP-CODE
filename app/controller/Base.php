@@ -2446,7 +2446,7 @@ class Base
      */
     static public function getSafeUniqidByIdOnce($id)
     {
-        return md5($id . '|' . uniqid() . '|' . mt_rand(1, 100000) . '|' . time());
+        return time() . uniqid() . '/' . md5($id  . mt_rand(1, 100000));
     }
 
     /**
@@ -2471,10 +2471,8 @@ class Base
         if ($contest_id <= 0 || !is_numeric($contest_id)) {
             return '';
         }
-        $redis31 = Redis::connection('db31');
         $key = Base::$contest_similarity_id_redis_front . $contest_id;
         $value = Base::getSafeUniqidByIdOnce($key);
-        $redis31->setNx($key, $value);
         return $value;
     }
 

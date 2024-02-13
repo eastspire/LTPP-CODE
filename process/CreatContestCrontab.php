@@ -171,7 +171,6 @@ class CreatContestCrontab
             $insert_user[] = [
                 'userid' => $tem,
                 'contestid' => $contest_id,
-                'totaltime' => 0,
             ];
             if ($cnt_i % 888 == 0 && !empty($insert_user)) {
                 Db::table('joincontest')
