@@ -87,7 +87,6 @@ class MonitorCrontab
         $count = 0;
         foreach ($iterator as $file) {
             $count++;
-            /</strong>var SplFileInfo $file */
             if (is_dir($file)) {
                 continue;
             }
