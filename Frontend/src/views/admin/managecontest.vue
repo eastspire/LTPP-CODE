@@ -175,15 +175,7 @@ export default {
   name: "managecontest",
   async activated() {
     this.isseetip = true;
-    if (this.total != 0) {
-      if (this.issearch) {
-        await this.search();
-      } else {
-        await this.getlist();
-      }
-    } else {
-      await this.getlist();
-    }
+    await this.search();
   },
   deactivated() {
     this.isseetip = false;
@@ -193,7 +185,6 @@ export default {
   },
   created() {
     this.isseetip = true;
-    this.issearch = false; //判断是否搜索，从而进行分页查找
     this.page = 1;
     this.limit = 50;
   },
@@ -202,7 +193,6 @@ export default {
       lastkey: "",
       isseetip: true,
       iscreat: false,
-      issearch: false,
       contestlist: [],
       total: 0,
       page: 1,
@@ -262,21 +252,13 @@ export default {
 
     handleCurrentChange(val) {
       this.page = val;
-      if (this.issearch) {
-        this.search();
-      } else {
-        this.getlist();
-      }
+      this.search();
     },
 
     handleSizeChange(val) {
       this.page = 1;
       this.limit = val;
-      if (this.issearch) {
-        this.search();
-      } else {
-        this.getlist();
-      }
+      this.search();
     },
     toupdata(id) {
       id &&
@@ -339,20 +321,18 @@ export default {
     },
     //搜索预处理
     search() {
-      if (this.key == "" || this.key == null || this.key == undefined) {
-        this.issearch = false;
+      if (!this.key) {
         this.getlist();
         return;
       }
       if (this.lastkey != this.key) {
         this.page = 1;
       }
-      this.issearch = true;
       this.keysearch();
     },
     //删除
     async deleteid(id) {
-      this.$confirm("确定删除该场竞赛吗？", "提示", {
+      this.$confirm("确定删除该竞赛吗？", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
@@ -370,7 +350,7 @@ export default {
           })
             .then((res) => {
               if (res?.data.code == 1) {
-                this.getlist();
+                this.search();
                 this.$msg({
                   type: "success",
                   message: res?.data.msg,
@@ -384,12 +364,8 @@ export default {
                   duration: 1600,
                   offset: 80,
                 });
-              }
-              if (this.issearch) {
-                this.keysearch();
-              } else {
-                this.getlist();
-              }
+              }              
+              this.search();
             })
             .catch((t) => {
               this.$msg({

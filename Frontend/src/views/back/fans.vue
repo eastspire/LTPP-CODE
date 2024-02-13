@@ -371,21 +371,12 @@ import urlencode from "../../../updateCompoents/urlencode";
 export default {
   name: "fans",
   async activated() {
-    if (this.total != 0) {
-      if (this.issearch) {
-        await this.search();
-      } else {
-        await this.getlist();
-      }
-    } else {
-      await this.getlist();
-    }
+    await this.search();
   },
   async created() {
     this.page = 1;
     this.limit = 50;
     this.total = 0;
-    this.issearch = false;
     this.showone = false;
   },
 
@@ -452,36 +443,26 @@ export default {
     },
 
     search() {
-      this.issearch = false;
-      if (this.key == "" || this.key == null || this.key == undefined) {
+      if (!this.key) {
         this.getlist();
         return;
       } else {
         if (this.lastkey != this.key) {
           this.page = 1;
+          this.showone = false;
         }
-        this.showone = false;
-        this.issearch = true;
         this.keysearch();
       }
     },
     handleCurrentChange(val) {
       this.page = val;
-      if (this.issearch) {
-        this.search();
-      } else {
-        this.getlist();
-      }
+      this.search();
     },
 
     handleSizeChange(val) {
       this.page = 1;
       this.limit = val;
-      if (this.issearch) {
-        this.search();
-      } else {
-        this.getlist();
-      }
+      this.search();
     },
 
     async passdata(id) {
@@ -573,14 +554,13 @@ export default {
           duration: 1600,
           offset: 80,
         });
-      this.getlist();
+      this.search();
     },
   },
 
   data() {
     return {
       lastkey: "",
-      issearch: false,
       showone: false,
       fansid: "",
       name: "",

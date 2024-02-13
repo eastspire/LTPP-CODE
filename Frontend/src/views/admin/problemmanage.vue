@@ -212,21 +212,12 @@ export default {
   name: "problemmanage",
   async created() {
     this.isseetip = true;
-    this.issearch = false; //判断是否搜索，从而进行分页查找
     this.page = 1;
     this.limit = 50;
   },
   async activated() {
     this.isseetip = true;
-    if (this.total != 0) {
-      if (this.issearch) {
-        this.search();
-      } else {
-        this.getlist();
-      }
-    } else {
-      this.getlist();
-    }
+    await this.search();
   },
   deactivated() {
     this.isseetip = false;
@@ -242,7 +233,6 @@ export default {
       passparam: {
         id: "",
       },
-      issearch: false,
       problemList: [],
       total: 0,
       page: 1,
@@ -295,21 +285,13 @@ export default {
     },
     handleCurrentChange(val) {
       this.page = val;
-      if (this.issearch) {
-        this.search();
-      } else {
-        this.getlist();
-      }
+      this.search();
     },
 
     handleSizeChange(val) {
       this.page = 1;
       this.limit = val;
-      if (this.issearch) {
-        this.search();
-      } else {
-        this.getlist();
-      }
+      this.search();
     },
     //获取题目列表
     async getlist() {
@@ -369,12 +351,8 @@ export default {
                   duration: 1600,
                   offset: 80,
                 });
-              }
-              if (this.issearch) {
-                this.keysearch();
-              } else {
-                this.getlist();
-              }
+              }              
+              this.search();              
             })
             .catch((t) => {
               this.$msg({
@@ -422,15 +400,13 @@ export default {
     },
     //搜索预处理
     search() {
-      if (this.key == "" || this.key == null || this.key == undefined) {
-        this.issearch = false;
+      if (!this.key) {        
         this.getlist();
         return;
       }
       if (this.lastkey != this.key) {
         this.page = 1;
       }
-      this.issearch = true;
       this.keysearch();
     },
 

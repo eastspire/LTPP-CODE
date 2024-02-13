@@ -645,22 +645,12 @@ import urlencode from "../../../updateCompoents/urlencode";
 export default {
   name: "usermanage",
   async activated() {
-    if (this.total != 0) {
-      if (this.issearch) {
-        await this.search();
-      } else {
-        await this.getlist();
-      }
-    } else {
-      await this.getlist();
-    }
+    await this.search();
   },
   async created() {
     this.page = 1;
     this.limit = 50;
     this.total = 0;
-
-    this.issearch = false;
     this.showone = false;
   },
 
@@ -802,7 +792,7 @@ export default {
         });
       }
 
-      this.getlist();
+      this.search();
     },
 
     tableRowClassName({ row, rowIndex }) {
@@ -853,35 +843,25 @@ export default {
       if (!this.$store.state.root) {
         return;
       }
-      this.issearch = false;
-      if (this.key == "" || this.key == null || this.key == undefined) {
+      if (!this.key) {
         this.getlist();
         return;
       }
       if (this.lastkey != this.key) {
         this.page = 1;
         this.showone = false;
-      }
-      this.issearch = true;
+      }  
       this.keysearch();
     },
     handleCurrentChange(val) {
       this.page = val;
-      if (this.issearch) {
-        this.search();
-      } else {
-        this.getlist();
-      }
+      this.search();
     },
 
     handleSizeChange(val) {
       this.page = 1;
       this.limit = val;
-      if (this.issearch) {
-        this.search();
-      } else {
-        this.getlist();
-      }
+      this.search();
     },
 
     async passdata(id) {
@@ -961,14 +941,15 @@ export default {
           offset: 80,
         });
         this.dialogFormVisible = false;
-      } else
+      } else {
         this.$msg({
           type: "error",
           message: res?.msg,
           duration: 1600,
           offset: 80,
         });
-      this.getlist();
+      }
+      this.search();
     },
 
     async deleteuser() {
@@ -1003,12 +984,8 @@ export default {
                   duration: 1600,
                   offset: 80,
                 });
-              }
-              if (this.issearch) {
-                this.keysearch();
-              } else {
-                this.getlist();
-              }
+              }              
+              this.search();              
             })
             .catch((t) => {
               this.$msg({
@@ -1033,7 +1010,6 @@ export default {
   data() {
     return {
       lastkey: "",
-      issearch: false,
       showone: false,
       addclick: false,
       headimage: "",

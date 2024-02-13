@@ -188,7 +188,7 @@
         <div style="float: left; text-align: left" v-show="isupdate">
           <el-button
             width="auto"
-            style="font-size: 1.06rem; margin: 2rem 2.6rem"
+            style="font-size: 1.06rem; margin: 1.6rem 2.6rem"
             class="pulse-enter-active"
             type="danger"
             @click="
@@ -204,7 +204,7 @@
           <el-button
             type="success"
             width="auto"
-            style="margin: 2rem 2.6rem; font-size: 1.06rem"
+            style="margin: 1.6rem 2.6rem; font-size: 1.06rem"
             class="pulse-enter-active"
             @click="
               isadd = false;
@@ -265,7 +265,7 @@
         <div style="float: left; text-align: left" v-show="isadd">
           <el-button
             width="auto"
-            style="font-size: 1.06rem; margin: 2rem 2.6rem"
+            style="font-size: 1.06rem; margin: 1.6rem 2.6rem"
             class="pulse-enter-active"
             type="danger"
             @click="
@@ -280,7 +280,7 @@
           <el-button
             type="success"
             width="auto"
-            style="margin: 2rem 2.6rem; font-size: 1.06rem"
+            style="margin: 1.6rem 2.6rem; font-size: 1.06rem"
             class="pulse-enter-active"
             @click="
               isadd = false;
@@ -313,10 +313,9 @@ export default {
   name: "shortsentencemanage",
   async activated() {
     this.isseetip = true;
-    this.issearch = false; //判断是否搜索，从而进行分页查找
     this.page = 1;
     this.blogpagesize = 50;
-    await this.getlist();
+    await this.search();
   },
   deactivated() {
     this.isseetip = false;
@@ -331,7 +330,6 @@ export default {
       isseetip: true,
       isupdate: false,
       isadd: false,
-      issearch: false,
       shortsentenceList: [],
       total: 0,
       page: 1,
@@ -352,22 +350,13 @@ export default {
       this.shortsentenceList = tem_list;
     },
     handleCurrentChange(val) {
-      this.page = val;
-      if (this.issearch) {
-        this.search();
-      } else {
-        this.getlist();
-      }
+      this.page = val;      
+      this.search();      
     },
-
     handleSizeChange(val) {
       this.page = 1;
-      this.blogpagesize = val;
-      if (this.issearch) {
-        this.search();
-      } else {
-        this.getlist();
-      }
+      this.blogpagesize = val;      
+      this.search();
     },
     cellStyle({ rowIndex }) {
       let styleRes = {
@@ -447,12 +436,8 @@ export default {
                   duration: 1600,
                   offset: 80,
                 });
-              }
-              if (this.issearch) {
-                this.keysearch();
-              } else {
-                this.getlist();
-              }
+              }              
+              this.search();
             })
             .catch((t) => {
               this.$msg({
@@ -509,15 +494,13 @@ export default {
     },
     //搜索预处理
     search() {
-      if (this.key == "" || this.key == null || this.key == undefined) {
-        this.issearch = false;
+      if (!this.key) {
         this.getlist();
         return;
       }
       if (this.lastkey != this.key) {
         this.page = 1;
       }
-      this.issearch = true;
       this.keysearch();
     },
 
@@ -561,7 +544,7 @@ export default {
       }
       this.id = "";
       this.hitokoto = "";
-      this.getlist();
+      this.search();
     },
     //添加
     async addid() {
@@ -602,7 +585,7 @@ export default {
       }
       this.id = 0;
       this.hitokoto = "";
-      this.getlist();
+      this.search();
     },
   },
 };

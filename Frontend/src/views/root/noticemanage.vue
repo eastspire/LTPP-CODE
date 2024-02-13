@@ -138,7 +138,6 @@
             <mavon-editor
               ref="md"
               @imgAdd="$imgAdd"
-              @imgDel="$imgDel"
               class="md"
               v-model.lazy="content"
               :toolbars="toolbars"
@@ -375,10 +374,9 @@ export default {
   name: "noticemanage",
   async activated() {
     this.isseetip = true;
-    this.issearch = false; //判断是否搜索，从而进行分页查找
     this.page = 1;
     this.limit = 50;
-    await this.getlist();
+    await this.search();
   },
   deactivated() {
     this.isseetip = false;
@@ -421,7 +419,6 @@ export default {
       isseetip: true,
       isupdate: false,
       isadd: false,
-      issearch: false,
       noticeList: [],
       total: 0,
       page: 1,
@@ -569,21 +566,13 @@ export default {
     },
     handleCurrentChange(val) {
       this.page = val;
-      if (this.issearch) {
-        this.search();
-      } else {
-        this.getlist();
-      }
+      this.search();
     },
 
     handleSizeChange(val) {
       this.page = 1;
       this.limit = val;
-      if (this.issearch) {
-        this.search();
-      } else {
-        this.getlist();
-      }
+      this.search();
     },
     //获取公告列表
     async getlist() {
@@ -673,7 +662,7 @@ export default {
                 duration: 1600,
                 offset: 80,
               });
-              this.getlist();
+              this.search();
             } else {
               this.$msg({
                 type: "error",
@@ -681,12 +670,8 @@ export default {
                 duration: 1600,
                 offset: 80,
               });
-            }
-            if (this.issearch) {
-              this.keysearch();
-            } else {
-              this.getlist();
-            }
+            }          
+            this.search();          
           });
         })
         .catch(() => {
@@ -735,15 +720,13 @@ export default {
     },
     //搜索预处理
     search() {
-      if (this.key == "" || this.key == null || this.key == undefined) {
-        this.issearch = false;
+      if (!this.key) {
         this.getlist();
         return;
       }
       if (this.lastkey != this.key) {
         this.page = 1;
       }
-      this.issearch = true;
       this.keysearch();
     },
 
@@ -786,7 +769,7 @@ export default {
       }
       this.id = 0;
       this.content = "";
-      this.getlist();
+      this.search();
     },
     //添加
     async addid() {
@@ -826,7 +809,7 @@ export default {
       }
       this.id = 0;
       this.content = "";
-      this.getlist();
+      this.search();
     },
   },
 };
