@@ -3652,9 +3652,9 @@ class Base
     static public function getOjTestDataList($problem_id)
     {
         try {
-            $redis36 = Redis::connection('db36');
-            if ($redis36->exists($problem_id)) {
-                return json_decode($redis36->get($problem_id), false);
+            $redis31 = Redis::connection('db31');
+            if ($redis31->exists($problem_id)) {
+                return json_decode($redis31->get($problem_id), false);
             }
             $list = Db::table('oj_test_data')
                 ->where('problem_id', $problem_id)
@@ -3662,7 +3662,7 @@ class Base
                 ->orderBy('id', 'asc')
                 ->select('id', 'test_in', 'test_out')
                 ->get();
-            $redis36->setEx($problem_id, Base::$redis_timeout, json_encode($list));
+            $redis31->setEx($problem_id, Base::$redis_timeout, json_encode($list));
             return $list;
         } catch (Exception $e) {
             Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【getOjTestDataList】** 运行错误：' . $e->getMessage());
@@ -3676,14 +3676,14 @@ class Base
     static public function updateOjTestDataListRedis($problem_id)
     {
         try {
-            $redis36 = Redis::connection('db36');
+            $redis31 = Redis::connection('db31');
             $list = Db::table('oj_test_data')
                 ->where('problem_id', $problem_id)
                 ->where('isdel', 0)
                 ->orderBy('id', 'asc')
                 ->select('id', 'test_in', 'test_out')
                 ->get();
-            $redis36->setEx($problem_id, Base::$redis_timeout, json_encode($list));
+            $redis31->setEx($problem_id, Base::$redis_timeout, json_encode($list));
             return $list;
         } catch (Exception $e) {
             Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '**【updateOjTestDataListRedis】** 运行错误：' . $e->getMessage());
