@@ -12,7 +12,6 @@
 
 namespace process;
 
-use app\controller\Robot;
 use GatewayWorker\Lib\Gateway;
 use Workerman\Crontab\Crontab;
 use app\controller\Base;
@@ -34,7 +33,7 @@ class DayproblemCrontab
                 'time' => date('Y-m-d H:i:s', time())
             ]));
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '定时任务进程<strong>【DayproblemCrontab】</strong>运行错误：' . $e->getMessage());
+            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), '定时任务进程<strong>【DayproblemCrontab】</strong>运行错误：' . $e->getMessage());
         }
     }
 
@@ -97,7 +96,7 @@ class DayproblemCrontab
             try {
                 $this->addDayProblem();
             } catch (Exception $e) {
-                Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '定时任务进程<strong>【DayproblemCrontab】</strong>运行错误：' . $e->getMessage());
+                Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), '定时任务进程<strong>【DayproblemCrontab】</strong>运行错误：' . $e->getMessage());
             }
         });
 
@@ -106,7 +105,7 @@ class DayproblemCrontab
             try {
                 $this->addDayProblem();
             } catch (Exception $e) {
-                Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '定时任务进程<strong>【DayproblemCrontab】</strong>运行错误：' . $e->getMessage());
+                Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), '定时任务进程<strong>【DayproblemCrontab】</strong>运行错误：' . $e->getMessage());
             }
         });
     }

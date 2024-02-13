@@ -2,7 +2,6 @@
 
 namespace process;
 
-use app\controller\Robot;
 use Workerman\Crontab\Crontab;
 use app\controller\Base;
 use Exception;
@@ -23,7 +22,7 @@ class DeleteDouYinVideo
                     ->where('time', '<', date('Y-m-d H:i:s', time() - $noupdate_limit_seconds))
                     ->update(['isdel' => 1]);
             } catch (Exception $e) {
-                Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '定时任务进程<strong>【DeleteDouYinVideo】</strong>运行错误：' . $e->getMessage());
+                Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), '定时任务进程<strong>【DeleteDouYinVideo】</strong>运行错误：' . $e->getMessage());
             }
         });
     }

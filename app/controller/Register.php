@@ -106,8 +106,8 @@ class Register extends Email
                     $Zcontent = '您的账号：';
                     $Mcontent = '您的密码：';
                     $cloud_file_readme_txt = Base::getSettingKeyData('cloud_file_readme_txt');
-                    $content = $Zcontent . $name . "<br>" .
-                        $Mcontent . $epasswd . "<br>" .
+                    $content = $Zcontent . $name . '<br>' .
+                        $Mcontent . $epasswd . '<br>' .
                         $cloud_file_readme_txt;
                     RedisQueue::send(Base::$redis_queue_send_mail_name, [
                         'to' => $email,
@@ -121,7 +121,7 @@ class Register extends Email
             }
             return json(['code' => 0, 'msg' => '账号注册失败']);
         } catch (\Exception $e) {
-            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '<strong>【judgeRegister】</strong>运行错误：' . $e->getMessage());
+            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), $e->getMessage());
         }
         return json(['code' => 0, 'msg' => '账号注册失败']);
     }

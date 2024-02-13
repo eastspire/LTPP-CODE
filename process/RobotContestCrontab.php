@@ -13,7 +13,6 @@
 namespace process;
 
 use app\controller\Base;
-use app\controller\Robot;
 use Exception;
 use support\Db;
 use Workerman\Crontab\Crontab;
@@ -41,7 +40,7 @@ class RobotContestCrontab
                 ->get();
             return $db;
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '定时任务进程<strong>【RobotContestCrontab】</strong>运行错误：' . $e->getMessage());
+            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), '定时任务进程<strong>【RobotContestCrontab】</strong>运行错误：' . $e->getMessage());
         }
         return [];
     }
@@ -74,7 +73,7 @@ class RobotContestCrontab
                     ]);
                 }
             } catch (Exception $e) {
-                Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '定时任务进程<strong>【RobotContestCrontab】</strong>运行错误：' . $e->getMessage());
+                Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), '定时任务进程<strong>【RobotContestCrontab】</strong>运行错误：' . $e->getMessage());
             }
         });
     }

@@ -14,7 +14,6 @@ namespace process;
 
 use app\controller\Base;
 use app\controller\Contest;
-use app\controller\Robot;
 use Exception;
 use stdClass;
 use support\Db;
@@ -44,7 +43,7 @@ class ContestRankCrontab
                 $obj = null;
             } catch (Exception $e) {
                 // 发送通知
-                Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '定时任务进程<strong>【ContestRankCrontab】</strong>运行错误：' . $e->getMessage());
+                Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), '定时任务进程<strong>【ContestRankCrontab】</strong>运行错误：' . $e->getMessage());
             }
         });
 
@@ -80,7 +79,7 @@ class ContestRankCrontab
                 }
             } catch (Exception $e) {
                 // 发送通知
-                Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '定时任务进程<strong>【ContestRankCrontab】</strong>运行错误：' . $e->getMessage());
+                Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), '定时任务进程<strong>【ContestRankCrontab】</strong>运行错误：' . $e->getMessage());
             }
         });
     }

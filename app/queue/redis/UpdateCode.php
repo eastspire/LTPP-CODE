@@ -13,7 +13,6 @@
 namespace app\queue\redis;
 
 use app\controller\Base;
-use app\controller\Robot;
 use Exception;
 use support\Db;
 use Webman\RedisQueue\Consumer;
@@ -39,7 +38,7 @@ class UpdateCode implements Consumer
         } catch (Exception $e) {
             $title = 'UpdateCode消息队列异常';
             $content = $e->getMessage();
-            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '<h4>' . $title . "</h4>\n" . $content);
+            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), '<h4>' . $title . "</h4>\n" . $content);
         }
     }
 }

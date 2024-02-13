@@ -12,7 +12,6 @@
 
 namespace process;
 
-use app\controller\Robot;
 use app\controller\Base;
 use app\controller\Contest;
 use Workerman\Crontab\Crontab;
@@ -202,7 +201,7 @@ class CreatContestCrontab
                     Contest::sendUpdateRankMQ($res_id);
                 }
             } catch (Exception $e) {
-                Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '定时任务进程<strong>【CreatContestCrontab】</strong>运行错误：' . $e->getMessage());
+                Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), '定时任务进程<strong>【CreatContestCrontab】</strong>运行错误：' . $e->getMessage());
             }
         });
     }

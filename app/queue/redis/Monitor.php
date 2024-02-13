@@ -15,7 +15,6 @@ namespace app\queue\redis;
 use Exception;
 use Webman\RedisQueue\Consumer;
 use app\controller\Base;
-use app\controller\Robot;
 
 class Monitor implements Consumer
 {
@@ -37,7 +36,7 @@ class Monitor implements Consumer
         } catch (Exception $e) {
             $title = 'Monitor消息队列异常';
             $content = $e->getMessage();
-            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '<h4>' . $title . "</h4>\n" . $content);
+            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), '<h4>' . $title . "</h4>\n" . $content);
         }
     }
 }

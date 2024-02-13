@@ -862,7 +862,7 @@ class PrivateRobot extends ChatBase
                 }
             }
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '调用GPT出错：' . $e->getMessage());
+            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), '调用GPT出错：' .  $e->getMessage());
         }
         return '';
     }

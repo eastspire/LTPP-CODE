@@ -119,7 +119,7 @@ class Contest
             $redis24->rpush(Contest::$redis_array_name, ...[$contest_id]);
         } catch (Exception $e) {
             $msg = '添加排名缓冲区异常：' . $e->getMessage();
-            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), $msg);
+            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), $msg);
         }
     }
 
@@ -1145,7 +1145,7 @@ class Contest
             $data = $json['data'];
             return json(['code' => 1, 'peopledata' => $peopledata, 'timedata' => $timedata, 'data' => $data, 'msg' => '统计信息完成！']);
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '<strong>【getContestRank】</strong>运行错误：' . $e->getMessage());
+            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), $e->getMessage());
         }
         return json(['code' => 1, 'peopledata' => [], 'timedata' => [], 'data' => [], 'msg' => '信息计算中！']);
     }
@@ -1391,7 +1391,7 @@ class Contest
             Base::dataToSafe($problemIndex);
             return json(['code' => 1, 'data' => $data, 'problemIndex' => $problemIndex, 'myrank' => $myrank, 'total' => $total]);
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '<strong>【lookAcmExcelRank】</strong>运行错误：' . $e->getMessage());
+            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), $e->getMessage());
         }
         return json(['code' => 1, 'data' => [], 'problemIndex' => [], 'msg' => '服务器异常！无法查看排名！']);
     }
@@ -1451,7 +1451,7 @@ class Contest
             Base::dataToSafe($problemIndex);
             return json(['code' => 1, 'data' => $data, 'problemIndex' => $problemIndex, 'myrank' => $myrank, 'total' => $total]);
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '<strong>【lookOiExcelRank】</strong>运行错误：' . $e->getMessage());
+            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), $e->getMessage());
         }
         return json(['code' => 1, 'data' => [], 'problemIndex' => [], 'msg' => '服务器异常！无法查看排名！']);
     }
@@ -1878,10 +1878,10 @@ class Contest
         $url = Base::writeNewStaticFile($my_aid, $res, 'html');
         $redis32->del($contest_id);
         $now = date('Y-m-d H:i:s', time());
-        Robot::sendChatToOneUserMsgAndEmail($my_aid, '<a href="' . $url . '" target="_blank"><h4>【' . $now . ' ' . $contest_db->name . '】查重结果（点击访问查重地址）</h4></a>');
+        Robot::sendChatToOneUserMsgAndEmail($my_aid, '<a href="' . $url . '" target="_blank"><strong>【' . $now . ' ' . $contest_db->name . '】查重结果（点击访问查重地址）</strong></a>');
         $root_id = Base::getRootId();
         if ($root_id != $my_aid) {
-            Robot::sendChatToOneUserMsgAndEmail($root_id, '<a href="' . $url . '" target="_blank"><h4>【' . $now . ' ' . $contest_db->name . '】查重结果（点击访问查重地址）</h4></a>');
+            Robot::sendChatToOneUserMsgAndEmail($root_id, '<a href="' . $url . '" target="_blank"><strong>【' . $now . ' ' . $contest_db->name . '】查重结果（点击访问查重地址）</strong></a>');
         }
         return json(['code' => 1, 'url' => $url, 'msg' => '查重完成']);
     }
@@ -1978,9 +1978,7 @@ class Contest
                 Contest::lookHtmlOiExcelRank($my_aid, $contest_id, $contest_db, $redis4);
             }
         } catch (Exception $e) {
-            $title = 'contestIdGetRank运行异常';
-            $content = $e->getMessage();
-            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '<h4>' . $title . "</h4>\n" . $content);
+            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), $e->getMessage());
         }
     }
 
@@ -2060,7 +2058,7 @@ class Contest
             }
             $html = '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><link rel="icon" href="https://ltpp.vip/LTPPlogo.png" type="image/x-icon"><title>LTPP【' . $contest_db->name . '】竞赛排名</title><style>' . $rank_css . '</style><script>' . $js . '</script></head><body><table class="CONTEST"><tr><th class="CONTEST-NAME" colspan="' . ($problems_len + 4) . '">LTPP【' . $contest_db->name . '】实时竞赛排名</th></tr>' . $table_title . $table_body . '</body></html>';
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '<strong>【calculateContestRank】</strong>运行错误：' . $e->getMessage());
+            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), $e->getMessage());
             return $html;
         }
         return $html;
