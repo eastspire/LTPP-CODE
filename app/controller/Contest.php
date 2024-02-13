@@ -1965,7 +1965,7 @@ class Contest
             }
             if ($contest_db->type == 'ACM' || $contest_db->type == 'SQS') {
                 Contest::lookHtmlAcmExcelRank($my_aid, $contest_id, $contest_db, $redis4);
-            } else if ($contest_db->type != 'OI' && $contest_db->type != 'IOI') {
+            } else if ($contest_db->type == 'OI' || $contest_db->type == 'IOI') {
                 Contest::lookHtmlOiExcelRank($my_aid, $contest_id, $contest_db, $redis4);
             }
         } catch (Exception $e) {
