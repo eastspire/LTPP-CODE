@@ -58,14 +58,29 @@ class Base
     static $oj_ac_code_default = '无';
 
     /**
+     * 竞赛排名计算中提示词
+     */
+    static $contest_rank_in_calculation = '竞赛排名计算中';
+
+    /**
+     * 竞赛未开始排名提示词
+     */
+    static $contest_rank_not_begin = '竞赛开始后展示排名';
+
+    /**
+     * OI赛制未结束排名提示词
+     */
+    static $contest_rank_oi_not_end = 'OI赛制竞赛结束后展示排名';
+
+    /**
      * AC提示
      */
-    static $ac_msg = '恭喜您AC了';
+    static $ac_msg = '恭喜您AC啦';
 
     /**
      * AK提示
      */
-    static $ak_msg = '恭喜您AK了';
+    static $ak_msg = '恭喜您AK啦';
 
     /**
      * GPT Key在MySQL&&Redis中Key的名称
@@ -76,7 +91,6 @@ class Base
      * GPT API地址在MySQL&&Redis中Key的名称
      */
     static $chat_gpt_api_url_key = 'chatgpt_api_url';
-
 
     /**
      * @var array $extion_map_number 文件类型转数字

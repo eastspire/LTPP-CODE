@@ -1134,11 +1134,12 @@ class Contest
             }
             if (!$isbegin) {
                 // 未开始
-                return json(['code' => -1, 'peopledata' => [], 'timedata' => [], 'data' => [], 'msg' => '竞赛未开始！无法查看排名!']);
+                return json(['code' => -1, 'peopledata' => [], 'timedata' => [], 'data' => [], 'msg' => Base::$contest_rank_not_begin]);
             }
             $json = Base::getContestRankEchartsData($contest_id);
             if (!$json) {
-                return json(['code' => -1, 'peopledata' => [], 'timedata' => [], 'data' => [], 'msg' => '暂无排名！']);
+                Contest::sendUpdateRankMQ($contest_id);
+                return json(['code' => -1, 'peopledata' => [], 'timedata' => [], 'data' => [], 'msg' => Base::$contest_rank_in_calculation]);
             }
             $peopledata = $json['peopledata'];
             $timedata = $json['timedata'];
@@ -1370,11 +1371,12 @@ class Contest
             }
             if (!$isbegin) {
                 // 未开始
-                return json(['code' => 1, 'data' => [], 'problemIndex' => [], 'msg' => '竞赛未开始！无法查看排名！']);
+                return json(['code' => 1, 'data' => [], 'problemIndex' => [], 'msg' => Base::$contest_rank_not_begin]);
             }
             $json = Base::getContestRankJsonData($contest_id);
             if (!$json) {
-                return json(['code' => 1, 'data' => [], 'problemIndex' => [], 'msg' => '暂无排名！']);
+                Contest::sendUpdateRankMQ($contest_id);
+                return json(['code' => -1, 'data' => [], 'problemIndex' => [], 'msg' => Base::$contest_rank_in_calculation]);
             }
             $data = $json['data'];
             $problemIndex = $json['problemIndex'];
@@ -1425,16 +1427,17 @@ class Contest
                 $isbegin = true;
             }
             if (!$isbegin) {
-                return json(['code' => 1, 'data' => [], 'problemIndex' => [], 'msg' => 'OI赛制竞赛结束可查看排名！']);
+                return json(['code' => 1, 'data' => [], 'problemIndex' => [], 'msg' => Base::$contest_rank_not_begin]);
             }
             $is_mycontest = Contest::judgeIsMyContest($contest_id, $my_aid);
             // OI赛制未结束，非管理员不可看
             if ($contest_db->type == 'OI' && time() <= $endtime && !$is_mycontest) {
-                return json(['code' => 1, 'data' => [], 'problemIndex' => [], 'msg' => 'OI赛制竞赛结束可查看排名！']);
+                return json(['code' => -1, 'data' => [], 'problemIndex' => [], 'msg' => Base::$contest_rank_oi_not_end]);
             }
             $json = Base::getContestRankJsonData($contest_id);
             if (!$json) {
-                return json(['code' => 1, 'data' => [], 'problemIndex' => [], 'msg' => '暂无排名！']);
+                Contest::sendUpdateRankMQ($contest_id);
+                return json(['code' => -1, 'data' => [], 'problemIndex' => [], 'msg' => Base::$contest_rank_in_calculation]);
             }
             $data = $json['data'];
             $problemIndex = $json['problemIndex'];
@@ -1954,7 +1957,7 @@ class Contest
                 return Base::notFoundPage();
             }
             // 非消息队列获取排名，排名不在缓存
-            return '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><link rel="icon" href="https://ltpp.vip/LTPPlogo.png" type="image/x-icon"><title>LTPP【' . $contest_db->name . '】竞赛排名</title><style>' . $msg_css . '</style><script>' . $js . '</script></head><body><h1>竞赛排名计算中</h1></body></html>';
+            return '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><link rel="icon" href="https://ltpp.vip/LTPPlogo.png" type="image/x-icon"><title>LTPP【' . $contest_db->name . '】竞赛排名</title><style>' . $msg_css . '</style><script>' . $js . '</script></head><body><h1>' . Base::$contest_rank_in_calculation . '</h1></body></html>';
         }
         return $html;
     }
@@ -2005,7 +2008,7 @@ class Contest
             $endtime = strtotime($contest_db->end);
             // OI赛制HTML排名竞赛未结束不显示
             if ($contest_db->type == 'OI' && time() <= $endtime) {
-                return '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><link rel="icon" href="https://ltpp.vip/LTPPlogo.png" type="image/x-icon"><title>LTPP【' . $contest_db->name . '】竞赛排名</title><style>' . $msg_css . '</style><script>' . $js . '</script></head><body><h1>OI赛制竞赛结束可查看排名</h1></body></html>';
+                return '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><link rel="icon" href="https://ltpp.vip/LTPPlogo.png" type="image/x-icon"><title>LTPP【' . $contest_db->name . '】竞赛排名</title><style>' . $msg_css . '</style><script>' . $js . '</script></head><body><h1>' . Base::$contest_rank_oi_not_end . '</h1></body></html>';
             }
             if ($contest_db->type == 'ACM' || $contest_db->type == 'SQS') {
                 $table_title = '<th>排名</th><th>用户</th><th>总AC数</th><th>总用时</th>';
