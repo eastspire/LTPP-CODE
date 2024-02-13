@@ -3675,7 +3675,7 @@ class Base
             if (!$trace) {
                 return '';
             }
-            if (!is_array($trace)) {
+            if (!is_array($trace) && !is_object($trace)) {
                 return $trace;
             }
             $res = '';
@@ -3691,7 +3691,7 @@ class Base
             }
             foreach ($trace as $key => &$value) {
                 ++$index;
-                if (is_array($value)) {
+                if (is_array($value) || is_object($value)) {
                     $child = Base::debugTrace($value, $deep + 1);
                     $is_top_num = @(is_numeric($key) && $deep === 0);
                     $res .= $tab . ($is_top_num ? '【执行顺序' . ($key + 1) . '】' : $key . ' => ') . "\n" . $child;

@@ -143,7 +143,7 @@ class Cloudfile
                 $data = zlib_decode($data);
             }
         } catch (\Exception $e) {
-            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT));
+            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), $e->getMessage());
         }
         return json(['code' => 1, 'msg' => '文件获取成功', 'data' => $data]);
     }
