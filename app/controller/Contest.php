@@ -1383,7 +1383,7 @@ class Contest
             $myrank = 1;
             $total = $json['total'];
             foreach ($data as &$tem) {
-                if (Base::getIdByUid($tem['id']) == $my_aid) {
+                if ($tem['id'] == $my_aid) {
                     $myrank = $tem['index'];
                     break;
                 }
@@ -1444,7 +1444,7 @@ class Contest
             $myrank = 1;
             $total = $json['total'];
             foreach ($data as &$tem) {
-                if (Base::getIdByUid($tem['id']) == $my_aid) {
+                if ($tem['id'] == $my_aid) {
                     $myrank = $tem['index'];
                     break;
                 }
@@ -2126,9 +2126,6 @@ class Contest
                 'problemid' => $tem->problemid
             ];
         }
-        $arr_prolist = $prolist->toArray();
-        // 题目数目
-        $pronum = sizeof($arr_prolist);
 
         //更新未ak用户时间补加总时长
         $res = Db::table('joincontest')
