@@ -107,14 +107,14 @@
                       :content="base64_decode(tem[0])"
                       placement="top"
                     >
-                      <p
+                      <span
                         style="
                           font-size: 1.06rem;
                           color: deepskyblue;                          
                         "
                       >
                         {{ base64_decode(tem[0]) }}
-                      </p>
+                      </span>
                     </el-tooltip>
                   </div>
 

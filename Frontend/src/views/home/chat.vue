@@ -480,9 +480,9 @@
                   :content="base64_decode(tem[0])"
                   placement="top"
                 >
-                  <p style="font-size: 1rem; color: deepskyblue">
+                  <span style="font-size: 1rem; color: deepskyblue">
                     {{ base64_decode(tem[0]).substr(0, 36) }}
-                  </p>
+                  </span>
                 </el-tooltip>
               </div>
               <div>

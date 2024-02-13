@@ -156,41 +156,43 @@
             </div>
           </div>
           <!-- echarts -->
-          <div
-            v-if="
-              isbegin &&
-              userdata &&
-              echartsnum &&
-              userdata.length > 0 &&
-              contestdata.allpeople > 0 &&
-              contestdata.allpeople <= 40 &&
-              type != 'OI'
-            "
-          >
-            <p
-              style="
-                font-size: 1.06rem;
-                text-align: left;
-                font-weight: bold;
-                margin: 1rem 1rem 0.5rem 1.16rem;
+          <div v-show="echarts_finish">
+            <div
+              v-if="
+                isbegin &&
+                userdata &&
+                echartsnum &&
+                userdata.length > 0 &&
+                contestdata.allpeople > 0 &&
+                contestdata.allpeople <= 40 &&
+                type != 'OI'
               "
             >
-              可视化排名
-            </p>
-            <div style="padding: 0.6rem 0rem 0.6rem 0rem">
-              <div
-                id="rankchart"
+              <p
                 style="
-                  margin-left: 0.36rem;
-                  margin-right: 0.36rem;
-                  width: 100%;
-                  height: 30rem;
-                  background-color: rgba(var(--ltpp-main-bk-color), 0);
-                  will-change: transform;
+                  font-size: 1.06rem;
+                  text-align: left;
+                  font-weight: bold;
+                  margin: 1rem 1rem 0.5rem 1.16rem;
                 "
-              ></div>
+              >
+                可视化排名
+              </p>
+              <div style="padding: 0.6rem 0rem 0.6rem 0rem">
+                <div
+                  id="rankchart"
+                  :style="`
+                    margin-left: 0.36rem;
+                    margin-right: 0.36rem;
+                    width: calc(${$store.state.max_width}px - 0.72rem);
+                    height: 30rem;
+                    background-color: rgba(var(--ltpp-main-bk-color), 0);
+                    will-change: transform;
+                  `"
+                ></div>
+              </div>
             </div>
-          </div>
+           </div>
           <div style="height: 1.6rem"></div>
           <div>
             <p
@@ -802,6 +804,7 @@ export default {
     ShowCode,
   },
   async activated() {
+    this.echarts_finish = false;
     this.rank_lock = false;
     this.isseetip = true;
     this.isgetprolist = false;
@@ -893,6 +896,7 @@ export default {
   },
   data() {
     return {
+      echarts_finish: false,
       rank_lock: false,
       show_oi_rank: false,
       can_show_time: false,
@@ -1192,7 +1196,6 @@ export default {
       }
     },
     async delrank() {
-      this.isshow = false;
       const { data: res } = await this.$ajax({
         method: "post",
         url: "/Contest/deleteRank",
@@ -1231,7 +1234,6 @@ export default {
         } else if (this.isioi === true || this.isoi === true) {
           await this.lookoirank();
         }
-        this.isshow = true;
         this.updateEcharts();
       } else {
         this.$msg({
@@ -1508,12 +1510,12 @@ export default {
         this.type == "OI"
       ) {
         return;
-      }
+      }    
       let echarts_dom = document.getElementById("rankchart");
       if (!echarts_dom) {
+        this.echarts_finish = false;
         return;
       }
-      let myChart = echarts.init(echarts_dom);
       let trank = [];
       for (let i = 0; i < this.echartsnum; ++i) {
         trank[i] = {
@@ -1525,6 +1527,7 @@ export default {
           data: this.resrank[i],
         };
       }
+      let myChart = echarts.init(echarts_dom);
       myChart.setOption({
         title: {
           text: "", //表格题目
@@ -1639,6 +1642,11 @@ export default {
           },
         },
       });
+      if(!this.echarts_finish){
+        setTimeout(() => {
+          this.echarts_finish = true;
+        }, 0);
+      }
     },
     toback() {
       this.$router.go(-1);
