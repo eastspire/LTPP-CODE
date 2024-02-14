@@ -138,10 +138,6 @@ class Cloudfile
                 return json(['code' => -1, 'msg' => '该格式不支持访问']);
             }
             $data = Base::getStaticFileData($path);
-            if ($data !== false && Base::judgeIsOpenGzip($extion)) {
-                // 数据使用gzip需要在取消gzip
-                $data = zlib_decode($data);
-            }
         } catch (\Exception $e) {
             Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), $e->getMessage());
         }
