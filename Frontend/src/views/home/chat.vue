@@ -106,7 +106,7 @@
             <el-button
               type="text"
               v-show="isSeeLastBtn && now_user && now_user.id"
-              @click="getHistoryChatData()"
+              @click="getHistoryChatData(true)"
               class="pulse-enter-active"
               >点击加载历史消息</el-button
             >
@@ -1360,6 +1360,7 @@ export default {
     },
     // 加载历史消息
     async getHistoryChatData(is_init = false) {
+      this.isSeeLastBtn = false;
       if (!this.now_user.id || !this.now_user.type) {
         !is_init && this.$msg({
           type: "error",
@@ -1380,8 +1381,7 @@ export default {
         this.id = 0;
       }
 
-      if (!this.id) {
-        this.isSeeLastBtn = false;
+      if (!this.id) {        
         !is_init && this.$msg({
           type: "success",
           message: "没有更久远的历史记录啦",
@@ -1418,14 +1418,8 @@ export default {
       });
       if (res?.code == 1) {
         let len = res?.data.length;
-        if(!is_init){
-          if(len < 50){
-            this.isSeeLastBtn = false;
-          }
-        }else{
-          if(len > 0){
-            this.isSeeLastBtn = true;
-          }
+        if(is_init && len > 0){          
+          this.isSeeLastBtn = true;          
         }
         if (len <= 0) {
           !is_init && this.$msg({
@@ -1442,7 +1436,7 @@ export default {
           this.to_last_scroll();
         }
       } else {
-        !is_init && tthis.$msg({
+        !is_init && this.$msg({
           type: "error",
           message: res?.msg,
           duration: 1600,

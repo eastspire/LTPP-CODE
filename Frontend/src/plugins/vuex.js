@@ -32,6 +32,7 @@ const state = {
     now_width: 0,//宽度
     no_scroll_height: 92,//无滚动高度，单位vw
     max_width: 0,//最大宽度
+    server_error: false,
 };
 
 const root_state = {
@@ -54,13 +55,36 @@ const root_state = {
     now_width: 0,//宽度
     no_scroll_height: 92,//无滚动高度，单位vw
     max_width: 0,//最大宽度
+    server_error: false,
 };
+let timer = null;
+let old_msg = null;
+let old_notice = null;
+const new_notice = function (params) { };
+const new_msg = function (params) { };
+timer = setTimeout(function () {
+    !old_msg && (old_msg = Vue.prototype.$msg);
+    !old_notice && (old_notice = Vue.prototype.$notice);
+    if (old_msg && old_notice) {
+        clearTimeout(timer);
+        timer = null;
+    }
+}, 0);
 
 const mutations = {
     updateObj(state, obj) {
         let key = Object.keys(obj)[0];
         let value = Object.values(obj)[0];
         state[key] = value;
+        if (key == 'server_error' && old_msg && old_notice) {
+            if (value) {
+                Vue.prototype.$msg = new_msg;
+                Vue.prototype.$notice = new_notice;
+            } else {
+                Vue.prototype.$msg = old_msg;
+                Vue.prototype.$notice = old_notice;
+            }
+        }
     },
     reset(state) {
         for (const key in state) {

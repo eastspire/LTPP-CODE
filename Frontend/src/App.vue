@@ -23,7 +23,7 @@ export default {
   name: "app",
   data() {
     return {
-      version: '1.9.4',
+      version: "1.9.6",
       get_version_lock: false,
     };
   },
@@ -33,7 +33,7 @@ export default {
     if (!authorization || !key) {
       this.logoutRemove();
       return;
-    }    
+    }
   },
   async mounted() {
     try {
@@ -59,17 +59,10 @@ export default {
         if (!is_electron) {
           setTimeout(() => {
             location.reload(true);
-          }, 1000);
+          }, 888);
           return;
         }
       }
-      this.$notice({
-        title: "系统资源检查",
-        dangerouslyUseHTMLString: true,
-        message: "系统资源检查完成",
-        duration: 3600,
-        offset: 80,
-      });
       window.localStorage.setItem(key, now);
       setInterval(() => {
         this.getVersion(is_electron);
@@ -79,6 +72,13 @@ export default {
   },
   methods: {
     init() {
+      this.$notice({
+        title: "系统资源检查",
+        dangerouslyUseHTMLString: true,
+        message: "系统资源检查完成",
+        duration: 3600,
+        offset: 80,
+      });
       let is_public_network = window.localStorage.getItem("is_public_network");
       if (is_public_network == 1) {
         this.$store.commit("updateObj", { is_public_network: 1 });
@@ -89,73 +89,81 @@ export default {
         this.$store.commit("updateObj", { is_public_network: 1 });
       }
     },
+    updateSeverError(server_error = false) {
+      this.$store.commit("updateObj", { server_error: server_error });
+    },
     async getVersion(is_electron = false) {
-        if(this.get_version_lock){
-          return;
-        }
-        this.get_version_lock = true;
-        const { data: res } = await this.$ajax({
-          method: "post",
-          url: "/Version/getVersion",
-          portType: {
-            process: "8793",
-          },
-        }).catch(() => {
-          ++err_times;
-          err_times > max_err_times &&
-            this.$route.path != "/maintenance" &&
+      if (this.get_version_lock) {
+        return;
+      }
+      this.get_version_lock = true;
+      const { data: res } = await this.$ajax({
+        method: "post",
+        url: "/Version/getVersion",
+        portType: {
+          process: "8793",
+        },
+      }).catch(() => {
+        ++err_times;
+        if (err_times > max_err_times) {
+          this.updateSeverError(true);
+          this.get_version_lock = false;
+          if (this.$route.path != "/maintenance") {
             this.$router.replace({
               path: "/maintenance",
               replace: true,
             });
-            this.get_version_lock = false;
-            return;
-        });
-        this.get_version_lock = false;
-        if (res?.code == 1) {
-          err_times = 0;
-          if (this.$route.path === "/maintenance") {
-            this.$router.replace({
-              path: "/homelist",
-              replace: true,
-            });
           }
-          if (this.version < res.version) {
-            if (!is_electron) {
-              this.$notice({
-                title: "发现新版本！",
-                dangerouslyUseHTMLString: true,
-                message: "系统自动更新中",
-                duration: 3600,
-                offset: 80,
-              });
-              setTimeout(() => {
-                location.reload(true);
-              }, 1000);
+        }
+        return;
+      });
+      this.get_version_lock = false;
+      if (res?.code == 1) {
+        err_times = 0;
+        this.updateSeverError(false);
+        if (this.$route.path === "/maintenance") {
+          this.$router.replace({
+            path: "/homelist",
+            replace: true,
+          });
+        }
+        if (this.version < res.version) {
+          if (!is_electron) {
+            this.$notice({
+              title: "发现新版本！",
+              dangerouslyUseHTMLString: true,
+              message: "系统自动更新中",
+              duration: 3600,
+              offset: 80,
+            });
+            setTimeout(() => {
+              location.reload(true);
+            }, 888);
+          } else {
+            this.$notice({
+              title: "发现新版本！",
+              dangerouslyUseHTMLString: true,
+              message: "请手动安装新版本",
+              duration: 0,
+              offset: 80,
+            });
+            if (this.judgeSystemIsWin()) {
+              res?.ltpp_win_download_url &&
+                window.open(res.ltpp_win_download_url, "_blank");
             } else {
-              this.$notice({
-                title: "发现新版本！",
-                dangerouslyUseHTMLString: true,
-                message: "请手动安装新版本",
-                duration: 0,
-                offset: 80,
-              });
-              if(this.judgeSystemIsWin()){
-                res?.ltpp_win_download_url && window.open(res.ltpp_win_download_url, "_blank");
-              }else{
-                res?.ltpp_mac_download_url && window.open(res.ltpp_mac_download_url, "_blank");
-              }
+              res?.ltpp_mac_download_url &&
+                window.open(res.ltpp_mac_download_url, "_blank");
             }
           }
-        } else {
-          ++err_times;
-          err_times > max_err_times &&
-            this.$route.path != "/maintenance" &&
-            this.$router.replace({
-              path: "/maintenance",
-              replace: true,
-            });          
-        }        
+        }
+      } else if (++err_times > max_err_times) {
+        this.updateSeverError(true);
+        this.$route.path != "/maintenance" &&
+          this.$router.replace({
+            path: "/maintenance",
+            replace: true,
+          });
+      }
     },
   },
 };
@@ -243,8 +251,14 @@ pre code.hljs {
   width: 100%;
   margin-left: auto;
   margin-right: auto;
-  border-color: rgba(var(--ltpp-light-color), var(--ltpp-center-box-bk-opacity));
-  background-color: rgba(var(--ltpp-light-color), var(--ltpp-center-box-bk-opacity));
+  border-color: rgba(
+    var(--ltpp-light-color),
+    var(--ltpp-center-box-bk-opacity)
+  );
+  background-color: rgba(
+    var(--ltpp-light-color),
+    var(--ltpp-center-box-bk-opacity)
+  );
 }
 
 .el-input-group--prepend,

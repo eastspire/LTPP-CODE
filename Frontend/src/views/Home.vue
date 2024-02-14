@@ -863,7 +863,7 @@ export default {
     },
 
     async setup() {
-      await this.wsInitConnect();
+      await this.wsInitConnect().catch(() => {});
     },
 
     /**
@@ -976,7 +976,7 @@ export default {
             clearInterval(clock_timer);
             clock_timer = null;
           } else if (this.websocket.readyState != WebSocket.CONNECTING) {
-            this.wsInitConnect();
+            this.wsInitConnect().catch(() => {});
           }
         }, 3600);
       } catch (err) {

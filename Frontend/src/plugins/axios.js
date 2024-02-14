@@ -102,7 +102,14 @@ _axios.interceptors.response.use(
     },
     function (error) {
         // Do something with response error
-        return Promise.reject(error);
+        const res = {
+            data: {
+                code: -1,
+                msg: error?.message || '未知错误',
+                data: []
+            }
+        };
+        return res;
     }
 );
 
