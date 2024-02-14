@@ -1623,7 +1623,7 @@ class Contest
     /**
      * 代码分词器
      */
-    private function splitWords($str)
+    private function splitWords(&$str)
     {
         $res = [];
         $len = strlen($str);
@@ -1677,7 +1677,7 @@ class Contest
      * @param string $code1
      * @param string $code2
      */
-    private function codeDuplicationCheck($code1, $code2)
+    private function codeDuplicationCheck(&$code1, &$code2)
     {
         if (!$code1 || !$code2) {
             return 0;
@@ -1812,14 +1812,14 @@ class Contest
         foreach ($problem_list as &$t) {
             for ($i = 0; $i < $len; ++$i) {
                 $code1 = $map[$user_list[$i]][$t];
-                if (!$code1) {
+                if (!isset($code1->id) || !isset($code1->code)) {
                     $code1 = new stdClass();
                     $code1->id = '';
                     $code1->code = '';
                 }
                 for ($j = $i + 1; $j < $len; ++$j) {
                     $code2 = $map[$user_list[$j]][$t];
-                    if (!$code2) {
+                    if (!isset($code2->id) || !isset($code2->code)) {
                         $code2 = new stdClass();
                         $code2->id = '';
                         $code2->code = '';
