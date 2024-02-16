@@ -104,10 +104,8 @@ class Article extends Image
         $my_aid = Base::getIdByUid($my_uid);
         $isroot = Base::judgeIsRoot($my_aid);
         $can_edit = ($info->writerid == $my_aid) || $isroot;
-        if ($info->public != 1) {
-            if ($info->writerid != $my_aid && !$isroot) {
-                return \json(['code' => -1, 'msg' => '私密文章不可见']);
-            }
+        if ($info->public != 1 && $info->writerid != $my_aid && !$isroot) {
+            return \json(['code' => -1, 'msg' => '私密文章不可见']);
         }
         $info->writer = $db->name;
         $islove = Db::table('lovearticle')
