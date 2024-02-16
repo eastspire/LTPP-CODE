@@ -196,7 +196,13 @@ class Article extends Image
                     ->get();
             }
         }
-
+        $user_db = Base::getUserData($user_id);
+        if (!$user_db) {
+            return \json(['code' => -1, 'data' => [], 'msg' => '该用户已注销，无法查看']);
+        }
+        foreach ($res as &$tem) {
+            $tem->writer = $user_db->name;
+        }
         Base::dataToSafe($res);
         return \json(['code' => 1, 'data' => $res]);
     }
@@ -240,6 +246,11 @@ class Article extends Image
         $allnum = sizeof($res);
         $resdata = array();
         for ($i = $limit * ($page - 1); $i < $limit * $page && $i < $allnum; ++$i) {
+            $db = Base::getUserData($res[$i]->writerid);
+            if (!$db) {
+                continue;
+            }
+            $res[$i]->writer = $db->name;
             $resdata[] = $res[$i];
         }
         Base::dataToSafe($resdata);
@@ -284,6 +295,11 @@ class Article extends Image
         $allnum = sizeof($publicarticlelist);
         $res = array();
         for ($i = ($page - 1) * $limit, $j = 0; $j < $limit && $i < sizeof($publicarticlelist); ++$i, ++$j) {
+            $db = Base::getUserData($publicarticlelist[$i]->writerid);
+            if (!$db) {
+                continue;
+            }
+            $publicarticlelist[$i]->writer = $db->name;
             $res[] = $publicarticlelist[$i];
         }
         $nowtime = date('Y-m-d H:i:s', time());
@@ -539,6 +555,14 @@ class Article extends Image
                 ->orderBy('fabulous', 'desc')
                 ->paginate($limit, '*', 'page', $page)
                 ->items();
+        }
+        foreach ($data as &$tem) {
+            $db = Base::getUserData($tem->writerid);
+            if (!$db) {
+                $tem->writer = '未知用户';
+                continue;
+            }
+            $tem->writer = $db->name;
         }
         Base::dataToSafe($data);
         return json(['code' => 1, 'data' => $data, 'msg' => '加载完成！']);
@@ -1008,6 +1032,14 @@ class Article extends Image
                         ->get();
                 }
             }
+        }
+        foreach ($info as &$tem) {
+            $db = Base::getUserData($tem->writerid);
+            if (!$db) {
+                $tem->writer = '未知用户';
+                continue;
+            }
+            $tem->writer = $db->name;
         }
         Base::dataToSafe($info);
         return json(['code' => 1, 'data' => $info]);
