@@ -1862,40 +1862,22 @@ class Base
      */
     static public function utfsubstr(string $str = '', $index = 0, $getlen = 0, $is_has_br = false)
     {
-        if (!$str) {
+        try {
+            if (!$str) {
+                return '';
+            }
+            mb_internal_encoding('UTF-8');
+            $len = min(mb_strlen($str), $getlen);
+            $s = mb_substr($str, $index, $len);
+            if (!$is_has_br) {
+                // 去除所有换行符
+                $s = str_replace(["\r", "\n"], '', $s);
+            }
+            return $s;
+        } catch (Exception $e) {
+            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), 'utfsubstr执行出错：' . $e->getMessage());
             return '';
         }
-        $len = strlen($str);
-        $s = '';
-        for ($i = $index; $i < $getlen && $i < $len; ++$i) {
-            if (ord($str[$i]) < 192) {
-                $s .= $str[$i];
-            } else if (ord($str[$i]) < 224) {
-                $s .= $str[$i];
-                ++$i;
-                if ($i >= $len) {
-                    break;
-                }
-                $s .= $str[$i];
-            } else {
-                $s .= $str[$i];
-                ++$i;
-                if ($i >= $len) {
-                    break;
-                }
-                $s .= $str[$i];
-                ++$i;
-                if ($i >= $len) {
-                    break;
-                }
-                $s .= $str[$i];
-            }
-        }
-        if (!$is_has_br) {
-            // 去除所有换行符
-            $s = str_replace(array("\r", "\n"), '', $s);
-        }
-        return $s;
     }
 
     /**
