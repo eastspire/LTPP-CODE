@@ -36,10 +36,11 @@ class LTPPErrorHandler extends ExceptionHandler
             if (($exception instanceof BusinessException) && ($response = $exception->render($request))) {
                 return $response;
             }
-            $code = $exception->getCode();
+            $err_code = $exception->getCode();
             if ($request->expectsJson()) {
                 $json = [
-                    'code' => $code ?: -1,
+                    'code' => -1,
+                    'err_code' => $err_code,
                     'msg' => $this->debug ? $exception->getMessage() : Base::$server_error_msg,
                     'data' => [],
                 ];

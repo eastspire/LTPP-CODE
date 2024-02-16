@@ -1180,9 +1180,13 @@ class Base
             if (!$data || empty($data) || $data->public != 1) {
                 return Base::notFoundPage();
             }
+            $user_db = Base::getUserData($data->writerid);
+            if (!$user_db) {
+                return Base::notFoundPage();
+            }
             $name = $data->name ?? '';
             $article = $data->article ?? '';
-            $writer = $data->writer ?? '';
+            $writer = $user_db->name ?? '';
             $fabulous = $data->fabulous ?? '';
             $collection = $data->collection ?? '';
             $releasetime = $data->releasetime ?? '';
@@ -1858,6 +1862,9 @@ class Base
      */
     static public function utfsubstr(string $str = '', $index = 0, $getlen = 0, $is_has_br = false)
     {
+        if (!$str) {
+            return '';
+        }
         $len = strlen($str);
         $s = '';
         for ($i = $index; $i < $getlen && $i < $len; ++$i) {
@@ -2786,6 +2793,14 @@ class Base
             if (!$db) {
                 return [];
             }
+            $data = Db::table('article_data')
+                ->where('article_id', $article_id)
+                ->select('data')
+                ->first();
+            if (!$data) {
+                return [];
+            }
+            $db->article = $data->data;
             $redis25->setEx($key, Base::$redis_timeout, json_encode($db));
             return $db;
         } catch (Exception $e) {
@@ -2987,6 +3002,14 @@ class Base
         if (!$db) {
             return;
         }
+        $data = Db::table('article_data')
+            ->where('article_id', $article_id)
+            ->select('data')
+            ->first();
+        if (!$data) {
+            return [];
+        }
+        $db->article = $data->data;
         $redis25->setEx($key, Base::$redis_timeout, json_encode($db));
     }
 

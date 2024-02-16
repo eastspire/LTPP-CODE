@@ -1021,11 +1021,6 @@ class User
             return \json(['code' => -1, 'msg' => '用户不存在']);
         }
         if ($UpdataBlogandCommentName->name != $data['name']) {
-            // 更新对应文章的作者名称
-            Db::table('article')
-                ->where('writerid', $data['id'])
-                ->where('isdel', 0)
-                ->update(['writer' => $data['name']]);
             // 更新文章评论用户名
             Db::table('articlecomment')
                 ->where('userid', $data['id'])

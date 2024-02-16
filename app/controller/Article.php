@@ -18,7 +18,6 @@ class Article extends Image
         'id',
         'problemid',
         'name',
-        'writer',
         'fabulous',
         'collection',
         'releasetime',
@@ -200,9 +199,6 @@ class Article extends Image
             }
         }
 
-        foreach ($res as &$tem) {
-            $tem->article = Base::utfsubstr(strip_tags($tem->article), 0, Base::$home_one_article_max_length);
-        }
         Base::dataToSafe($res);
         return \json(['code' => 1, 'data' => $res]);
     }
@@ -234,7 +230,6 @@ class Article extends Image
                 ->select(Article::$article_db_key)
                 ->first();
             if ($temarticle) {
-                $temarticle->article = Base::utfsubstr(strip_tags($temarticle->article), 0, Base::$home_one_article_max_length);
                 if ($temarticle->public != 1) {
                     if ($temarticle->writerid == $my_aid || Base::judgeIsRoot($my_aid)) {
                         $res[] = $temarticle;
@@ -279,7 +274,6 @@ class Article extends Image
                 ->select(Article::$article_db_key)
                 ->first();
             if ($db) {
-                $db->article = Base::utfsubstr(strip_tags($db->article), 0, Base::$home_one_article_max_length);
                 if ($db->public != 1) {
                     if ($db->writerid == $my_aid || Base::judgeIsRoot($my_aid)) {
                         $publicarticlelist[] = $db;
@@ -302,7 +296,7 @@ class Article extends Image
     /**
      * 取消收藏一篇文章
      * @param Request $request 请求
-     * @return string $res json 
+     * @return string $res json
      */
     public function deleteLoveArticle(Request $request)
     {
@@ -338,7 +332,7 @@ class Article extends Image
     /**
      * 更新一篇文章
      * @param Request $request 请求
-     * @return string $res json 
+     * @return string $res json
      */
     public function updataOneArticle(Request $request)
     {
@@ -351,14 +345,22 @@ class Article extends Image
         if (!$isme && !$isroot) {
             return json(['code' => -1, 'msg' => '权限不足']);
         }
+
         $data = [
             'name' => $tabledata['name'],
-            'article' => $tabledata['article'],
+            'article' => Base::utfsubstr(strip_tags($tabledata['article']), 0, Base::$home_one_article_max_length),
             'lastchangetime' => date('Y-m-d H:i:s', time()),
             'image' => $tabledata['image'],
             'public' => $tabledata['public']
         ];
-        Db::table('article')->where('id', $tabledata['id'])->update($data);
+        Db::table('article')
+            ->where('id', $tabledata['id'])
+            ->update($data);
+        Db::table('article_data')
+            ->where('article_id', $tabledata['id'])
+            ->update([
+                'data' => $data
+            ]);
         Base::updateArticleDataRedis($tabledata['id']);
         return json(['code' => 1, 'msg' => '更新成功']);
     }
@@ -386,9 +388,6 @@ class Article extends Image
             ->where('writerid', $my_aid)
             ->where('isdel', 0)
             ->count();
-        foreach ($info as &$tem) {
-            $tem->article = Base::utfsubstr(strip_tags($tem->article), 0, Base::$home_one_article_max_length);
-        }
         Base::dataToSafe($info);
         return json(['code' => 1, 'data' => $info, 'allnum' => $allnum, 'msg' => "您一共发布 $allnum 篇文章"]);
     }
@@ -482,9 +481,6 @@ class Article extends Image
                 }
             }
         }
-        foreach ($info as &$tem) {
-            $tem->article = Base::utfsubstr(strip_tags($tem->article), 0, Base::$home_one_article_max_length);
-        }
         Base::dataToSafe($info);
         return json(['code' => 1, 'data' => $info, 'msg' => "加载成功"]);
     }
@@ -546,9 +542,6 @@ class Article extends Image
                 ->paginate($limit, '*', 'page', $page)
                 ->items();
         }
-        foreach ($data as &$tem) {
-            $tem->article = Base::utfsubstr(strip_tags($tem->article), 0, Base::$home_one_article_max_length);
-        }
         Base::dataToSafe($data);
         return json(['code' => 1, 'data' => $data, 'msg' => '加载完成！']);
     }
@@ -569,9 +562,10 @@ class Article extends Image
             ->where('writerid', $writerid)
             ->where('public', 1)
             ->where('isdel', 0)
-            ->select(Article::$article_db_key)
+            ->select('id')
             ->inRandomOrder()
             ->first();
+        $db = Base::getArticleData($db->id);
         Base::dataToSafe($db);
         return json(['data' => $db]);
     }
@@ -626,9 +620,11 @@ class Article extends Image
         if ($request->post('problem_id')) {
             $problemid = Base::getIdByUid($request->post('problem_id'));
         }
-
+        $is_public = $request->post('public');
+        if ($is_public != 0 && $is_public != 1) {
+            $is_public = 0;
+        }
         $tabledata = [
-            'writer' => $user_db->name,
             'problemid' => $problemid,
             'writerid' => $my_aid,
             'image' => $request->post('image'),
@@ -637,10 +633,9 @@ class Article extends Image
             'releasetime' => $releasetime,
             'lastchangetime' => $lastchangetime,
             'name' => $request->post('name'),
-            'article' => $request->post('article'),
-            'public' => $request->post('public'),
+            'article' => Base::utfsubstr(strip_tags($request->post('article')), 0, Base::$home_one_article_max_length),
+            'public' => $is_public,
         ];
-
         $urlimage = $tabledata['image'];
         $tem = preg_replace('/ /', '', $urlimage);
         //默认随机图片
@@ -648,6 +643,10 @@ class Article extends Image
             $tabledata['image'] = Image::randimage();
         }
         $article_id = Base::insertToDb('article', $tabledata);
+        Base::insertToDb('article_data', [
+            'article_id' => $article_id,
+            'data' => $request->post('article')
+        ]);
         Base::updateArticleDataRedis($article_id);
         return json(['code' => 1, 'msg' => '发布成功']);
     }
@@ -748,10 +747,6 @@ class Article extends Image
             ->where('isdel', 0)
             ->where('name', 'like', '%' . $key . '%')
             ->count(); //模糊查询
-
-        foreach ($info as &$tem) {
-            $tem->article = Base::utfsubstr(strip_tags($tem->article), 0, Base::$home_one_article_max_length);
-        }
         Base::dataToSafe($info);
         return json(['code' => 1, 'data' => $info, 'allnum' => $allnum, 'msg' => "查询到 $allnum 条结果"]);
     }
@@ -1015,9 +1010,6 @@ class Article extends Image
                         ->get();
                 }
             }
-        }
-        foreach ($info as &$tem) {
-            $tem->article = Base::utfsubstr(strip_tags($tem->article), 0, Base::$home_one_article_max_length);
         }
         Base::dataToSafe($info);
         return json(['code' => 1, 'data' => $info]);
