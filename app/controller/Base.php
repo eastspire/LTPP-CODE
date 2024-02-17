@@ -1193,13 +1193,13 @@ class Base
             $lastchangetime = $data->lastchangetime ?? '';
             $image = $data->image ?? '';
             $url = Base::getSettingKeyData('GLOBfronturl') . '/onearticle?path=' . Base::urlEncode($article_uid);
-            $res = '<h1>' . $name . "</h1>\n" .
-                '[原文链接](' . $url . ')' . "\n***\n" .
-                '> 版权声明：本文为LTPP作者「' . $writer . '」的文章，著作权归作者所有，商业转载请联系作者获得授权，非商业转载请注明出处。' . "\n***\n" .
-                '> 发布时间：' . $releasetime . "\n***\n" .
-                ($lastchangetime != $releasetime ? '> 修改时间：' . $lastchangetime . "\n***\n" : '') .
-                '> 点赞数：' . $fabulous . "\n***\n" .
-                '> 收藏数：' . $collection . "\n***\n" .
+            $res = '<h1>' . $name . "</h1>\n\n" .
+                '[原文链接](' . $url . ')' . "\n\n" .
+                '> 版权声明：本文为LTPP作者「' . $writer . '」的文章，著作权归作者所有，商业转载请联系作者获得授权，非商业转载请注明出处。' . "\n\n" .
+                '> 发布时间：' . $releasetime . "\n\n" .
+                ($lastchangetime != $releasetime ? '> 修改时间：' . $lastchangetime . "\n\n" : '') .
+                '> 点赞数：' . $fabulous . "\n\n" .
+                '> 收藏数：' . $collection . "\n\n" .
                 '<div style="display:flex;justify-content:center;"><img src="' . $image . '" alt="" style="margin:0px 0px 8px 0px;"></div>' . "\n\n" .
                 $article;
             return Base::markdownToHTML($res);
