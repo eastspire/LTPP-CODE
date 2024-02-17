@@ -3788,7 +3788,10 @@ class Base
                 return;
             }
             $trace_str = Base::debugTrace($trace);
-            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '<h4>LTPP运行错误</h4><br><strong>Trace信息</strong><br>' . $trace_str . '<br><strong>报错信息</strong><br>' . $msg);
+            if (!$trace_str) {
+                $trace_str = '暂无Trace信息';
+            }
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '<h4>LTPP运行错误</h4><br><strong>报错信息</strong><br>' . $msg . '<br><strong>Trace信息</strong><br>' . $trace_str);
         } catch (Exception $e) {
             Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), $e->getMessage());
         }

@@ -134,6 +134,7 @@ class Article extends Image
             }
             return Base::getHTMLArticle($article_uid);
         } catch (Exception $e) {
+            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), $e->getMessage());
             return Base::notFoundPage();
         }
     }
