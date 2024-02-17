@@ -104,7 +104,7 @@ class Verification extends Email
             return \json(['code' => -1, 'msg' => '重置密码速度太快，10分钟后即可重新尝试！']);
         }
         $redis2->setEx('resetpasswd' . $name . $to, 600, 1);
-        $loc = $request->getRealIp($safe_mode = true);
+        $loc = $request->getRealIp(true);
         $num = rand(100000, 999999);
         $offline = (int) Base::getSettingKeyData('offline');
         if ($offline == 0) {
@@ -151,7 +151,7 @@ class Verification extends Email
             return json(['code' => -1, 'msg' => '邮箱错误']);
         }
         $time = date('Y-m-d H:i:s', time());
-        $loc = $request->getRealIp($safe_mode = true);
+        $loc = $request->getRealIp(true);
         $content = "LTPP账号登陆提示<br>
                     您的账号：$name <br>
                     于北京时间：$time <br>

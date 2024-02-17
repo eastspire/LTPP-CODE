@@ -403,6 +403,14 @@ class Article extends Image
             ->where('writerid', $my_aid)
             ->where('isdel', 0)
             ->count();
+        foreach ($info as &$tem) {
+            $db = Base::getUserData($tem->writerid);
+            if (!$db) {
+                $tem->writer = '未知用户';
+                continue;
+            }
+            $tem->writer = $db->name;
+        }
         Base::dataToSafe($info);
         return json(['code' => 1, 'data' => $info, 'allnum' => $allnum, 'msg' => "您一共发布 $allnum 篇文章"]);
     }
@@ -770,6 +778,14 @@ class Article extends Image
             ->where('isdel', 0)
             ->where('name', 'like', '%' . $key . '%')
             ->count(); //模糊查询
+        foreach ($info as &$tem) {
+            $db = Base::getUserData($tem->writerid);
+            if (!$db) {
+                $tem->writer = '未知用户';
+                continue;
+            }
+            $tem->writer = $db->name;
+        }
         Base::dataToSafe($info);
         return json(['code' => 1, 'data' => $info, 'allnum' => $allnum, 'msg' => "查询到 $allnum 条结果"]);
     }

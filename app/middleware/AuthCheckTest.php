@@ -140,7 +140,7 @@ class AuthCheckTest implements MiddlewareInterface
         $my_aid = Base::getIdByUid($my_uid);
         $redis0 = Redis::connection('db0');
         $redis14 = Redis::connection('db14');
-        $loc = $request->getRealIp($safe_mode = true);
+        $loc = $request->getRealIp(true);
         $onekey = $header['key'];
         // 判断单点登录
         if ($onekey != $redis14->get($my_aid . 'login')) {

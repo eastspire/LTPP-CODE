@@ -8,7 +8,6 @@ use support\Redis;
 use Tinywan\Jwt\JwtToken;
 use GatewayWorker\Lib\Gateway;
 use Webman\RedisQueue\Redis as RedisQueue;
-use utils\SafeSerializableClass;
 
 class Base
 {
@@ -1195,11 +1194,11 @@ class Base
             $url = Base::getSettingKeyData('GLOBfronturl') . '/onearticle?path=' . Base::urlEncode($article_uid);
             $res = '<h1>' . $name . "</h1>\n\n" .
                 '[原文链接](' . $url . ')' . "\n\n" .
-                '> 版权声明：本文为LTPP作者「' . $writer . '」的文章，著作权归作者所有，商业转载请联系作者获得授权，非商业转载请注明出处。' . "\n\n" .
-                '> 发布时间：' . $releasetime . "\n\n" .
-                ($lastchangetime != $releasetime ? '> 修改时间：' . $lastchangetime . "\n\n" : '') .
-                '> 点赞数：' . $fabulous . "\n\n" .
-                '> 收藏数：' . $collection . "\n\n" .
+                '> 版权声明：本文为LTPP作者「' . $writer . '」的文章，著作权归作者所有，商业转载请联系作者获得授权，非商业转载请注明出处。' . "\n\n<br>\n\n" .
+                '> 发布时间：' . $releasetime . "\n\n<br>\n\n" .
+                ($lastchangetime != $releasetime ? '> 修改时间：' . $lastchangetime . "\n\n<br>\n\n" : '') .
+                '> 点赞数：' . $fabulous . "\n\n<br>\n\n" .
+                '> 收藏数：' . $collection . "\n\n<br>\n\n" .
                 '<div style="display:flex;justify-content:center;"><img src="' . $image . '" alt="" style="margin:0px 0px 8px 0px;"></div>' . "\n\n" .
                 $article;
             return Base::markdownToHTML($res);
@@ -2775,14 +2774,18 @@ class Base
             if (!$db) {
                 return [];
             }
+            $user_db = Base::getUserData($db->writerid);
+            if (!$user_db) {
+                return [];
+            }
+            $db->writer = $user_db->name;
             $data = Db::table('article_data')
                 ->where('article_id', $article_id)
                 ->select('data')
                 ->first();
-            if (!$data) {
-                return [];
+            if ($data) {
+                $db->article = $data->data;
             }
-            $db->article = $data->data;
             $redis25->setEx($key, Base::$redis_timeout, json_encode($db));
             return $db;
         } catch (Exception $e) {
@@ -2984,14 +2987,18 @@ class Base
         if (!$db) {
             return;
         }
+        $user_db = Base::getUserData($db->writerid);
+        if (!$user_db) {
+            return;
+        }
+        $db->writer = $user_db->name;
         $data = Db::table('article_data')
             ->where('article_id', $article_id)
             ->select('data')
             ->first();
-        if (!$data) {
-            return [];
+        if ($data) {
+            $db->article = $data->data;
         }
-        $db->article = $data->data;
         $redis25->setEx($key, Base::$redis_timeout, json_encode($db));
     }
 
@@ -3718,60 +3725,15 @@ class Base
     /**
      * DEBUG
      * @param * $trace trace
-     * @param int $deep 递归深度
-     * @param array $processed 用于数组和对象记忆化，防止循环引用导致无限递归
      */
-    static public function debugTrace(&$trace = false, $deep = 0, &$processed = [])
+    static public function debugTrace(&$trace = false)
     {
         $res = '';
         try {
             if ($trace === false) {
                 return '';
             }
-            $is_obj = is_object($trace);
-            $is_arr = is_array($trace);
-            if (!$is_obj && !$is_arr) {
-                return $trace;
-            }
-            $tab = '';
-            for (
-                $i = 0;
-                $i < $deep;
-                ++$i
-            ) {
-                $tab .= '	';
-            }
-            if ($is_arr) {
-                $trace = new SafeSerializableClass($trace);
-            }
-            $hash = $is_obj ? spl_object_hash($trace) : md5(serialize($trace));
-            if (isset($processed[$hash]) && $processed[$hash] === true) {
-                return $tab . '（检测到循环引用）';
-            }
-            $processed[$hash] = true;
-            $len = sizeof((array)$trace);
-            $total_stack_num = 0;
-            if ($deep === 0) {
-                foreach ($trace as $key => &$value) {
-                    if (is_numeric($key) && (is_array($value) || is_object($value))) {
-                        ++$total_stack_num;
-                    }
-                }
-            }
-            $index = 0;
-            foreach ($trace as $key => &$value) {
-                ++$index;
-                if (is_array($value) || is_object($value)) {
-                    $child = Base::debugTrace($value, $deep + 1, $processed);
-                    $is_top_num = @(is_numeric($key) && $deep === 0);
-                    $res .= $tab . ($is_top_num ? '【第' . ($total_stack_num - $key) . '次调用详情】' : $key . ' => ') . "\n" . $child;
-                } else {
-                    $res .= $tab . $key . ' => ' . $value;
-                }
-                if ($index != $len) {
-                    $res .= "\n";
-                }
-            }
+            return json_encode($trace, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         } catch (Exception $e) {
             Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '<h4>LTPP运行错误</h4><br><strong>Trace信息</strong><br>' . json_encode(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT)) . '<br><strong>报错信息</strong><br>' . $e->getMessage());
         }

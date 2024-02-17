@@ -28,7 +28,7 @@ class Login
             ->select('id', 'name', 'password', 'email', 'grade')
             ->first();
         $redis9 = Redis::connection('db9');
-        $loc = $request->getRealIp();
+        $loc = $request->getRealIp(true);
         if (!$user_db) {
             //缓存存在读取缓存
             if ($redis9->get('login' . $name)) {
