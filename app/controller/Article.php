@@ -95,10 +95,6 @@ class Article extends Image
         if (!$info) {
             return \json(['code' => -1, 'msg' => '无该文章']);
         }
-        $db = Base::getUserData($info->writerid);
-        if (!$db) {
-            return \json(['code' => -1, 'msg' => '该用户已注销，无法查看']);
-        }
         //权限验证
         $my_uid = JwtToken::getCurrentId();
         $my_aid = Base::getIdByUid($my_uid);
@@ -107,7 +103,6 @@ class Article extends Image
         if ($info->public != 1 && $info->writerid != $my_aid && !$isroot) {
             return \json(['code' => -1, 'msg' => '私密文章不可见']);
         }
-        $info->writer = $db->name;
         $islove = Db::table('lovearticle')
             ->where('userid', $my_aid)
             ->where('articleid', $article_id)
@@ -374,7 +369,7 @@ class Article extends Image
         Db::table('article_data')
             ->where('article_id', $tabledata['id'])
             ->update([
-                'data' => $data
+                'data' => $tabledata['article']
             ]);
         Base::updateArticleDataRedis($tabledata['id']);
         return json(['code' => 1, 'msg' => '更新成功']);
@@ -984,7 +979,7 @@ class Article extends Image
                     return json(['code' => 1, 'data' => []]);
                 } else if ($do == 'down') {
                     $info = Db::table('article')
-                        ->where('name', $key)
+                        ->where('name', 'like', '%' . $key . '%')
                         ->where('isdel', 0)
                         ->select(Article::$article_db_key)
                         ->orderBy('id', 'desc')
@@ -994,7 +989,7 @@ class Article extends Image
             } else {
                 if ($do == 'up') {
                     $info = Db::table('article')
-                        ->where('name', $key)
+                        ->where('name', 'like', '%' . $key . '%')
                         ->where('id', '>', $article_id)
                         ->where('isdel', 0)
                         ->select(Article::$article_db_key)
@@ -1003,7 +998,7 @@ class Article extends Image
                         ->get();
                 } else if ($do == 'down') {
                     $info = Db::table('article')
-                        ->where('name', $key)
+                        ->where('name', 'like', '%' . $key . '%')
                         ->where('id', '<', $article_id)
                         ->where('isdel', 0)
                         ->select(Article::$article_db_key)
@@ -1018,7 +1013,7 @@ class Article extends Image
                     return json(['code' => 1, 'data' => []]);
                 } else if ($do == 'down') {
                     $info = Db::table('article')
-                        ->where('name', $key)
+                        ->where('name', 'like', '%' . $key . '%')
                         ->where('public', 1)
                         ->where('isdel', 0)
                         ->select(Article::$article_db_key)
@@ -1029,7 +1024,7 @@ class Article extends Image
             } else {
                 if ($do == 'up') {
                     $info = Db::table('article')
-                        ->where('name', $key)
+                        ->where('name', 'like', '%' . $key . '%')
                         ->where('public', 1)
                         ->where('isdel', 0)
                         ->where('id', '>', $article_id)
@@ -1039,7 +1034,7 @@ class Article extends Image
                         ->get();
                 } else if ($do == 'down') {
                     $info = Db::table('article')
-                        ->where('name', $key)
+                        ->where('name', 'like', '%' . $key . '%')
                         ->where('public', 1)
                         ->where('isdel', 0)
                         ->where('id', '<', $article_id)

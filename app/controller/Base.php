@@ -2978,7 +2978,6 @@ class Base
         }
         $redis25 = Redis::connection('db25');
         $key = 'ArticleData' . $article_id;
-        $redis25->del($key);
         $db = Db::table('article')
             ->where('id', $article_id)
             ->where('isdel', 0)
@@ -2999,6 +2998,7 @@ class Base
         if ($data) {
             $db->article = $data->data;
         }
+        $redis25->del($key);
         $redis25->setEx($key, Base::$redis_timeout, json_encode($db));
     }
 
