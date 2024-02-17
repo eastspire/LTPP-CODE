@@ -823,12 +823,10 @@ class User
         if (empty($data)) {
             return \json(['code' => -1, 'msg' => '用户信息不能为空']);
         }
-
         if (!preg_match("/^[0-9]*$/", $data['grade'])) {
             return \json(['code' => -1, 'msg' => '权限必须是纯数字']);
         }
-
-        if (strripos($data['email'], '@qq.com') === false) {
+        if (strripos($data['email'], '@qq.com') === false && !$isroot) {
             return \json(['code' => -1, 'msg' => '邮箱请填写QQ邮箱']);
         }
         if (filter_var($data['headimage'], FILTER_VALIDATE_URL) === false) {
@@ -1151,7 +1149,7 @@ class User
             return \json(['code' => -1, 'msg' => '该名称已存在']);
         }
 
-        if (strripos($data['email'], '@qq.com') === false) {
+        if (strripos($data['email'], '@qq.com') === false && !Base::judgeIsRoot($my_aid)) {
             return \json(['code' => -1, 'msg' => '邮箱请填写QQ邮箱']);
         }
         if (filter_var($data['headimage'], FILTER_VALIDATE_URL) === false) {
