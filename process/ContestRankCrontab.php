@@ -67,7 +67,7 @@ class ContestRankCrontab
                     $has_map[$id] = true;
                 }
                 foreach ($contest_list as &$contest_id) {
-                    if ($has_map[$contest_id]) {
+                    if (isset($has_map[$contest_id]) && $has_map[$contest_id] === true) {
                         continue;
                     }
                     $lockonerank = 'contestranklock' . $contest_id;
