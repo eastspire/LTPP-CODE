@@ -2978,6 +2978,7 @@ class Base
         }
         $redis25 = Redis::connection('db25');
         $key = 'ArticleData' . $article_id;
+        $redis25->del($key);
         $db = Db::table('article')
             ->where('id', $article_id)
             ->where('isdel', 0)
@@ -2998,7 +2999,6 @@ class Base
         if ($data) {
             $db->article = $data->data;
         }
-        $redis25->del($key);
         $redis25->setEx($key, Base::$redis_timeout, json_encode($db));
     }
 
@@ -4140,6 +4140,7 @@ class Base
                 return;
             }
             $redis35 = Redis::connection('db35');
+            $redis35->del($file_path);
             $db = Db::table('cloud_file_path')
                 ->where('userid', $userid)
                 ->where('path', $file_path)
@@ -4153,7 +4154,6 @@ class Base
                 ->where('path', $file_path)
                 ->where('isdel', 0)
                 ->update(['isdel' => 1]);
-            $redis35->del($file_path);
         } catch (Exception $e) {
             Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), $e->getMessage());
         }
