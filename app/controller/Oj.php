@@ -770,14 +770,10 @@ class Oj
             return json(['code' => -1, 'msg' => '题目测试样例不存在！']);
         }
         $path = Base::$tmp_path . 'testdata/' . $md5_problem_id . '/';
+        $alltestpath = Base::$tmp_path . 'testdata/' . $md5_problem_id . '/';
+        $test_data_list = Base::getOjTestDataList($problem_id);
         Base::deleteAllFile($path);
-        Base::judgeCreatPath($path);
-        $i = 1;
-        foreach ($data as &$tem) {
-            Base::writeToFile($path . $i . '.in', $tem->test_in);
-            Base::writeToFile($path . $i . '.out', $tem->test_out);
-            ++$i;
-        }
+        Base::writeOjDataInToFile($problem_id, $alltestpath, $test_data_list);
         //文件路径加文件名称
         $zip_path = '/tmp/file/' . (uniqid() . mt_rand(1, 100000) . time()) . '/' . $db->problemName . '.zip';
         Base::judgeCreatPath($zip_path);
