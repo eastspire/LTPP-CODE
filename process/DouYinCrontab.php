@@ -28,7 +28,7 @@ class DouYinCrontab
             // 长度限制
             $preview_title = Base::utfsubstr($preview_title, 0, Base::$video_name_limit);
         } catch (Exception $e) {
-            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), '定时任务进程<strong>【DouYinCrontab】</strong>运行错误：' . $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), '定时任务进程<strong>【DouYinCrontab】</strong>运行错误：' . $e->getMessage());
         }
         return $preview_title;
     }
@@ -51,7 +51,7 @@ class DouYinCrontab
             }
             $preview_title = Base::utfsubstr($preview_title, 0, Base::$video_name_limit);
         } catch (Exception $e) {
-            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), '定时任务进程<strong>【DouYinCrontab】</strong>运行错误：' . $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), '定时任务进程<strong>【DouYinCrontab】</strong>运行错误：' . $e->getMessage());
         }
         return $preview_title;
     }
@@ -92,7 +92,7 @@ class DouYinCrontab
             ];
             $res = json_decode(Base::postRequest($url, $headers, $data), true);
         } catch (Exception $e) {
-            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), '定时任务进程<strong>【DouYinCrontab】</strong>运行错误：' . $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), '定时任务进程<strong>【DouYinCrontab】</strong>运行错误：' . $e->getMessage());
         }
         return $res;
     }
@@ -215,7 +215,7 @@ class DouYinCrontab
                 }
             }
         } catch (Exception $e) {
-            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), '定时任务进程<strong>【DouYinCrontab】</strong>运行错误：' . $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), '定时任务进程<strong>【DouYinCrontab】</strong>运行错误：' . $e->getMessage());
         }
     }
 
@@ -226,7 +226,7 @@ class DouYinCrontab
             try {
                 $this->run();
             } catch (Exception $e) {
-                Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), '定时任务进程<strong>【DouYinCrontab】</strong>运行错误：' . $e->getMessage());
+                Base::sendErrorNotice($e->getTraceAsString(), '定时任务进程<strong>【DouYinCrontab】</strong>运行错误：' . $e->getMessage());
             }
         });
     }

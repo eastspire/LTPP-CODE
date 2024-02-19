@@ -129,7 +129,7 @@ class Article extends Image
             }
             return Base::getHTMLArticle($article_uid);
         } catch (Exception $e) {
-            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
             return Base::notFoundPage();
         }
     }
@@ -581,7 +581,7 @@ class Article extends Image
     {
         $writerid = Base::getRobotId();
         if (!$writerid) {
-            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), '机器人账号不存在！');
+            Base::sendErrorNotice($e->getTraceAsString(), '机器人账号不存在！');
             $writerid = Base::getRobotId();
         }
         $db = Db::table('article')

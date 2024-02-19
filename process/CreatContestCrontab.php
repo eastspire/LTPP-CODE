@@ -201,7 +201,7 @@ class CreatContestCrontab
                     Contest::sendUpdateRankMQ($res_id);
                 }
             } catch (Exception $e) {
-                Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), '定时任务进程<strong>【CreatContestCrontab】</strong>运行错误：' . $e->getMessage());
+                Base::sendErrorNotice($e->getTraceAsString(), '定时任务进程<strong>【CreatContestCrontab】</strong>运行错误：' . $e->getMessage());
             }
         });
     }

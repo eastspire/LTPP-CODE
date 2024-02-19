@@ -340,7 +340,7 @@ class RobotContest implements Consumer
         } catch (Exception $e) {
             $title = 'RobotContest消息队列异常';
             $content = $e->getMessage();
-            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), '<h4>' . $title . "</h4>\n" . $content);
+            Base::sendErrorNotice($e->getTraceAsString(), '<h4>' . $title . "</h4>\n" . $content);
         }
     }
 };

@@ -22,7 +22,7 @@ class DeleteDouYinVideo
                     ->where('time', '<', date('Y-m-d H:i:s', time() - $noupdate_limit_seconds))
                     ->update(['isdel' => 1]);
             } catch (Exception $e) {
-                Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), '定时任务进程<strong>【DeleteDouYinVideo】</strong>运行错误：' . $e->getMessage());
+                Base::sendErrorNotice($e->getTraceAsString(), '定时任务进程<strong>【DeleteDouYinVideo】</strong>运行错误：' . $e->getMessage());
             }
         });
     }

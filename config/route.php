@@ -70,7 +70,7 @@ Route::any(Base::$LTPP_public_static_path . '[/{path:.+}]', function (Request $r
         }
         return Response($file_data, 200, $response_header);
     } catch (Exception $e) {
-        Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), $e->getMessage());
+        Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
         return Base::notFoundPage($path, $file_extion);
     }
 });

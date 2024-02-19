@@ -33,7 +33,7 @@ class DayproblemCrontab
                 'time' => date('Y-m-d H:i:s', time())
             ]));
         } catch (Exception $e) {
-            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), '定时任务进程<strong>【DayproblemCrontab】</strong>运行错误：' . $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), '定时任务进程<strong>【DayproblemCrontab】</strong>运行错误：' . $e->getMessage());
         }
     }
 
@@ -96,7 +96,7 @@ class DayproblemCrontab
             try {
                 $this->addDayProblem();
             } catch (Exception $e) {
-                Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), '定时任务进程<strong>【DayproblemCrontab】</strong>运行错误：' . $e->getMessage());
+                Base::sendErrorNotice($e->getTraceAsString(), '定时任务进程<strong>【DayproblemCrontab】</strong>运行错误：' . $e->getMessage());
             }
         });
 
@@ -105,7 +105,7 @@ class DayproblemCrontab
             try {
                 $this->addDayProblem();
             } catch (Exception $e) {
-                Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), '定时任务进程<strong>【DayproblemCrontab】</strong>运行错误：' . $e->getMessage());
+                Base::sendErrorNotice($e->getTraceAsString(), '定时任务进程<strong>【DayproblemCrontab】</strong>运行错误：' . $e->getMessage());
             }
         });
     }

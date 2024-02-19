@@ -121,7 +121,7 @@ class Register extends Email
             }
             return json(['code' => 0, 'msg' => '账号注册失败']);
         } catch (\Exception $e) {
-            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
         }
         return json(['code' => 0, 'msg' => '账号注册失败']);
     }

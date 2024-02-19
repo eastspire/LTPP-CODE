@@ -153,7 +153,7 @@ class BuySsh implements Consumer
                 } catch (Exception $e) {
                     $title = '用户【' . $my_data->name . '】购买LTPP-SSH异常';
                     $content = $e->getMessage();
-                    Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), '<h4>' . $title . "</h4>\n" . $content);
+                    Base::sendErrorNotice($e->getTraceAsString(), '<h4>' . $title . "</h4>\n" . $content);
                     return;
                 }
             }
@@ -195,7 +195,7 @@ class BuySsh implements Consumer
         } catch (Exception $e) {
             $title = '用户【' . ($my_data->name ?? '') . '】购买LTPP-SSH异常';
             $content = $e->getMessage();
-            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), '<h4>' . $title . "</h4>\n" . $content);
+            Base::sendErrorNotice($e->getTraceAsString(), '<h4>' . $title . "</h4>\n" . $content);
             $redis22->del($key);
         }
     }

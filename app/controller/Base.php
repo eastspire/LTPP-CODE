@@ -998,7 +998,7 @@ class Base
             $length = count($matches[0]);
             return $length;
         } catch (Exception $e) {
-            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
             return 0;
         }
     }
@@ -1050,7 +1050,7 @@ class Base
             $not_found = gzencode($not_found, Base::$gzip_num);
             $redis23->set($key, $not_found);
         } catch (Exception $e) {
-            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
             $redis23->set($key, $not_found);
         }
         return response($not_found, 404, [
@@ -1203,7 +1203,7 @@ class Base
                 $article;
             return Base::markdownToHTML($res);
         } catch (Exception $e) {
-            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
         }
         return Base::notFoundPage();
     }
@@ -1239,7 +1239,7 @@ class Base
             curl_setopt($ch, CURLOPT_PROXY, 'http://172.17.0.1:7890');
             $res = curl_exec($ch);
         } catch (Exception $e) {
-            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), '发送POST请求异常信息：' . $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), '发送POST请求异常信息：' . $e->getMessage());
         }
         return $res;
     }
@@ -1265,7 +1265,7 @@ class Base
             curl_setopt($ch, CURLOPT_PROXY, 'http://172.17.0.1:7890');
             $res = curl_exec($ch);
         } catch (Exception $e) {
-            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), '发送GET请求异常信息：' . $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), '发送GET请求异常信息：' . $e->getMessage());
         } finally {
             curl_close($ch);
         }
@@ -1289,7 +1289,7 @@ class Base
             }
             $str = $res;
         } catch (Exception $e) {
-            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
         }
     }
 
@@ -1395,7 +1395,7 @@ class Base
                 }
             }
         } catch (Exception $e) {
-            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
             return $port;
         }
         return $port;
@@ -1433,7 +1433,7 @@ class Base
                 $ip .= $url[$i];
             }
         } catch (Exception $e) {
-            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
             return $ip;
         }
         return $ip;
@@ -1454,7 +1454,7 @@ class Base
                 $res .= $characters[rand(0, $len - 1)];
             }
         } catch (Exception $e) {
-            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
             return '';
         }
         return $res;
@@ -1479,7 +1479,7 @@ class Base
                 $resid = Db::table($db_name)->insertGetId($data);
             }
         } catch (Exception $e) {
-            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), '插入数据' . json_encode($data ?? []) . '到数据表' . $db_name . '出错:' . $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), '插入数据' . json_encode($data ?? []) . '到数据表' . $db_name . '出错:' . $e->getMessage());
         }
         return $resid;
     }
@@ -1606,7 +1606,7 @@ class Base
         try {
             $json = json_decode($json, true);
         } catch (Exception $e) {
-            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
             $json = [];
         }
         return $json;
@@ -1844,7 +1844,7 @@ class Base
             closedir($handle);
             @rmdir($dir);
         } catch (Exception $e) {
-            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), 'deleteAllFile执行出错：' . $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), 'deleteAllFile执行出错：' . $e->getMessage());
             return false;
         }
         return true;
@@ -1874,7 +1874,7 @@ class Base
             }
             return $s;
         } catch (Exception $e) {
-            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), 'utfsubstr执行出错：' . $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), 'utfsubstr执行出错：' . $e->getMessage());
             return '';
         }
     }
@@ -1896,7 +1896,7 @@ class Base
         try {
             $css = @file_get_contents($path);
         } catch (Exception $e) {
-            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
             $css = '';
         }
         $redis18->set($path, $css);
@@ -1920,7 +1920,7 @@ class Base
         try {
             $js = @file_get_contents($path);
         } catch (Exception $e) {
-            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
             $js = '';
         }
         $redis18->set($path, $js);
@@ -2071,7 +2071,7 @@ class Base
             }
             return $base64_encode;
         } catch (Exception $e) {
-            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
         }
         return '';
     }
@@ -2119,7 +2119,7 @@ class Base
             }
             return $base64_decode;
         } catch (Exception $e) {
-            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
         }
         return '';
     }
@@ -2138,7 +2138,7 @@ class Base
             }
             file_put_contents($save_path, $file_data);
         } catch (Exception $e) {
-            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), '保存网络文件到本地出错：' . $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), '保存网络文件到本地出错：' . $e->getMessage());
         }
     }
 
@@ -2164,7 +2164,7 @@ class Base
                 'time' => date('Y-m-d H:i:s', time())
             ]);
         } catch (Exception $e) {
-            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), '保存抖音视频文件到数据库出错：' . $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), '保存抖音视频文件到数据库出错：' . $e->getMessage());
         }
     }
 
@@ -2360,7 +2360,7 @@ class Base
             }
             return $res_id;
         } catch (Exception $e) {
-            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
         }
         return 0;
     }
@@ -2373,7 +2373,7 @@ class Base
         try {
             $data = JwtToken::verify(1, $authorization);
         } catch (Exception $e) {
-            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
             return '';
         }
         if (!$data || !isset($data['extend']) || !isset($data['extend']['id'])) {
@@ -2444,7 +2444,7 @@ class Base
             $base_str = substr($uid, 1);
             $id = Base::Base64Decode($base_str, Base::$id_char_set[$loc]);
         } catch (Exception $e) {
-            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
             return 0;
         }
         return $id;
@@ -2602,7 +2602,7 @@ class Base
             try {
                 $res = $db->$key;
             } catch (Exception $e) {
-                Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), $e->getMessage());
+                Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
                 return null;
             }
             $redis5->setEx($key, 0, $res);
@@ -2651,7 +2651,7 @@ class Base
             $redis33->setEx($key, Base::$redis_timeout, json_encode($db));
             return $db;
         } catch (Exception $e) {
-            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
             return [];
         }
     }
@@ -2682,7 +2682,7 @@ class Base
             $redis8->setEx($key, Base::$redis_timeout, json_encode($db));
             return $db;
         } catch (Exception $e) {
-            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
             return [];
         }
     }
@@ -2713,7 +2713,7 @@ class Base
             $redis20->setEx($key, Base::$redis_timeout, json_encode($db));
             return $db;
         } catch (Exception $e) {
-            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
             return [];
         }
     }
@@ -2745,7 +2745,7 @@ class Base
             $redis21->setEx($key, Base::$redis_timeout, json_encode($db));
             return $db;
         } catch (Exception $e) {
-            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
             return [];
         }
     }
@@ -2789,7 +2789,7 @@ class Base
             $redis25->setEx($key, Base::$redis_timeout, json_encode($db));
             return $db;
         } catch (Exception $e) {
-            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
             return [];
         }
     }
@@ -2821,7 +2821,7 @@ class Base
             $redis26->setEx($key, Base::$redis_timeout, json_encode($db));
             return $db;
         } catch (Exception $e) {
-            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
             return [];
         }
     }
@@ -2852,7 +2852,7 @@ class Base
             $redis28->setEx($key, Base::$redis_timeout, json_encode($db));
             return $db;
         } catch (Exception $e) {
-            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
             return [];
         }
     }
@@ -2898,7 +2898,7 @@ class Base
             }
             return $db;
         } catch (Exception $e) {
-            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
             return [];
         }
     }
@@ -3091,7 +3091,7 @@ class Base
                 return true;
             }
         } catch (Exception $e) {
-            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
             return false;
         }
         return false;
@@ -3173,7 +3173,7 @@ class Base
                 return false;
             }
         } catch (Exception $e) {
-            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), '判题机安装出错：' . $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), '判题机安装出错：' . $e->getMessage());
             return false;
         }
         return true;
@@ -3206,7 +3206,7 @@ class Base
                 Base::chmodFile($tempath, $num);
             }
         } catch (Exception $e) {
-            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
             return;
         }
     }
@@ -3238,7 +3238,7 @@ class Base
                 Base::chownFile($tempath, $user_id);
             }
         } catch (Exception $e) {
-            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
             return;
         }
     }
@@ -3303,7 +3303,7 @@ class Base
                     return ['code' => -1, 'result' => '请选择语言后提交！', 'usememory' => 0, 'usetime' => 0];
             }
         } catch (Exception $e) {
-            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
             return ['code' => -1, 'result' => '判题机异常！' . $e->getMessage(), 'usememory' => 0, 'usetime' => 0];
         }
         return ['code' => 1, 'result' => $out, 'usememory' => 0, 'usetime' => 0];
@@ -3359,7 +3359,7 @@ class Base
                     break;
             }
         } catch (Exception $e) {
-            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
             return $out;
         }
         return $out;
@@ -3390,7 +3390,7 @@ class Base
             $text = mb_convert_encoding($text, 'UTF-8', $encoding);
             return $text;
         } catch (Exception $e) {
-            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
             return '';
         }
     }
@@ -3413,7 +3413,7 @@ class Base
             $memory_used = (int) $res['memory_used'] ?? 0;
             $msg = $res['msg'] ?? '';
         } catch (Exception $e) {
-            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
             // 触发错误的情况是判题机输出 Segmentation fault (core dumped) 导致解析json失败 而判题机触发该错误是不断分配内存不回收触发安全机制导致程序崩溃
             // 由于具体分配内存大小不确定，所以按照 RE 处理
             return ['status' => 4, 'time_used' => $time_used, 'memory_used' => $memory_used, 'msg' => $msg];
@@ -3469,7 +3469,7 @@ class Base
             $list = preg_split("/[\s]+/", $list_str);
             return $list;
         } catch (Exception $e) {
-            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), '获取GPT KEY LIST出错：' . $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), '获取GPT KEY LIST出错：' . $e->getMessage());
         }
         return [];
     }
@@ -3483,7 +3483,7 @@ class Base
             $url = Base::getSettingKeyData('chatgpt_api_url') ?? '';
             return $url;
         } catch (Exception $e) {
-            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), '获取GPT接口地址出错：' . $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), '获取GPT接口地址出错：' . $e->getMessage());
         }
         return '';
     }
@@ -3584,7 +3584,7 @@ class Base
             ]);
             return Base::$GLOBlinuxurl . $file_path;
         } catch (Exception $e) {
-            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
         }
     }
 
@@ -3749,7 +3749,10 @@ class Base
             if ($trace === false) {
                 return;
             }
-            $trace_str = Base::debugTrace($trace);
+            $trace_str = $trace;
+            if (is_array($msg) || is_object($trace)) {
+                $trace_str = Base::debugTrace($trace);
+            }
             if (!$trace_str) {
                 $trace_str = '暂无Trace信息';
             }
@@ -3757,7 +3760,7 @@ class Base
                 $msg = '暂无报错信息';
             }
             $now = date('Y-m-d H:i:s', time());
-            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '<h4>LTPP运行错误【' . $now . '】</h4><br><strong>报错信息</strong><br><pre>' . $msg . '</pre><br><strong>Trace信息</strong><br><pre>' . $trace_str . '</pre>');
+            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '<h4>LTPP运行错误【' . $now . '】</h4><br><strong>报错信息</strong><br><pre style="white-space:pre-wrap;word-wrap:break-word;">' . $msg . '</pre><br><strong>Trace信息</strong><br><pre style="white-space:pre-wrap;word-wrap:break-word;">' . $trace_str . '</pre>');
         } catch (Exception $e) {
             Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), $e->getMessage());
         }
@@ -3782,7 +3785,7 @@ class Base
             $redis31->setEx($problem_id, Base::$redis_timeout, json_encode($list));
             return $list;
         } catch (Exception $e) {
-            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
         }
         return [];
     }
@@ -3810,7 +3813,7 @@ class Base
             Base::writeOjDataInToFile($problem_id, $alltestpath, $test_data_list);
             return $list;
         } catch (Exception $e) {
-            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
         }
         return [];
     }
@@ -3838,7 +3841,7 @@ class Base
                 Base::writeToFile($file_in_path, $tem->test_out);
             }
         } catch (Exception $e) {
-            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
         }
     }
 
@@ -3876,7 +3879,7 @@ class Base
                 return Base::$GLOBlinuxurl . $new_path;
             }
         } catch (Exception $e) {
-            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
         }
         return '';
     }
@@ -3906,7 +3909,7 @@ class Base
                 return $new_path;
             }
         } catch (Exception $e) {
-            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
         }
         return '';
     }
@@ -3948,7 +3951,7 @@ class Base
                 return '[' . $file_name . '](' . Base::$GLOBlinuxurl . $new_path . ')';
             }
         } catch (Exception $e) {
-            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
         }
         return '';
     }
@@ -3992,7 +3995,7 @@ class Base
             $data = Base::getStaticFileData($path);
             $res = strlen(Base::textToSafeText($data));
         } catch (Exception $e) {
-            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
         }
         return $res;
     }
@@ -4017,7 +4020,7 @@ class Base
                 }
             }
         } catch (Exception $e) {
-            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
         }
         return $file_extion;
     }
@@ -4032,7 +4035,7 @@ class Base
                 return Base::$extion_map_number[$file_extion];
             }
         } catch (Exception $e) {
-            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
         }
         return 9;
     }
@@ -4073,7 +4076,7 @@ class Base
                 return '[' . $file_name . '](' . Base::$GLOBlinuxurl . $new_path . ')';
             }
         } catch (Exception $e) {
-            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
         }
         return '';
     }
@@ -4135,7 +4138,7 @@ class Base
             Base::getChineseSize($size);
             return json(['code' => 1, 'msg' => '更新成功', 'data' => $size]);
         } catch (Exception $e) {
-            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
         }
         return json(['code' => -1, 'msg' => '更新成功']);
     }
@@ -4165,7 +4168,7 @@ class Base
                 ->where('isdel', 0)
                 ->update(['isdel' => 1]);
         } catch (Exception $e) {
-            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
         }
     }
 
@@ -4185,7 +4188,7 @@ class Base
             }
             return $file_name;
         } catch (Exception $e) {
-            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
         }
     }
 
@@ -4208,7 +4211,7 @@ class Base
             }
             return json_decode($db->json, true);
         } catch (Exception $e) {
-            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
         }
         return '';
     }
@@ -4232,7 +4235,7 @@ class Base
             }
             return json_decode($db->echarts, true);
         } catch (Exception $e) {
-            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
         }
         return '';
     }
@@ -4256,7 +4259,7 @@ class Base
             }
             return $db->html;
         } catch (Exception $e) {
-            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
         }
         return '';
     }
@@ -4287,7 +4290,7 @@ class Base
                 );
             return true;
         } catch (Exception $e) {
-            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
         }
         return false;
     }
@@ -4317,7 +4320,7 @@ class Base
                 );
             return true;
         } catch (Exception $e) {
-            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
         }
         return false;
     }
@@ -4348,7 +4351,7 @@ class Base
                 );
             return true;
         } catch (Exception $e) {
-            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
         }
         return false;
     }

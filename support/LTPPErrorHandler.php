@@ -26,7 +26,7 @@ class LTPPErrorHandler extends ExceptionHandler
             Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), '系统未捕获的异常');
             parent::report($exception);
         } catch (Throwable $e) {
-            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), '系统未捕获的异常：' . $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), '系统未捕获的异常：' . $e->getMessage());
         }
     }
 
@@ -54,7 +54,7 @@ class LTPPErrorHandler extends ExceptionHandler
             $error = $this->debug ? nl2br((string)$exception) : Base::notFoundPage();
             return new Response(500, [], $error);
         } catch (Throwable $e) {
-            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
         }
         return Base::notFoundPage();
     }
