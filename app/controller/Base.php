@@ -3801,6 +3801,13 @@ class Base
                 ->select('id', 'test_in', 'test_out')
                 ->get();
             $redis31->setEx($problem_id, Base::$redis_timeout, json_encode($list));
+            $md5_problem_id = Base::doubleMd5($problem_id);
+            $alltestpath = Base::$tmp_path . 'testdata/' . $md5_problem_id . '/';
+            $test_data_list = Base::getOjTestDataList($problem_id);
+            // 删除解压的文件
+            Base::deleteAllFile($alltestpath);
+            // 重新写入
+            Base::writeOjDataInToFile($problem_id, $alltestpath, $test_data_list);
             return $list;
         } catch (Exception $e) {
             Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), $e->getMessage());
@@ -3826,6 +3833,8 @@ class Base
             foreach ($test_data_list as &$tem) {
                 $file_in_path = $path . $tem->id . '.in';
                 Base::writeToFile($file_in_path, $tem->test_in);
+                $file_in_path = $path . $tem->id . '.out';
+                Base::writeToFile($file_in_path, $tem->test_out);
             }
         } catch (Exception $e) {
             Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), $e->getMessage());
