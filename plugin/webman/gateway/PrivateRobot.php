@@ -255,7 +255,7 @@ class PrivateRobot extends ChatBase
         $limittime = (int) $problem_db->Time;
         $limitmemory = ((int) $problem_db->Memory) << 20;
         $md5_problem_id = Base::doubleMd5($problem_id);
-        $alltestpath =  Base::$tmp_path . 'testdata/' . $md5_problem_id . '/';
+        $alltestpath =  Base::$testdata_path . $md5_problem_id . '/';
         $test_data_list = Base::getOjTestDataList($problem_id);
         Base::writeOjDataInToFile($problem_id, $alltestpath, $test_data_list);
         if (sizeof($test_data_list) <= 0) {

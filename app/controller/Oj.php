@@ -701,7 +701,7 @@ class Oj
             ->where('isdel', 0)
             ->update(['isdel' => 1]);
         $md5_problem_id = Base::doubleMd5($problem_id);
-        Base::deleteAllFile(Base::$tmp_path . 'testdata/' . $md5_problem_id . '/');
+        Base::deleteAllFile(Base::$testdata_path . $md5_problem_id . '/');
         Base::updateOjDataRedis($problem_id);
         if ($deldb) {
             return json(['code' => 1, 'msg' => '删除成功']);
@@ -769,8 +769,8 @@ class Oj
         if (!sizeof($data)) {
             return json(['code' => -1, 'msg' => '题目测试样例不存在！']);
         }
-        $path = Base::$tmp_path . 'testdata/' . $md5_problem_id . '/';
-        $alltestpath = Base::$tmp_path . 'testdata/' . $md5_problem_id . '/';
+        $path = Base::$testdata_path . $md5_problem_id . '/';
+        $alltestpath = Base::$testdata_path . $md5_problem_id . '/';
         $test_data_list = Base::getOjTestDataList($problem_id);
         Base::deleteAllFile($path);
         Base::writeOjDataInToFile($problem_id, $alltestpath, $test_data_list);

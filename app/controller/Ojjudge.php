@@ -398,7 +398,7 @@ class Ojjudge
         }
 
         $md5_problem_id = Base::doubleMd5($problem_id);
-        $alltestpath = Base::$tmp_path . 'testdata/' . $md5_problem_id . '/';
+        $alltestpath = Base::$testdata_path . $md5_problem_id . '/';
         $test_data_list = Base::getOjTestDataList($problem_id);
         if (sizeof($test_data_list) <= 0) {
             Ojjudge::updateCodeStatus($code_id, '运行出错', 0, 0);

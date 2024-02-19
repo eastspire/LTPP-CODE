@@ -36,7 +36,7 @@ class Testupload extends Oj
             return \json(['code' => -1, 'msg' => '权限不足！']);
         }
         $md5_problem_id = Base::doubleMd5($problem_id);
-        $alltestpath = Base::$tmp_path . 'testdata/' . $md5_problem_id . '/'; // 目标文件夹
+        $alltestpath = Base::$testdata_path . $md5_problem_id . '/'; // 目标文件夹
         Base::deleteAllFile($alltestpath);
         Base::creatFilePath($alltestpath);
         $out = '';

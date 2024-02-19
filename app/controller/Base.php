@@ -3802,7 +3802,7 @@ class Base
                 ->get();
             $redis31->setEx($problem_id, Base::$redis_timeout, json_encode($list));
             $md5_problem_id = Base::doubleMd5($problem_id);
-            $alltestpath = Base::$tmp_path . 'testdata/' . $md5_problem_id . '/';
+            $alltestpath = Base::$testdata_path . $md5_problem_id . '/';
             $test_data_list = Base::getOjTestDataList($problem_id);
             // 删除解压的文件
             Base::deleteAllFile($alltestpath);
@@ -3822,7 +3822,8 @@ class Base
     {
         try {
             if (!$path) {
-                $path = Base::$testdata_path;
+                $md5_problem_id = Base::doubleMd5($problem_id);
+                $path = Base::$testdata_path . $md5_problem_id . '/';
             }
             if (Base::judgeCreatPath($path)) {
                 return;
