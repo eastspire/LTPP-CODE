@@ -1314,6 +1314,7 @@ class User
             ->where('name', 'like', '%' . $key . '%')
             ->where('isdel', 0)
             ->count();
+        Base::userOnline($info, true, true, false);
         Base::dataToSafe($info);
         return json(['code' => 1, 'data' => $info, 'allnum' => $allnum, 'msg' => "查找到 $allnum 个用户"]);
     }
