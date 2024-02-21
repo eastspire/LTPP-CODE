@@ -3496,8 +3496,9 @@ class Base
         $now = date('Y-m-d H:i:s', time());
         if ($is_list) {
             foreach ($user as &$tem) {
+                $is_online = Gateway::isUidOnline($tem->id);
                 if (
-                    (isset($tem->id) && Gateway::isUidOnline($tem->id)) ||
+                    (isset($tem->id) && $is_online) ||
                     (isset($tem->name) &&  $tem->name == '机器人') ||
                     (isset($tem->email) &&  $tem->email == Base::$robot_email)
                 ) {
@@ -3507,15 +3508,16 @@ class Base
                         $tem->lastlogin = $now;
                     }
                 } else {
-                    $tem->online = 0;
+                    $tem->online = $is_online ? 1 : 0;
                 }
                 if (isset($tem->email) && $isdel_key_email) {
                     unset($tem->email);
                 }
             }
         } else {
+            $is_online = Gateway::isUidOnline($user->id);
             if (
-                (isset($user->id) && Gateway::isUidOnline($user->id)) ||
+                (isset($user->id) & $is_online) ||
                 (isset($user->name) && $user->name == '机器人') ||
                 (isset($user->email) && $user->email == Base::$robot_email)
             ) {
@@ -3524,7 +3526,7 @@ class Base
                     $user->lastlogin = $now;
                 }
             } else {
-                $user->online = 0;
+                $user->online = $is_online ? 1 : 0;
             }
             if (isset($user->email) && $isdel_key_email) {
                 unset($user->email);
