@@ -3752,8 +3752,11 @@ class Base
                 return;
             }
             $trace_str = $trace;
-            if (is_array($msg) || is_object($trace)) {
+            if (is_array($trace) || is_object($trace)) {
                 $trace_str = Base::debugTrace($trace);
+            }
+            if (is_array($msg) || is_object($msg)) {
+                $msg = Base::debugTrace($msg);
             }
             if (!$trace_str) {
                 $trace_str = '暂无Trace信息';
