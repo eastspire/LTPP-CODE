@@ -324,13 +324,12 @@ class RobotContest implements Consumer
             }
             // 每个机器人赛题顺序，乱序
             $people_problem_list = [];
-            foreach ($people_list as &$one_person_id) {
-                $rand_idx_list =  array_rand($problem_list, $problem_length);
-                // 初始化
-                $people_problem_list[$one_person_id] = [];
-                foreach ($rand_idx_list as &$key) {
-                    $people_problem_list[$one_person_id][] = $problem_list[$key];
+            $rand_problem_list = $problem_list;
+            foreach ($people_list as $index => &$one_person_id) {
+                if ($index % $problem_length == 0) {
+                    shuffle($rand_problem_list);
                 }
+                $people_problem_list[$one_person_id] = $rand_problem_list;
             }
             for ($i = 0; $i < $submit_times; ++$i) {
                 foreach ($problem_list as $one_problem_index => &$one_problem_id) {
