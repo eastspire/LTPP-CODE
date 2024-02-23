@@ -90,6 +90,7 @@ class RobotContest implements Consumer
                 ->where('time', '<', $contest_begin)
                 ->where('isdel', 0)
                 ->orderBy('id', 'desc')
+                ->select('userid', 'problemid', 'language', 'code')
                 ->first();
         }
         if (!isset(RobotContest::$code_all_no_ac_code_db[$problem_id]) || !RobotContest::$code_all_no_ac_code_db[$problem_id]) {
@@ -98,12 +99,14 @@ class RobotContest implements Consumer
                 ->where('time', '<', $contest_begin)
                 ->where('isdel', 0)
                 ->orderBy('id', 'desc')
+                ->select('userid', 'problemid', 'language', 'code')
                 ->first();
         }
         if (!isset(RobotContest::$code_all_code_db[$problem_id]) || !RobotContest::$code_all_code_db[$problem_id]) {
             RobotContest::$code_all_code_db[$problem_id] = Db::table('solveproblem')
                 ->where('isdel', 0)
                 ->orderBy('id', 'desc')
+                ->select('userid', 'problemid', 'language', 'code')
                 ->first();
         }
         if (!RobotContest::$code_all_code_db[$problem_id] || !RobotContest::$code_all_code_db[$problem_id]) {
@@ -132,7 +135,7 @@ class RobotContest implements Consumer
         if (!$contest_db) {
             return;
         }
-        $is_ac = !!(rand(0, 100) <= 36);
+        $is_ac = rand(0, 100) <= 36 ? true : false;
         $db = RobotContest::$code_all_no_ac_code_db[$problem_id];
         if ($is_ac) {
             $db = RobotContest::$code_all_ac_code_db[$problem_id];
@@ -148,19 +151,37 @@ class RobotContest implements Consumer
                 ->increment('acnum', 1);
             $has = Db::table('solveproblem')
                 ->where('userid', $my_id)
-                ->where('problemid', $db->problemid)
+                ->where('problemid', $problem_id)
                 ->where('language', $db->language)
                 ->where('isdel', 0)
                 ->exists();
-            if (!$has) {
+            if ($has) {
+                $has_db = Db::table('solveproblem')
+                    ->where('userid', $my_id)
+                    ->where('problemid', $problem_id)
+                    ->where('language', $db->language)
+                    ->where('isdel', 0)
+                    ->orderBy('id', 'desc')
+                    ->select('id')
+                    ->first();
+                if ($has_db) {
+                    Db::table('solveproblem')
+                        ->where('id', $has_db->id)
+                        ->where('isdel', 0)
+                        ->update([
+                            'time' => $now,
+                            'code' => $db->code,
+                        ]);
+                }
+            } else {
                 Base::insertToDb('solveproblem', [
                     'userid' => $my_id,
-                    'problemid' => $db->problemid,
+                    'problemid' => $problem_id,
                     'time' => $now,
                     'language' => $db->language,
                     'code' => $db->code,
                 ]);
-                $problem_db = Base::getOjData($db->problemid);
+                $problem_db = Base::getOjData($problem_id);
                 if ($problem_db) {
                     Base::addAcMoney($my_id, $problem_db->problemName, $db->language);
                 }
@@ -169,7 +190,7 @@ class RobotContest implements Consumer
         if ($now >= $contest_db->begin && $now <= $contest_db->end) {
             Base::insertToDb('contestrank', [
                 'userid' => $my_id,
-                'problemid' => $db->problemid,
+                'problemid' => $problem_id,
                 'language' => $db->language,
                 'score' => $is_ac ? 100 : 0,
                 'submittime' => $now,
@@ -179,7 +200,7 @@ class RobotContest implements Consumer
         }
         Base::insertToDb('codehistory', [
             'userid' => $my_id,
-            'problemid' => $db->problemid,
+            'problemid' => $problem_id,
             'language' => $db->language,
             'status' => $is_ac ? '正常运行' : '答案错误',
             'time' => $now,
