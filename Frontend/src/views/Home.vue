@@ -697,7 +697,7 @@ export default {
       icon_left: "<",
       icon_right: ">",
       scroll_percent: 0,
-      last_notice_num: -1,
+      last_notice_num: 0,
       video_load_error: false,
       timer: null,
       reg: /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\*\+,;=.]+$/,
@@ -1057,17 +1057,15 @@ export default {
           offset: 80,
         });
       });
-      if (res.allnum > 0) {
-        if (this.last_notice_num == -1 || res.allnum > this.last_notice_num) {
-          this.$notice({
-            title: "通知(" + res.time + ")",
-            dangerouslyUseHTMLString: true,
-            message: res?.msg,
-            duration: 10000,
-            offset: 80,
-          });
-          this.last_notice_num = res.allnum;
-        }
+      if (res.allnum > this.last_notice_num) {
+        this.$notice({
+          title: "我的消息（" + res.time + "）",
+          dangerouslyUseHTMLString: true,
+          message: res?.msg,
+          duration: 10000,
+          offset: 80,
+        });
+        this.last_notice_num = res.allnum;
       }
     },
     async loadSelfData() {
