@@ -387,14 +387,15 @@ class Setting extends Image
         if ($db) {
             $redis5 = Redis::connection('db5');
 
-            if ($data['robot_mail'] != $redis5->get('robot_mail')) {
-                Base::updateRobotUsersEmail($redis5->get('robot_mail'));
+            $old_email = $redis5->get('robot_email');
+            if ($data['robot_email'] != $old_email) {
                 Db::table('setting')
                     ->where('id', $db->id)
                     ->where('isdel', 0)
-                    ->update(['robot_mail' => $data['robot_mail']]);
-                $redis5->del('robot_mail');
-                $redis5->set('robot_mail', $data['robot_mail']);
+                    ->update(['robot_email' => $data['robot_email']]);
+                $redis5->del('robot_email');
+                $redis5->set('robot_email', $data['robot_email']);
+                Base::updateRobotUsersEmail($old_email);
             }
 
             if ($data['ltpp_win_download_url'] != $redis5->get('ltpp_win_download_url')) {

@@ -714,6 +714,32 @@
               margin: 1rem 0rem 1rem 0rem;
             "
           >
+            机器人邮箱
+          </p>
+          <el-input
+            type="password"
+            show-password
+            style="font-size: 1.06rem"
+            placeholder="请输入机器人邮箱"
+            v-model.lazy="resdata.robot_email"
+            @keyup.enter.native="updatesetting()"
+          >
+            <el-button
+              slot="append"
+              icon="el-icon-upload"
+              @click="updatesetting()"
+              >更新</el-button
+            >
+          </el-input>
+
+          <p
+            style="
+              font-size: 1.06rem;
+              text-align: left;
+              font-weight: bold;
+              margin: 1rem 0rem 1rem 0rem;
+            "
+          >
             用户批量生成（仅支持数字类型的名称）
           </p>
           <el-input
@@ -888,32 +914,6 @@
             style="font-size: 1.06rem"
             placeholder="请输入请求频率记录有效期"
             v-model.lazy="resdata.GLOBiplimitTime"
-            @keyup.enter.native="updatesetting()"
-          >
-            <el-button
-              slot="append"
-              icon="el-icon-upload"
-              @click="updatesetting()"
-              >更新</el-button
-            >
-          </el-input>
-
-          <p
-            style="
-              font-size: 1.06rem;
-              text-align: left;
-              font-weight: bold;
-              margin: 1rem 0rem 1rem 0rem;
-            "
-          >
-            机器人邮箱
-          </p>
-          <el-input
-            type="password"
-            show-password
-            style="font-size: 1.06rem"
-            placeholder="请输入机器人邮箱"
-            v-model.lazy="resdata.robot_mail"
             @keyup.enter.native="updatesetting()"
           >
             <el-button
