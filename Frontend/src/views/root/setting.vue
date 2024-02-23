@@ -1614,6 +1614,12 @@ export default {
       }
     },
     async updatesetting() {
+      this.$msg({
+        type: "success",
+        message: "开始更新设置，请耐心等待更新完成",
+        duration: 1600,
+        offset: 80,
+      });
       const { data: res } = await this.$ajax({
         method: "post",
         url: "/Setting/updateSetting",
