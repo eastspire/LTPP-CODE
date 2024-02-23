@@ -409,12 +409,12 @@ export default {
     this.head = {
       Authorization: "Bearer " + window.localStorage.getItem("authorization"),
       Key: window.localStorage.getItem("key"),
-      Requestid : this.Base64Encode(new Date().getTime())
+      Requestid: this.Base64Encode(new Date().getTime()),
     };
     this.requestid_timer = setInterval(() => {
-        this.head.Requestid = this.Base64Encode(new Date().getTime())
+      this.head.Requestid = this.Base64Encode(new Date().getTime());
     }, 1000);
-    const tem_linuxbkurl = window.sessionStorage.getItem("linuxurl"); 
+    const tem_linuxbkurl = window.sessionStorage.getItem("linuxurl");
     if (!tem_linuxbkurl) {
       this.getlinuxbkurl();
     } else {
@@ -434,7 +434,7 @@ export default {
       this.getproblem(this.tableData.id);
     } else {
       //添加题目
-      this.tableData.problemContent = `<h4>题目内容</h4>\n<pre style="background-color:rgba(0,0,0,0);font-size:1.16rem;padding:0rem;margin:0rem;white-space:pre-wrap;">\n\n</pre>\n\n<h4>输入说明</h4>\n<pre style="background-color:rgba(0,0,0,0);font-size:1.16rem;padding:0rem;margin:0rem;white-space:pre-wrap;">\n\n</pre>\n\n<h4>输出说明</h4>\n<pre style="background-color:rgba(0,0,0,0);font-size:1.16rem;padding:0rem;margin:0rem;white-space:pre-wrap;">\n\n</pre>\n\n<h5>输入样例1</h5>\n<pre style="background-color:rgba(0,0,0,0);font-size:1.16rem;padding:0rem;margin:0rem;white-space:pre-wrap;">\n\n</pre>\n\n<h5>输出样例1</h5>\n<pre style="background-color:rgba(0,0,0,0);font-size:1.16rem;padding:0rem;margin:0rem;white-space:pre-wrap;">\n\n</pre>\n\n<h4>提示</h4>\n<pre style="background-color:rgba(0,0,0,0);font-size:1.16rem;color:deeppink;padding:0rem;margin:0rem;white-space:pre-wrap;">\n\n</pre>\n`;
+      this.tableData.problemContent = `<h4>题目内容</h4>\n<pre style="background-color:rgba(0,0,0,0);font-size:1.06rem;padding:0rem;margin:0rem;white-space:pre-wrap;">\n\n</pre>\n\n<h4>输入说明</h4>\n<pre style="background-color:rgba(0,0,0,0);font-size:1.06rem;padding:0rem;margin:0rem;white-space:pre-wrap;">\n\n</pre>\n\n<h4>输出说明</h4>\n<pre style="background-color:rgba(0,0,0,0);font-size:1.06rem;padding:0rem;margin:0rem;white-space:pre-wrap;">\n\n</pre>\n\n<h5>输入样例1</h5>\n<pre style="background-color:rgba(0,0,0,0);font-size:1.06rem;padding:0rem;margin:0rem;white-space:pre-wrap;">\n\n</pre>\n\n<h5>输出样例1</h5>\n<pre style="background-color:rgba(0,0,0,0);font-size:1.06rem;padding:0rem;margin:0rem;white-space:pre-wrap;">\n\n</pre>\n\n<h4>提示</h4>\n<pre style="background-color:rgba(0,0,0,0);font-size:1.06rem;color:deeppink;padding:0rem;margin:0rem;white-space:pre-wrap;">\n\n</pre>\n`;
       this.tableData.problemName = "";
       this.tableData.problemCinTest = "";
       this.tableData.problemCoutTest = "";
@@ -802,7 +802,7 @@ export default {
     $imgAdd(pos, $file) {
       // 第一步.将图片上传到服务器.
       let formdata = new FormData();
-      formdata.append('file', $file);
+      formdata.append("file", $file);
       this.$ajax({
         url: "/File/saveImage",
         method: "post",

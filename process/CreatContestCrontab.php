@@ -40,7 +40,7 @@ class CreatContestCrontab
                 break;
             }
             $problem_db = Base::getOjData($tem->problemid);
-            if (!$problem_db) {
+            if (!$problem_db || $problem_db->public != 1) {
                 continue;
             }
             $res[] = $tem->problemid;
