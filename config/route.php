@@ -15,7 +15,6 @@
 
 use Webman\Route;
 use app\controller\Base;
-use app\controller\Robot;
 use support\Request;
 
 Route::any(Base::$LTPP_public_static_path . '[/{path:.+}]', function (Request $request) {
