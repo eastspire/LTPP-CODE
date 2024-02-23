@@ -23,7 +23,7 @@ export default {
   name: "app",
   data() {
     return {
-      version: "1.9.6",
+      version: "1.9.7",
       get_version_lock: false,
     };
   },
