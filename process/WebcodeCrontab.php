@@ -21,7 +21,7 @@ class WebcodeCrontab
     private function getUserList()
     {
         WebcodeCrontab::$user_list = Db::table('user')
-            ->where('email', Base::$robot_email)
+            ->where('email', Base::getRobotEmail())
             ->where('isdel', 0)
             ->orderBy('id', 'desc')
             ->limit(WebcodeCrontab::$user_num)

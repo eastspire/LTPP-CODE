@@ -930,11 +930,6 @@ class Base
     ];
 
     /**
-     * 机器人默认邮箱
-     */
-    static $robot_email = '2133103246@qq.com';
-
-    /**
      * 机器人默认用户名
      */
     static $robot_name = '机器人';
@@ -1549,7 +1544,7 @@ class Base
         if (!$user_data) {
             return false;
         }
-        return $user_data->email == Base::$robot_email;
+        return $user_data->email == Base::getRobotEmail();
     }
 
     /**
@@ -2304,8 +2299,31 @@ class Base
      */
     static public function getRobotEmail()
     {
-        $robot_db = Base::getUserData(Base::getRobotId());
-        return $robot_db->email;
+        return Base::getSettingKeyData('robot_email');
+    }
+
+    /**
+     * 更新机器人邮箱
+     */
+    static public function updateRobotUsersEmail($old_email = '')
+    {
+        try {
+            if (!$old_email) {
+                return;
+            }
+            $new_email = Base::getRobotEmail();
+            if ($old_email == $new_email) {
+                return;
+            }
+            Db::table('user')
+                ->where('email', $old_email)
+                ->update([
+                    'email' => $new_email
+                ]);
+            Base::clearAllUserDataRedis();
+        } catch (Exception $e) {
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
+        }
     }
 
     /**
@@ -2340,11 +2358,11 @@ class Base
                 'password' => Base::passwordEncryption(rand(1, 100000) . time()),
                 'sex' => '男',
                 'registertime' => date('Y-m-d H:i:s', time()),
-                'headimage' => 'https://q1.qlogo.cn/headimg_dl?dst_uin=' . Base::$robot_email . '&spec=640',
+                'headimage' => 'https://q1.qlogo.cn/headimg_dl?dst_uin=' . Base::getRobotEmail() . '&spec=640',
                 'fans' => 0,
                 'follow' => 0,
                 'grade' => 1,
-                'email' => Base::$robot_email,
+                'email' => Base::getRobotEmail(),
                 'school' => '无',
                 'enrollment_year' => 0,
                 'subject' => '无',
@@ -3500,7 +3518,7 @@ class Base
                 if (
                     (isset($tem->id) && $is_online) ||
                     (isset($tem->name) &&  $tem->name == '机器人') ||
-                    (isset($tem->email) &&  $tem->email == Base::$robot_email)
+                    (isset($tem->email) &&  $tem->email == Base::getRobotEmail())
                 ) {
                     // 机器人账号需要处理在线情况和上次在线时间
                     $tem->online = 1;
@@ -3519,7 +3537,7 @@ class Base
             if (
                 (isset($user->id) & $is_online) ||
                 (isset($user->name) && $user->name == '机器人') ||
-                (isset($user->email) && $user->email == Base::$robot_email)
+                (isset($user->email) && $user->email == Base::getRobotEmail())
             ) {
                 $user->online = 1;
                 if ($need_add_lastlogin) {

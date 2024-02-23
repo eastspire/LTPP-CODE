@@ -24,7 +24,7 @@ class CleanRobotDb
         // 每天凌晨三点执行一次
         new Crontab('00 3 * * *', function () {
             try {
-                $robot_email = Base::$robot_email;
+                $robot_email = Base::getRobotEmail();
                 $time = date('Y-m-d', time());
 
                 Db::table('articlecomment')

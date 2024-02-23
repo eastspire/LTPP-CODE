@@ -700,16 +700,17 @@ class PrivateRobot extends ChatBase
             return;
         }
         $headimage = '';
+        $robot_email = Base::getRobotEmail();
         for ($i = 0; $i < $image_count; ++$i) {
             Db::table('user')
-                ->where('email', Base::$robot_email)
+                ->where('email', $robot_email)
                 ->whereRaw('id % ? = ?', [$image_count, $i])
                 ->update([
                     'headimage' => $image_list[rand(0, $image_count - 1)]
                 ]);
         }
         $user_db = Db::table('user')
-            ->where('email', '!=', Base::$robot_email)
+            ->where('email', '!=', $robot_email)
             ->orderBy('id', 'desc')
             ->select(['id', 'email'])
             ->get();

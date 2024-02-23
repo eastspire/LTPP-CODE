@@ -884,7 +884,7 @@ class User
         if ($user_db->name == 'root' && $user_db->grade == 3) {
             return \json(['code' => -1, 'msg' => '超级管理员账号禁止删除']);
         }
-        if ($user_db->name == '机器人' || $user_db->email == Base::$robot_email) {
+        if ($user_db->name == '机器人' || $user_db->email == Base::getRobotEmail()) {
             return \json(['code' => -1, 'msg' => '机器人账号禁止删除']);
         }
         $res = Db::table('user')
