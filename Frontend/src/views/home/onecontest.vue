@@ -275,7 +275,8 @@
             </p>
           </div>
           <div
-            v-show="
+            v-if="
+              myrank &&
               resuserrank.length > 0 &&
               isbegin &&
               isshow &&
@@ -833,7 +834,7 @@ export default {
     this.isseetip = true;
     this.isgetprolist = false;
     this.echartsnum = 0;
-    this.myrank = 1;
+    this.myrank = 0;
     this.show_code_check_similarity = true;
     this.showone_join_msg = false;
     this.isseepassword = false;
@@ -931,7 +932,7 @@ export default {
       showone_join_msg: false,
       show_code_check_similarity: true,
       timer: null,
-      myrank: 1,
+      myrank: 0,
       is_my_contest: false,
       echartsnum: 0,
       isgetprolist: false,
@@ -1832,7 +1833,7 @@ export default {
         this.isseetip = true;
         this.isgetprolist = false;
         this.echartsnum = 0;
-        this.myrank = 1;
+        this.myrank = 0;
         this.limit = 20;
         this.page = 1;
         this.isseecode = false;
