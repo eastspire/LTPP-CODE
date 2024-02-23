@@ -64,7 +64,9 @@
                   placement="right"
                 >
                   <span
-                    class="my-span"
+                    :class="`my-span ${
+                      scope.row.password ? 'el-icon-lock' : 'el-icon-trophy'
+                    }`"
                     style="
                       font-weight: bold;
                       font-size: 1.06rem;
@@ -364,7 +366,7 @@ export default {
                   duration: 1600,
                   offset: 80,
                 });
-              }              
+              }
               this.search();
             })
             .catch((t) => {

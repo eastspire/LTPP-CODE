@@ -221,6 +221,7 @@ const oj_contest_list_data = {
     allpeople: "加载中",
     type: "加载中",
     createrid: "",
+    password: true
 };
 
 const video_list_data = {

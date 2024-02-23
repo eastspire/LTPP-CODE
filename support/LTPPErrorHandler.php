@@ -23,7 +23,7 @@ class LTPPErrorHandler extends ExceptionHandler
     {
         try {
             // 通知
-            Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), '系统未捕获的异常');
+            Base::sendErrorNotice($exception->getTraceAsString(), '系统未捕获的异常：' . $exception->getMessage());
             parent::report($exception);
         } catch (Throwable $e) {
             Base::sendErrorNotice($e->getTraceAsString(), '系统未捕获的异常：' . $e->getMessage());

@@ -77,7 +77,8 @@ class Contest
         'creater',
         'allpeople',
         'type',
-        'createrid'
+        'createrid',
+        'password'
     ];
 
     /**
@@ -92,7 +93,8 @@ class Contest
         'creater',
         'allpeople',
         'type',
-        'createrid'
+        'createrid',
+        'password'
     ];
 
     /**
@@ -412,6 +414,9 @@ class Contest
                 ->where('isdel', 0)
                 ->count();
         }
+        foreach ($db as &$tem) {
+            $tem->password = $tem->password ? true : false;
+        }
         Base::dataToSafe($db);
         if ($db) {
             return json(['code' => 1, 'data' => $db, 'msg' => '列表加载成功', 'allnum' => $allnum]);
@@ -483,6 +488,9 @@ class Contest
         $allnum = Db::table('contest')
             ->where('isdel', 0)
             ->count();
+        foreach ($db as &$tem) {
+            $tem->password = $tem->password ? true : false;
+        }
         Base::dataToSafe($db);
         if ($db) {
             return json(['code' => 1, 'data' => $db, 'msg' => '列表加载成功', 'allnum' => $allnum]);
@@ -550,17 +558,13 @@ class Contest
     {
         $contest_uid = $request->post('contest_id');
         $contest_id = Base::getIdByUid($contest_uid);
-
         $db = Base::getContestData($contest_id);
-        // 删除密码字段
-        if (isset($db->password)) {
-            unset($db->password);
-        }
-        Base::dataToSafe($db);
         if ($db) {
+            $db->password = $db->password ? true : false;
+            Base::dataToSafe($db);
             return json(['code' => 1, 'msg' => '竞赛加载成功', 'data' => $db]);
         }
-        return json(['code' => -1, 'msg' => '竞赛加载失败']);
+        return json(['code' => -1, 'msg' => '竞赛加载失败', 'data' => []]);
     }
 
     /**
@@ -1049,19 +1053,14 @@ class Contest
             ->select('userid')
             ->distinct()
             ->count();
-
         $res = array();
         foreach ($db as &$tem) {
             $temdb = Base::getContestData($tem->contestid);
             //如果竞赛存在
             if ($temdb) {
+                $temdb->password = $temdb->password ? true : false;
                 //如果数组没有该竞赛，加入该竞赛
                 $res[] = $temdb;
-            } else {
-                Db::table('joincontest')
-                    ->where('contestid', $tem->contestid)
-                    ->where('isdel', 0)
-                    ->update(['isdel' => 1]);
             }
         }
         Base::dataToSafe($res);
@@ -1102,6 +1101,7 @@ class Contest
                 ->first();
             //如果存在
             if ($temdb) {
+                $temdb->password = $temdb->password ? true : false;
                 $all_list[] = $temdb;
                 ++$allnum;
             }
@@ -1110,6 +1110,7 @@ class Contest
         $res = [];
         $begin = ($page - 1) * $limit;
         for ($i = $begin; $i < $begin + $limit && $i < $allnum; ++$i) {
+            $all_list[$i]->password = $all_list[$i]->password ? true : false;
             $res[] = $all_list[$i];
         }
         Base::dataToSafe($res);

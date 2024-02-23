@@ -29,6 +29,11 @@
                 overflow: hidden;
               "
             >
+              <span
+                :class="`${
+                  contestdata.password ? 'el-icon-lock' : 'el-icon-trophy'
+                }`"
+              ></span>
               {{ contestdata.name }}
             </div>
           </div>
@@ -192,7 +197,7 @@
                 ></div>
               </div>
             </div>
-           </div>
+          </div>
           <div style="height: 1.6rem"></div>
           <div>
             <p
@@ -752,7 +757,7 @@
               <el-button
                 v-if="!isjoin && canclick"
                 round
-                @click="joincontest()"
+                @click="middlewareJoinContest()"
                 width="auto"
                 class="el-icon-user-solid pulse-enter-active shadow"
                 >报名竞赛</el-button
@@ -786,6 +791,25 @@
         ></ShowCode>
       </el-dialog>
 
+      <el-dialog
+        @contextmenu.prevent.native="isseepassword = false"
+        :close-on-click-modal="false"
+        width="30%"
+        :append-to-body="true"
+        title="参赛密码"
+        :visible.sync="isseepassword"
+      >
+        <el-input
+          placeholder="请输入参赛密码"
+          style="font-size: 1.06rem"
+          v-model.lazy="password"
+          @keyup.enter.native="joincontest()"
+        >
+          <el-button slot="append" icon="el-icon-success" @click="joincontest()"
+            >确定</el-button
+          >
+        </el-input>
+      </el-dialog>
       <div style="height: 2rem"></div>
     </div>
   </div>
@@ -812,6 +836,8 @@ export default {
     this.myrank = 1;
     this.show_code_check_similarity = true;
     this.showone_join_msg = false;
+    this.isseepassword = false;
+    this.password = "";
     if (
       !(
         this.$route &&
@@ -834,17 +860,17 @@ export default {
     this.isioi = false;
     this.issqs = false;
     this.isshow = true;
-    await this.getdata();
+    this.getdata();
     this.timer = setInterval(() => {
       this.gettime();
     }, 1000);
     this.$nextTick(() => {
       this.totop();
     });
-    await this.judgeisjoin();
-    await this.getproblemlist();
-    await this.frontendJudgeIsMyContest();
-    await this.updateEcharts();
+    this.judgeisjoin();
+    this.getproblemlist();
+    this.frontendJudgeIsMyContest();
+    this.updateEcharts();
 
     this.totaltime = 0;
     this.totaltime++;
@@ -860,20 +886,20 @@ export default {
     if (this.begin <= this.nowtime && this.end >= this.nowtime) {
       this.isbegin = true;
       this.isend = false;
-      await this.updateEcharts();
+      this.updateEcharts();
     } else if (this.end < this.nowtime) {
       this.isbegin = true;
       this.isend = true;
-      await this.updateEcharts();
+      this.updateEcharts();
     }
     if (!this.isbegin || (this.isbegin && !this.isend)) {
       this.can_show_time = true;
     }
     if (this.isacm || this.issqs) {
       this.isshow = true;
-      await this.lookacmrank();
+      this.lookacmrank();
     } else if (this.isioi || this.isoi) {
-      await this.lookoirank();
+      this.lookoirank();
     }
   },
   destroyed() {
@@ -896,6 +922,8 @@ export default {
   },
   data() {
     return {
+      password: "",
+      isseepassword: false,
       echarts_finish: false,
       rank_lock: false,
       show_oi_rank: false,
@@ -1391,6 +1419,13 @@ export default {
         oA.remove();
       }
     },
+    middlewareJoinContest() {
+      if (this.contestdata?.password) {
+        this.isseepassword = true;
+      } else {
+        this.joincontest();
+      }
+    },
     async gettime() {
       this.totaltime++;
       if (this.totaltime >= 3600) {
@@ -1510,7 +1545,7 @@ export default {
         this.type == "OI"
       ) {
         return;
-      }    
+      }
       let echarts_dom = document.getElementById("rankchart");
       if (!echarts_dom) {
         this.echarts_finish = false;
@@ -1642,7 +1677,7 @@ export default {
           },
         },
       });
-      if(!this.echarts_finish){
+      if (!this.echarts_finish) {
         setTimeout(() => {
           this.echarts_finish = true;
         }, 0);
@@ -1714,7 +1749,7 @@ export default {
       });
       if (res?.code == 1) {
         this.contestdata = res?.data;
-        this.type = res?.data.type;
+        this.type = res?.data?.type;
         /* 允许查看排名 */
         if (this.type == "ACM") {
           this.lookacmrank();
@@ -1765,6 +1800,7 @@ export default {
     },
     async joincontest() {
       this.canclick = false;
+      this.isseepassword = false;
       const { data: res } = await this.$ajax({
         method: "post",
         url: "/Contest/joinContest",
@@ -1773,6 +1809,7 @@ export default {
         },
         data: {
           contest_id: this.contestid,
+          password: this.password,
         },
       }).catch((t) => {
         this.$msg({
@@ -1783,6 +1820,7 @@ export default {
         });
       });
       this.canclick = true;
+      this.password = "";
       if (res?.code == 1) {
         this.$msg({
           type: "success",

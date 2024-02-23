@@ -13,7 +13,6 @@
 namespace app\controller;
 
 use Exception;
-use support\Request;
 
 class Version
 {
@@ -21,13 +20,13 @@ class Version
      * 软件版本
      * @var string $version 软件版本
      */
-    static $version = '1.9.7';
+    static $version = '1.9.8';
 
     /**
      * 获取版本
      * @return $res 结果
      */
-    public function getVersion(Request $request)
+    public function getVersion()
     {
         try {
             $ltpp_win_download_url = Base::getSettingKeyData('ltpp_win_download_url');

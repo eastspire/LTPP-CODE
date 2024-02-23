@@ -127,6 +127,21 @@
           >
           </el-option>
         </el-select>
+        <p
+          style="
+            font-size: 1.06rem;
+            text-align: left;
+            font-weight: bold;
+            margin: 1rem 0rem 0.5rem 0rem;
+          "
+        >
+          参赛密码（留空默认为公开竞赛）
+        </p>
+        <el-input
+          placeholder="参赛密码"
+          style="font-size: 1.06rem"
+          v-model.lazy="onedata.password"
+        ></el-input>
         <div v-if="$store.state.root && $store.state.my_name === 'root'">
           <p
             style="
@@ -625,7 +640,7 @@ export default {
     $imgAdd(pos, $file) {
       // 第一步.将图片上传到服务器.
       let formdata = new FormData();
-      formdata.append('file', $file);
+      formdata.append("file", $file);
       this.$ajax({
         url: "/File/saveImage",
         method: "post",

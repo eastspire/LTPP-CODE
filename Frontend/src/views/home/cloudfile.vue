@@ -5,7 +5,7 @@
         v-loading.lock="!loadfinish"
         element-loading-text="拼命加载中"
         element-loading-spinner="el-icon-loading"
-        element-loading-background="background-color:rgba(var(--ltpp-main-bk-color),var(--ltpp-list-box-bk-opacity))"          
+        element-loading-background="background-color:rgba(var(--ltpp-main-bk-color),var(--ltpp-list-box-bk-opacity))"
         class="shadow ltpp-list-box"
         :style="`min-height:${$store.state.no_scroll_height}vh`"
       >
@@ -24,7 +24,7 @@
             我的云盘
           </p>
           <div>
-            <div style="float: left">              
+            <div style="float: left">
               <el-button
                 type="text"
                 class="pulse-enter-active"
@@ -60,7 +60,7 @@
           </div>
         </div>
         <div style="clear: both"></div>
-        <div style="height: 0.8rem"></div>        
+        <div style="height: 0.8rem"></div>
         <p style="color: #dcdfe6; margin-left: 1.6rem; font-weight: bold">
           容量使用情况
         </p>
@@ -86,33 +86,32 @@
               :style="`cursor: pointer; background-color:${
                 index % 2 != 0 ? deepcolor : notdeepcolor
               };margin-top:0.46rem;`"
-              @contextmenu.prevent="
-                showdelete(
-                  tem[4],
-                  tem[0]
-                )
-              "
+              @contextmenu.prevent="showdelete(tem[4], tem[0])"
               @dblclick="tolookcode(tem[0], tem[4], index)"
             >
               <div>
                 <div>
                   <div
                     :class="gitclass[tem[1] - 1]"
-                    style="margin-left: 1rem;"
+                    style="margin-left: 1rem"
                   ></div>
-                  <div style="white-space:nowrap;text-overflow:ellipsis;float:left;margin:2rem 1rem 1rem 0rem;overflow:hidden;width:46%;">
+                  <div
+                    style="
+                      white-space: nowrap;
+                      text-overflow: ellipsis;
+                      float: left;
+                      margin: 2rem 1rem 1rem 0rem;
+                      overflow: hidden;
+                      width: 46%;
+                    "
+                  >
                     <el-tooltip
                       class="item;"
                       effect="dark"
                       :content="base64_decode(tem[0])"
                       placement="top"
                     >
-                      <span
-                        style="
-                          font-size: 1.06rem;
-                          color: deepskyblue;                          
-                        "
-                      >
+                      <span style="font-size: 1.06rem; color: deepskyblue">
                         {{ base64_decode(tem[0]) }}
                       </span>
                     </el-tooltip>
@@ -244,11 +243,7 @@
                       width="auto"
                       type="text"
                       class="el-icon-share pulse-enter-active"
-                      @click="
-                        copy(
-                          linuxurl + base64_decode(filepath)
-                        )
-                      "
+                      @click="copy(linuxurl + base64_decode(filepath))"
                       >分享</el-button
                     >
                     <el-button
@@ -462,11 +457,7 @@
                         width="auto"
                         type="text"
                         class="el-icon-share pulse-enter-active"
-                        @click="
-                          copy(
-                            linuxurl + base64_decode(filepath)
-                          )
-                        "
+                        @click="copy(linuxurl + base64_decode(filepath))"
                         >分享</el-button
                       >
                       <el-button
@@ -572,10 +563,10 @@ export default {
     this.head = {
       Authorization: "Bearer " + window.localStorage.getItem("authorization"),
       Key: window.localStorage.getItem("key"),
-      Requestid : this.Base64Encode(new Date().getTime())
+      Requestid: this.Base64Encode(new Date().getTime()),
     };
     this.requestid_timer = setInterval(() => {
-        this.head.Requestid = this.Base64Encode(new Date().getTime())
+      this.head.Requestid = this.Base64Encode(new Date().getTime());
     }, 1000);
   },
   async created() {
@@ -592,14 +583,14 @@ export default {
     this.iscloseFile = false;
     this.IsShowUp = false;
     this.Isnew = false;
-    this.height = window.innerHeight - 198 + "px";   
+    this.height = window.innerHeight - 198 + "px";
     await this.loadCharset();
     this.getlist();
     this.getPercentage();
   },
   data() {
     return {
-      loadfinish:false,
+      loadfinish: false,
       file_idx: 0,
       requestid_timer: null,
       ide_code: "",
@@ -673,8 +664,8 @@ export default {
       IsShowUp: false,
       code: "",
       list: [],
-      filename: '', 
-      filepath:'',
+      filename: "",
+      filepath: "",
       onetheme: "monokai",
       head: {},
       Isnew: false,
@@ -750,7 +741,7 @@ export default {
     async $imgAdd(pos, $file) {
       // 第一步.将图片上传到服务器.
       let formdata = new FormData();
-      formdata.append('file', $file);
+      formdata.append("file", $file);
       await this.$ajax({
         url: "/File/saveImage",
         method: "post",
@@ -893,7 +884,7 @@ export default {
     async getlist() {
       const { data: res } = await this.$ajax({
         method: "post",
-        url: "/Cloudfile/loadList",       
+        url: "/Cloudfile/loadList",
       }).catch((t) => {
         this.$msg({
           type: "error",
@@ -928,7 +919,7 @@ export default {
       this.getPercentage();
       const { data: res } = await this.$ajax({
         method: "post",
-        url: "/Cloudfile/loadList",       
+        url: "/Cloudfile/loadList",
       }).catch((t) => {
         this.$msg({
           type: "error",
@@ -1027,9 +1018,9 @@ export default {
           duration: 600,
           offset: 80,
         });
-        try{
+        try {
           this.list[this.file_idx][2] = res?.data;
-        }catch(err){}
+        } catch (err) {}
       } else {
         this.$msg({
           type: "error",
@@ -1047,13 +1038,11 @@ export default {
         this.$store.state.my_id != ""
       ) {
         this.ShowStaticFileUrl =
-          this.linuxurl +
-          this.base64_decode(this.filepath);
+          this.linuxurl + this.base64_decode(this.filepath);
       } else {
         this.$store.commit("updateObj", { my_id: this.getMyId() });
         this.ShowStaticFileUrl =
-          this.linuxurl +
-        this.base64_decode(this.filepath);
+          this.linuxurl + this.base64_decode(this.filepath);
       }
     },
     async lookfile() {
@@ -1063,9 +1052,7 @@ export default {
         this.$store.state.my_id != undefined &&
         this.$store.state.my_id != ""
       ) {
-        let url =
-          this.linuxurl +
-          this.base64_decode(this.filepath);
+        let url = this.linuxurl + this.base64_decode(this.filepath);
         this.IsShowCode = false;
         this.IsShowStaticFile = false;
         this.$router.push({
@@ -1077,9 +1064,7 @@ export default {
         return;
       } else {
         this.$store.commit("updateObj", { my_id: this.getMyId() });
-        let url =
-          this.linuxurl +
-          this.base64_decode(this.filepath);
+        let url = this.linuxurl + this.base64_decode(this.filepath);
         this.IsShowCode = false;
         this.IsShowStaticFile = false;
         this.$router.push({
@@ -1098,16 +1083,12 @@ export default {
         this.$store.state.my_id != undefined &&
         this.$store.state.my_id != 0
       ) {
-        let url =
-          this.linuxurl + "/Filehtml/lookView?path=" + this.filepath;
-          window.open(url);
-          return;
+        let url = this.linuxurl + "/Filehtml/lookView?path=" + this.filepath;
+        window.open(url);
+        return;
       }
       this.$store.commit("updateObj", { my_id: this.getMyId() });
-      let url =
-        this.linuxurl +
-        "/Filehtml/lookView?path=" +
-        this.filepath;
+      let url = this.linuxurl + "/Filehtml/lookView?path=" + this.filepath;
       window.open(url);
     },
     async deletefile(path) {
@@ -1143,7 +1124,7 @@ export default {
       this.refreshlist();
       this.getPercentage();
     },
-    showdelete(path, name = "") {      
+    showdelete(path, name = "") {
       name = this.base64_decode(name);
       this.$alert(`此操作将永久把【${name}】隐藏（文件依然存在）`, "提示", {
         confirmButtonText: "确定",
@@ -1180,7 +1161,7 @@ export default {
           path: this.filepath,
         },
       })
-        .then((res) => {          
+        .then((res) => {
           let name = this.Base64Decode(this.filename, this.char_set);
           if (window.navigator && window.navigator.msSaveOrOpenBlob) {
             const blob = new Blob([res?.data], {
@@ -1204,7 +1185,7 @@ export default {
             message: "下载完成",
             duration: 1600,
             offset: 80,
-          });          
+          });
         })
         .catch((t) => {
           this.$msg({
