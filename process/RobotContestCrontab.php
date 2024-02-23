@@ -28,9 +28,9 @@ class RobotContestCrontab
     {
         try {
             if (!$now) {
-                $now = time();
+                $now_time = time();
+                $now = date('Y-m-d H:i:s', $now_time);
             }
-            $now = date('Y-m-d H:i:s', $now);
             $db = Db::table('contest')
                 ->where('begin', '<=', $now)
                 ->where('end', '>=', $now)
@@ -50,7 +50,8 @@ class RobotContestCrontab
         // 每一秒钟执行一次
         new Crontab('*/1 * * * * *', function () {
             try {
-                $now = time();
+                $now_time = time();
+                $now = date('Y-m-d H:i:s', $now_time);
                 $contest_list = $this->getRunningContestList($now);
                 $redis27 = \support\Redis::connection('db27');
                 foreach ($contest_list as &$one_contest) {
@@ -58,12 +59,12 @@ class RobotContestCrontab
                         continue;
                     }
                     // 竞赛已开始秒数
-                    $start_seconds = $now - strtotime($one_contest->begin);
+                    $start_seconds = $now_time - strtotime($one_contest->begin);
                     if ($start_seconds < 0) {
                         // 竞赛未开始
                         continue;
                     }
-                    $contest_run_time_seconds = strtotime($one_contest->end) - $now;
+                    $contest_run_time_seconds = strtotime($one_contest->end) - $now_time;
                     if ($contest_run_time_seconds < 0) {
                         // 竞赛结束不进行提交
                         continue;

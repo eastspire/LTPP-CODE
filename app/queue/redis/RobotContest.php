@@ -322,6 +322,16 @@ class RobotContest implements Consumer
             for ($i = 1; $i <= $problem_length; ++$i) {
                 $one_sleep_time_list[] = $one_sleep_min_time / max(1, $problem_length + 1 - $i);
             }
+            // 每个机器人赛题顺序，乱序
+            $people_problem_list = [];
+            foreach ($people_list as &$one_person_id) {
+                $rand_idx_list =  array_rand($problem_list, $problem_length);
+                // 初始化
+                $people_problem_list[$one_person_id] = [];
+                foreach ($rand_idx_list as &$key) {
+                    $people_problem_list[$one_person_id][] = $problem_list[$key];
+                }
+            }
             for ($i = 0; $i < $submit_times; ++$i) {
                 foreach ($problem_list as $one_problem_index => &$one_problem_id) {
                     foreach ($people_list as &$one_person_id) {
@@ -331,6 +341,7 @@ class RobotContest implements Consumer
                             break;
                         }
                         // 先枚举用户
+                        $now_time = time();
                         $now = date('Y-m-d H:i:s', $now_time);
                         if ($now < $contest_db->begin || $now > $contest_db->end) {
                             $this_contest_is_end = true;
@@ -338,8 +349,12 @@ class RobotContest implements Consumer
                         }
                         if (rand(0, 100) <= 88) {
                             // 从代码历史查询记录，没有记录会自带生成一个记录
-                            $this->getCodeFromSolveproblem($contest_db->begin, $one_problem_id, $one_person_id);
-                            $this->addCodeFromSolveproblem($one_contest_id, $one_problem_id, $one_person_id);
+                            $rand_problem_id = $one_problem_id;
+                            if (isset($people_problem_list[$one_person_id][$one_problem_index])) {
+                                $rand_problem_id = $people_problem_list[$one_person_id][$one_problem_index];
+                            }
+                            $this->getCodeFromSolveproblem($contest_db->begin, $rand_problem_id, $one_person_id);
+                            $this->addCodeFromSolveproblem($one_contest_id, $rand_problem_id, $one_person_id);
                             Contest::sendUpdateRankMQ($one_contest_id);
                         }
                         // 休眠微秒数
