@@ -356,6 +356,10 @@ class Contest
         if ($isjoin) {
             return json(['code' => -1, 'msg' => '您已报名该竞赛，无法多次报名']);
         }
+        $password = $request->post('password');
+        if ($password != $contest_db->password) {
+            return json(['code' => -1, 'msg' => '密码错误，报名失败']);
+        }
         $res = Db::table('joincontest')
             ->insert([
                 'userid' => $my_aid,
@@ -548,6 +552,10 @@ class Contest
         $contest_id = Base::getIdByUid($contest_uid);
 
         $db = Base::getContestData($contest_id);
+        // 删除密码字段
+        if (isset($db->password)) {
+            unset($db->password);
+        }
         Base::dataToSafe($db);
         if ($db) {
             return json(['code' => 1, 'msg' => '竞赛加载成功', 'data' => $db]);
@@ -920,7 +928,8 @@ class Contest
                     'content' => $data['content'],
                     'begin' => $data['begin'],
                     'end' => $data['end'],
-                    'type' => $data['type']
+                    'type' => $data['type'],
+                    'password' => $data['password'],
                 ]
             );
         $problemdata = $request->post('problemdata');

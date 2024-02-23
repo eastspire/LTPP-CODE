@@ -132,7 +132,7 @@ class RobotContest implements Consumer
         if (!$contest_db) {
             return;
         }
-        $is_ac = (rand(0, 100) <= 36);
+        $is_ac = !!(rand(0, 100) <= 36);
         $db = RobotContest::$code_all_no_ac_code_db[$problem_id];
         if ($is_ac) {
             $db = RobotContest::$code_all_ac_code_db[$problem_id];
@@ -153,14 +153,13 @@ class RobotContest implements Consumer
                 ->where('isdel', 0)
                 ->exists();
             if (!$has) {
-                Db::table('solveproblem')
-                    ->insert([
-                        'userid' => $my_id,
-                        'problemid' => $db->problemid,
-                        'time' => $now,
-                        'language' => $db->language,
-                        'code' => $db->code,
-                    ]);
+                Base::insertToDb('solveproblem', [
+                    'userid' => $my_id,
+                    'problemid' => $db->problemid,
+                    'time' => $now,
+                    'language' => $db->language,
+                    'code' => $db->code,
+                ]);
                 $problem_db = Base::getOjData($db->problemid);
                 if ($problem_db) {
                     Base::addAcMoney($my_id, $problem_db->problemName, $db->language);
@@ -168,29 +167,27 @@ class RobotContest implements Consumer
             }
         }
         if ($now >= $contest_db->begin && $now <= $contest_db->end) {
-            Db::table('contestrank')
-                ->insert([
-                    'userid' => $my_id,
-                    'problemid' => $db->problemid,
-                    'language' => $db->language,
-                    'score' => $is_ac ? 100 : 0,
-                    'submittime' => $now,
-                    'code' => $db->code,
-                    'contestid' => $contest_id,
-                ]);
-        }
-        Db::table('codehistory')
-            ->insert([
+            Base::insertToDb('contestrank', [
                 'userid' => $my_id,
                 'problemid' => $db->problemid,
                 'language' => $db->language,
-                'status' => $is_ac ? '正常运行' : '答案错误',
-                'time' => $now,
-                'usetime' => rand(10, 100),
-                'usememory' => rand(10, 100),
+                'score' => $is_ac ? 100 : 0,
+                'submittime' => $now,
                 'code' => $db->code,
                 'contestid' => $contest_id,
             ]);
+        }
+        Base::insertToDb('codehistory', [
+            'userid' => $my_id,
+            'problemid' => $db->problemid,
+            'language' => $db->language,
+            'status' => $is_ac ? '正常运行' : '答案错误',
+            'time' => $now,
+            'usetime' => rand(10, 100),
+            'usememory' => rand(10, 100),
+            'code' => $db->code,
+            'contestid' => $contest_id,
+        ]);
     }
 
     /**
