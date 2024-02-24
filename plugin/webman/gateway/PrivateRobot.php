@@ -657,7 +657,6 @@ class PrivateRobot extends ChatBase
             $reply = '暂无图片已跳过更新!';
             return;
         }
-        $headimage = '';
         $robot_email = Base::getRobotEmail();
         for ($i = 0; $i < $image_count; ++$i) {
             Db::table('user')
@@ -670,14 +669,20 @@ class PrivateRobot extends ChatBase
         $user_db = Db::table('user')
             ->where('email', '!=', $robot_email)
             ->orderBy('id', 'desc')
-            ->select(['id', 'email'])
+            ->select('id', 'email')
             ->get();
+        Base::$GLOBlinuxurl = Base::getGLOBlinuxurl();
         foreach ($user_db as &$tem) {
-            $headimage = 'https://q1.qlogo.cn/headimg_dl?dst_uin=' . $tem->email . '&spec=640';
+            // 申请图片路径
+            $local_path = Base::creatFilePath('png');
+            // 保存网络图片到本地
+            $email_image = 'https://q1.qlogo.cn/headimg_dl?dst_uin=' . $tem->email . '&spec=640';
+            Base::saveNetworkFileToDb(Base::getRobotId(), $email_image, $local_path);
+
             Db::table('user')
                 ->where('id', $tem->id)
                 ->update([
-                    'headimage' => $headimage
+                    'headimage' => Base::$GLOBlinuxurl . $local_path,
                 ]);
         }
         Base::clearAllUserDataRedis();
@@ -877,9 +882,11 @@ class PrivateRobot extends ChatBase
                 PrivateRobot::loadAdminRootUser($reply);
                 break;
             case '10':
-                Db::table('user')->update([
-                    'isusemusic' => 1
-                ]);
+                Db::table('user')
+                    ->orderBy('id', 'asc')
+                    ->update([
+                        'isusemusic' => 1
+                    ]);
                 Base::clearAllUserDataRedis();
                 $reply = '开启成功';
                 break;
@@ -970,11 +977,11 @@ class PrivateRobot extends ChatBase
             case '21':
                 $new_password = md5(uniqid() . mt_rand(1, 100000) . time());
                 Db::table('user')
-                    ->where('isdel', 0)
                     ->where('email', Base::getRobotEmail())
                     ->update([
                         'password' => Base::passwordEncryption($new_password)
                     ]);
+                Base::clearAllUserDataRedis();
                 $reply = '重置所有机器人账号的密码完成【新密码：' . $new_password . '】';
                 break;
             case '帮助':
