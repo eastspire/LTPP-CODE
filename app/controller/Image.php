@@ -72,18 +72,24 @@ class Image
                 $file = glob($testpath . '*.' . $t_img);
                 foreach ($file as &$tem) {
                     $path = Base::creatFilePath($t_img);
-                    $data[] = [
-                        'url' => Base::$GLOBlinuxurl . $path
-                    ];
                     $id = Base::insertToDb('file_data', [
                         'data' => file_get_contents(realpath($tem)),
                     ]);
-                    Base::insertToDb('file_path', [
+                    if (!$id) {
+                        continue;
+                    }
+                    $id = Base::insertToDb('file_path', [
                         'path' => $path,
                         'file_id' => $id,
                         'userid' => $root_id,
                         'time' => date('Y-m-d H:i:s', time())
                     ]);
+                    if (!$id) {
+                        continue;
+                    }
+                    $data[] = [
+                        'url' => Base::$GLOBlinuxurl . $path
+                    ];
                     if (sizeof($data) % 888 == 0) {
                         Db::table('image')->insert($data);
                         $data = [];

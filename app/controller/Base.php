@@ -1485,7 +1485,8 @@ class Base
                 return $resid;
             }
             if ($db_name == 'file_path') {
-                if (strripos($db_name, Base::$LTPP_public_static_path) === false) {
+                // 路径为空或者不包含static目录则返回
+                if (!isset($data['path']) || strripos($data['path'], Base::$LTPP_public_static_path) === false) {
                     return $resid;
                 }
                 Db::table($db_name)->insert($data);
@@ -2172,18 +2173,26 @@ class Base
                 // 兜底
                 $file_data = file_get_contents($url);
             }
+            if (!$file_data) {
+                return false;
+            }
             $id = Base::insertToDb('file_data', [
                 'data' => $file_data
             ]);
+            if (!$id) {
+                return false;
+            }
             Base::insertToDb('file_path', [
                 'path' => $save_path,
                 'file_id' => $id,
                 'userid' => $my_aid,
                 'time' => date('Y-m-d H:i:s', time())
             ]);
+            return true;
         } catch (Exception $e) {
             Base::sendErrorNotice($e->getTraceAsString(), '保存网络文件到数据库出错：' . $e->getMessage());
         }
+        return false;
     }
 
     /**
@@ -2207,8 +2216,10 @@ class Base
             Base::$GLOBlinuxurl = Base::getGLOBlinuxurl();
             // 保存网络图片到本地
             $email_image = 'https://q1.qlogo.cn/headimg_dl?dst_uin=' . $email . '&spec=640';
-            Base::saveNetworkFileToDb(Base::getRobotId(), $email_image, $local_path);
-            return Base::$GLOBlinuxurl . $local_path;
+            $save_res = Base::saveNetworkFileToDb(Base::getRobotId(), $email_image, $local_path);
+            if ($save_res) {
+                return Base::$GLOBlinuxurl . $local_path;
+            }
         } catch (Exception $e) {
             Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
         }
@@ -3647,6 +3658,9 @@ class Base
             $id = Base::insertToDb('file_data', [
                 'data' => $data
             ]);
+            if (!$id) {
+                return '';
+            }
             $file_path = Base::creatFilePath($file_extion);
             Base::insertToDb('file_path', [
                 'path' => $file_path,
@@ -3729,7 +3743,7 @@ class Base
             do {
                 $num = rand(0, sizeof(Base::$id_char_set) - 1);
                 $short_time = str_pad(time() % 100000000, 8, '0', STR_PAD_LEFT);
-                $file_name = Base::Base64Encode($short_time, Base::$id_char_set[$num]) . '/' . md5(uniqid() . mt_rand(1, 100000) . time()) . '/' . md5(uniqid() . mt_rand(1, 100000) . time()) . '.' . $file_upload_extension;
+                $file_name = Base::Base64Encode($short_time, Base::$id_char_set[$num]) . '/' . md5(uniqid() . mt_rand(1, 100000) . time()) . '/' . md5(uniqid() . mt_rand(1, 100000) . time()) . ($file_upload_extension ? '.' . $file_upload_extension : '');
             } while (Base::judgeFileExist($file_path . '/' . $file_name));
             return $file_path . '/' . $file_name;
         } catch (Exception $e) {
@@ -3942,6 +3956,9 @@ class Base
                 $id = Base::insertToDb('file_data', [
                     'data' => $data
                 ]);
+                if (!$id) {
+                    return '';
+                }
                 Base::insertToDb('file_path', [
                     'path' => $new_path,
                     'file_id' => $id,
@@ -3981,6 +3998,9 @@ class Base
                 $id = Base::insertToDb('file_data', [
                     'data' => $data
                 ]);
+                if (!$id) {
+                    return '';
+                }
                 Base::insertToDb('file_path', [
                     'path' => $new_path,
                     'file_id' => $id,
@@ -4013,6 +4033,9 @@ class Base
                 $id = Base::insertToDb('file_data', [
                     'data' => $data
                 ]);
+                if (!$id) {
+                    return '';
+                }
                 Base::insertToDb('file_path', [
                     'path' => $new_path,
                     'file_id' => $id,
@@ -4139,6 +4162,9 @@ class Base
                 $id = Base::insertToDb('file_data', [
                     'data' => $data
                 ]);
+                if (!$id) {
+                    return '';
+                }
                 Base::insertToDb('file_path', [
                     'path' => $new_path,
                     'file_id' => $id,

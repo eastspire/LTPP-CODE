@@ -55,6 +55,9 @@ class Cloudfile
             $id = Base::insertToDb('file_data', [
                 'data' => $data
             ]);
+            if (!$id) {
+                return;
+            }
             Base::insertToDb('file_path', [
                 'path' => $new_path,
                 'file_id' => $id,
@@ -276,6 +279,9 @@ class Cloudfile
         $id = Base::insertToDb('file_data', [
             'data' => $data
         ]);
+        if (!$id) {
+            return json(['code' => -1, 'msg' => '创建失败！请稍后重试！']);
+        }
         Base::insertToDb('file_path', [
             'path' => $new_path,
             'file_id' => $id,

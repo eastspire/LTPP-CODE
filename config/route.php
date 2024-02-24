@@ -27,7 +27,7 @@ Route::any(Base::$LTPP_public_static_path . '[/{path:.+}]', function (Request $r
         $iscode = false;
         $language = '';
         foreach (Base::$map_language_file as $key => $val) {
-            $iscode = ($key == $file_extion);
+            $iscode = $key == $file_extion ? true : false;
             if ($iscode) {
                 if ($key == 'html') {
                     $iscode = false;
