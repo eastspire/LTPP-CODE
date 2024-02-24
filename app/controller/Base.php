@@ -1237,6 +1237,9 @@ class Base
             // 禁用主机验证
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
             $res = curl_exec($ch);
+            if (curl_errno($ch)) {
+                Base::sendErrorNotice('', '发送POST请求异常信息：' . curl_error($ch));
+            }
         } catch (Exception $e) {
             Base::sendErrorNotice($e->getTraceAsString(), '发送POST请求异常信息：' . $e->getMessage());
         }
@@ -1267,6 +1270,9 @@ class Base
             // 禁用主机验证
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
             $res = curl_exec($ch);
+            if (curl_errno($ch)) {
+                Base::sendErrorNotice('', '发送GET请求异常信息：' . curl_error($ch));
+            }
         } catch (Exception $e) {
             Base::sendErrorNotice($e->getTraceAsString(), '发送GET请求异常信息：' . $e->getMessage());
         } finally {
