@@ -398,6 +398,21 @@ class Setting extends Image
                 Base::updateRobotUsersEmail($old_email);
             }
 
+            if ($data['code_check_similarity_one_page_limit'] != $redis5->get('code_check_similarity_one_page_limit')) {
+                if (!is_numeric($data['code_check_similarity_one_page_limit'])) {
+                    return json(['code' => -1, 'msg' => '类型错误！请填写数字！']);
+                }
+                if ($data['code_check_similarity_one_page_limit'] < 0) {
+                    return json(['code' => -1, 'msg' => '数字不能小于0！']);
+                }
+                Db::table('setting')
+                    ->where('id', $db->id)
+                    ->where('isdel', 0)
+                    ->update(['code_check_similarity_one_page_limit' => $data['code_check_similarity_one_page_limit']]);
+                $redis5->del('code_check_similarity_one_page_limit');
+                $redis5->set('code_check_similarity_one_page_limit', $data['code_check_similarity_one_page_limit']);
+            }
+
             if ($data['ltpp_win_download_url'] != $redis5->get('ltpp_win_download_url')) {
                 Db::table('setting')
                     ->where('id', $db->id)

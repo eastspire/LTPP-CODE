@@ -1224,8 +1224,6 @@ export default {
           duration: 1600,
           offset: 80,
         });
-        this.copy(res.url);
-        window.open(res.url);
       } else {
         this.$msg({
           type: "error",

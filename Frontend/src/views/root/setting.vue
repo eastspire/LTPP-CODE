@@ -1140,6 +1140,32 @@
               margin: 1rem 0rem 1rem 0rem;
             "
           >
+            竞赛代码查重每页最大数据条数
+          </p>
+          <el-input
+            type="password"
+            show-password
+            style="font-size: 1.06rem"
+            placeholder="请输入竞赛代码查重每页最大数据条数"
+            v-model.lazy="resdata.code_check_similarity_one_page_limit"
+            @keyup.enter.native="updatesetting()"
+          >
+            <el-button
+              slot="append"
+              icon="el-icon-upload"
+              @click="updatesetting()"
+              >更新</el-button
+            >
+          </el-input>
+
+          <p
+            style="
+              font-size: 1.06rem;
+              text-align: left;
+              font-weight: bold;
+              margin: 1rem 0rem 1rem 0rem;
+            "
+          >
             竞赛默认内容描述
           </p>
           <el-input
