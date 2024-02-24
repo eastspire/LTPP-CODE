@@ -1242,6 +1242,8 @@ class Base
             }
         } catch (Exception $e) {
             Base::sendErrorNotice($e->getTraceAsString(), '发送POST请求异常信息：' . $e->getMessage());
+        } finally {
+            curl_close($ch);
         }
         return $res;
     }
@@ -2168,7 +2170,7 @@ class Base
             }
             if (!$file_data) {
                 // 兜底
-                $file_data = Base::getRequest(Image::randImage(), $header);
+                $file_data = file_get_contents($url);
             }
             $id = Base::insertToDb('file_data', [
                 'data' => $file_data
@@ -2210,6 +2212,7 @@ class Base
         } catch (Exception $e) {
             Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
         }
+        return Image::randImage();
     }
 
     /**
@@ -3720,13 +3723,19 @@ class Base
      */
     static public function creatFilePath($file_upload_extension = '')
     {
-        $file_path = Base::$LTPP_public_static_path . '/' . md5(time());
-        do {
-            $num = rand(0, sizeof(Base::$id_char_set) - 1);
-            $short_time = time() % 1000000000;
-            $file_name = Base::Base64Encode($short_time, Base::$id_char_set[$num]) . '/' . md5(uniqid() . mt_rand(1, 100000) . time()) . '/' . md5(uniqid() . mt_rand(1, 100000) . time()) . '.' . $file_upload_extension;
-        } while (Base::judgeFileExist($file_path . '/' . $file_name));
-        return $file_path . '/' . $file_name;
+        try {
+            $file_path = Base::$LTPP_public_static_path . '/' . md5(time());
+            $file_name = '';
+            do {
+                $num = rand(0, sizeof(Base::$id_char_set) - 1);
+                $short_time = str_pad(time() % 100000000, 8, '0', STR_PAD_LEFT);
+                $file_name = Base::Base64Encode($short_time, Base::$id_char_set[$num]) . '/' . md5(uniqid() . mt_rand(1, 100000) . time()) . '/' . md5(uniqid() . mt_rand(1, 100000) . time()) . '.' . $file_upload_extension;
+            } while (Base::judgeFileExist($file_path . '/' . $file_name));
+            return $file_path . '/' . $file_name;
+        } catch (Exception $e) {
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
+        }
+        return '';
     }
 
     /**
