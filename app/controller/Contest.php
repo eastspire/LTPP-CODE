@@ -1977,22 +1977,38 @@ class Contest
     }
 
     /**
-     * 生成 HTML 排名
+     * 前端查看 HTML 排名
      */
     public function publicContestRank(Request $request)
     {
-        $contest_uid = $request->get('contest_id');
-        $contest_id = Base::getIdByUid($contest_uid);
-        $html = Base::getContestRankHtml($contest_id);
-        if (!$html) {
-            $js = Base::getJs('rank');
-            $msg_css = Base::getCss('msg');
+        $html = Base::notFoundPage();
+        try {
+            $contest_uid = $request->get('contest_id');
+            $contest_id = Base::getIdByUid($contest_uid);
             $contest_db = Base::getContestData($contest_id);
+            // 竞赛不存在
             if (!$contest_db) {
-                return Base::notFoundPage();
+                return $html;
             }
-            // 非消息队列获取排名，排名不在缓存
-            return '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><link rel="icon" href="https://ltpp.vip/LTPPlogo.png" type="image/x-icon"><title>LTPP【' . $contest_db->name . '】竞赛排名</title><style>' . $msg_css . '</style><script>' . $js . '</script></head><body><h1>' . Base::$contest_rank_in_calculation . '</h1></body></html>';
+            $endtime = strtotime($contest_db->end);
+            $msg_css = Base::getCss('msg');
+            // OI赛制HTML排名竞赛未结束不显示
+            if ($contest_db->type == 'OI' && time() <= $endtime) {
+                return '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><link rel="icon" href="https://ltpp.vip/LTPPlogo.png" type="image/x-icon"><title>LTPP【' . $contest_db->name . '】竞赛排名</title><style>' . $msg_css . '</style><script>' . $js . '</script></head><body><h1>' . Base::$contest_rank_oi_not_end . '</h1></body></html>';
+            }
+            $html = Base::getContestRankHtml($contest_id);
+            if (!$html) {
+                $js = Base::getJs('rank');
+                $msg_css = Base::getCss('msg');
+                $contest_db = Base::getContestData($contest_id);
+                if (!$contest_db) {
+                    return Base::notFoundPage();
+                }
+                // 非消息队列获取排名，排名不在缓存
+                return '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><link rel="icon" href="https://ltpp.vip/LTPPlogo.png" type="image/x-icon"><title>LTPP【' . $contest_db->name . '】竞赛排名</title><style>' . $msg_css . '</style><script>' . $js . '</script></head><body><h1>' . Base::$contest_rank_in_calculation . '</h1></body></html>';
+            }
+        } catch (Exception $e) {
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
         }
         return $html;
     }
@@ -2038,13 +2054,7 @@ class Contest
             $pro_index = 1;
             $problems_len = sizeof($problems);
             $rank_css = Base::getCss('table');
-            $msg_css = Base::getCss('msg');
             $js = Base::getJs('rank');
-            $endtime = strtotime($contest_db->end);
-            // OI赛制HTML排名竞赛未结束不显示
-            if ($contest_db->type == 'OI' && time() <= $endtime) {
-                return '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><link rel="icon" href="https://ltpp.vip/LTPPlogo.png" type="image/x-icon"><title>LTPP【' . $contest_db->name . '】竞赛排名</title><style>' . $msg_css . '</style><script>' . $js . '</script></head><body><h1>' . Base::$contest_rank_oi_not_end . '</h1></body></html>';
-            }
             if ($contest_db->type == 'ACM' || $contest_db->type == 'SQS') {
                 $table_title = '<th>排名</th><th>用户</th><th>总AC数</th><th>总用时</th>';
                 foreach ($problems as &$tem) {
