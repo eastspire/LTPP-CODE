@@ -1868,9 +1868,10 @@ class Contest
                         $duplication * 100 . '%</span></td></div></tr>';
                     $loc = number_format(floor($duplication * 10) / 10, 1);
                     if (isset($percentage_list[$loc])) {
-                        $percentage_list[$loc] .= $msg;
+                        $percentage_list[$loc][] = $msg;
                     } else {
-                        $percentage_list[$loc] = $msg;
+                        $percentage_list[$loc] =  [];
+                        $percentage_list[$loc][] = $msg;
                     }
                 }
             }
@@ -1883,39 +1884,42 @@ class Contest
         $page = 1;
         $similarity_css = Base::getCss('table');
         $one_page_limit = Base::getSettingKeyData('code_check_similarity_one_page_limit');
-        $res = '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><link rel="icon" href="https://ltpp.vip/LTPPlogo.png" type="image/x-icon"><title>LTPP ' . $now . ' ' . $contest_db->name . ' 第' . $page . '页 代码查重</title><style>' . $similarity_css . '</style></head><body>';
         if (!$one_page_limit) {
             $one_page_limit = sizeof($percentage_list);
         }
-        foreach ($percentage_list as $key => $value) {
-            $res .= '<table><tr><th class="tips" colspan="3">代码相似度达到【 ' . $key * 100 . '% 】</th></tr>' . $value . '</table><br/><br/><br/><br/><br/><br/>';
-            if ($idx && $idx % $one_page_limit == 0) {
-                $idx = 0;
-                $res .= '</body></html>';
-                $url = Base::writeNewStaticFile($my_aid, $res, 'html');
-                $now = date('Y-m-d H:i:s', time());
-                Robot::sendChatToOneUserMsgAndEmail($my_aid, '<a href="' . $url . '" target="_blank"><strong>【' . $now . ' ' . $contest_db->name . ' 第' . $page . '页】查重结果（点击访问查重地址）</strong></a>');
-                $root_id = Base::getRootId();
-                if ($root_id != $my_aid) {
-                    Robot::sendChatToOneUserMsgAndEmail($root_id, '<a href="' . $url . '" target="_blank"><strong>【' . $now . ' ' . $contest_db->name . ' 第' . $page . '页】查重结果（点击访问查重地址）</strong></a>');
+        $chat_msg = '';
+        $res = '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><link rel="icon" href="https://ltpp.vip/LTPPlogo.png" type="image/x-icon"><title>LTPP ' . $contest_db->name . ' 第' . $page . '页 代码查重</title><style>' . $similarity_css . '</style></head><body>';
+        foreach ($percentage_list as $key => &$list) {
+            $res .= '<table><tr><th class="tips" colspan="3">代码相似度达到【 ' . $key * 100 . '% 】</th></tr>';
+            foreach ($list as &$value) {
+                if ($idx && $idx % $one_page_limit == 0) {
+                    $idx = 0;
+                    $res .= '</table><br><br><br><br><br><br></body></html>';
+                    $url = Base::writeNewStaticFile($my_aid, $res, 'html');
+                    $now = date('Y-m-d H:i:s', time());
+                    $chat_msg .= '<a href="' . $url . '" target="_blank"><strong>【' . $now . ' ' . $contest_db->name . ' 第' . $page . '页】查重结果（点击访问查重地址）</strong></a><br><br>';
+                    ++$page;
+                    $res = '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><link rel="icon" href="https://ltpp.vip/LTPPlogo.png" type="image/x-icon"><title>LTPP ' . $contest_db->name . ' 第' . $page . '页 代码查重</title><style>' . $similarity_css . '</style></head><body>';
+                    $res .= '<table><tr><th class="tips" colspan="3">代码相似度达到【 ' . $key * 100 . '% 】</th></tr>';
                 }
-                ++$page;
-                $res = '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><link rel="icon" href="https://ltpp.vip/LTPPlogo.png" type="image/x-icon"><title>LTPP ' . $now . ' ' . $contest_db->name . ' 第' . $page . '页 代码查重</title><style>' . $similarity_css . '</style></head><body>';
+                ++$idx;
+                $res .= $value;
             }
-            ++$idx;
         }
         if ($idx) {
-            $res .= '</body></html>';
+            $res .= '</table><br><br><br><br><br><br></body></html>';
             $url = Base::writeNewStaticFile($my_aid, $res, 'html');
             $now = date('Y-m-d H:i:s', time());
-            Robot::sendChatToOneUserMsgAndEmail($my_aid, '<a href="' . $url . '" target="_blank"><strong>【' . $now . ' ' . $contest_db->name . ' 第' . $page . '页】查重结果（点击访问查重地址）</strong></a>');
-            $root_id = Base::getRootId();
-            if ($root_id != $my_aid) {
-                Robot::sendChatToOneUserMsgAndEmail($root_id, '<a href="' . $url . '" target="_blank"><strong>【' . $now . ' ' . $contest_db->name . ' 第' . $page . '页】查重结果（点击访问查重地址）</strong></a>');
-            }
+            $chat_msg .= '<a href="' . $url . '" target="_blank"><strong>【' . $now . ' ' . $contest_db->name . ' 第' . $page . '页】查重结果（点击访问查重地址）</strong></a><br><br>';
+        }
+        Robot::sendChatToOneUserMsgAndEmail($my_aid, $chat_msg);
+        $root_id = Base::getRootId();
+        if ($root_id != $my_aid) {
+            Robot::sendChatToOneUserMsgAndEmail($root_id, $chat_msg);
         }
         $redis32->del($contest_id);
         $res = '';
+        $chat_msg = '';
         $percentage_list = [];
         return json(['code' => 1,  'msg' => '查重链接将发送至私信和邮箱，请注意查收']);
     }
