@@ -56,13 +56,7 @@
             <el-table-column label="名称" width="260">
               <template slot-scope="scope">
                 <p
-                  @click="lookvideo(scope.row.function)"
-                  style="
-                    font-weight: bold;
-                    font-size: 1.06rem;
-                    color: deeppink;
-                    cursor: pointer;
-                  "
+                  style="font-weight: bold; font-size: 1.06rem; color: deeppink"
                   type="success"
                 >
                   {{ scope.row.function.substr(0, 60) }}

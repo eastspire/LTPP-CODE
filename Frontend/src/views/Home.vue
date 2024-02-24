@@ -508,26 +508,7 @@
           </el-menu>
         </div>
       </div>
-      <el-backtop
-        :bottom="10"
-        style="position: fixed; bottom: 5.5rem; right: 5.5rem"
-        class="pulse-enter-active"
-      >
-        <div
-          style="
-            border-radius: 1rem;
-            height: 100%;
-            width: 100%;
-            background-color: rgba(var(--ltpp-main-bk-color);
-            box-shadow: 0 0 6px rgba(var(--ltpp-main-bk-color), 0.12);
-            text-align: center;
-            line-height: 40px;
-            color: rgba(var(--ltpp-light-color), 1);
-          "
-        >
-          UP
-        </div>
-      </el-backtop>
+      <totopbottom></totopbottom>
       <div v-if="$store.state.root">
         <el-dialog
           :close-on-click-modal="false"
@@ -598,9 +579,10 @@
 <script>
 import { resolve } from "../../updateCompoents/monaco-editor/esm/vs/base/common/path";
 import music from "./home/music.vue";
+import totopbottom from "../components/totopbottom.vue";
 export default {
   name: "Home",
-  components: { music },
+  components: { music, totopbottom },
   beforeCreate() {
     this.$store.commit("updateObj", { login: false });
     let authorization = window.localStorage.getItem("authorization");

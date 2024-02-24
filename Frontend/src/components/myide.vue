@@ -561,7 +561,7 @@ export default {
       });
     },
     async testQueryOne(code_id) {
-      if (!this.editor  || !this.test_query_one_can_next || !code_id) {
+      if (!this.editor || !this.test_query_one_can_next || !code_id) {
         return;
       }
       this.test_query_one_can_next = false;
@@ -594,7 +594,7 @@ export default {
       this.test_query_one_can_next = true;
       if (res?.code == 0) {
         // code为0
-        // 等待中        
+        // 等待中
         return;
       }
       try {
@@ -667,12 +667,10 @@ export default {
       if (!this.editor || !code_id) {
         return;
       }
-      this.save();
       this.isshow = false;
       this.istest = true;
       this.isac = false;
       this.iswrong = false;
-      this.my_code = this.editor.getValue();
       const { data: res } = await this.$ajax({
         method: "post",
         url: "/Ojjudge/queryCode",
@@ -691,6 +689,7 @@ export default {
           duration: 1600,
           offset: 80,
         });
+        return;
       });
       if (res?.code == 0) {
         // code为0
