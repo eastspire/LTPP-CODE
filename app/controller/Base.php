@@ -2167,6 +2167,31 @@ class Base
     }
 
     /**
+     * 获取QQ图片内容保存本地，返回URL
+     */
+    static public function getEmailImageToLtppUrl($email = '')
+    {
+        try {
+            if (
+                !$email ||
+                filter_var($email, FILTER_VALIDATE_URL) === false ||
+                strripos($email, '@qq.com') === false
+            ) {
+                return Image::randImage();
+            }
+            // 申请图片路径
+            $local_path = Base::creatFilePath('png');
+            Base::$GLOBlinuxurl = Base::getGLOBlinuxurl();
+            // 保存网络图片到本地
+            $email_image = 'https://q1.qlogo.cn/headimg_dl?dst_uin=' . $email . '&spec=640';
+            Base::saveNetworkFileToDb(Base::getRobotId(), $email_image, $local_path);
+            return Base::$GLOBlinuxurl . $local_path;
+        } catch (Exception $e) {
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
+        }
+    }
+
+    /**
      * 获取GLOBlinuxurl
      * @return string $url linux url地址
      */
@@ -2361,7 +2386,7 @@ class Base
                 'password' => Base::passwordEncryption(rand(1, 100000) . time()),
                 'sex' => '男',
                 'registertime' => date('Y-m-d H:i:s', time()),
-                'headimage' => 'https://q1.qlogo.cn/headimg_dl?dst_uin=' . Base::getRobotEmail() . '&spec=640',
+                'headimage' => Image::randImage(),
                 'fans' => 0,
                 'follow' => 0,
                 'grade' => 1,

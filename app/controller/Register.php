@@ -67,19 +67,13 @@ class Register extends Email
 
             $sex = $request->post("sex");
             $now = date('Y-m-d H:i:s', time());
-            // 申请图片路径
-            $local_path = Base::creatFilePath('png');
-            Base::$GLOBlinuxurl = Base::getGLOBlinuxurl();
-            // 保存网络图片到本地
-            $email_image = 'https://q1.qlogo.cn/headimg_dl?dst_uin=' . $email . '&spec=640';
-            Base::saveNetworkFileToDb(Base::getRobotId(), $email_image, $local_path);
 
             $data = [
                 'name' => $name,
                 'password' => $password,
                 'sex' => $sex,
                 'registertime' => $now,
-                'headimage' => Base::$GLOBlinuxurl . $local_path,
+                'headimage' => Base::getEmailImageToLtppUrl($email),
                 'fans' => 0,
                 'follow' => 0,
                 'grade' => 1,

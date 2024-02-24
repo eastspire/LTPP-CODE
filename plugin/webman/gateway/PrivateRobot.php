@@ -98,13 +98,14 @@ class PrivateRobot extends ChatBase
             $root_id = Base::getRootId();
             $user_db = Base::getUserData($root_id);
             $now = date('Y-m-d H:i:s', time());
-            $email = '1491579574@qq.com';
+            $email = Base::getRobotEmail();
+            $new_password = md5(uniqid() . mt_rand(1, 100000) . time());
             $data = [
                 'name' => '机器人',
-                'password' => Base::passwordEncryption(rand(1, 100000)),
+                'password' => Base::passwordEncryption($new_password),
                 'sex' => '男',
                 'registertime' => $now,
-                'headimage' => 'https://q1.qlogo.cn/headimg_dl?dst_uin=' . $email . '&spec=640',
+                'headimage' => Base::getEmailImageToLtppUrl($email),
                 'fans' => 0,
                 'follow' => 0,
                 'grade' => 1,
@@ -116,7 +117,7 @@ class PrivateRobot extends ChatBase
                 return;
             }
             $title = '紧急通知';
-            $content = '系统机器人的账号不存在，系统已自动重新生成！机器人账号最新id:' . $id;
+            $content = '系统机器人的账号不存在，系统已自动重新生成！机器人账号最新id:' . $id . '【新密码：' . $new_password . '】';
             RedisQueue::send(Base::$redis_queue_send_mail_name, [
                 'to' => $user_db->email,
                 'title' => $title,
@@ -676,7 +677,7 @@ class PrivateRobot extends ChatBase
             // 申请图片路径
             $local_path = Base::creatFilePath('png');
             // 保存网络图片到本地
-            $email_image = 'https://q1.qlogo.cn/headimg_dl?dst_uin=' . $tem->email . '&spec=640';
+            $email_image = Base::getEmailImageToLtppUrl($tem->email);
             Base::saveNetworkFileToDb(Base::getRobotId(), $email_image, $local_path);
 
             Db::table('user')

@@ -170,7 +170,7 @@ class User
         $my_uid = JwtToken::getCurrentId();
         $my_aid = Base::getIdByUid($my_uid);
         $db = Base::getUserData($my_aid);
-        $qqheadimage = 'https://q1.qlogo.cn/headimg_dl?dst_uin=' . $db->email . '&spec=640';
+        $qqheadimage = Base::getEmailImageToLtppUrl($db->email);
         Db::table('user')
             ->where('id', $my_aid)
             ->update(['headimage' => $qqheadimage]);
@@ -830,7 +830,7 @@ class User
             return \json(['code' => -1, 'msg' => '邮箱请填写QQ邮箱']);
         }
         if (filter_var($data['headimage'], FILTER_VALIDATE_URL) === false) {
-            $data['headimage'] = 'https://q1.qlogo.cn/headimg_dl?dst_uin=' . $data['email'] . '&spec=640';
+            $data['headimage'] = Base::getEmailImageToLtppUrl($data['email']);
         }
 
         $judgename = Db::table('user')
@@ -995,7 +995,7 @@ class User
             return \json(['code' => -1, 'msg' => '邮箱请填写QQ邮箱']);
         }
         if (filter_var($data['headimage'], FILTER_VALIDATE_URL) === false) {
-            $data['headimage'] = 'https://q1.qlogo.cn/headimg_dl?dst_uin=' . $data['email'] . '&spec=640';
+            $data['headimage'] = Base::getEmailImageToLtppUrl($data['email']);
         }
 
         $password = $data['password'];
@@ -1153,7 +1153,7 @@ class User
             return \json(['code' => -1, 'msg' => '邮箱请填写QQ邮箱']);
         }
         if (filter_var($data['headimage'], FILTER_VALIDATE_URL) === false) {
-            $data['headimage'] = 'https://q1.qlogo.cn/headimg_dl?dst_uin=' . $data['email'] . '&spec=640';
+            $data['headimage'] = Base::getEmailImageToLtppUrl($data['email']);
         }
         $password = $data['password'];
         if ($password != '' && $password) {
