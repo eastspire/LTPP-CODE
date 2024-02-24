@@ -1521,8 +1521,6 @@ class Contest
             }
         }
         $redis30->del(Base::$redis_contest_code_list_key_name . $contest_id);
-        $redis32 = Redis::connection('db32');
-        $redis32->del($contest_id);
         Contest::sendUpdateRankMQ($contest_id);
         return json(['code' => 1, 'msg' => '该竞赛缓存清理完成！']);
     }
@@ -1724,203 +1722,209 @@ class Contest
      */
     public function codeCheckSimilarity(Request $request)
     {
-        $my_uid = JwtToken::getCurrentId();
-        $my_aid = Base::getIdByUid($my_uid);
-        $contest_uid = $request->post('contest_id');
-        $contest_id = Base::getIdByUid($contest_uid);
-        $is_my = Contest::judgeIsMyContest($contest_id, $my_aid);
-        if (!$is_my) {
-            return json(['code' => -1, 'msg' => '权限不足！']);
-        }
-        $contest_db = Base::getContestData($contest_id);
-        if (!$contest_db) {
-            return json(['code' => -1, 'msg' => '竞赛不存在']);
-        }
-        $now = date('Y-m-d H:i:s', time());
-        if ($now < $contest_db->begin) {
-            return json(['code' => -1, 'msg' => '竞赛未开始']);
-        }
-        $redis32 = Redis::connection('db32');
-        if ($redis32->exists($contest_id) || !$redis32->setNx($contest_id, 1)) {
-            return json(['code' => -1, 'msg' => '正在查重！请耐心等待！']);
-        }
-        $type = $contest_db->type;
-        $user_list = Db::table('joincontest')
-            ->where('contestid', $contest_id)
-            ->where('isdel', 0)
-            ->distinct()
-            ->pluck('userid')
-            ->toArray();
-        $problem_list = Db::table('contestproblem')
-            ->where('contestid', $contest_id)
-            ->where('isdel', 0)
-            ->pluck('problemid');
-        $problem_name = [];
-        foreach ($problem_list as &$t) {
-            $db = Db::table('oj')
-                ->where('id', $t)
-                ->where('isdel', 0)
-                ->select('problemName')
-                ->first();
-            if (!$db) {
-                $problem_name[$t] = '未知题目';
-            } else {
-                $problem_name[$t] = $db->problemName;
+        $contest_id = 0;
+        try {
+            $my_uid = JwtToken::getCurrentId();
+            $my_aid = Base::getIdByUid($my_uid);
+            $contest_uid = $request->post('contest_id');
+            $contest_id = Base::getIdByUid($contest_uid);
+            $is_my = Contest::judgeIsMyContest($contest_id, $my_aid);
+            if (!$is_my) {
+                return json(['code' => -1, 'msg' => '权限不足！']);
             }
-        }
-        $res = '';
-        $map = [];
-        foreach ($problem_list as &$t_problem) {
-            foreach ($user_list as &$tem) {
-                if (!isset($map[$tem])) {
-                    $map[$tem] = [];
-                }
-                switch ($type) {
-                    case 'ACM':
-                        $map[$tem][$t_problem] = $this->getAcmIoiSqsOneUserContestCode($contest_db, $t_problem, $tem);
-                        break;
-                    case 'OI':
-                        $map[$tem][$t_problem] = $this->getOiOneUserContestCode($contest_db, $t_problem, $tem);
-                        break;
-                    case 'IOI':
-                        $map[$tem][$t_problem] = $this->getAcmIoiSqsOneUserContestCode($contest_db, $t_problem, $tem);
-                        break;
-                    case 'SQS':
-                        $map[$tem][$t_problem] = $this->getAcmIoiSqsOneUserContestCode($contest_db, $t_problem, $tem);
-                        break;
-                    default:
-                        break;
-                }
+            $contest_db = Base::getContestData($contest_id);
+            if (!$contest_db) {
+                return json(['code' => -1, 'msg' => '竞赛不存在']);
             }
-        }
-        $len = sizeof($user_list);
-
-        $percentage_list = [];
-        Base::$GLOBlinuxurl = Base::getSettingKeyData('GLOBlinuxurl');
-
-        // 删除查重缓存锁
-        $redis32 = Redis::connection('db32');
-        $redis32->del($contest_id);
-        // 删除旧的缓存
-        $redis29 = Redis::connection('db29');
-        $redis30 = Redis::connection('db30');
-        $old_id_list = $redis30->get(Base::$redis_contest_code_list_key_name . $contest_id);
-        if ($old_id_list) {
-            try {
-                $old_id_list = json_decode($old_id_list, true);
-            } catch (Exception $e) {
-                $old_id_list = [];
-            }
-            foreach ($old_id_list as &$tem_one_old) {
-                $redis29->del($tem_one_old[0]);
-            }
-        }
-        $redis30->del(Base::$redis_contest_code_list_key_name . $contest_id);
-        // 索引数组
-        $contestrank_code_safe_id_list = [];
-
-        foreach ($problem_list as &$t) {
-            for ($i = 0; $i < $len; ++$i) {
-                $code1 = $map[$user_list[$i]][$t];
-                if (!isset($code1->id) || !isset($code1->code)) {
-                    $code1 = new stdClass();
-                    $code1->id = '';
-                    $code1->code = '';
-                }
-                for ($j = $i + 1; $j < $len; ++$j) {
-                    $code2 = $map[$user_list[$j]][$t];
-                    if (!isset($code2->id) || !isset($code2->code)) {
-                        $code2 = new stdClass();
-                        $code2->id = '';
-                        $code2->code = '';
-                    }
-                    $duplication = $this->codeDuplicationCheck($code1->code, $code2->code);
-                    if (!($duplication * 100)) {
-                        continue;
-                    }
-                    $code1_safe_id = md5($code1->id);
-                    $code2_safe_id = md5($code2->id);
-                    // 缓存
-                    $redis29->setNx($code1_safe_id, $code1->id);
-                    $redis29->setNx($code2_safe_id, $code2->id);
-                    // 存入索引数组
-                    $contestrank_code_safe_id_list[] = [$code1_safe_id, $code1->id];
-                    $contestrank_code_safe_id_list[] = [$code2_safe_id, $code2->id];
-                    // 地址
-                    $user_code_url_1 = Base::$GLOBlinuxurl . '/Contest/lookContestProblemCode?path=' . $code1_safe_id;
-                    $user_code_url_2 = Base::$GLOBlinuxurl . '/Contest/lookContestProblemCode?path=' . $code2_safe_id;
-                    $user_i_db = Base::getUserDataFromDb($user_list[$i]);
-                    $user_j_db = Base::getUserDataFromDb($user_list[$j]);
-                    if (!$user_i_db) {
-                        $user_i_db = new stdClass();
-                        $user_i_db->name = '未知用户';
-                    }
-                    if (!$user_j_db) {
-                        $user_j_db = new stdClass();
-                        $user_j_db->name = '未知用户';
-                    }
-                    $msg =
-                        '<tr><td>题目：【<span class="title">' . $problem_name[$t] . '</span>】</td><td>用户：【<a class="user" href="' .
-                        $user_code_url_1 . '" target="_blank">' .
-                        $user_i_db->name . '</a>】和用户：【<a class="user" href="' .
-                        $user_code_url_2 . '" target="_blank">' .
-                        $user_j_db->name . '</a>】</td><td>代码相似度达到：<span class="duplication">' .
-                        $duplication * 100 . '%</span></td></div></tr>';
-                    $loc = number_format(floor($duplication * 10) / 10, 1);
-                    if (isset($percentage_list[$loc])) {
-                        $percentage_list[$loc][] = $msg;
-                    } else {
-                        $percentage_list[$loc] =  [];
-                        $percentage_list[$loc][] = $msg;
-                    }
-                }
-            }
-        }
-
-        $redis30->setNx(Base::$redis_contest_code_list_key_name . $contest_id, json_encode($contestrank_code_safe_id_list));
-
-        krsort($percentage_list);
-        $idx = 0;
-        $page = 1;
-        $similarity_css = Base::getCss('table');
-        $one_page_limit = Base::getSettingKeyData('code_check_similarity_one_page_limit');
-        if (!$one_page_limit) {
-            $one_page_limit = sizeof($percentage_list);
-        }
-        $chat_msg = '';
-        $res = '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><link rel="icon" href="https://ltpp.vip/LTPPlogo.png" type="image/x-icon"><title>LTPP ' . $contest_db->name . ' 第' . $page . '页 代码查重</title><style>' . $similarity_css . '</style></head><body>';
-        foreach ($percentage_list as $key => &$list) {
-            $res .= '<table><tr><th class="tips" colspan="3">代码相似度达到【 ' . $key * 100 . '% 】</th></tr>';
-            foreach ($list as &$value) {
-                if ($idx && $idx % $one_page_limit == 0) {
-                    $idx = 0;
-                    $res .= '</table><br><br><br><br><br><br></body></html>';
-                    $url = Base::writeNewStaticFile($my_aid, $res, 'html');
-                    $now = date('Y-m-d H:i:s', time());
-                    $chat_msg .= '<a href="' . $url . '" target="_blank"><strong>【' . $now . ' ' . $contest_db->name . ' 第' . $page . '页】查重结果（点击访问查重地址）</strong></a><br><br>';
-                    ++$page;
-                    $res = '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><link rel="icon" href="https://ltpp.vip/LTPPlogo.png" type="image/x-icon"><title>LTPP ' . $contest_db->name . ' 第' . $page . '页 代码查重</title><style>' . $similarity_css . '</style></head><body>';
-                    $res .= '<table><tr><th class="tips" colspan="3">代码相似度达到【 ' . $key * 100 . '% 】</th></tr>';
-                }
-                ++$idx;
-                $res .= $value;
-            }
-        }
-        if ($idx) {
-            $res .= '</table><br><br><br><br><br><br></body></html>';
-            $url = Base::writeNewStaticFile($my_aid, $res, 'html');
             $now = date('Y-m-d H:i:s', time());
-            $chat_msg .= '<a href="' . $url . '" target="_blank"><strong>【' . $now . ' ' . $contest_db->name . ' 第' . $page . '页】查重结果（点击访问查重地址）</strong></a><br><br>';
+            if ($now < $contest_db->begin) {
+                return json(['code' => -1, 'msg' => '竞赛未开始']);
+            }
+            $redis32 = Redis::connection('db32');
+            if ($redis32->exists($contest_id) || !$redis32->setNx($contest_id, 1)) {
+                return json(['code' => -1, 'msg' => '正在查重！请耐心等待！']);
+            }
+            $type = $contest_db->type;
+            $user_list = Db::table('joincontest')
+                ->where('contestid', $contest_id)
+                ->where('isdel', 0)
+                ->distinct()
+                ->pluck('userid')
+                ->toArray();
+            $problem_list = Db::table('contestproblem')
+                ->where('contestid', $contest_id)
+                ->where('isdel', 0)
+                ->pluck('problemid');
+            $problem_name = [];
+            foreach ($problem_list as &$t) {
+                $db = Db::table('oj')
+                    ->where('id', $t)
+                    ->where('isdel', 0)
+                    ->select('problemName')
+                    ->first();
+                if (!$db) {
+                    $problem_name[$t] = '未知题目';
+                } else {
+                    $problem_name[$t] = $db->problemName;
+                }
+            }
+            $res = '';
+            $map = [];
+            foreach ($problem_list as &$t_problem) {
+                foreach ($user_list as &$tem) {
+                    if (!isset($map[$tem])) {
+                        $map[$tem] = [];
+                    }
+                    switch ($type) {
+                        case 'ACM':
+                            $map[$tem][$t_problem] = $this->getAcmIoiSqsOneUserContestCode($contest_db, $t_problem, $tem);
+                            break;
+                        case 'OI':
+                            $map[$tem][$t_problem] = $this->getOiOneUserContestCode($contest_db, $t_problem, $tem);
+                            break;
+                        case 'IOI':
+                            $map[$tem][$t_problem] = $this->getAcmIoiSqsOneUserContestCode($contest_db, $t_problem, $tem);
+                            break;
+                        case 'SQS':
+                            $map[$tem][$t_problem] = $this->getAcmIoiSqsOneUserContestCode($contest_db, $t_problem, $tem);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+            $len = sizeof($user_list);
+
+            $percentage_list = [];
+            Base::$GLOBlinuxurl = Base::getSettingKeyData('GLOBlinuxurl');
+            // 删除旧的缓存
+            $redis29 = Redis::connection('db29');
+            $redis30 = Redis::connection('db30');
+            $old_id_list = $redis30->get(Base::$redis_contest_code_list_key_name . $contest_id);
+            if ($old_id_list) {
+                try {
+                    $old_id_list = json_decode($old_id_list, true);
+                } catch (Exception $e) {
+                    $old_id_list = [];
+                }
+                foreach ($old_id_list as &$tem_one_old) {
+                    $redis29->del($tem_one_old[0]);
+                }
+            }
+            $redis30->del(Base::$redis_contest_code_list_key_name . $contest_id);
+            // 索引数组
+            $contestrank_code_safe_id_list = [];
+
+            foreach ($problem_list as &$t) {
+                for ($i = 0; $i < $len; ++$i) {
+                    $code1 = $map[$user_list[$i]][$t];
+                    if (!isset($code1->id) || !isset($code1->code)) {
+                        $code1 = new stdClass();
+                        $code1->id = '';
+                        $code1->code = '';
+                    }
+                    for ($j = $i + 1; $j < $len; ++$j) {
+                        $code2 = $map[$user_list[$j]][$t];
+                        if (!isset($code2->id) || !isset($code2->code)) {
+                            $code2 = new stdClass();
+                            $code2->id = '';
+                            $code2->code = '';
+                        }
+                        $duplication = $this->codeDuplicationCheck($code1->code, $code2->code);
+                        if (!($duplication * 100)) {
+                            continue;
+                        }
+                        $code1_safe_id = md5($code1->id);
+                        $code2_safe_id = md5($code2->id);
+                        // 缓存
+                        $redis29->setNx($code1_safe_id, $code1->id);
+                        $redis29->setNx($code2_safe_id, $code2->id);
+                        // 存入索引数组
+                        $contestrank_code_safe_id_list[] = [$code1_safe_id, $code1->id];
+                        $contestrank_code_safe_id_list[] = [$code2_safe_id, $code2->id];
+                        // 地址
+                        $user_code_url_1 = Base::$GLOBlinuxurl . '/Contest/lookContestProblemCode?path=' . $code1_safe_id;
+                        $user_code_url_2 = Base::$GLOBlinuxurl . '/Contest/lookContestProblemCode?path=' . $code2_safe_id;
+                        $user_i_db = Base::getUserDataFromDb($user_list[$i]);
+                        $user_j_db = Base::getUserDataFromDb($user_list[$j]);
+                        if (!$user_i_db) {
+                            $user_i_db = new stdClass();
+                            $user_i_db->name = '未知用户';
+                        }
+                        if (!$user_j_db) {
+                            $user_j_db = new stdClass();
+                            $user_j_db->name = '未知用户';
+                        }
+                        $msg =
+                            '<tr><td>题目：【<span class="title">' . $problem_name[$t] . '</span>】</td><td>用户：【<a class="user" href="' .
+                            $user_code_url_1 . '" target="_blank">' .
+                            $user_i_db->name . '</a>】和用户：【<a class="user" href="' .
+                            $user_code_url_2 . '" target="_blank">' .
+                            $user_j_db->name . '</a>】</td><td>代码相似度达到：<span class="duplication">' .
+                            $duplication * 100 . '%</span></td></div></tr>';
+                        $loc = number_format(floor($duplication * 10) / 10, 1);
+                        if (isset($percentage_list[$loc])) {
+                            $percentage_list[$loc][] = $msg;
+                        } else {
+                            $percentage_list[$loc] =  [];
+                            $percentage_list[$loc][] = $msg;
+                        }
+                    }
+                }
+            }
+
+            $redis30->setNx(Base::$redis_contest_code_list_key_name . $contest_id, json_encode($contestrank_code_safe_id_list));
+
+            krsort($percentage_list);
+            $idx = 0;
+            $page = 1;
+            $similarity_css = Base::getCss('table');
+            $one_page_limit = Base::getSettingKeyData('code_check_similarity_one_page_limit');
+            if (!$one_page_limit) {
+                $one_page_limit = sizeof($percentage_list);
+            }
+            $chat_msg = '';
+            $res = '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><link rel="icon" href="https://ltpp.vip/LTPPlogo.png" type="image/x-icon"><title>LTPP ' . $contest_db->name . ' 第' . $page . '页 代码查重</title><style>' . $similarity_css . '</style></head><body>';
+            foreach ($percentage_list as $key => &$list) {
+                $res .= '<table><tr><th class="tips" colspan="3">代码相似度达到【 ' . $key * 100 . '% 】</th></tr>';
+                foreach ($list as &$value) {
+                    if ($idx && $idx % $one_page_limit == 0) {
+                        $idx = 0;
+                        $res .= '</table><br><br><br><br><br><br></body></html>';
+                        $url = Base::writeNewStaticFile($my_aid, $res, 'html');
+                        $now = date('Y-m-d H:i:s', time());
+                        $chat_msg .= '<a href="' . $url . '" target="_blank"><strong>【' . $now . ' ' . $contest_db->name . ' 第' . $page . '页】查重结果（点击访问查重地址）</strong></a><br><br>';
+                        ++$page;
+                        $res = '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><link rel="icon" href="https://ltpp.vip/LTPPlogo.png" type="image/x-icon"><title>LTPP ' . $contest_db->name . ' 第' . $page . '页 代码查重</title><style>' . $similarity_css . '</style></head><body>';
+                        $res .= '<table><tr><th class="tips" colspan="3">代码相似度达到【 ' . $key * 100 . '% 】</th></tr>';
+                    }
+                    ++$idx;
+                    $res .= $value;
+                }
+            }
+            if ($idx) {
+                $res .= '</table><br><br><br><br><br><br></body></html>';
+                $url = Base::writeNewStaticFile($my_aid, $res, 'html');
+                $now = date('Y-m-d H:i:s', time());
+                $chat_msg .= '<a href="' . $url . '" target="_blank"><strong>【' . $now . ' ' . $contest_db->name . ' 第' . $page . '页】查重结果（点击访问查重地址）</strong></a><br><br>';
+            }
+            Robot::sendChatToOneUserMsgAndEmail($my_aid, $chat_msg);
+            $root_id = Base::getRootId();
+            if ($root_id != $my_aid) {
+                Robot::sendChatToOneUserMsgAndEmail($root_id, $chat_msg);
+            }
+            // 删除查重缓存锁
+            $redis32->del($contest_id);
+            $res = '';
+            $chat_msg = '';
+            $percentage_list = [];
+        } catch (Exception $e) {
+            // 删除查重缓存锁
+            $redis32 = Redis::connection('db32');
+            $redis32->del($contest_id);
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
+            return json(['code' => -1,  'msg' => '查重服务异常，请稍后重试']);
         }
-        Robot::sendChatToOneUserMsgAndEmail($my_aid, $chat_msg);
-        $root_id = Base::getRootId();
-        if ($root_id != $my_aid) {
-            Robot::sendChatToOneUserMsgAndEmail($root_id, $chat_msg);
-        }
-        $redis32->del($contest_id);
-        $res = '';
-        $chat_msg = '';
-        $percentage_list = [];
         return json(['code' => 1,  'msg' => '查重链接将发送至私信和邮箱，请注意查收']);
     }
 
