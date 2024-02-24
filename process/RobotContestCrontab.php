@@ -16,6 +16,8 @@ use app\controller\Base;
 use Exception;
 use support\Db;
 use Workerman\Crontab\Crontab;
+use support\Redis;
+use app\queue\redis\RobotContest;
 use Webman\RedisQueue\Redis as RedisQueue;
 
 class RobotContestCrontab
@@ -53,9 +55,9 @@ class RobotContestCrontab
                 $now_time = time();
                 $now = date('Y-m-d H:i:s', $now_time);
                 $contest_list = $this->getRunningContestList($now);
-                $redis27 = \support\Redis::connection('db27');
+                $redis27 = Redis::connection('db27');
                 foreach ($contest_list as &$one_contest) {
-                    if (\app\queue\redis\RobotContest::judgeHasJudgeContest($redis27, $one_contest->id)) {
+                    if (RobotContest::judgeHasJudgeContest($redis27, $one_contest->id)) {
                         continue;
                     }
                     // 竞赛已开始秒数

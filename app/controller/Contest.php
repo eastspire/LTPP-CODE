@@ -1991,6 +1991,7 @@ class Contest
                 return $html;
             }
             $endtime = strtotime($contest_db->end);
+            $js = Base::getJs('rank');
             $msg_css = Base::getCss('msg');
             // OI赛制HTML排名竞赛未结束不显示
             if ($contest_db->type == 'OI' && time() <= $endtime) {
@@ -1998,8 +1999,6 @@ class Contest
             }
             $html = Base::getContestRankHtml($contest_id);
             if (!$html) {
-                $js = Base::getJs('rank');
-                $msg_css = Base::getCss('msg');
                 $contest_db = Base::getContestData($contest_id);
                 if (!$contest_db) {
                     return Base::notFoundPage();
@@ -2133,165 +2132,169 @@ class Contest
      */
     static private function lookHtmlAcmExcelRank($my_aid, $contest_id, $contest_db, $redis4)
     {
-        if (!$my_aid) {
-            $my_aid = 0;
-        }
-        if (!$contest_db) {
-            return;
-        }
-        if ($contest_db->type != 'ACM' && $contest_db->type != 'SQS') {
-            return;
-        }
-        $begintime = strtotime($contest_db->begin);
-        $endtime = strtotime($contest_db->end);
-
-        //排名锁
-        $lockone = 'contestranklock' . $contest_id;
-        $now_key_value = Base::randString();
-        //加锁
-        $lock_res = $redis4->setNx($lockone, $now_key_value);
-        if (!$lock_res) {
-            return;
-        }
-        // 题目
-        $prolist = Db::table('contestproblem')
-            ->where('contestid', $contest_id)
-            ->select('problemid')
-            ->distinct()
-            ->where('isdel', 0)
-            ->get();
-        $problemIndex = [];
-        foreach ($prolist as &$tem) {
-            $problem_db = Base::getOjData($tem->problemid);
-            if (!$problem_db) {
-                continue;
+        try {
+            if (!$my_aid) {
+                $my_aid = 0;
             }
-            $problemIndex[] = [
-                'problemname' => $problem_db->problemName,
-                'problemid' => $tem->problemid
-            ];
-        }
-
-        //更新未ak用户时间补加总时长
-        $res = Db::table('joincontest')
-            ->where('contestid', $contest_id)
-            ->where('isdel', 0)
-            ->select('userid')
-            ->orderBy('id', 'desc')
-            ->get();
-        $resarray = array();
-
-        foreach ($res as &$tem) {
-            $now_lock = $redis4->get($lockone);
-            if (!$now_lock || $now_lock != $now_key_value) {
-                return json(['code' => 1, 'data' => [], 'problemIndex' => []]);
+            if (!$contest_db) {
+                return;
             }
-            $ta = [];
-            $db = Base::getUserDataFromDb($tem->userid);
-            if (!$db || empty($db)) {
-                continue;
+            if ($contest_db->type != 'ACM' && $contest_db->type != 'SQS') {
+                return;
             }
-            $userResProList = [];
-            $firstactime = -1;
-            $sumwa = 0;
-            $ta['id'] = $db->id;
-            $ta['name'] = $db->name;
-            // AC的题目数目
-            $acnum = 0;
-            $endtime = min($endtime, max($begintime, time()));
-            $acm_total_time = 0;
-            //罚时加竞赛经过时间
-            foreach ($problemIndex as &$tp) {
-                $wa = 0;
-                $addtime = Db::table('contestrank')
-                    ->where('contestid', $contest_id)
-                    ->where('problemid', $tp['problemid'])
-                    ->where('userid', $tem->userid)
-                    ->where('submittime', '>=', date('Y-m-d H:i:s', $begintime))
-                    ->where('submittime', '<=', date('Y-m-d H:i:s', $endtime))
-                    ->where('isdel', 0)
-                    ->orderBy('id', 'asc')
-                    ->get();
-                $isac = false;
-                foreach ($addtime as &$t) {
-                    if ($t->score != 100) {
-                        ++$wa;
-                    } else {
-                        $firstactime = $t->submittime;
-                        $acm_total_time += strtotime($firstactime) - $begintime;
-                        $ftime = (int) (strtotime($firstactime) - $begintime);
-                        $hour = (int) ($ftime / 3600);
-                        $minute = (int) (($ftime - $hour * 3600) / 60);
-                        $seconds = $ftime - $hour * 3600 - $minute * 60;
-                        $isac = true;
-                        ++$acnum;
+            $begintime = strtotime($contest_db->begin);
+            $endtime = strtotime($contest_db->end);
+
+            //排名锁
+            $lockone = 'contestranklock' . $contest_id;
+            $now_key_value = Base::randString();
+            //加锁
+            $lock_res = $redis4->setNx($lockone, $now_key_value);
+            if (!$lock_res) {
+                return;
+            }
+            // 题目
+            $prolist = Db::table('contestproblem')
+                ->where('contestid', $contest_id)
+                ->select('problemid')
+                ->distinct()
+                ->where('isdel', 0)
+                ->get();
+            $problemIndex = [];
+            foreach ($prolist as &$tem) {
+                $problem_db = Base::getOjData($tem->problemid);
+                if (!$problem_db) {
+                    continue;
+                }
+                $problemIndex[] = [
+                    'problemname' => $problem_db->problemName,
+                    'problemid' => $tem->problemid
+                ];
+            }
+
+            //更新未ak用户时间补加总时长
+            $res = Db::table('joincontest')
+                ->where('contestid', $contest_id)
+                ->where('isdel', 0)
+                ->select('userid')
+                ->orderBy('id', 'desc')
+                ->get();
+            $resarray = array();
+
+            foreach ($res as &$tem) {
+                $now_lock = $redis4->get($lockone);
+                if (!$now_lock || $now_lock != $now_key_value) {
+                    return json(['code' => 1, 'data' => [], 'problemIndex' => []]);
+                }
+                $ta = [];
+                $db = Base::getUserDataFromDb($tem->userid);
+                if (!$db || empty($db)) {
+                    continue;
+                }
+                $userResProList = [];
+                $firstactime = -1;
+                $sumwa = 0;
+                $ta['id'] = $db->id;
+                $ta['name'] = $db->name;
+                // AC的题目数目
+                $acnum = 0;
+                $endtime = min($endtime, max($begintime, time()));
+                $acm_total_time = 0;
+                //罚时加竞赛经过时间
+                foreach ($problemIndex as &$tp) {
+                    $wa = 0;
+                    $addtime = Db::table('contestrank')
+                        ->where('contestid', $contest_id)
+                        ->where('problemid', $tp['problemid'])
+                        ->where('userid', $tem->userid)
+                        ->where('submittime', '>=', date('Y-m-d H:i:s', $begintime))
+                        ->where('submittime', '<=', date('Y-m-d H:i:s', $endtime))
+                        ->where('isdel', 0)
+                        ->orderBy('id', 'asc')
+                        ->get();
+                    $isac = false;
+                    foreach ($addtime as &$t) {
+                        if ($t->score != 100) {
+                            ++$wa;
+                        } else {
+                            $firstactime = $t->submittime;
+                            $acm_total_time += strtotime($firstactime) - $begintime;
+                            $ftime = (int) (strtotime($firstactime) - $begintime);
+                            $hour = (int) ($ftime / 3600);
+                            $minute = (int) (($ftime - $hour * 3600) / 60);
+                            $seconds = $ftime - $hour * 3600 - $minute * 60;
+                            $isac = true;
+                            ++$acnum;
+                            $userResProList[] = [
+                                'id' => $tp['problemid'],
+                                'waNum' => $wa,
+                                'firstAcTime' => "$hour:$minute:$seconds",
+                                'score' => ''
+                            ];
+                            // 遇到AC记录停止循环
+                            break;
+                        }
+                    }
+                    if (!$isac) {
                         $userResProList[] = [
                             'id' => $tp['problemid'],
                             'waNum' => $wa,
-                            'firstAcTime' => "$hour:$minute:$seconds",
+                            'firstAcTime' => -1,
                             'score' => ''
                         ];
-                        // 遇到AC记录停止循环
-                        break;
+                    } else {
+                        // AC则罚时
+                        $sumwa += $wa;
                     }
                 }
-                if (!$isac) {
-                    $userResProList[] = [
-                        'id' => $tp['problemid'],
-                        'waNum' => $wa,
-                        'firstAcTime' => -1,
-                        'score' => ''
-                    ];
+                if ($contest_db->type == 'SQS') {
+                    // SQS赛制无罚时
+                    // 没有AK
+                    $ta['totaltime'] = max(0, $acm_total_time);
                 } else {
-                    // AC则罚时
-                    $sumwa += $wa;
+                    $ta['totaltime'] = max(0, $sumwa * 1200 + $acm_total_time);
+                }
+                $ta['res'] = $userResProList;
+                $ta['acnum'] = $acnum;
+                $ta['allscore'] = '';
+
+                if (!empty($ta)) {
+                    $resarray[] = $ta;
                 }
             }
-            if ($contest_db->type == 'SQS') {
-                // SQS赛制无罚时
-                // 没有AK
-                $ta['totaltime'] = max(0, $acm_total_time);
-            } else {
-                $ta['totaltime'] = max(0, $sumwa * 1200 + $acm_total_time);
-            }
-            $ta['res'] = $userResProList;
-            $ta['acnum'] = $acnum;
-            $ta['allscore'] = '';
 
-            if (!empty($ta)) {
-                $resarray[] = $ta;
-            }
-        }
+            usort($resarray, function ($a, $b) {
+                $total_acnum = (int) ((int) $b['acnum'] - (int) $a['acnum']);
+                if ($total_acnum === 0) {
+                    return (int) $a['totaltime'] - (int) $b['totaltime'];
+                }
+                return $total_acnum;
+            });
 
-        usort($resarray, function ($a, $b) {
-            $total_acnum = (int) ((int) $b['acnum'] - (int) $a['acnum']);
-            if ($total_acnum === 0) {
-                return (int) $a['totaltime'] - (int) $b['totaltime'];
+            $index = 0;
+            $last_acnum = null;
+            $last_totaltime = null;
+            foreach ($resarray as &$tem) {
+                if ($tem['acnum'] === $last_acnum && $tem['totaltime'] === $last_totaltime) {
+                    $tem['index'] = $index;
+                } else {
+                    $tem['index'] = ++$index;
+                    $last_acnum = $tem['acnum'];
+                    $last_totaltime = $tem['totaltime'];
+                }
             }
-            return $total_acnum;
-        });
-
-        $index = 0;
-        $last_acnum = null;
-        $last_totaltime = null;
-        foreach ($resarray as &$tem) {
-            if ($tem['acnum'] === $last_acnum && $tem['totaltime'] === $last_totaltime) {
-                $tem['index'] = $index;
-            } else {
-                $tem['index'] = ++$index;
-                $last_acnum = $tem['acnum'];
-                $last_totaltime = $tem['totaltime'];
+            $redis4->del($lockone);
+            // 更新JSON缓存，顺序不可换，因为HTML更新传递引用，会导致数组总时间格式化
+            $total = sizeof($resarray);
+            $json = ['data' => $resarray, 'problemIndex' => $problemIndex, 'total' => $total];
+            Base::updateContestRankJson($contest_id, $json);
+            // 更新HTML缓存
+            $html = Contest::calculateContestRank($problemIndex, $resarray, $contest_db);
+            if ($html) {
+                Base::updateContestRankHtml($contest_id, $html);
             }
-        }
-        $redis4->del($lockone);
-        // 更新JSON缓存，顺序不可换，因为HTML更新传递引用，会导致数组总时间格式化
-        $total = sizeof($resarray);
-        $json = ['data' => $resarray, 'problemIndex' => $problemIndex, 'total' => $total];
-        Base::updateContestRankJson($contest_id, $json);
-        // 更新HTML缓存
-        $html = Contest::calculateContestRank($problemIndex, $resarray, $contest_db);
-        if ($html) {
-            Base::updateContestRankHtml($contest_id, $html);
+        } catch (Exception $e) {
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
         }
     }
 
@@ -2304,172 +2307,176 @@ class Contest
      */
     static private function lookHtmlOiExcelRank($my_aid, $contest_id, $contest_db, $redis4)
     {
-        if (!$my_aid) {
-            $my_aid = 0;
-        }
-        if (!$contest_db) {
-            return;
-        }
-        if ($contest_db->type != 'OI' && $contest_db->type != 'IOI') {
-            return;
-        }
-        $begintime = strtotime($contest_db->begin);
-        $endtime = strtotime($contest_db->end);
-
-        $lockone = 'contestranklock' . $contest_id;
-        $now_key_value = Base::randString();
-        //加锁
-        $lock_res = $redis4->setNx($lockone, $now_key_value);
-        if (!$lock_res) {
-            // 未抢到锁
-            return;
-        }
-        // 题目
-        $prolist = Db::table('contestproblem')
-            ->where('contestid', $contest_id)
-            ->where('isdel', 0)
-            ->select('problemid')
-            ->get();
-        $problemIndex = [];
-        foreach ($prolist as &$tem) {
-            $problem_db = Base::getOjData($tem->problemid);
-            if (!$problem_db) {
-                continue;
+        try {
+            if (!$my_aid) {
+                $my_aid = 0;
             }
-            $problemIndex[] = [
-                'problemname' => $problem_db->problemName,
-                'problemid' => $tem->problemid
-            ];
-        }
-
-        //更新未ak用户时间补加总时长
-        $res = Db::table('joincontest')
-            ->where('contestid', $contest_id)
-            ->where('isdel', 0)
-            ->select('userid')
-            ->orderBy('id', 'desc')
-            ->get();
-        $resarray = array();
-
-        foreach ($res as &$tem) {
-            $now_lock = $redis4->get($lockone);
-            if (!$now_lock || $now_lock != $now_key_value) {
-                return json(['code' => 1, 'data' => [], 'problemIndex' => []]);
+            if (!$contest_db) {
+                return;
             }
-            $ta = [];
-            $db = Base::getUserDataFromDb($tem->userid);
-            if (!$db || empty($db)) {
-                continue;
+            if ($contest_db->type != 'OI' && $contest_db->type != 'IOI') {
+                return;
             }
-            $userResProList = [];
-            $allscore = 0;
-            $ta['id'] = $db->id;
-            $ta['name'] = $db->name;
-            $endtime = min($endtime, max($begintime, time()));
-            $ioi_total_time = 0;
-            foreach ($problemIndex as &$tp) {
-                $addtime = null;
-                if ($contest_db->type == "OI") {
-                    // 以最新的提交为准
-                    $addtime = Db::table('contestrank')
-                        ->where('contestid', $contest_id)
-                        ->where('problemid', $tp['problemid'])
-                        ->where('userid', $tem->userid)
-                        ->where('submittime', '>=', date('Y-m-d H:i:s', $begintime))
-                        ->where('submittime', '<=', date('Y-m-d H:i:s', $endtime))
-                        ->where('isdel', 0)
-                        ->select('submittime', 'score')
-                        ->orderBy('id', 'desc')
-                        ->first();
-                } else {
-                    // 取最高的分数，考虑时间需要从前开始枚举
-                    $addtime = Db::table('contestrank')
-                        ->where('contestid', $contest_id)
-                        ->where('problemid', $tp['problemid'])
-                        ->where('userid', $tem->userid)
-                        ->where('submittime', '>=', date('Y-m-d H:i:s', $begintime))
-                        ->where('submittime', '<=', date('Y-m-d H:i:s', $endtime))
-                        ->where('isdel', 0)
-                        ->select('submittime', 'score')
-                        ->orderBy('score', 'desc')
-                        ->orderBy('id', 'asc')
-                        ->first();
+            $begintime = strtotime($contest_db->begin);
+            $endtime = strtotime($contest_db->end);
+
+            $lockone = 'contestranklock' . $contest_id;
+            $now_key_value = Base::randString();
+            //加锁
+            $lock_res = $redis4->setNx($lockone, $now_key_value);
+            if (!$lock_res) {
+                // 未抢到锁
+                return;
+            }
+            // 题目
+            $prolist = Db::table('contestproblem')
+                ->where('contestid', $contest_id)
+                ->where('isdel', 0)
+                ->select('problemid')
+                ->get();
+            $problemIndex = [];
+            foreach ($prolist as &$tem) {
+                $problem_db = Base::getOjData($tem->problemid);
+                if (!$problem_db) {
+                    continue;
                 }
-                if ($addtime) {
-                    $firstactime = (int) strtotime($addtime->submittime);
-                    $one_pro_score = $addtime->score;
-                    $ftime = max(0, (int) ($firstactime - $begintime));
-                    $ioi_total_time += max(0, $ftime);
-                    $allscore += $one_pro_score;
-                    if ($ftime == 0) {
+                $problemIndex[] = [
+                    'problemname' => $problem_db->problemName,
+                    'problemid' => $tem->problemid
+                ];
+            }
+
+            //更新未ak用户时间补加总时长
+            $res = Db::table('joincontest')
+                ->where('contestid', $contest_id)
+                ->where('isdel', 0)
+                ->select('userid')
+                ->orderBy('id', 'desc')
+                ->get();
+            $resarray = array();
+
+            foreach ($res as &$tem) {
+                $now_lock = $redis4->get($lockone);
+                if (!$now_lock || $now_lock != $now_key_value) {
+                    return json(['code' => 1, 'data' => [], 'problemIndex' => []]);
+                }
+                $ta = [];
+                $db = Base::getUserDataFromDb($tem->userid);
+                if (!$db || empty($db)) {
+                    continue;
+                }
+                $userResProList = [];
+                $allscore = 0;
+                $ta['id'] = $db->id;
+                $ta['name'] = $db->name;
+                $endtime = min($endtime, max($begintime, time()));
+                $ioi_total_time = 0;
+                foreach ($problemIndex as &$tp) {
+                    $addtime = null;
+                    if ($contest_db->type == "OI") {
+                        // 以最新的提交为准
+                        $addtime = Db::table('contestrank')
+                            ->where('contestid', $contest_id)
+                            ->where('problemid', $tp['problemid'])
+                            ->where('userid', $tem->userid)
+                            ->where('submittime', '>=', date('Y-m-d H:i:s', $begintime))
+                            ->where('submittime', '<=', date('Y-m-d H:i:s', $endtime))
+                            ->where('isdel', 0)
+                            ->select('submittime', 'score')
+                            ->orderBy('id', 'desc')
+                            ->first();
+                    } else {
+                        // 取最高的分数，考虑时间需要从前开始枚举
+                        $addtime = Db::table('contestrank')
+                            ->where('contestid', $contest_id)
+                            ->where('problemid', $tp['problemid'])
+                            ->where('userid', $tem->userid)
+                            ->where('submittime', '>=', date('Y-m-d H:i:s', $begintime))
+                            ->where('submittime', '<=', date('Y-m-d H:i:s', $endtime))
+                            ->where('isdel', 0)
+                            ->select('submittime', 'score')
+                            ->orderBy('score', 'desc')
+                            ->orderBy('id', 'asc')
+                            ->first();
+                    }
+                    if ($addtime) {
+                        $firstactime = (int) strtotime($addtime->submittime);
+                        $one_pro_score = $addtime->score;
+                        $ftime = max(0, (int) ($firstactime - $begintime));
+                        $ioi_total_time += max(0, $ftime);
+                        $allscore += $one_pro_score;
+                        if ($ftime == 0) {
+                            $userResProList[] = [
+                                'id' => $tp['problemid'],
+                                'waNum' => '',
+                                'firstAcTime' => -1,
+                                'score' => 0
+                            ];
+                        } else {
+                            $hour = (int) ($ftime / 3600);
+                            $minute = (int) (($ftime - $hour * 3600) / 60);
+                            $seconds = $ftime - $hour * 3600 - $minute * 60;
+                            $userResProList[] = [
+                                'id' => $tp['problemid'],
+                                'waNum' => '',
+                                'firstAcTime' => "$hour:$minute:$seconds",
+                                'score' => $one_pro_score
+                            ];
+                        }
+                    } else {
                         $userResProList[] = [
                             'id' => $tp['problemid'],
                             'waNum' => '',
                             'firstAcTime' => -1,
                             'score' => 0
                         ];
-                    } else {
-                        $hour = (int) ($ftime / 3600);
-                        $minute = (int) (($ftime - $hour * 3600) / 60);
-                        $seconds = $ftime - $hour * 3600 - $minute * 60;
-                        $userResProList[] = [
-                            'id' => $tp['problemid'],
-                            'waNum' => '',
-                            'firstAcTime' => "$hour:$minute:$seconds",
-                            'score' => $one_pro_score
-                        ];
                     }
+                }
+                // OI赛制时间不进行计算
+                if ($contest_db->type == 'OI') {
+                    $ta['totaltime'] = max(0, $endtime - $begintime);
                 } else {
-                    $userResProList[] = [
-                        'id' => $tp['problemid'],
-                        'waNum' => '',
-                        'firstAcTime' => -1,
-                        'score' => 0
-                    ];
+                    $ta['totaltime'] = max(0, $ioi_total_time);
+                }
+                $ta['res'] = $userResProList;
+                $ta['acnum'] = '';
+                $ta['allscore'] = $allscore;
+                if (!empty($ta)) {
+                    $resarray[] = $ta;
                 }
             }
-            // OI赛制时间不进行计算
-            if ($contest_db->type == 'OI') {
-                $ta['totaltime'] = max(0, $endtime - $begintime);
-            } else {
-                $ta['totaltime'] = max(0, $ioi_total_time);
-            }
-            $ta['res'] = $userResProList;
-            $ta['acnum'] = '';
-            $ta['allscore'] = $allscore;
-            if (!empty($ta)) {
-                $resarray[] = $ta;
-            }
-        }
-        usort($resarray, function ($a, $b) {
-            $total_score = (int) ((int) $b['allscore'] - (int) $a['allscore']);
-            if ($total_score === 0) {
-                return (int) $a['totaltime'] - (int) $b['totaltime'];
-            }
-            return $total_score;
-        });
+            usort($resarray, function ($a, $b) {
+                $total_score = (int) ((int) $b['allscore'] - (int) $a['allscore']);
+                if ($total_score === 0) {
+                    return (int) $a['totaltime'] - (int) $b['totaltime'];
+                }
+                return $total_score;
+            });
 
-        $index = 0;
-        $last_allscore = null;
-        $last_totaltime = null;
-        foreach ($resarray as &$tem) {
-            if ($tem['allscore'] === $last_allscore && $tem['totaltime'] === $last_totaltime) {
-                $tem['index'] = $index;
-            } else {
-                $tem['index'] = ++$index;
-                $last_allscore = $tem['allscore'];
-                $last_totaltime = $tem['totaltime'];
+            $index = 0;
+            $last_allscore = null;
+            $last_totaltime = null;
+            foreach ($resarray as &$tem) {
+                if ($tem['allscore'] === $last_allscore && $tem['totaltime'] === $last_totaltime) {
+                    $tem['index'] = $index;
+                } else {
+                    $tem['index'] = ++$index;
+                    $last_allscore = $tem['allscore'];
+                    $last_totaltime = $tem['totaltime'];
+                }
             }
-        }
-        $redis4->del($lockone);
-        // 更新JSON缓存，顺序不可换，因为HTML更新传递引用，会导致数组总时间格式化
-        $total = sizeof($resarray);
-        $json = ['data' => $resarray, 'problemIndex' => $problemIndex, 'total' => $total];
-        Base::updateContestRankJson($contest_id, $json);
-        // 更新HTML缓存
-        $html = Contest::calculateContestRank($problemIndex, $resarray, $contest_db);
-        if ($html) {
-            Base::updateContestRankHtml($contest_id, $html);
+            $redis4->del($lockone);
+            // 更新JSON缓存，顺序不可换，因为HTML更新传递引用，会导致数组总时间格式化
+            $total = sizeof($resarray);
+            $json = ['data' => $resarray, 'problemIndex' => $problemIndex, 'total' => $total];
+            Base::updateContestRankJson($contest_id, $json);
+            // 更新HTML缓存
+            $html = Contest::calculateContestRank($problemIndex, $resarray, $contest_db);
+            if ($html) {
+                Base::updateContestRankHtml($contest_id, $html);
+            }
+        } catch (Exception $e) {
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
         }
     }
 
@@ -2478,47 +2485,52 @@ class Contest
      */
     public function getProblemMD(Request $request)
     {
-        $my_uid = JwtToken::getCurrentId();
-        $my_aid = Base::getIdByUid($my_uid);
-        $contest_uid = $request->post('contest_id');
-        $contest_id = Base::getIdByUid($contest_uid);
-        $is_my = Contest::judgeIsMyContest($contest_id, $my_aid);
-        if (!$is_my) {
-            return json(['code' => -1, 'msg' => '权限不足！']);
-        }
-        $contest_db = Base::getContestData($contest_id);
-        if (!$contest_db) {
-            return json(['code' => -1, 'msg' => '竞赛不存在！']);
-        }
-        $problem_list = Db::table('contestproblem')
-            ->where('contestid', $contest_id)
-            ->where('isdel', 0)
-            ->pluck('problemid')
-            ->toArray();
-        $res_md = '<h1>【' . $contest_db->name . "】赛题</h1>\n\n<br>\n\n" . $contest_db->content . "\n\n<br><hr><br>\n\n";
-        $res_md .= '<h2>出题人</h2>' . "\n\n<br>\n\n> " . ($contest_db->creater ?? '无') . "\n\n<br><hr><br>\n\n";
-        foreach ($problem_list as &$problem_id) {
-            $problem_db = Db::table('oj')
-                ->where('id', $problem_id)
-                ->where('isdel', 0)
-                ->first();
-            if (!$problem_db) {
-                continue;
+        $res_md = '';
+        try {
+            $my_uid = JwtToken::getCurrentId();
+            $my_aid = Base::getIdByUid($my_uid);
+            $contest_uid = $request->post('contest_id');
+            $contest_id = Base::getIdByUid($contest_uid);
+            $is_my = Contest::judgeIsMyContest($contest_id, $my_aid);
+            if (!$is_my) {
+                return json(['code' => -1, 'msg' => '权限不足！']);
             }
-            // 题目
-            $res_md .= '<h3>' . $problem_db->problemName . "</h3>\n\n<br>\n\n";
-            // 内容
-            $res_md .= $problem_db->problemContent . "\n\n<br>\n\n";
-            // 输入样例
-            $res_md .= '<h5>输入样例</h5>' . "\n\n > " . $problem_db->problemCinTest . "\n\n<br>\n\n";
-            // 输出样例
-            $res_md .= '<h5>输出样例</h5>' . "\n\n > " . $problem_db->problemCoutTest . "\n\n<br>\n\n";
-            // 时间限制
-            $res_md .= '<h5>时间限制（单位：MS）</h5>' . "\n\n > " . $problem_db->Time . "\n\n<br>\n\n";
-            // 内存限制
-            $res_md .= '<h5>内存限制（单位：MB）</h5>' . "\n\n > " . $problem_db->Memory . "\n\n<br>\n\n";
-            // 题目来源
-            $res_md .= '<h5>题目来源</h5>' . "\n\n > " . $problem_db->problemFrom . "\n\n<br><hr><br>\n\n";
+            $contest_db = Base::getContestData($contest_id);
+            if (!$contest_db) {
+                return json(['code' => -1, 'msg' => '竞赛不存在！']);
+            }
+            $problem_list = Db::table('contestproblem')
+                ->where('contestid', $contest_id)
+                ->where('isdel', 0)
+                ->pluck('problemid')
+                ->toArray();
+            $res_md = '<h1>【' . $contest_db->name . "】赛题</h1>\n\n<br>\n\n" . $contest_db->content . "\n\n<br><hr><br>\n\n";
+            $res_md .= '<h2>出题人</h2>' . "\n\n<br>\n\n> " . ($contest_db->creater ?? '无') . "\n\n<br><hr><br>\n\n";
+            foreach ($problem_list as &$problem_id) {
+                $problem_db = Db::table('oj')
+                    ->where('id', $problem_id)
+                    ->where('isdel', 0)
+                    ->first();
+                if (!$problem_db) {
+                    continue;
+                }
+                // 题目
+                $res_md .= '<h3>' . $problem_db->problemName . "</h3>\n\n<br>\n\n";
+                // 内容
+                $res_md .= $problem_db->problemContent . "\n\n<br>\n\n";
+                // 输入样例
+                $res_md .= '<h5>输入样例</h5>' . "\n\n > " . $problem_db->problemCinTest . "\n\n<br>\n\n";
+                // 输出样例
+                $res_md .= '<h5>输出样例</h5>' . "\n\n > " . $problem_db->problemCoutTest . "\n\n<br>\n\n";
+                // 时间限制
+                $res_md .= '<h5>时间限制（单位：MS）</h5>' . "\n\n > " . $problem_db->Time . "\n\n<br>\n\n";
+                // 内存限制
+                $res_md .= '<h5>内存限制（单位：MB）</h5>' . "\n\n > " . $problem_db->Memory . "\n\n<br>\n\n";
+                // 题目来源
+                $res_md .= '<h5>题目来源</h5>' . "\n\n > " . $problem_db->problemFrom . "\n\n<br><hr><br>\n\n";
+            }
+        } catch (Exception $e) {
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
         }
         return $res_md;
     }
@@ -2528,124 +2540,129 @@ class Contest
      */
     public function getProblemSolveMD(Request $request)
     {
-        $my_uid = JwtToken::getCurrentId();
-        $my_aid = Base::getIdByUid($my_uid);
-        $contest_uid = $request->post('contest_id');
-        $contest_id = Base::getIdByUid($contest_uid);
-        $contest_db = Base::getContestData($contest_id);
-        if (!$contest_db) {
-            return json(['code' => -1, 'msg' => '竞赛不存在！']);
-        }
-        $is_my = Contest::judgeIsMyContest($contest_id, $my_aid);
-        if (!$is_my) {
-            return json(['code' => -1, 'msg' => '权限不足！']);
-        }
-        $problem_list = Db::table('contestproblem')
-            ->where('contestid', $contest_id)
-            ->where('isdel', 0)
-            ->pluck('problemid')
-            ->toArray();
-        $res_md = '<h1>【' . $contest_db->name . "】题解</h1>\n\n<br>\n\n" . $contest_db->content . "\n\n<br><hr><br>\n\n";
-        $res_md .= '<h2>出题人</h2>' . "\n\n<br>\n\n> " . ($contest_db->creater ?? '无') . "\n\n<br><hr><br>\n\n";
-        $res_md .= '<h2>题解编写人</h2>' . "\n\n<br>\n\n> " . ($contest_db->creater ?? '无') . "\n\n<br><hr><br>\n\n";
-        foreach ($problem_list as &$problem_id) {
-            $problem_db = Db::table('oj')
-                ->where('id', $problem_id)
-                ->where('isdel', 0)
-                ->first();
-            if (!$problem_db) {
-                continue;
+        $res_md = '';
+        try {
+            $my_uid = JwtToken::getCurrentId();
+            $my_aid = Base::getIdByUid($my_uid);
+            $contest_uid = $request->post('contest_id');
+            $contest_id = Base::getIdByUid($contest_uid);
+            $contest_db = Base::getContestData($contest_id);
+            if (!$contest_db) {
+                return json(['code' => -1, 'msg' => '竞赛不存在！']);
             }
-            $code = '无';
-            $language = 'cpp';
-            $code_db = null;
-            if ($problem_db->code && $problem_db->code != Base::$oj_ac_code_default) {
-                $code = $problem_db->code;
-                $language = 'cpp';
-            } else {
-                $code_db = Db::table('solveproblem')
-                    ->where('problemid', $problem_id)
+            $is_my = Contest::judgeIsMyContest($contest_id, $my_aid);
+            if (!$is_my) {
+                return json(['code' => -1, 'msg' => '权限不足！']);
+            }
+            $problem_list = Db::table('contestproblem')
+                ->where('contestid', $contest_id)
+                ->where('isdel', 0)
+                ->pluck('problemid')
+                ->toArray();
+            $res_md = '<h1>【' . $contest_db->name . "】题解</h1>\n\n<br>\n\n" . $contest_db->content . "\n\n<br><hr><br>\n\n";
+            $res_md .= '<h2>出题人</h2>' . "\n\n<br>\n\n> " . ($contest_db->creater ?? '无') . "\n\n<br><hr><br>\n\n";
+            $res_md .= '<h2>题解编写人</h2>' . "\n\n<br>\n\n> " . ($contest_db->creater ?? '无') . "\n\n<br><hr><br>\n\n";
+            foreach ($problem_list as &$problem_id) {
+                $problem_db = Db::table('oj')
+                    ->where('id', $problem_id)
                     ->where('isdel', 0)
-                    ->orderBy('id', 'desc')
                     ->first();
-                if ($code_db) {
-                    $code = $code_db->code;
-                    switch ($code_db->language) {
-                        case 'C++': {
-                                $language = 'cpp';
-                                break;
-                            }
-                        case 'C': {
-                                $language = 'c';
-                                break;
-                            }
-                        case 'Java': {
-                                $language = 'java';
-                                break;
-                            }
-                        case 'Python3': {
-                                $language = 'python';
-                                break;
-                            }
-                        case 'JavaScript': {
-                                $language = 'js';
-                                break;
-                            }
-                        case 'TypeScript': {
-                                $language = 'ts';
-                                break;
-                            }
-                        case 'Go': {
-                                $language = 'go';
-                                break;
-                            }
-                        case 'C#': {
-                                $language = 'csharp';
-                                break;
-                            }
-                        case 'Ruby': {
-                                $language = 'ruby';
-                                break;
-                            }
-                        case 'Rust': {
-                                $language = 'rust';
-                                break;
-                            }
-                        case 'PHP': {
-                                $language = 'php';
-                                break;
-                            }
-                        default: {
-                                $language = 'cpp';
-                                break;
-                            }
+                if (!$problem_db) {
+                    continue;
+                }
+                $code = '无';
+                $language = 'cpp';
+                $code_db = null;
+                if ($problem_db->code && $problem_db->code != Base::$oj_ac_code_default) {
+                    $code = $problem_db->code;
+                    $language = 'cpp';
+                } else {
+                    $code_db = Db::table('solveproblem')
+                        ->where('problemid', $problem_id)
+                        ->where('isdel', 0)
+                        ->orderBy('id', 'desc')
+                        ->first();
+                    if ($code_db) {
+                        $code = $code_db->code;
+                        switch ($code_db->language) {
+                            case 'C++': {
+                                    $language = 'cpp';
+                                    break;
+                                }
+                            case 'C': {
+                                    $language = 'c';
+                                    break;
+                                }
+                            case 'Java': {
+                                    $language = 'java';
+                                    break;
+                                }
+                            case 'Python3': {
+                                    $language = 'python';
+                                    break;
+                                }
+                            case 'JavaScript': {
+                                    $language = 'js';
+                                    break;
+                                }
+                            case 'TypeScript': {
+                                    $language = 'ts';
+                                    break;
+                                }
+                            case 'Go': {
+                                    $language = 'go';
+                                    break;
+                                }
+                            case 'C#': {
+                                    $language = 'csharp';
+                                    break;
+                                }
+                            case 'Ruby': {
+                                    $language = 'ruby';
+                                    break;
+                                }
+                            case 'Rust': {
+                                    $language = 'rust';
+                                    break;
+                                }
+                            case 'PHP': {
+                                    $language = 'php';
+                                    break;
+                                }
+                            default: {
+                                    $language = 'cpp';
+                                    break;
+                                }
+                        }
                     }
                 }
+                // 题目
+                $res_md .= '<h2>' . $problem_db->problemName . "</h2>\n\n<br>\n\n";
+                // 内容
+                $res_md .= $problem_db->problemContent . "\n\n<br>\n\n";
+                // 输入样例
+                $res_md .= '<h5>输入样例</h5>' . "\n\n > " . $problem_db->problemCinTest . "\n\n<br>\n\n";
+                // 输出样例
+                $res_md .= '<h5>输出样例</h5>' . "\n\n > " . $problem_db->problemCoutTest . "\n\n<br>\n\n";
+                // 时间限制
+                $res_md .= '<h5>时间限制（单位：MS）</h5>' . "\n\n > " . $problem_db->Time . "\n\n<br>\n\n";
+                // 内存限制
+                $res_md .= '<h5>内存限制（单位：MB）</h5>' . "\n\n > " . $problem_db->Memory . "\n\n<br>\n\n";
+                // 题目来源
+                $res_md .= '<h5>题目来源</h5>' . "\n\n > " . $problem_db->problemFrom . "\n\n<br>\n\n";
+                // 解题思路
+                if (!$problem_db->think) {
+                    $problem_db->think = '无';
+                }
+                $res_md .= '<h5>解题思路</h5>' . "\n\n> " . $problem_db->think . "\n\n<br>\n\n";
+                // AC代码
+                if (!$code) {
+                    $code = '无';
+                }
+                $res_md .= '<h5>AC代码</h5>' . "\n\n```$language\n" . $code . "\n```\n\n<br><hr><br>\n\n";
             }
-            // 题目
-            $res_md .= '<h2>' . $problem_db->problemName . "</h2>\n\n<br>\n\n";
-            // 内容
-            $res_md .= $problem_db->problemContent . "\n\n<br>\n\n";
-            // 输入样例
-            $res_md .= '<h5>输入样例</h5>' . "\n\n > " . $problem_db->problemCinTest . "\n\n<br>\n\n";
-            // 输出样例
-            $res_md .= '<h5>输出样例</h5>' . "\n\n > " . $problem_db->problemCoutTest . "\n\n<br>\n\n";
-            // 时间限制
-            $res_md .= '<h5>时间限制（单位：MS）</h5>' . "\n\n > " . $problem_db->Time . "\n\n<br>\n\n";
-            // 内存限制
-            $res_md .= '<h5>内存限制（单位：MB）</h5>' . "\n\n > " . $problem_db->Memory . "\n\n<br>\n\n";
-            // 题目来源
-            $res_md .= '<h5>题目来源</h5>' . "\n\n > " . $problem_db->problemFrom . "\n\n<br>\n\n";
-            // 解题思路
-            if (!$problem_db->think) {
-                $problem_db->think = '无';
-            }
-            $res_md .= '<h5>解题思路</h5>' . "\n\n> " . $problem_db->think . "\n\n<br>\n\n";
-            // AC代码
-            if (!$code) {
-                $code = '无';
-            }
-            $res_md .= '<h5>AC代码</h5>' . "\n\n```$language\n" . $code . "\n```\n\n<br><hr><br>\n\n";
+        } catch (Exception $e) {
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
         }
         return $res_md;
     }
