@@ -1469,18 +1469,18 @@ class Base
      * @param array $data 数据
      * @return string $id 插入后的id
      */
-    static public function insertToDb($db_name, $data)
+    static public function insertToDb($db_name = '', $data = [])
     {
-        if (!$db_name || !$data) {
-            return 0;
-        }
         $resid = 0;
         try {
+            if (!$db_name || !$data) {
+                return $resid;
+            }
             if ($db_name == 'file_path') {
                 if (strripos($db_name, Base::$LTPP_public_static_path) === false) {
-                    return 0;
+                    return $resid;
                 }
-                $resid = Db::table($db_name)->insert($data);
+                Db::table($db_name)->insert($data);
             } else {
                 $resid = Db::table($db_name)->insertGetId($data);
             }
@@ -2175,11 +2175,15 @@ class Base
     }
 
     /**
-     * 获取QQ图片内容保存本地，返回URL
+     * 获取QQ邮箱图片保存本地，返回URL
      */
     static public function getEmailImageToLtppUrl($email = '')
     {
         try {
+            /**
+             * 邮箱为空 || 邮箱不是合法URL || 邮箱不是QQ邮箱
+             * 返回随机一条数据库里的图片URL
+             */
             if (
                 !$email ||
                 filter_var($email, FILTER_VALIDATE_URL) === false ||
@@ -3710,7 +3714,7 @@ class Base
         $file_path = Base::$LTPP_public_static_path . '/' . md5(time());
         do {
             $num = rand(0, sizeof(Base::$id_char_set) - 1);
-            $short_time = time() % 100000000;
+            $short_time = time() % 1000000000;
             $file_name = Base::Base64Encode($short_time, Base::$id_char_set[$num]) . '/' . md5(uniqid() . mt_rand(1, 100000) . time()) . '/' . md5(uniqid() . mt_rand(1, 100000) . time()) . '.' . $file_upload_extension;
         } while (Base::judgeFileExist($file_path . '/' . $file_name));
         return $file_path . '/' . $file_name;

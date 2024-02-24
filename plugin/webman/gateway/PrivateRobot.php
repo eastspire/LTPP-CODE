@@ -672,17 +672,12 @@ class PrivateRobot extends ChatBase
             ->orderBy('id', 'desc')
             ->select('id', 'email')
             ->get();
-        Base::$GLOBlinuxurl = Base::getGLOBlinuxurl();
         foreach ($user_db as &$tem) {
-            // 申请图片路径
-            $local_path = Base::creatFilePath('png');
-            // 保存网络图片到本地
             $email_image = Base::getEmailImageToLtppUrl($tem->email);
-            Base::saveNetworkFileToDb(Base::getRobotId(), $email_image, $local_path);
             Db::table('user')
                 ->where('id', $tem->id)
                 ->update([
-                    'headimage' => Base::$GLOBlinuxurl . $local_path,
+                    'headimage' => $email_image
                 ]);
         }
         Base::clearAllUserDataRedis();
