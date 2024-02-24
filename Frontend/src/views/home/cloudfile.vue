@@ -190,97 +190,21 @@
               </el-dialog>
             </div>
 
-            <!-- 文件预览 -->
-            <div v-if="!iscloseFile">
-              <el-dialog
-                :close-on-click-modal="false"
-                :width="
-                  ($store.state.max_width / $store.state.now_width) * 100 + '%'
-                "
-                @closed="iscloseFile = true"
-                :visible.sync="IsShowStaticFile"
-                title="文件预览"
-                :append-to-body="true"
-              >
-                <div>
-                  <iframe
-                    :style="`height:${
-                      $store.state.no_scroll_height * 0.68
-                    }vh; width: 100%`"
-                    :src="ShowStaticFileUrl"
-                    scrolling="no"
-                    border="0"
-                    frameborder="no"
-                    framespacing="0"
-                    allowfullscreen="true"
-                  ></iframe>
-
-                  <div style="text-align: left; margin-top: 0.6rem">
-                    <el-button
-                      class="pulse-enter-active"
-                      type="text"
-                      icon="el-icon-star-on"
-                      size="mini"
-                      width="auto"
-                      style="
-                        font-size: 1.06rem;
-                        text-align: left;
-                        color: #67c23a;
-                        margin: 0rem 0rem;
-                        float: left;
-                      "
-                      @click="downloadonefile()"
-                      >点击下载</el-button
-                    >
-                    <el-button
-                      style="
-                        color: #67c23a;
-                        margin: 0rem 0rem 0rem 2.6rem;
-                        font-size: 1.06rem;
-                        float: right;
-                      "
-                      size="mini"
-                      width="auto"
-                      type="text"
-                      class="el-icon-share pulse-enter-active"
-                      @click="copy(linuxurl + base64_decode(filepath))"
-                      >分享</el-button
-                    >
-                    <el-button
-                      style="
-                        color: #67c23a;
-                        margin: 0rem 0rem;
-                        font-size: 1.06rem;
-                        float: right;
-                      "
-                      size="mini"
-                      width="auto"
-                      type="text"
-                      class="el-icon-s-opportunity pulse-enter-active"
-                      @click="
-                        iscloseFile = true;
-                        lookfile();
-                      "
-                      >新页面打开</el-button
-                    >
-                  </div>
-                  <div style="clear: both"></div>
-                </div>
-              </el-dialog>
-            </div>
-
             <div>
               <el-dialog
                 :close-on-click-modal="false"
                 @contextmenu.prevent.native="savacode"
-                :visible.sync="IsShowCode"
-                title="文件内容"
+                :visible.sync="isShowFileDialog"
+                title="文件"
                 :width="
                   ($store.state.max_width / $store.state.now_width) * 100 + '%'
                 "
                 :append-to-body="true"
+                @closed="iscloseFile = true"
               >
+                <!-- 文本文件 -->
                 <div
+                  v-if="IsShowTxt"
                   style="`
                     border-radius: 0rem;
                     height: auto;
@@ -288,7 +212,17 @@
                   `"
                 >
                   <div>
-                    <div v-if="IsShowCode && !is_code_file">
+                    <div v-if="is_code_file">
+                      <myide
+                        v-if="txt_load_finish"
+                        :code="code"
+                        :language="language"
+                        @upCodeFile="updateIdeCode"
+                        :iscloudfile="true"
+                      ></myide>
+                      <ShowCode v-else :code="code" language="php"></ShowCode>
+                    </div>
+                    <div v-else>
                       <div class="markdown-body">
                         <mavon-editor
                           ref="md"
@@ -299,7 +233,7 @@
                           :subfield="prop.subfield"
                           :defaultOpen="prop.defaultOpen"
                           :toolbarsFlag="prop.toolbarsFlag"
-                          :editable="prop.editable"
+                          :editable="prop.editable && txt_load_finish"
                           :scrollStyle="prop.scrollStyle"
                           :codeStyle="prop.codeStyle"
                           :toolbarsBackground="prop.toolbarsBackground"
@@ -405,14 +339,6 @@
                         </el-dialog>
                       </div>
                     </div>
-                    <div v-if="IsShowCode && is_code_file">
-                      <myide
-                        :code="code"
-                        :language="language"
-                        @upCodeFile="updateIdeCode"
-                        :iscloudfile="true"
-                      ></myide>
-                    </div>
                   </div>
                   <div style="height: 1rem"></div>
                   <div slot="footer" class="dialog-footer">
@@ -475,6 +401,72 @@
                     </div>
                   </div>
                 </div>
+                <!-- 静态资源 -->
+                <div v-if="IsShowStaticFile">
+                  <iframe
+                    v-if="!iscloseFile"
+                    :style="`height:${
+                      $store.state.no_scroll_height * 0.68
+                    }vh; width: 100%`"
+                    :src="ShowStaticFileUrl"
+                    scrolling="no"
+                    border="0"
+                    frameborder="no"
+                    framespacing="0"
+                    allowfullscreen="true"
+                  ></iframe>
+
+                  <div style="text-align: left; margin-top: 0.6rem">
+                    <el-button
+                      class="pulse-enter-active"
+                      type="text"
+                      icon="el-icon-star-on"
+                      size="mini"
+                      width="auto"
+                      style="
+                        font-size: 1.06rem;
+                        text-align: left;
+                        color: #67c23a;
+                        margin: 0rem 0rem;
+                        float: left;
+                      "
+                      @click="downloadonefile()"
+                      >点击下载</el-button
+                    >
+                    <el-button
+                      style="
+                        color: #67c23a;
+                        margin: 0rem 0rem 0rem 2.6rem;
+                        font-size: 1.06rem;
+                        float: right;
+                      "
+                      size="mini"
+                      width="auto"
+                      type="text"
+                      class="el-icon-share pulse-enter-active"
+                      @click="copy(linuxurl + base64_decode(filepath))"
+                      >分享</el-button
+                    >
+                    <el-button
+                      style="
+                        color: #67c23a;
+                        margin: 0rem 0rem;
+                        font-size: 1.06rem;
+                        float: right;
+                      "
+                      size="mini"
+                      width="auto"
+                      type="text"
+                      class="el-icon-s-opportunity pulse-enter-active"
+                      @click="
+                        iscloseFile = true;
+                        lookfile();
+                      "
+                      >新页面打开</el-button
+                    >
+                  </div>
+                  <div style="clear: both"></div>
+                </div>
               </el-dialog>
             </div>
           </div>
@@ -523,11 +515,14 @@
 import "../../../public/md/markdown/github-markdown.min.css";
 import urlencode from "../../../updateCompoents/urlencode";
 import myide from "../../components/myide.vue";
+const file_txt_loading_tips = "资源加载中！请耐心等待！";
+import ShowCode from "../../components/showcode.vue";
 
 export default {
   name: "cloudfile",
   components: {
     myide,
+    ShowCode,
   },
   computed: {
     prop() {
@@ -560,6 +555,14 @@ export default {
   },
   activated() {
     this.isseetip = true;
+    this.isShowFileDialog = false;
+    this.IsShowTxt = false;
+    this.IsShowStaticFile = false;
+    this.iscloseFile = false;
+    this.IsShowUp = false;
+    this.Isnew = false;
+    this.txt_load_finish = false;
+    this.height = window.innerHeight - 198 + "px";
     this.head = {
       Authorization: "Bearer " + window.localStorage.getItem("authorization"),
       Key: window.localStorage.getItem("key"),
@@ -578,18 +581,14 @@ export default {
       this.linuxurl = tem_linuxurl;
       this.cloudfileurl = this.linuxurl + "/Cloudfile/upFile";
     }
-    this.IsShowCode = false;
-    this.IsShowStaticFile = false;
-    this.iscloseFile = false;
-    this.IsShowUp = false;
-    this.Isnew = false;
-    this.height = window.innerHeight - 198 + "px";
     await this.loadCharset();
     this.getlist();
     this.getPercentage();
   },
   data() {
     return {
+      txt_load_finish: false,
+      isShowFileDialog: false,
       loadfinish: false,
       file_idx: 0,
       requestid_timer: null,
@@ -660,7 +659,7 @@ export default {
       ShowStaticFileUrl: "",
       linuxurl: "",
       cloudfileurl: "",
-      IsShowCode: false,
+      IsShowTxt: false,
       IsShowUp: false,
       code: "",
       list: [],
@@ -951,7 +950,7 @@ export default {
       this.file_idx = index;
       this.filename = name;
       this.filepath = path;
-      this.IsShowCode = false;
+      this.IsShowTxt = false;
       this.IsShowStaticFile = false;
       this.is_code_file = false;
       let is_code = false;
@@ -965,6 +964,13 @@ export default {
           this.language = this.$SqsGlobal.map_language_file[key];
         }
       }
+      this.isShowFileDialog = true;
+      if (is_code) {
+        this.is_code_file = true;
+      }
+      this.IsShowTxt = true;
+      this.code = file_txt_loading_tips;
+      this.txt_load_finish = false;
       const { data: res } = await this.$ajax({
         method: "post",
         url: "/Cloudfile/lookCode",
@@ -978,21 +984,24 @@ export default {
           duration: 1600,
           offset: 80,
         });
+        this.txt_load_finish = false;
+        this.code = "资源加载失败！请稍后重试！";
+        return;
       });
+      this.txt_load_finish = true;
       if (res?.code == 1) {
         this.code = res?.data;
-        if (is_code) {
-          this.is_code_file = true;
-        }
-        this.IsShowCode = true;
       } else {
-        this.IsShowCode = false;
+        this.IsShowTxt = false;
         this.iscloseFile = false;
         this.IsShowStaticFile = true;
         this.ShowStaticDialog();
       }
     },
     async savacode() {
+      if (!this.IsShowTxt || this.IsShowStaticFile) {
+        return;
+      }
       if (this.is_code_file) {
         this.code = this.ide_code;
       }
@@ -1053,7 +1062,7 @@ export default {
         this.$store.state.my_id != ""
       ) {
         let url = this.linuxurl + this.base64_decode(this.filepath);
-        this.IsShowCode = false;
+        this.IsShowTxt = false;
         this.IsShowStaticFile = false;
         this.$router.push({
           path: "/staticfile",
@@ -1065,7 +1074,7 @@ export default {
       } else {
         this.$store.commit("updateObj", { my_id: this.getMyId() });
         let url = this.linuxurl + this.base64_decode(this.filepath);
-        this.IsShowCode = false;
+        this.IsShowTxt = false;
         this.IsShowStaticFile = false;
         this.$router.push({
           path: "/staticfile",
