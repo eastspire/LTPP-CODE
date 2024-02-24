@@ -1310,6 +1310,10 @@ pre,
   border-radius: 0px !important;
 }
 
+.v-note-wrapper {
+  z-index: 1 !important;
+}
+
 .is-active {
   color: deepskyblue !important;
   font-weight: bold;

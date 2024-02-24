@@ -158,7 +158,7 @@ export default {
   right: 4.66rem;
   background-color: transparent;
   cursor: pointer;
-  z-index: 1000000000 !important;
+  z-index: 100 !important;
 }
 
 .scroll-to-top {
@@ -167,6 +167,6 @@ export default {
   right: 4.66rem;
   background-color: transparent;
   cursor: pointer;
-  z-index: 1000000000 !important;
+  z-index: 100 !important;
 }
 </style>
