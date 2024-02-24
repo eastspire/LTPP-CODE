@@ -102,6 +102,7 @@
 
 <script>
 export default {
+  name: "totopbottom",
   data() {
     return {
       show_left_button: false,

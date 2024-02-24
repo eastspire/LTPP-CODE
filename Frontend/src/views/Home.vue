@@ -580,6 +580,7 @@
 import { resolve } from "../../updateCompoents/monaco-editor/esm/vs/base/common/path";
 import music from "./home/music.vue";
 import totopbottom from "../components/totopbottom.vue";
+
 export default {
   name: "Home",
   components: { music, totopbottom },
