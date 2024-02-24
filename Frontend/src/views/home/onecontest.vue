@@ -639,7 +639,11 @@
                   cursor: auto;
                 "
               >
-                <div v-show="!isbegin">
+                <div
+                  v-show="
+                    !isbegin && !isNaN(parseFloat(begin)) && isFinite(begin)
+                  "
+                >
                   距离竞赛开始还有：{{
                     Math.floor((begin - nowtime) / 1000 / 3600) +
                     " 小时 " +
@@ -653,7 +657,14 @@
                     " 秒 "
                   }}
                 </div>
-                <div v-show="isbegin && !isend">
+                <div
+                  v-show="
+                    isbegin &&
+                    !isend &&
+                    !isNaN(parseFloat(end)) &&
+                    isFinite(end)
+                  "
+                >
                   距离竞赛结束还有：{{
                     Math.floor((end - nowtime) / 1000 / 3600).toFixed(0) +
                     " 小时 " +
