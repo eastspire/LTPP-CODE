@@ -35,10 +35,70 @@ class Image
             ->select('url')
             ->inRandomOrder()
             ->first();
+        // 无图片，生成图片成功
+        if (!$table && Image::getImageList()) {
+            $table = Db::table('image')
+                ->where('isdel', 0)
+                ->select('url')
+                ->inRandomOrder()
+                ->first();
+        }
         if (!$table) {
             return '';
         }
         return $table->url;
     }
-}
-;
+
+    /**
+     * 有图片直接返回URL列表，无图片，生成图片返回URL列表
+     * @return array res 图片url列表
+     */
+    static public function getImageList()
+    {
+        $image_list = Db::table('image')
+            ->where('isdel', 0)
+            ->pluck('url')
+            ->toArray();
+        if (!$image_list) {
+            $testpath = Base::$LTPP_public_path . Base::$LTPP_public_static_path . '/dbimage/';
+            // 清空数据库
+            Db::table('image')
+                ->where('isdel', 0)
+                ->update(['isdel' => 1]);
+            Base::$GLOBlinuxurl = Base::getSettingKeyData('GLOBlinuxurl');
+            $data = [];
+            $root_id = Base::getRootId();
+            foreach (Cloudfile::$photo as &$t_img) {
+                $file = glob($testpath . '*.' . $t_img);
+                foreach ($file as &$tem) {
+                    $path = Base::creatFilePath($t_img);
+                    $data[] = [
+                        'url' => Base::$GLOBlinuxurl . $path
+                    ];
+                    $id = Base::insertToDb('file_data', [
+                        'data' => file_get_contents(realpath($tem)),
+                    ]);
+                    Base::insertToDb('file_path', [
+                        'path' => $path,
+                        'file_id' => $id,
+                        'userid' => $root_id,
+                        'time' => date('Y-m-d H:i:s', time())
+                    ]);
+                    if (sizeof($data) % 888 == 0) {
+                        Db::table('image')->insert($data);
+                        $data = [];
+                    }
+                }
+                if (sizeof($data) >= 0) {
+                    Db::table('image')->insert($data);
+                    $data = [];
+                }
+            }
+            $image_list = Db::table('image')
+                ->where('isdel', 0)
+                ->pluck('url')
+                ->toArray();
+        }
+        return $image_list;
+    }
+};

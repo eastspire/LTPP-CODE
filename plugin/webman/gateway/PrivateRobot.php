@@ -18,7 +18,7 @@ use GatewayWorker\Lib\Gateway;
 use support\Db;
 use app\controller\Base;
 use app\controller\Robot;
-use app\controller\Cloudfile;
+use app\controller\Image;
 use support\Redis;
 use Webman\RedisQueue\Redis as RedisQueue;
 
@@ -650,50 +650,7 @@ class PrivateRobot extends ChatBase
      */
     static private function resetUserHeadimage(&$reply)
     {
-        $image_list = Db::table('image')
-            ->where('isdel', 0)
-            ->pluck('url')
-            ->toArray();
-        if (!$image_list) {
-            $testpath = Base::$LTPP_public_path . Base::$LTPP_public_static_path . '/dbimage/';
-            // 清空数据库
-            Db::table('image')
-                ->where('isdel', 0)
-                ->update(['isdel' => 1]);
-            Base::$GLOBlinuxurl = Base::getSettingKeyData('GLOBlinuxurl');
-            $data = [];
-            $root_id = Base::getRootId();
-            foreach (Cloudfile::$photo as &$t_img) {
-                $file = glob($testpath . '*.' . $t_img);
-                foreach ($file as &$tem) {
-                    $path = Base::creatFilePath($t_img);
-                    $data[] = [
-                        'url' => Base::$GLOBlinuxurl . $path
-                    ];
-                    $id = Base::insertToDb('file_data', [
-                        'data' => file_get_contents(realpath($tem)),
-                    ]);
-                    Base::insertToDb('file_path', [
-                        'path' => $path,
-                        'file_id' => $id,
-                        'userid' => $root_id,
-                        'time' => date('Y-m-d H:i:s', time())
-                    ]);
-                    if (sizeof($data) % 888 == 0) {
-                        Db::table('image')->insert($data);
-                        $data = [];
-                    }
-                }
-                if (sizeof($data) >= 0) {
-                    Db::table('image')->insert($data);
-                    $data = [];
-                }
-            }
-            $image_list = Db::table('image')
-                ->where('isdel', 0)
-                ->pluck('url')
-                ->toArray();
-        }
+        $image_list = Image::getImageList();
         $image_count = sizeof($image_list);
         if (!$image_count) {
             $reply = '暂无图片已跳过更新!';

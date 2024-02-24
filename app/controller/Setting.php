@@ -55,6 +55,7 @@ class Setting extends Image
         'user_id',
         'ip'
     ];
+
     /**
      * 批量生成用户
      * @param Request $request 请求
@@ -93,7 +94,7 @@ class Setting extends Image
             'password' => '',
             'sex' => '男',
             'registertime' => date('Y-m-d H:i:s', time()),
-            'headimage' => 'https://q1.qlogo.cn/headimg_dl?dst_uin=' . $email . '&spec=640',
+            'headimage' => Image::randImage(),
             'fans' => 0,
             'follow' => 0,
             'grade' => 1,
@@ -102,6 +103,8 @@ class Setting extends Image
         ];
         $successnum = 0;
         $all_user_data = [];
+        $image_list = Image::getImageList();
+        $image_length = sizeof($image_list);
         for ($i = $userbeginnum; $i <= $userendnum; $i = Base::bigIntAdd($i, '1')) {
             $ishas = Db::table('user')->where('name', $i)->exists();
             if ($ishas) {
@@ -109,7 +112,7 @@ class Setting extends Image
             }
             $one_user_data["name"] = $i;
             $one_user_data["password"] = $i;
-
+            $one_user_data['headimage'] = $image_list[rand(0, $image_length - 1)];
             $all_user_data[] = $one_user_data;
             ++$successnum;
         }

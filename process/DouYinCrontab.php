@@ -193,7 +193,7 @@ class DouYinCrontab
                                 $path_arr = $this->getSaveFilePath();
                                 $local_path = $path_arr[0];
                                 // 保存视频到本地
-                                Base::saveNetworkDouYinFileToDb(Base::getRobotId(), $video_url, $local_path);
+                                Base::saveNetworkFileToDb(Base::getRobotId(), $video_url, $local_path);
                                 // 替换视频地址为本地地址
                                 $video_url = $path_arr[1];
                                 // 已经保存本地，所以不是抖音

@@ -1469,6 +1469,9 @@ class Base
         $resid = 0;
         try {
             if ($db_name == 'file_path') {
+                if (strripos($db_name, Base::$LTPP_public_static_path) === false) {
+                    return 0;
+                }
                 $resid = Db::table($db_name)->insert($data);
             } else {
                 $resid = Db::table($db_name)->insertGetId($data);
@@ -2138,9 +2141,9 @@ class Base
     }
 
     /**
-     * 从URL下载抖音视频文件到数据库
+     * 从URL下载文件到数据库
      */
-    static public function saveNetworkDouYinFileToDb($my_aid, $url, $save_path, $is_post = false, $header = [], $body = [], $body_type_is_json = false)
+    static public function saveNetworkFileToDb($my_aid, $url, $save_path, $is_post = false, $header = [], $body = [], $body_type_is_json = false)
     {
         $file_data = '';
         try {
@@ -2159,7 +2162,7 @@ class Base
                 'time' => date('Y-m-d H:i:s', time())
             ]);
         } catch (Exception $e) {
-            Base::sendErrorNotice($e->getTraceAsString(), '保存抖音视频文件到数据库出错：' . $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), '保存网络文件到数据库出错：' . $e->getMessage());
         }
     }
 
@@ -3671,10 +3674,11 @@ class Base
      */
     static public function creatFilePath($file_upload_extension = '')
     {
-        $file_path = Base::$LTPP_public_static_path . '/' . md5(date("Y-m", time()));
+        $file_path = Base::$LTPP_public_static_path . '/' . md5(time());
         do {
             $num = rand(0, sizeof(Base::$id_char_set) - 1);
-            $file_name = Base::Base64Encode(time(), Base::$id_char_set[$num]) . '/' . md5(uniqid() . mt_rand(1, 100000) . time()) . '/' . md5(uniqid() . mt_rand(1, 100000) . time()) . '.' . $file_upload_extension;
+            $short_time = time() % 100000000;
+            $file_name = Base::Base64Encode($short_time, Base::$id_char_set[$num]) . '/' . md5(uniqid() . mt_rand(1, 100000) . time()) . '/' . md5(uniqid() . mt_rand(1, 100000) . time()) . '.' . $file_upload_extension;
         } while (Base::judgeFileExist($file_path . '/' . $file_name));
         return $file_path . '/' . $file_name;
     }
