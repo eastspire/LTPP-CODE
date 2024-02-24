@@ -679,7 +679,6 @@ class PrivateRobot extends ChatBase
             // 保存网络图片到本地
             $email_image = Base::getEmailImageToLtppUrl($tem->email);
             Base::saveNetworkFileToDb(Base::getRobotId(), $email_image, $local_path);
-
             Db::table('user')
                 ->where('id', $tem->id)
                 ->update([

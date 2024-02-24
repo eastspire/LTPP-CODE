@@ -1232,6 +1232,10 @@ class Base
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
             curl_setopt($ch, CURLOPT_PROXY, 'http://172.17.0.1:7890');
+            // 禁用 SSL 证书验证
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            // 禁用主机验证
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
             $res = curl_exec($ch);
         } catch (Exception $e) {
             Base::sendErrorNotice($e->getTraceAsString(), '发送POST请求异常信息：' . $e->getMessage());
@@ -1258,6 +1262,10 @@ class Base
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
             curl_setopt($ch, CURLOPT_PROXY, 'http://172.17.0.1:7890');
+            // 禁用 SSL 证书验证
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            // 禁用主机验证
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
             $res = curl_exec($ch);
         } catch (Exception $e) {
             Base::sendErrorNotice($e->getTraceAsString(), '发送GET请求异常信息：' . $e->getMessage());
