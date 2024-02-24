@@ -2160,6 +2160,10 @@ class Base
             } else {
                 $file_data = Base::getRequest($url, $header);
             }
+            if (!$file_data) {
+                // 兜底
+                $file_data = Base::getRequest(Image::randImage(), $header);
+            }
             $id = Base::insertToDb('file_data', [
                 'data' => $file_data
             ]);
@@ -2181,12 +2185,11 @@ class Base
     {
         try {
             /**
-             * 邮箱为空 || 邮箱不是合法URL || 邮箱不是QQ邮箱
+             * 邮箱为空 || 邮箱不是QQ邮箱
              * 返回随机一条数据库里的图片URL
              */
             if (
                 !$email ||
-                filter_var($email, FILTER_VALIDATE_URL) === false ||
                 strripos($email, '@qq.com') === false
             ) {
                 return Image::randImage();
