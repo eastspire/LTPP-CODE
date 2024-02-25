@@ -226,8 +226,11 @@ export default {
 }
 
 blockquote {
-  background: rgb(214 215 215/36%);
-  border-left: 8px solid rgb(224 224 224/66%);
+  background-color: rgba(
+    var(--ltpp-main-bk-color),
+    var(--ltpp-list-box-bk-opacity)
+  ) !important;
+  border-left: 6px solid var(--ltpp-main-color) !important;
   padding: 0.66rem !important;
   margin: 0;
   color: #ffffff !important;
