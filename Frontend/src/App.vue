@@ -188,11 +188,11 @@ export default {
   // 弹出框悬浮文字颜色
   --ltpp-hover-text-color: rgba(245, 247, 250, 0.66);
   // 组件内容盒子背景透明度
-  --ltpp-center-box-bk-opacity: 0.16;
+  --ltpp-center-box-bk-opacity: 0.36;
   // 组件内容盒子颜色
   --ltpp-box-text-color: #ffffffe6;
   // 表格背景透明度
-  --ltpp-list-box-bk-opacity: 0.16;
+  --ltpp-list-box-bk-opacity: 0.36;
 }
 
 * {
@@ -232,7 +232,7 @@ blockquote {
   ) !important;
   border-left: 6px solid var(--ltpp-main-color) !important;
   padding: 0.66rem !important;
-  margin: 0;
+  margin: 0.36rem 0rem !important;
   color: #ffffff !important;
   font-weight: 400;
 }
