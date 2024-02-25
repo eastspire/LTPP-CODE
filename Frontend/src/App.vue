@@ -188,11 +188,11 @@ export default {
   // 弹出框悬浮文字颜色
   --ltpp-hover-text-color: rgba(245, 247, 250, 0.66);
   // 组件内容盒子背景透明度
-  --ltpp-center-box-bk-opacity: 0.26;
+  --ltpp-center-box-bk-opacity: 0.28;
   // 组件内容盒子颜色
   --ltpp-box-text-color: #ffffffe6;
   // 表格背景透明度
-  --ltpp-list-box-bk-opacity: 0.26;
+  --ltpp-list-box-bk-opacity: 0.28;
 }
 
 * {
