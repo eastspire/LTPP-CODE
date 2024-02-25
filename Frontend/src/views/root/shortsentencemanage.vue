@@ -121,7 +121,7 @@
                     hitokoto = scope.row.hitokoto;
                     from = scope.row.from;
                     isadd = false;
-                    isupdate = true;
+                    id ? (isupdate = true) : (isupdate = false);
                   "
                   style="
                     margin: 0rem 2rem 0rem 0rem;
@@ -350,12 +350,12 @@ export default {
       this.shortsentenceList = tem_list;
     },
     handleCurrentChange(val) {
-      this.page = val;      
-      this.search();      
+      this.page = val;
+      this.search();
     },
     handleSizeChange(val) {
       this.page = 1;
-      this.blogpagesize = val;      
+      this.blogpagesize = val;
       this.search();
     },
     cellStyle({ rowIndex }) {
@@ -405,6 +405,9 @@ export default {
     },
     //删除
     async deleteid() {
+      if (!this.id) {
+        return;
+      }
       this.$confirm("确定删除该短句吗？", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -436,7 +439,7 @@ export default {
                   duration: 1600,
                   offset: 80,
                 });
-              }              
+              }
               this.search();
             })
             .catch((t) => {

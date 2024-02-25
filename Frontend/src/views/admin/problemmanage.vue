@@ -320,6 +320,9 @@ export default {
     },
     //删除
     async deleteid(id) {
+      if (!id) {
+        return;
+      }
       this.$confirm("确定删除该题目吗？", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",

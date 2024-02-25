@@ -104,10 +104,10 @@ export default {
     this.head = {
       Authorization: "Bearer " + window.localStorage.getItem("authorization"),
       Key: window.localStorage.getItem("key"),
-      Requestid : this.Base64Encode(new Date().getTime())
+      Requestid: this.Base64Encode(new Date().getTime()),
     };
     this.requestid_timer = setInterval(() => {
-        this.head.Requestid = this.Base64Encode(new Date().getTime())
+      this.head.Requestid = this.Base64Encode(new Date().getTime());
     }, 1000);
     this.linuxurl = window.sessionStorage.getItem("linuxurl");
     this.backurl = window.sessionStorage.getItem("linuxurl");
@@ -125,7 +125,7 @@ export default {
   },
   data() {
     return {
-      requestid_timer: null, 
+      requestid_timer: null,
       isadd: false,
       linuxurl: "",
       head: {},
@@ -136,12 +136,13 @@ export default {
   },
   methods: {
     lookimg(name) {
-      this.$router.push({
-        path: "/staticfile",
-        query: {
-          path: urlencode(this.linuxurl + name, "gbk"),
-        },
-      });
+      name &&
+        this.$router.push({
+          path: "/staticfile",
+          query: {
+            path: urlencode(this.linuxurl + name, "gbk"),
+          },
+        });
     },
     cellStyle({ rowIndex }) {
       let styleRes = {
@@ -255,6 +256,9 @@ export default {
     },
     //删除
     async deletephoto() {
+      if (!this.photo_path) {
+        return;
+      }
       this.$confirm("确定删除该图片吗？", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
