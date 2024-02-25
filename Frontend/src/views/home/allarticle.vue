@@ -429,6 +429,7 @@ export default {
     },
     toOneArticle(id) {
       id &&
+        id != this.$SqsGlobal.loading_tips &&
         this.$router.push({
           path: "/onearticle",
           query: {

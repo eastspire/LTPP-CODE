@@ -27,7 +27,7 @@
         <div
           @click="
             passdata(temtable.id);
-            temtable.id
+            temtable.id && temtable.id != $SqsGlobal.loading_tips
               ? (dialogFormVisible = true)
               : (dialogFormVisible = false);
           "
@@ -394,6 +394,7 @@ export default {
     },
     touserpage(id) {
       id &&
+        id != this.$SqsGlobal.loading_tips &&
         this.$router.push({
           path: "/userpage",
           query: {
@@ -469,7 +470,7 @@ export default {
     },
 
     async passdata(id) {
-      if (!id) {
+      if (!id || id == this.$SqsGlobal.loading_tips) {
         return;
       }
       const { data: res } = await this.$ajax({

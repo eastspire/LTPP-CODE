@@ -258,6 +258,7 @@ export default {
       this.passdata.id = id;
       this.passdata.contestid = "";
       id &&
+        id != this.$SqsGlobal.loading_tips &&
         this.$router.push({
           path: "/oneproblem",
           query: {

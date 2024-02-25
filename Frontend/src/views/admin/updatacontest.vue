@@ -544,6 +544,7 @@ export default {
   methods: {
     toonepro(id) {
       id &&
+        id != this.$SqsGlobal.loading_tips &&
         this.$router.push({
           path: "/oneproblem",
           query: {

@@ -248,6 +248,7 @@ export default {
     //加载文章
     toload(id) {
       id &&
+        id != this.$SqsGlobal.loading_tips &&
         this.$router.push({
           path: "/onearticle",
           query: {

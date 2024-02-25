@@ -806,7 +806,7 @@ export default {
       }
     },
     async lookOne(id) {
-      if (!id) {
+      if (!id || id == this.$SqsGlobal.loading_tips) {
         return;
       }
       this.goods_data = [];

@@ -262,6 +262,7 @@ export default {
     },
     tojoinpage(id) {
       id &&
+        id != this.$SqsGlobal.loading_tips &&
         this.$router.push({
           path: "/onecontest",
           query: {

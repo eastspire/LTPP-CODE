@@ -264,6 +264,7 @@ export default {
     },
     toupdata(id) {
       id &&
+        id != this.$SqsGlobal.loading_tips &&
         this.$router.push({
           path: "/updatacontest",
           query: {
@@ -334,7 +335,7 @@ export default {
     },
     //删除
     async deleteid(id) {
-      if (!id) {
+      if (!id || id == this.$SqsGlobal.loading_tips) {
         return;
       }
       this.$confirm("确定删除该竞赛吗？", "提示", {

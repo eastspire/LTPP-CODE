@@ -236,6 +236,7 @@ export default {
     },
     toUserPage(id) {
       id &&
+        id != this.$SqsGlobal.loading_tips &&
         this.$router.push({
           path: "/userpage",
           query: {
@@ -245,6 +246,7 @@ export default {
     },
     toOneQuestionPage(id) {
       id &&
+        id != this.$SqsGlobal.loading_tips &&
         this.$router.push({
           path: "/onequestion",
           query: {

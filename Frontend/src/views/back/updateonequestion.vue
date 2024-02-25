@@ -416,7 +416,7 @@ export default {
     $imgAdd(pos, $file) {
       // 第一步.将图片上传到服务器.
       let formdata = new FormData();
-      formdata.append('file', $file);
+      formdata.append("file", $file);
       this.$ajax({
         url: "/File/saveImage",
         method: "post",
@@ -528,6 +528,7 @@ export default {
 
     touserpage(id) {
       id &&
+        id != this.$SqsGlobal.loading_tips &&
         this.$router.push({
           path: "/userpage",
           query: {

@@ -320,7 +320,7 @@ export default {
     },
     //删除
     async deleteid(id) {
-      if (!id) {
+      if (!id || id == this.$SqsGlobal.loading_tips) {
         return;
       }
       this.$confirm("确定删除该题目吗？", "提示", {
@@ -416,6 +416,7 @@ export default {
     //更新
     updateid(id) {
       id &&
+        id != this.$SqsGlobal.loading_tips &&
         this.$router.push({
           path: "/oneproblemmanage",
           query: {

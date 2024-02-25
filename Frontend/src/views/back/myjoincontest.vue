@@ -241,6 +241,7 @@ export default {
     },
     tobeginpage(id) {
       id &&
+        id != this.$SqsGlobal.loading_tips &&
         this.$router.push({
           path: "/onecontest",
           query: {

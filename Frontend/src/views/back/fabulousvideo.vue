@@ -453,6 +453,7 @@ export default {
     },
     touserpage(id) {
       id &&
+        id != this.$SqsGlobal.loading_tips &&
         this.$router.push({
           path: "/userpage",
           query: {

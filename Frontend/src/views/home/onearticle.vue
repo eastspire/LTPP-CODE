@@ -1154,6 +1154,7 @@ export default {
     },
     touserpage(id) {
       id &&
+        id != this.$SqsGlobal.loading_tips &&
         this.$router.push({
           path: "/userpage",
           query: {
@@ -1168,7 +1169,7 @@ export default {
     async $imgAdd1(pos, $file) {
       // 第一步.将图片上传到服务器.
       let formdata = new FormData();
-      formdata.append('file', $file);
+      formdata.append("file", $file);
       await this.$ajax({
         url: "/File/saveImage",
         method: "post",
@@ -1194,7 +1195,7 @@ export default {
     async $imgAdd4(pos, $file) {
       // 第一步.将图片上传到服务器.
       let formdata = new FormData();
-      formdata.append('file', $file);
+      formdata.append("file", $file);
       await this.$ajax({
         url: "/File/saveImage",
         method: "post",

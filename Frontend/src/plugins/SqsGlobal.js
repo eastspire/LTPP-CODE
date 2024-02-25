@@ -34,7 +34,7 @@ const typescript = `/**\n * 输入\n * @param [fn] Function(cin_line = '', cin_a
 const ruby = `def main()\n    res = '';\n    input = gets.chomp\n    \n    \n    return res\nend\n\n\nputs main()`;
 const csharp = `using System;\n\nnamespace Main\n{\n    class Program\n    {\n        static void Main(string[] args)\n        {\n            string input = Console.ReadLine();\n            \n            \n            Console.WriteLine(input);\n        }\n    }\n}`;
 const websocket_connect_str = '@ltpp@';
-
+const loading_tips = '加载中';
 // 编辑器主题
 const themelist = [
     {
@@ -165,46 +165,46 @@ const options = [
  */
 const article_list_data = {
     id: "",
-    name: "加载中",
-    article: "加载中",
+    name: loading_tips,
+    article: loading_tips,
     image: "",
     writerid: "",
-    writer: "加载中",
-    fabulous: "加载中",
-    collection: "加载中",
-    releasetime: "加载中",
-    lastchangetime: "加载中"
+    writer: loading_tips,
+    fabulous: loading_tips,
+    collection: loading_tips,
+    releasetime: loading_tips,
+    lastchangetime: loading_tips
 };
 
 const question_list_data = {
     "id": "",
-    "name": "加载中",
+    "name": loading_tips,
     "userid": "",
-    "time": "加载中",
+    "time": loading_tips,
     "answer_num": 0,
-    "writer": "加载中",
+    "writer": loading_tips,
     "headimage": ""
 };
 const monitor_list_data = {
     "id": "",
-    "time": "加载中",
-    "path": "加载中",
-    "function": "加载中",
-    "userid": "加载中",
-    "name": "加载中",
-    "grade": "加载中",
-    "user_aid": "加载中"
+    "time": loading_tips,
+    "path": loading_tips,
+    "function": loading_tips,
+    "userid": loading_tips,
+    "name": loading_tips,
+    "grade": loading_tips,
+    "user_aid": loading_tips
 };
 // OJ题库列表数据模板
 const oj_problem_list_data = {
     id: "",
-    problemName: "加载中",
-    problemLabe: "加载中",
-    ACNum: "加载中",
-    ALLSubmitNum: "加载中",
-    Time: "加载中",
-    Memory: "加载中",
-    problemFrom: "加载中",
+    problemName: loading_tips,
+    problemLabe: loading_tips,
+    ACNum: loading_tips,
+    ALLSubmitNum: loading_tips,
+    Time: loading_tips,
+    Memory: loading_tips,
+    problemFrom: loading_tips,
     ACpoint: 1,
     hassolve: 0,
     time: '加载中'
@@ -213,13 +213,13 @@ const oj_problem_list_data = {
 // OJ竞赛列表数据模板
 const oj_contest_list_data = {
     id: "",
-    name: "加载中",
-    content: "加载中",
-    begin: "加载中",
-    end: "加载中",
-    creater: "加载中",
-    allpeople: "加载中",
-    type: "加载中",
+    name: loading_tips,
+    content: loading_tips,
+    begin: loading_tips,
+    end: loading_tips,
+    creater: loading_tips,
+    allpeople: loading_tips,
+    type: loading_tips,
     createrid: "",
     password: true
 };
@@ -237,76 +237,77 @@ const video_list_data = {
 // 商品列表数据模板
 const goods_list_data = {
     "id": "",
-    "name": "加载中",
-    "money": "加载中",
-    "path": "加载中",
-    "type": "加载中",
-    "size": "加载中",
-    "times": "加载中",
-    "blurb": "加载中",
-    "time": "加载中",
+    "name": loading_tips,
+    "money": loading_tips,
+    "path": loading_tips,
+    "type": loading_tips,
+    "size": loading_tips,
+    "times": loading_tips,
+    "blurb": loading_tips,
+    "time": loading_tips,
     "has_buy": true
 };
 
 // 公告数据模板
 const notice_list_data = {
     "id": "",
-    "content": "加载中",
-    "time": "加载中"
+    "content": loading_tips,
+    "time": loading_tips
 };
 
 // 用户列表数据模板
 const user_list_data =
 {
     id: "",
-    name: "加载中",
-    registertime: "加载中",
-    lastlogin: "加载中",
-    sex: "加载中",
-    email: "加载中",
+    name: loading_tips,
+    registertime: loading_tips,
+    lastlogin: loading_tips,
+    sex: loading_tips,
+    email: loading_tips,
     headimage: '',
-    fans: "加载中",
-    follow: "加载中",
-    online: "加载中",
-    acnum: "加载中",
-    mysay: "加载中",
+    fans: loading_tips,
+    follow: loading_tips,
+    online: loading_tips,
+    acnum: loading_tips,
+    mysay: loading_tips,
     bkimage: '',
 };
 // 用户排名界面数据模板
 const user_rank_list_data = {
-    index: "加载中",
-    id: "加载中",
-    name: "加载中",
-    acnum: "加载中",
-    registertime: "加载中",
-    lastlogin: "加载中",
+    index: loading_tips,
+    id: loading_tips,
+    name: loading_tips,
+    acnum: loading_tips,
+    registertime: loading_tips,
+    lastlogin: loading_tips,
     online: 0,
-    sex: "加载中",
-    fans: "加载中",
-    follow: "加载中",
+    sex: loading_tips,
+    fans: loading_tips,
+    follow: loading_tips,
 };
 // 提交记录数据模板
 const codehistory_data = {
     id: 0,
     userid: "",
-    language: "加载中",
-    status: "加载中",
-    time: "加载中",
+    language: loading_tips,
+    status: loading_tips,
+    time: loading_tips,
     usetime: 0,
     usememory: 0,
-    code: "加载中",
-    user: "加载中",
+    code: loading_tips,
+    user: loading_tips,
 };
 // 短句数据模板
 const short_sentence_list = {
     id: "",
-    hitokoto: "加载中",
-    from: "加载中",
+    hitokoto: loading_tips,
+    from: loading_tips,
 };
 
 const max_video_retry_times = 16;
 
 export default {
+    loading_tips,
     websocket_connect_str,
     language_map,
     map_language,

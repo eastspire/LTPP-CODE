@@ -329,6 +329,7 @@ export default {
     passid(id) {
       //加载修改博客
       id &&
+        id != this.$SqsGlobal.loading_tips &&
         this.$router.push({
           path: "/updateonearticle",
           query: {
