@@ -46,7 +46,9 @@
           <div
             @click="
               passdata(temtable.id);
-              dialogFormVisible = true;
+              temtable.id
+                ? (dialogFormVisible = true)
+                : (dialogFormVisible = false);
             "
             class="pulse-enter-active shadow ltpp-list-box"
             style="
@@ -506,7 +508,7 @@
           <el-button
             v-if="$store.state.root && $store.state.my_name === 'root'"
             type="success"
-            @click="updateuser();"
+            @click="updateuser()"
             width="auto"
             class="el-icon-upload2"
             style="font-size: 1.06rem; margin-right: 2rem; font-weight: bold"
@@ -614,7 +616,7 @@
       <div style="text-align: right">
         <el-button
           type="success"
-          @click="adduser();"
+          @click="adduser()"
           style="font-size: 1.06rem; margin-right: 2rem; font-weight: bold"
           width="auto"
           class="el-icon-upload2"
@@ -850,7 +852,7 @@ export default {
       if (this.lastkey != this.key) {
         this.page = 1;
         this.showone = false;
-      }  
+      }
       this.keysearch();
     },
     handleCurrentChange(val) {
@@ -865,6 +867,9 @@ export default {
     },
 
     async passdata(id) {
+      if (!id) {
+        return;
+      }
       this.userdata = {};
       const { data: res } = await this.$ajax({
         method: "post",
@@ -984,8 +989,8 @@ export default {
                   duration: 1600,
                   offset: 80,
                 });
-              }              
-              this.search();              
+              }
+              this.search();
             })
             .catch((t) => {
               this.$msg({

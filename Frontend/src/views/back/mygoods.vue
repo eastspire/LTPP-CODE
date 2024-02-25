@@ -537,6 +537,9 @@ export default {
       }
     },
     async lookOne(id) {
+      if (!id) {
+        return;
+      }
       this.goods_data = [];
       const { data: res } = await this.$ajax({
         method: "post",

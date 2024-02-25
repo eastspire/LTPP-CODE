@@ -460,6 +460,7 @@
                       class="el-icon-s-opportunity pulse-enter-active"
                       @click="
                         iscloseFile = true;
+                        isShowFileDialog = false;
                         lookfile();
                       "
                       >新页面打开</el-button

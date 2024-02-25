@@ -806,6 +806,9 @@ export default {
       }
     },
     async lookOne(id) {
+      if (!id) {
+        return;
+      }
       this.goods_data = [];
       this.passparam.id = id;
       const { data: res } = await this.$ajax({

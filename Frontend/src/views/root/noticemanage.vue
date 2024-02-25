@@ -92,8 +92,8 @@
               <el-button
                 class="pulse-enter-active"
                 @click="
-                  (id = scope.row.id), (isadd = false);
-                  isupdate = true;
+                  id = scope.row.id;
+                  isadd = false;
                   lookOneNotice();
                 "
                 style="
@@ -116,8 +116,12 @@
       :close-on-click-modal="false"
       :append-to-body="true"
       style="text-align: center; font-size: 2rem; font-weight: bold"
-      :width="($store.state.max_width / $store.state.now_width) * 100 + '%'"      
-      @contextmenu.prevent.native="updateid();isadd = false;isupdate = false;"
+      :width="($store.state.max_width / $store.state.now_width) * 100 + '%'"
+      @contextmenu.prevent.native="
+        updateid();
+        isadd = false;
+        isupdate = false;
+      "
       title=""
       :visible.sync="isupdate"
     >
@@ -144,7 +148,7 @@
               :subfield="prop.subfield"
               :defaultOpen="prop.defaultOpen"
               :toolbarsFlag="prop.toolbarsFlag"
-              :editable="prop.editable"
+              :editable="prop.editable && load_txt_finish"
               :scrollStyle="prop.scrollStyle"
               :codeStyle="prop.codeStyle"
               :toolbarsBackground="prop.toolbarsBackground"
@@ -214,7 +218,11 @@
       :append-to-body="true"
       style="text-align: center; font-size: 2rem; font-weight: bold"
       :width="($store.state.max_width / $store.state.now_width) * 100 + '%'"
-      @contextmenu.prevent.native="addid();isupdate = false;isadd = false;"
+      @contextmenu.prevent.native="
+        addid();
+        isupdate = false;
+        isadd = false;
+      "
       title=""
       :visible.sync="isadd"
     >
@@ -376,6 +384,7 @@ export default {
     this.isseetip = true;
     this.page = 1;
     this.limit = 50;
+    this.load_txt_finish = false;
     await this.search();
   },
   deactivated() {
@@ -407,6 +416,7 @@ export default {
   },
   data() {
     return {
+      load_txt_finish: false,
       form: {
         // 表单对话框内表单的数据
         link: "",
@@ -535,7 +545,7 @@ export default {
     async $imgAdd(pos, $file) {
       // 第一步.将图片上传到服务器.
       let formdata = new FormData();
-      formdata.append('file', $file);
+      formdata.append("file", $file);
       await this.$ajax({
         url: "/File/saveImage",
         method: "post",
@@ -609,6 +619,12 @@ export default {
     },
     //查看公告
     async lookOneNotice() {
+      if (!this.id) {
+        return;
+      }
+      this.isupdate = true;
+      this.content = "资源加载中！请耐心等待！";
+      this.load_txt_finish = false;
       const { data: res } = await this.$ajax({
         method: "post",
         url: "/Notice/backlookOneNotice",
@@ -625,7 +641,10 @@ export default {
           duration: 1600,
           offset: 80,
         });
+        this.load_txt_finish = true;
+        this.content = "资源加载失败！请稍后重试！";
       });
+      this.load_txt_finish = true;
       if (res?.code == 1) {
         this.content = res?.data;
       } else {
@@ -670,8 +689,8 @@ export default {
                 duration: 1600,
                 offset: 80,
               });
-            }          
-            this.search();          
+            }
+            this.search();
           });
         })
         .catch(() => {

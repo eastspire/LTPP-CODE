@@ -27,7 +27,9 @@
         <div
           @click="
             passdata(temtable.id);
-            dialogFormVisible = true;
+            temtable.id
+              ? (dialogFormVisible = true)
+              : (dialogFormVisible = false);
           "
           class="pulse-enter-active shadow ltpp-list-box"
           style="
@@ -467,6 +469,9 @@ export default {
     },
 
     async passdata(id) {
+      if (!id) {
+        return;
+      }
       const { data: res } = await this.$ajax({
         method: "post",
         url: "/User/lookUserData",
