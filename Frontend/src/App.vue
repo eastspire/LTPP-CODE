@@ -928,7 +928,8 @@ a:active {
 }
 
 .el-select-dropdown__item.hover {
-  color: deepskyblue !important;
+  background-color: transparent !important;
+  color: rgb(var(--ltpp-main-bk-color)) !important;
   font-weight: bold;
 }
 
