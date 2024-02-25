@@ -1,7 +1,7 @@
 <!-- OJ竞赛管理 -->
 <template>
   <div
-    class="shadow"
+    class="shadow ltpp-list-box"
     v-show="isseetip"
     @contextmenu.prevent=""
     style="margin-left: auto; margin-right: auto"

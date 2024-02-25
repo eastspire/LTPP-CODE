@@ -512,17 +512,19 @@
       </div>
       <!-- 清除浮动 -->
       <div class="clear"></div>
-      <p
-        v-show="!showfoot"
-        style="
-          font-size: 1.06rem;
-          color: deeppink;
-          text-align: center;
-          font-weight: bold;
-        "
-      >
-        没有更多内容啦！
-      </p>
+      <div v-show="!showfoot">
+        <p
+          style="
+            font-size: 1.06rem;
+            color: deeppink;
+            text-align: center;
+            font-weight: bold;
+          "
+        >
+          没有更多内容啦！
+        </p>
+        <div style="height: 2rem"></div>
+      </div>
     </div>
   </div>
 </template>

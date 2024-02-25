@@ -5,7 +5,7 @@
     class="no-select"
     style="margin-left: auto; margin-right: auto; width: 88%"
   >
-    <div class="shadow">
+    <div class="shadow ltpp-list-box">
       <div style="color: azure; border-width: 0rem; height: auto; width: 100%">
         <div :style="`min-height:${$store.state.no_scroll_height * 0.82}vh;`">
           <el-table

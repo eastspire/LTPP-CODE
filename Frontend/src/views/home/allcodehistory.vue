@@ -5,7 +5,7 @@
     class="no-select"
     style="margin-left: auto; margin-right: auto"
   >
-    <div class="shadow">
+    <div class="shadow ltpp-list-box">
       <div style="color: azure; height: auto; width: 100%">
         <div>
           <div>

@@ -57,7 +57,7 @@
           <div style="height: 1rem"></div>
           <div v-show="messagedata && messagedata.length > 0">
             <div
-              class="shadow"
+              class="shadow ltpp-list-box"
               style="
                 height: 36rem;
                 overflow-x: hidden;

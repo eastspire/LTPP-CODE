@@ -5,7 +5,7 @@
     @contextmenu.prevent=""
     style="margin-left: auto; margin-right: auto"
   >
-    <div class="shadow">
+    <div class="shadow ltpp-list-box">
       <div class="ltpp-list-box">
         <div class="search shadow">
           <el-input
@@ -351,8 +351,8 @@ export default {
                   duration: 1600,
                   offset: 80,
                 });
-              }              
-              this.search();              
+              }
+              this.search();
             })
             .catch((t) => {
               this.$msg({
@@ -400,7 +400,7 @@ export default {
     },
     //搜索预处理
     search() {
-      if (!this.key) {        
+      if (!this.key) {
         this.getlist();
         return;
       }

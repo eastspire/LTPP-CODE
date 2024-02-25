@@ -2,8 +2,8 @@
   <div v-show="isseetip" class="no-select">
     <div @contextmenu.prevent="" style="margin-left: auto; margin-right: auto">
       <div
+        class="shadow ltpp-list-box"
         style="
-          background-color: rgba(var(--ltpp-main-bk-color), 0);
           color: azure;
           border-width: 0rem;
           border-color: rgba(var(--ltpp-main-bk-color), 0);
@@ -13,15 +13,13 @@
       >
         <div>
           <p
-            class="shadow"
+            class="shadow ltpp-list-box"
             style="
               font-size: 1.66rem;
               text-align: center;
               font-weight: bold;
-              margin: 0rem 1rem 2rem 1rem;
-              padding-top: 1rem;
-              padding-bottom: 1rem;
-              background-color: rgba(var(--ltpp-light-color), 0.16);
+              padding: 1rem 0rem;
+              background-color: rgba(var(--ltpp-main-bk-color), 0.66);
               color: var(--ltpp-box-text-color);
             "
           >
@@ -169,17 +167,6 @@
           </div>
           <!-- 清除浮动 -->
           <div class="clear"></div>
-          <p
-            v-show="!noshowfoot"
-            style="
-              font-size: 1.06rem;
-              color: deeppink;
-              text-align: center;
-              font-weight: bold;
-            "
-          >
-            没有更多内容啦！
-          </p>
         </div>
       </div>
     </div>
@@ -192,7 +179,6 @@ export default {
   name: "oneproblemsolve",
   created() {
     this.isseetip = true;
-    this.noshowfoot = false;
     this.page = 1;
     this.isfollow = false;
     if (
@@ -245,7 +231,6 @@ export default {
       isseetip: true,
       aclist: [],
       canclick: true,
-      noshowfoot: false,
       problemid: 0,
       page: 1,
       userdata: [],
@@ -364,7 +349,6 @@ export default {
         setTimeout(() => {
           this.$router.go(-1);
         }, 1000);
-        this.noshowfoot = false;
       } else if (
         res?.data &&
         res?.data.length <= 0 &&
@@ -379,14 +363,17 @@ export default {
         setTimeout(() => {
           this.$router.go(-1);
         }, 1000);
-        this.noshowfoot = false;
       } else if (res?.data && res?.data.length <= 0) {
-        this.noshowfoot = false;
+        this.$msg({
+          type: "success",
+          message: "没有更多内容啦！",
+          duration: 1600,
+          offset: 80,
+        });
       } else {
         if (!this.isinit) {
           this.userarticle = [];
         }
-        this.noshowfoot = true;
         this.userarticle.push(...res?.data);
       }
       this.isinit = true;

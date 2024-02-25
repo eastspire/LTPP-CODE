@@ -5,7 +5,7 @@
     class="no-select"
     style="margin-left: auto; margin-right: auto"
   >
-    <div class="shadow">
+    <div class="shadow ltpp-list-box">
       <div>
         <div class="ltpp-list-box">
           <div class="search shadow">
@@ -181,7 +181,7 @@
             </el-table-column>
           </el-table>
         </div>
-        <el-dialog        
+        <el-dialog
           @contextmenu.prevent.native="isseecode = false"
           title="代码详情"
           :visible.sync="isseecode"

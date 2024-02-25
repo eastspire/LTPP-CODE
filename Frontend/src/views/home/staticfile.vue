@@ -13,7 +13,10 @@
     @contextmenu.prevent=""
     style="margin-left: auto; margin-right: auto; text-align: center"
   >
-    <div class="shadow" :style="`height:${$store.state.no_scroll_height}vh; `">
+    <div
+      class="shadow main-center-box-content"
+      :style="`height:${$store.state.no_scroll_height}vh; `"
+    >
       <iframe
         style="border-width: 0rem; min-height: 31.2rem"
         height="100%"

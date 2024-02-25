@@ -4,14 +4,14 @@
     @contextmenu.prevent=""
   >
     <el-container
-      class="shadow"
+      class="shadow ltpp-list-box"
       :style="`height:${$store.state.no_scroll_height}vh; border: 1px solid rgba(0,0,0,0.1);`"
     >
       <el-aside
         v-loading.lock="!chat_list_loadfinish"
         element-loading-text="拼命加载中"
         element-loading-spinner="el-icon-loading"
-        element-loading-background="background-color:rgba(var(--ltpp-main-bk-color),var(--ltpp-list-box-bk-opacity))"          
+        element-loading-background="background-color:rgba(var(--ltpp-main-bk-color),var(--ltpp-list-box-bk-opacity))"
         width="200px"
         style="background-color: rgba(var(--ltpp-main-bk-color), 0.16)"
         id="scroll"
@@ -37,9 +37,7 @@
         </div>
         <div id="list">
           <div v-for="tem in user_list" :key="tem.idnex" class="user">
-            <div
-              @click="changeNowWindow(tem)"
-            >
+            <div @click="changeNowWindow(tem)">
               <el-image
                 fit="cover"
                 style="height: 3.4rem; width: 3.4rem"
@@ -80,7 +78,7 @@
         v-loading.lock="!load_msg_list_finish"
         element-loading-text="拼命加载中"
         element-loading-spinner="el-icon-loading"
-        element-loading-background="background-color:rgba(var(--ltpp-main-bk-color),var(--ltpp-list-box-bk-opacity))"    
+        element-loading-background="background-color:rgba(var(--ltpp-main-bk-color),var(--ltpp-list-box-bk-opacity))"
         v-if="user_list && typeof user_list == 'object' && user_list.length > 0"
       >
         <el-header class="main_header" v-show="now_user && now_user.id">
@@ -473,7 +471,14 @@
               @dblclick="downloadonefile(tem[0], tem[4])"
             >
               <div :class="gitclass[tem[1] - 1]"></div>
-              <div style="white-space:nowrap;text-overflow:ellipsis;overflow:hidden;width:84%;">
+              <div
+                style="
+                  white-space: nowrap;
+                  text-overflow: ellipsis;
+                  overflow: hidden;
+                  width: 84%;
+                "
+              >
                 <el-tooltip
                   class="item;"
                   effect="dark"
@@ -672,31 +677,31 @@ export default {
     this.linuxurl = window.sessionStorage.getItem("linuxurl");
     if (!this.linuxurl) {
       await this.getlinuxurl();
-    }    
+    }
     await this.loadCharset();
     // 获取聊天列表
     await this.getUserAndGroupList();
   },
   activated() {
-    try{
+    try {
       this.isSeeLastBtn = false;
       this.head = {
         Authorization: "Bearer " + window.localStorage.getItem("authorization"),
         Key: window.localStorage.getItem("key"),
-        Requestid : this.Base64Encode(new Date().getTime())
+        Requestid: this.Base64Encode(new Date().getTime()),
       };
       this.requestid_timer = setInterval(() => {
-          this.head.Requestid = this.Base64Encode(new Date().getTime())
+        this.head.Requestid = this.Base64Encode(new Date().getTime());
       }, 1000);
       let list = document.getElementById("list");
       list.addEventListener("click", this.onclicklist);
-      this.chat_msg_list = this.chat_msg_list.slice(-50);  
+      this.chat_msg_list = this.chat_msg_list.slice(-50);
       window.localStorage.setItem(
         "Chat " + this.now_user.type + " " + this.now_user.id,
         JSON.stringify(this.chat_msg_list.slice(-50))
       );
       this.getHistoryChatData(true);
-    }catch(err){}
+    } catch (err) {}
     this.$nextTick(() => {
       this.to_scroll_bottom(1);
     });
@@ -730,7 +735,7 @@ export default {
   },
 
   methods: {
-    async changeNowWindow(tem){
+    async changeNowWindow(tem) {
       this.id = 0;
       tem.no_look_num = 0;
       this.now_post_type = tem.type;
@@ -805,7 +810,7 @@ export default {
     async $imgAdd(pos, $file) {
       // 第一步.将图片上传到服务器.
       let formdata = new FormData();
-      formdata.append('file', $file);
+      formdata.append("file", $file);
       await this.$ajax({
         url: "/File/saveImage",
         method: "post",
@@ -896,7 +901,7 @@ export default {
           "Content-Type": "application/json; application/octet-stream;",
         },
         data: {
-          path: file_path
+          path: file_path,
         },
       })
         .then((res) => {
@@ -917,7 +922,8 @@ export default {
           link.download = file_name; // 重命名文件
           link.click();
           URL.revokeObjectURL(url); // 释放内存
-        }).catch((t) => {
+        })
+        .catch((t) => {
           this.$msg({
             type: "error",
             message: t,
@@ -984,7 +990,8 @@ export default {
           duration: 1600,
           offset: 80,
         });
-        this.mymessage = "我刚刚上传" + response.filename + "到云文件，快去看看吧。";
+        this.mymessage =
+          "我刚刚上传" + response.filename + "到云文件，快去看看吧。";
         this.postmessage();
         this.mymessage = "";
       } else {
@@ -1004,7 +1011,7 @@ export default {
       if (response?.url) {
         this.group_data.headimage = response.url;
         this.creat_group_chat_image = response.url;
-      } 
+      }
       this.deleteOneFileHistoryFromUpList(file, file_list);
     },
     async getlinuxurl() {
@@ -1275,7 +1282,7 @@ export default {
     },
     // 加载新消息
     async getLatestChatData() {
-      try{
+      try {
         if (!this.now_user.id || !this.now_user.type) {
           this.$msg({
             type: "error",
@@ -1321,7 +1328,7 @@ export default {
           });
           this.load_msg_list_finish = true;
         });
-        if(this.now_user.id != copy_now_user_id){
+        if (this.now_user.id != copy_now_user_id) {
           // 切换用户了
           this.load_msg_list_finish = true;
           return;
@@ -1340,7 +1347,7 @@ export default {
           window.localStorage.setItem(
             "Chat " + this.now_user.type + " " + this.now_user.id,
             JSON.stringify(res?.data)
-          );          
+          );
         } else {
           this.$msg({
             type: "error",
@@ -1354,7 +1361,7 @@ export default {
         this.$nextTick(() => {
           this.to_scroll_bottom(1);
         });
-      }catch(err){
+      } catch (err) {
         this.load_msg_list_finish = true;
       }
     },
@@ -1362,12 +1369,13 @@ export default {
     async getHistoryChatData(is_init = false) {
       this.isSeeLastBtn = false;
       if (!this.now_user.id || !this.now_user.type) {
-        !is_init && this.$msg({
-          type: "error",
-          message: "用户加载出错",
-          duration: 1600,
-          offset: 80,
-        });
+        !is_init &&
+          this.$msg({
+            type: "error",
+            message: "用户加载出错",
+            duration: 1600,
+            offset: 80,
+          });
         return;
       }
 
@@ -1381,13 +1389,14 @@ export default {
         this.id = 0;
       }
 
-      if (!this.id) {        
-        !is_init && this.$msg({
-          type: "success",
-          message: "没有更久远的历史记录啦",
-          duration: 1600,
-          offset: 80,
-        });
+      if (!this.id) {
+        !is_init &&
+          this.$msg({
+            type: "success",
+            message: "没有更久远的历史记录啦",
+            duration: 1600,
+            offset: 80,
+          });
         return;
       }
 
@@ -1407,41 +1416,44 @@ export default {
           msg_id: this.id,
           user_id: this.now_user.id,
         },
-      }).catch((t) => {        
-        !is_init && this.$msg({
-          type: "error",
-          message: t,
-          duration: 1600,
-          offset: 80,
-        });
+      }).catch((t) => {
+        !is_init &&
+          this.$msg({
+            type: "error",
+            message: t,
+            duration: 1600,
+            offset: 80,
+          });
         return;
       });
       if (res?.code == 1) {
         let len = res?.data.length;
-        if(is_init && len > 0){          
-          this.isSeeLastBtn = true;          
+        if (is_init && len > 0) {
+          this.isSeeLastBtn = true;
         }
         if (len <= 0) {
-          !is_init && this.$msg({
-            type: "success",
-            message: "没有更久远的历史记录啦",
-            duration: 1600,
-            offset: 80,
-          });
+          !is_init &&
+            this.$msg({
+              type: "success",
+              message: "没有更久远的历史记录啦",
+              duration: 1600,
+              offset: 80,
+            });
           return;
         }
-        if(!is_init){        
+        if (!is_init) {
           res.data = res?.data.reverse();
           this.chat_msg_list = [...res?.data, ...this.chat_msg_list];
           this.to_last_scroll();
         }
       } else {
-        !is_init && this.$msg({
-          type: "error",
-          message: res?.msg,
-          duration: 1600,
-          offset: 80,
-        });
+        !is_init &&
+          this.$msg({
+            type: "error",
+            message: res?.msg,
+            duration: 1600,
+            offset: 80,
+          });
       }
       !is_init && this.getHistoryChatData(true);
     },

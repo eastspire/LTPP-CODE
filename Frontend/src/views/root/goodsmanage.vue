@@ -5,7 +5,7 @@
     class="no-select"
     style="margin-left: auto; margin-right: auto"
   >
-    <div class="shadow">
+    <div class="shadow ltpp-list-box">
       <div class="shadow ltpp-list-box" style="border-width: 0rem">
         <div class="search shadow">
           <el-input
@@ -537,10 +537,10 @@ export default {
     this.head = {
       Authorization: "Bearer " + window.localStorage.getItem("authorization"),
       Key: window.localStorage.getItem("key"),
-      Requestid : this.Base64Encode(new Date().getTime())
+      Requestid: this.Base64Encode(new Date().getTime()),
     };
     this.requestid_timer = setInterval(() => {
-        this.head.Requestid = this.Base64Encode(new Date().getTime())
+      this.head.Requestid = this.Base64Encode(new Date().getTime());
     }, 1000);
     this.isseetip = true;
     if (this.total != 0) {

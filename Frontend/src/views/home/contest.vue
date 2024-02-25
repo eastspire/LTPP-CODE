@@ -6,7 +6,7 @@
     class="no-select"
     style="margin-left: auto; margin-right: auto"
   >
-    <div class="shadow">
+    <div class="shadow ltpp-list-box">
       <div style="border-width: 0rem">
         <div class="search shadow">
           <el-input

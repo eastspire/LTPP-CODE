@@ -81,7 +81,7 @@
             <div style="height: 0.8rem"></div>
             <div
               v-for="(tem, index) in list"
-              class="shadow"
+              class="shadow ltpp-list-box"
               :key="index"
               :style="`cursor: pointer; background-color:${
                 index % 2 != 0 ? deepcolor : notdeepcolor
