@@ -32,7 +32,7 @@
           "
           @click="useqqheadimage()"
         >
-          点击使用QQ头像
+          点击使用邮箱头像
         </button>
       </div>
     </div>
@@ -288,7 +288,6 @@
           placeholder="请输入个性签名"
           style="font-size: 1rem"
           v-model.lazy="userdata['mysay']"
-          @blur="updata()"
         >
         </el-input>
 
@@ -308,7 +307,6 @@
           placeholder="请输入CSS自定义配置"
           style="font-size: 1rem"
           v-model.lazy="userdata['root_css']"
-          @blur="updata()"
         >
         </el-input>
 
@@ -492,15 +490,15 @@ export default {
     this.head = {
       Authorization: "Bearer " + window.localStorage.getItem("authorization"),
       Key: window.localStorage.getItem("key"),
-      Requestid : this.Base64Encode(new Date().getTime())
+      Requestid: this.Base64Encode(new Date().getTime()),
     };
     this.requestid_timer = setInterval(() => {
-        this.head.Requestid = this.Base64Encode(new Date().getTime())
+      this.head.Requestid = this.Base64Encode(new Date().getTime());
     }, 1000);
     if (!this.linuxurl) {
       await this.getlinuxurl();
     }
-    await this.loaddata();    
+    await this.loaddata();
   },
   deactivated() {
     clearInterval(this.requestid_timer);
@@ -514,7 +512,7 @@ export default {
       head: {
         authorization: "Bearer " + window.localStorage.getItem("authorization"),
         key: window.localStorage.getItem("key"),
-        Requestid : this.Base64Encode(new Date().getTime())
+        Requestid: this.Base64Encode(new Date().getTime()),
       },
       linuxurl: "",
       bkimage: "",
