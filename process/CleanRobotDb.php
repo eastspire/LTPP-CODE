@@ -82,7 +82,7 @@ class CleanRobotDb
                 Db::table('usernotice')
                     ->where('isdel', 0)
                     ->where('time', '<', $time)
-                    ->whereExists(function ($query) use ($robot_email, $time) {
+                    ->whereExists(function ($query) use ($robot_email) {
                         $query->select(Db::raw(1))
                             ->from('user')
                             ->where('user.email', $robot_email)
