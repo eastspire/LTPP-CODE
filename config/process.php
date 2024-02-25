@@ -24,10 +24,6 @@
  */
 
 return [
-    'DeleteDouYinVideo' => [
-        'handler' => process\DeleteDouYinVideo::class,
-        'count' => 1
-    ],
     'DouYinCrontab' => [
         'handler' => process\DouYinCrontab::class,
         'count' => 1

@@ -9,6 +9,9 @@ use support\Db;
 
 class DouYinCrontab
 {
+    /**
+     * 重命名
+     */
     private function rename($preview_title = '')
     {
         try {
@@ -68,6 +71,24 @@ class DouYinCrontab
     }
 
     /**
+     * 删除抖音过期视频
+     */
+    private function deleteDouYinTimeoutVideo()
+    {
+        try {
+            $noupdate_limit_seconds = Base::getSettingKeyData('douyin_noupdate_limit_seconds');
+            // 删除过期的抖音视频
+            Db::table('video')
+                ->where('isdouyin', 1)
+                ->where('isdel', 0)
+                ->where('time', '<', date('Y-m-d H:i:s', time() - $noupdate_limit_seconds))
+                ->update(['isdel' => 1]);
+        } catch (Exception $e) {
+            Base::sendErrorNotice($e->getTraceAsString(), '定时任务进程<strong>【DouYinCrontab】</strong>运行错误：' . $e->getMessage());
+        }
+    }
+
+    /**
      * 获取收藏列表
      * @param {*} count 
      * @param {*} cursor
@@ -97,6 +118,9 @@ class DouYinCrontab
         return $res;
     }
 
+    /**
+     * 运行
+     */
     private function run()
     {
         try {
@@ -104,6 +128,7 @@ class DouYinCrontab
             $count = 10;
             $cursor = 0;
             while (true) {
+                $this->deleteDouYinTimeoutVideo();
                 // 每轮请求重新读取，root更新配置尽可能早生效
                 $is_save_file = Base::getSettingKeyData('douyin_save_file');
                 $save_limit = Base::getSettingKeyData('douyin_save_limit');
