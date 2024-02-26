@@ -815,7 +815,7 @@ class PrivateRobot extends ChatBase
                     'Authorization:Bearer ' . $api_key
                 ];
                 $result = Base::postRequest($gpt_api_url, $headers, $data, true);
-                Robot::sendChatToOneUserMsgAndEmail(Base::getRobotId(), '<strong>' . $time . ' ' . $user_name . ' 调用GPT结果</strong><br>' . ($result ? $result : '调用失败！'));
+                Robot::sendChatToOneUserMsgAndEmail(Base::getRobotId(), '<strong>' . $time . ' ' . $user_name . ' 调用GPT详情</strong><br><strong>用户问题</strong><br>' . $msg . '<strong>调用GPT回答</strong><br>' . ($result ? json_encode($result, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) : '调用GPT失败！'));
                 $result = json_decode($result, true);
                 if (isset($result['choices']) && sizeof($result['choices']) > 0 && isset($result['choices'][0]['message']) && isset($result['choices'][0]['message']['content'])) {
                     return $result['choices'][0]['message']['content'];
