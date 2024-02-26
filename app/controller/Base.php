@@ -3856,7 +3856,14 @@ class Base
                 $msg = '暂无报错信息';
             }
             $now = date('Y-m-d H:i:s', time());
-            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '<h4>LTPP运行错误【' . $now . '】</h4><br><strong>报错信息</strong><br><pre style="white-space:pre-wrap;word-wrap:break-word;">' . $msg . '</pre><br><strong>Trace信息</strong><br><pre style="white-space:pre-wrap;word-wrap:break-word;">' . $trace_str . '</pre>');
+            Robot::sendChatToOneUserMsgAndEmail(
+                Base::getRootId(),
+                '<h4>LTPP运行错误【' . $now
+                    . '】</h4><br><strong>报错信息</strong><br><pre style="white-space:pre-wrap;word-wrap:break-word;">'
+                    . $msg .
+                    '</pre><br><strong>Trace信息</strong><br><pre style="white-space:pre-wrap;word-wrap:break-word;">'
+                    . $trace_str . '</pre>'
+            );
         } catch (Exception $e) {
             Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), $e->getMessage());
         }

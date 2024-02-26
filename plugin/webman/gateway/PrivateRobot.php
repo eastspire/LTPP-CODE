@@ -815,7 +815,14 @@ class PrivateRobot extends ChatBase
                     'Authorization:Bearer ' . $api_key
                 ];
                 $result = Base::postRequest($gpt_api_url, $headers, $data, true);
-                Robot::sendChatToOneUserMsgAndEmail(Base::getRobotId(), '<strong>' . $time . ' ' . $user_name . ' 调用GPT详情</strong><br><strong>用户问题</strong><br>' . $msg . '<strong>调用GPT回答</strong><br>' . ($result ? json_encode($result, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) : '调用GPT失败！'));
+                Robot::sendChatToOneUserMsgAndEmail(
+                    Base::getRobotId(),
+                    '<strong>' . $time . ' ' . $user_name
+                        . ' 调用GPT详情</strong><br><strong>用户问题</strong><br>'
+                        . $msg . '<br><strong>调用GPT回答</strong><br><pre style="white-space:pre-wrap;word-wrap:break-word;">'
+                        . ($result ? json_encode(json_decode($result, true), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) : '调用GPT失败！')
+                        . '</pre>'
+                );
                 $result = json_decode($result, true);
                 if (isset($result['choices']) && sizeof($result['choices']) > 0 && isset($result['choices'][0]['message']) && isset($result['choices'][0]['message']['content'])) {
                     return $result['choices'][0]['message']['content'];
