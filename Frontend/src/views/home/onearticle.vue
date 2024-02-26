@@ -64,7 +64,7 @@
               :fontSize="prop.fontSize"
               :externalLink="externalLink"
               :xssOptions="whiteList"
-              style="min-height: 0rem; height: auto"
+              style="color: #ebeef5; min-height: 0rem; height: auto"
             >
             </mavon-editor>
           </div>
@@ -402,6 +402,7 @@
                         style="
                           min-height: 0rem !important;
                           height: auto !important;
+                          color: aliceblue !important;
                         "
                       ></mavon-editor>
                     </div>
@@ -557,6 +558,7 @@
                             style="
                               min-height: 0rem !important;
                               height: auto !important;
+                              color: aliceblue !important;
                             "
                           ></mavon-editor>
                         </div>
