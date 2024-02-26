@@ -203,11 +203,13 @@
         <div style="float: left; text-align: left" v-show="isupdate">
           <el-button
             width="auto"
-            style="font-size: 1.06rem; margin: 2rem 2.6rem"
-            class="pulse-enter-active"
+            size="small"
+            style="font-size: 1.06rem; margin: 1rem 2rem 0rem 2rem"
+            class="pulse-enter-active el-icon-success"
             type="primary"
             @click="updateid()"
-            >更新</el-button
+          >
+            更新</el-button
           >
         </div>
 
@@ -215,13 +217,15 @@
           <el-button
             type="success"
             width="auto"
-            style="margin: 2rem 2.6rem; font-size: 1.06rem"
-            class="pulse-enter-active"
+            size="small"
+            style="margin: 1rem 2rem 0rem 2rem; font-size: 1.06rem"
+            class="pulse-enter-active el-icon-warning"
             @click="
               isadd = false;
               isupdate = false;
             "
-            >取消</el-button
+          >
+            取消</el-button
           >
         </div>
       </div>
@@ -271,24 +275,28 @@
         <div style="float: left; text-align: left" v-show="isadd">
           <el-button
             width="auto"
-            style="font-size: 1.06rem; margin: 2rem 2.6rem"
-            class="pulse-enter-active"
+            size="small"
+            style="font-size: 1.06rem; margin: 1rem 2rem 0rem 2rem"
+            class="pulse-enter-active el-icon-success"
             type="primary"
             @click="addid()"
-            >添加</el-button
+          >
+            添加</el-button
           >
         </div>
         <div style="text-align: right">
           <el-button
             type="success"
             width="auto"
-            style="margin: 2rem 2.6rem; font-size: 1.06rem"
-            class="pulse-enter-active"
+            size="small"
+            style="margin: 1rem 2rem 0rem 2rem; font-size: 1.06rem"
+            class="pulse-enter-active el-icon-warning"
             @click="
               isadd = false;
               isupdate = false;
             "
-            >取消</el-button
+          >
+            取消</el-button
           >
         </div>
         <el-divider content-position="center">推荐使用下方方式</el-divider>
