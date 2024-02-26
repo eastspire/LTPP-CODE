@@ -265,14 +265,14 @@
           deletesure = false;
           dialogFormVisible = false;
         "
-        style="margin: 0.2rem 1rem; font-weight: bold"
+        style="margin: 0.2rem 1rem 0rem 1rem; font-weight: bold"
         width="auto"
         class="el-icon-check pulse-enter-active"
         >确定</el-button
       >
       <el-button
         type="primary"
-        style="margin: 0.2rem 1rem; font-weight: bold"
+        style="margin: 0.2rem 1rem 0rem 1rem; font-weight: bold"
         @click="deletesure = false"
         class="el-icon-s-unfold pulse-enter-active"
         width="auto"
@@ -336,7 +336,11 @@
               dialogFormVisible = false;
             "
             width="auto"
-            style="width: auto; margin: 0.4rem 1rem; font-weight: bold"
+            style="
+              width: auto;
+              margin: 0.4rem 1rem 0rem 1rem;
+              font-weight: bold;
+            "
             class="el-icon-delete pulse-enter-active"
             >移除粉丝</el-button
           >
@@ -349,7 +353,11 @@
               touserpage(fansid);
             "
             width="auto"
-            style="width: auto; margin: 0.4rem 4rem; font-weight: bold"
+            style="
+              width: auto;
+              margin: 0.4rem 1rem 0rem 1rem;
+              font-weight: bold;
+            "
             class="el-icon-user-solid pulse-enter-active"
             >主页</el-button
           >
@@ -357,7 +365,11 @@
             type="primary"
             @click="dialogFormVisible = false"
             width="auto"
-            style="width: auto; margin: 0.4rem 1rem; font-weight: bold"
+            style="
+              width: auto;
+              margin: 0.4rem 1rem 0rem 1rem;
+              font-weight: bold;
+            "
             class="el-icon-s-unfold pulse-enter-active"
             >返回</el-button
           >

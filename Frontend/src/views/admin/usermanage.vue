@@ -444,13 +444,13 @@
         style="font-size: 1.06rem; overflow: hidden"
       ></el-input>
       <div style="height: 1.6rem"></div>
-      <div slot="footer" class="dialog-footer">
+      <div class="dialog-footer">
         <div style="float: left">
           <el-button
             v-if="userdata.name != 'root' && $store.state.root"
             type="danger"
             class="el-icon-delete"
-            style="font-size: 1.06rem; margin-left: 2rem; font-weight: bold"
+            style="font-size: 1.06rem; margin-left: 0rem; font-weight: bold"
             @click="
               dialogFormVisible = false;
               deleteuser();
@@ -522,7 +522,7 @@
               addclick = false;
             "
             width="auto"
-            style="font-size: 1.06rem; margin-right: 2rem; font-weight: bold"
+            style="font-size: 1.06rem; margin-right: 0rem; font-weight: bold"
             class="el-icon-s-unfold"
             >返回</el-button
           >
