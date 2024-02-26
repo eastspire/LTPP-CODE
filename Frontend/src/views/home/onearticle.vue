@@ -64,12 +64,7 @@
               :fontSize="prop.fontSize"
               :externalLink="externalLink"
               :xssOptions="whiteList"
-              style="
-                color: #ebeef5;
-                min-height: 0rem;
-                height: auto;
-                border-width: 0rem;
-              "
+              style="min-height: 0rem; height: auto"
             >
             </mavon-editor>
           </div>
@@ -407,14 +402,6 @@
                         style="
                           min-height: 0rem !important;
                           height: auto !important;
-                          border-width: 0rem !important;
-                          background-color: rgba(
-                            228,
-                            147,
-                            208,
-                            0.16
-                          ) !important;
-                          color: aliceblue !important;
                         "
                       ></mavon-editor>
                     </div>
@@ -568,16 +555,8 @@
                             :externalLink="externalLink"
                             :xssOptions="whiteList"
                             style="
-                              background-color: rgba(
-                                41,
-                                50,
-                                56,
-                                0.16
-                              ) !important;
                               min-height: 0rem !important;
                               height: auto !important;
-                              border-width: 0rem !important;
-                              color: aliceblue !important;
                             "
                           ></mavon-editor>
                         </div>
