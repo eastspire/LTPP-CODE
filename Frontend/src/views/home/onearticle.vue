@@ -109,6 +109,28 @@
                 </el-tag>
               </p>
             </div>
+            <div style="float: left" class="no-select">
+              <p style="margin: 1rem 1rem 0.5rem 1rem">
+                <el-tag
+                  size="small"
+                  effect="dark"
+                  type="success"
+                  style="font-size: 1.06rem; font-weight: bold"
+                  >点赞数：{{ fabulous }}
+                </el-tag>
+              </p>
+            </div>
+            <div style="float: left" class="no-select">
+              <p style="margin: 1rem 1rem 0.5rem 1rem">
+                <el-tag
+                  size="small"
+                  effect="dark"
+                  type="success"
+                  style="font-size: 1.06rem; font-weight: bold"
+                  >收藏数：{{ collection }}
+                </el-tag>
+              </p>
+            </div>
           </div>
           <div style="clear: both"></div>
           <div style="height: 1rem"></div>
@@ -180,42 +202,16 @@
             <div style="height: 8rem"></div>
             <div slot="footer">
               <el-button
-                type="text"
-                style="
-                  float: left;
-                  margin-left: 0rem;
-                  color: chartreuse;
-                  font-size: 1.06rem;
-                  cursor: auto;
-                "
-                width="auto"
-                class="el-icon-message-solid"
-              >
-                点赞数：{{ fabulous }}</el-button
-              >
-              <el-button
-                type="text"
-                style="
-                  float: left;
-                  margin-left: 2rem;
-                  color: chartreuse;
-                  font-size: 1.06rem;
-                  cursor: auto;
-                "
-                width="auto"
-                class="el-icon-s-claim"
-              >
-                收藏数：{{ collection }}</el-button
-              >
-
-              <el-button
-                type="text"
                 @click="tohome()"
                 width="auto"
                 style="
                   float: right;
                   margin-right: 0rem;
-                  color: red;
+                  background-color: rgba(
+                    var(--ltpp-main-bk-color),
+                    1
+                  ) !important;
+                  color: rgba(var(--ltpp-light-color), 1) !important;
                   font-size: 1.06rem;
                 "
                 class="el-icon-s-unfold pulse-enter-active"
@@ -223,11 +219,14 @@
               >
               <el-button
                 v-show="!islove"
-                type="text"
                 style="
                   float: right;
                   margin-right: 2rem;
-                  color: aqua;
+                  background-color: rgba(
+                    var(--ltpp-main-bk-color),
+                    1
+                  ) !important;
+                  color: rgba(var(--ltpp-light-color), 1) !important;
                   font-size: 1.06rem;
                 "
                 @click="collectionClick()"
@@ -238,11 +237,14 @@
 
               <el-button
                 v-show="islove"
-                type="text"
                 style="
                   float: right;
                   margin-right: 2rem;
-                  color: deeppink;
+                  background-color: rgba(
+                    var(--ltpp-main-bk-color),
+                    1
+                  ) !important;
+                  color: rgba(var(--ltpp-light-color), 1) !important;
                   font-size: 1.06rem;
                 "
                 @click="delcollectionClick()"
@@ -253,11 +255,14 @@
 
               <el-button
                 v-show="!isfabulous"
-                type="text"
                 style="
                   float: right;
                   margin-right: 2rem;
-                  color: deeppink;
+                  background-color: rgba(
+                    var(--ltpp-main-bk-color),
+                    1
+                  ) !important;
+                  color: rgba(var(--ltpp-light-color), 1) !important;
                   font-size: 1.06rem;
                 "
                 @click="fabulousClick()"
@@ -266,11 +271,14 @@
                 >点赞</el-button
               >
               <el-button
-                type="text"
                 style="
                   float: right;
                   margin-right: 2rem;
-                  color: aqua;
+                  background-color: rgba(
+                    var(--ltpp-main-bk-color),
+                    1
+                  ) !important;
+                  color: rgba(var(--ltpp-light-color), 1) !important;
                   font-size: 1.06rem;
                 "
                 @click="btnExport()"
@@ -280,11 +288,14 @@
               >
               <el-button
                 v-if="is_public == 1"
-                type="text"
                 style="
                   float: right;
                   margin-right: 2rem;
-                  color: deeppink;
+                  background-color: rgba(
+                    var(--ltpp-main-bk-color),
+                    1
+                  ) !important;
+                  color: rgba(var(--ltpp-light-color), 1) !important;
                   font-size: 1.06rem;
                 "
                 @click="shareArticle()"
@@ -294,11 +305,14 @@
               >
               <el-button
                 v-if="is_can_edit"
-                type="text"
                 style="
                   float: right;
                   margin-right: 2rem;
-                  color: red;
+                  background-color: rgba(
+                    var(--ltpp-main-bk-color),
+                    1
+                  ) !important;
+                  color: rgba(var(--ltpp-light-color), 1) !important;
                   font-size: 1.06rem;
                 "
                 @click="toupdateonearticle()"
