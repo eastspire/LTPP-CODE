@@ -65,12 +65,7 @@
               :fontSize="prop.fontSize"
               :externalLink="externalLink"
               :xssOptions="whiteList"
-              style="
-                color: #ebeef5;
-                min-height: 0rem;
-                height: auto;
-                border-width: 0rem;
-              "
+              style="color: #ebeef5; min-height: 0rem; height: auto"
             >
             </mavon-editor>
           </div>
@@ -124,11 +119,7 @@
                 :previewBackground="prop.previewBackground"
                 :editorBackground="prop.editorBackground"
                 :xssOptions="whiteList"
-                style="
-                  min-height: 16rem !important;
-                  height: auto !important;
-                  border-width: 0rem !important;
-                "
+                style="min-height: 16rem !important; height: auto !important"
               >
                 <!-- 引用视频链接的自定义按钮 -->
                 <template v-slot:left-toolbar-after>
@@ -342,13 +333,6 @@
                         style="
                           min-height: 0rem !important;
                           height: auto !important;
-                          border-width: 0rem !important;
-                          background-color: rgba(
-                            228,
-                            147,
-                            208,
-                            0.16
-                          ) !important;
                           color: aliceblue !important;
                         "
                       ></mavon-editor>
@@ -503,15 +487,8 @@
                             :externalLink="externalLink"
                             :xssOptions="whiteList"
                             style="
-                              background-color: rgba(
-                                41,
-                                50,
-                                56,
-                                0.16
-                              ) !important;
                               min-height: 0rem !important;
                               height: auto !important;
-                              border-width: 0rem !important;
                               color: aliceblue !important;
                             "
                           ></mavon-editor>

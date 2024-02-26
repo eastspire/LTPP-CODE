@@ -153,11 +153,7 @@
                 :previewBackground="prop.previewBackground"
                 :editorBackground="prop.editorBackground"
                 :xssOptions="whiteList"
-                style="
-                  min-height: 16rem !important;
-                  height: auto !important;
-                  border-width: 0rem !important;
-                "
+                style="min-height: 16rem !important; height: auto !important"
               >
                 <!-- 引用视频链接的自定义按钮 -->
                 <template v-slot:left-toolbar-after>
