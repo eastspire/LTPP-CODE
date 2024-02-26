@@ -184,7 +184,8 @@
         <div style="float: left; text-align: left" v-show="isupdate">
           <el-button
             width="auto"
-            style="font-size: 1.06rem; margin: 2rem 2.6rem"
+            size="small"
+            style="font-size: 1.06rem; margin-right: 2rem"
             type="danger"
             class="pulse-enter-active"
             @click="
@@ -198,9 +199,10 @@
 
         <div style="text-align: right">
           <el-button
+            size="small"
             type="success"
             width="auto"
-            style="margin: 2rem 2.6rem; font-size: 1.06rem"
+            style="margin-right: 2rem; font-size: 1.06rem"
             class="pulse-enter-active"
             @click="
               isadd = false;
@@ -285,7 +287,8 @@
         <div style="float: left; text-align: left" v-show="isadd">
           <el-button
             width="auto"
-            style="font-size: 1.06rem; margin: 2rem 2.6rem"
+            size="small"
+            style="font-size: 1.06rem; margin-left: 2rem"
             class="pulse-enter-active"
             type="danger"
             @click="
@@ -298,9 +301,10 @@
         </div>
         <div style="text-align: right">
           <el-button
+            size="small"
             type="success"
             width="auto"
-            style="margin: 2rem 2.6rem; font-size: 1.06rem"
+            style="margin-right: 2rem; font-size: 1.06rem"
             class="pulse-enter-active"
             @click="
               isadd = false;
