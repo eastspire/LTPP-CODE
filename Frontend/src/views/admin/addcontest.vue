@@ -341,7 +341,7 @@
             class="el-icon-s-unfold pulse-enter-active"
             style="margin: 1rem 0.4rem 0rem 1rem; font-size: 1.06rem"
             @click="backlast()"
-            >返回</el-button
+            >【返回】</el-button
           >
         </div>
         <div style="height: 3.6rem"></div>
