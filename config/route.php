@@ -17,7 +17,7 @@ use Webman\Route;
 use app\controller\Base;
 use support\Request;
 
-Route::any(Base::$LTPP_public_static_path . '[/{path:.+}]', function (Request $request) {
+Route::any(Base::$LTPP_public_static_path . '/' . '[{path:.+}]', function (Request $request) {
     $path = '';
     $file_extion = '';
     try {
@@ -70,6 +70,6 @@ Route::any(Base::$LTPP_public_static_path . '[/{path:.+}]', function (Request $r
         return Response($file_data, 200, $response_header);
     } catch (Exception $e) {
         Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
-        return Base::notFoundPage($path, $file_extion);
     }
+    return Base::notFoundPage($path, $file_extion);
 });
