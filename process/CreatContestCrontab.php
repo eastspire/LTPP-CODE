@@ -99,7 +99,7 @@ class CreatContestCrontab
     private function getContent($title = '')
     {
         $default_content = Base::getSettingKeyData('default_contest_content');
-        $content = '<h2>' . $title . "</h2>\n\n" . $default_content;
+        $content = '<blockquote>' . $title . "</blockquote>\n\n" . $default_content;
         return $content;
     }
 
