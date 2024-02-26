@@ -62,11 +62,14 @@
                 height: 36rem;
                 overflow-x: hidden;
                 background-color: rgba(var(--ltpp-main-bk-color), 0.2);
-                padding: 1rem 1rem;
               "
               id="chatBox-content-demo"
             >
-              <div v-for="temcomment in messagedata" :key="temcomment.index">
+              <div
+                v-for="temcomment in messagedata"
+                :key="temcomment.index"
+                style="margin: 1rem"
+              >
                 <p
                   type="text"
                   style="font-size: 1.06rem; color: red; margin: 0.6rem"
@@ -77,6 +80,7 @@
                   type="textarea"
                   style="font-size: 1rem; overflow: hidden"
                   autosize
+                  disabled
                   v-model.lazy="temcomment.msg"
                 ></el-input>
               </div>

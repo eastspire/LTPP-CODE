@@ -3,7 +3,7 @@
   <div
     @contextmenu.prevent=""
     style="margin-left: auto; margin-right: auto"
-    class="no-select shadow"
+    class="no-select shadow ltpp-list-box"
   >
     <div style="color: azure; height: auto; width: 100%">
       <div>

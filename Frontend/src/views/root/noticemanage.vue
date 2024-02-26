@@ -1,7 +1,7 @@
 <!-- 公告管理 -->
 <template>
   <div
-    class="no-select shadow"
+    class="no-select shadow ltpp-list-box"
     v-show="isseetip"
     @contextmenu.prevent=""
     style="margin-left: auto; margin-right: auto"

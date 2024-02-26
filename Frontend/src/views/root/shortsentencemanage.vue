@@ -3,7 +3,7 @@
   <div
     v-show="isseetip"
     @contextmenu.prevent=""
-    class="no-select shadow"
+    class="no-select shadow ltpp-list-box"
     style="margin-left: auto; margin-right: auto"
   >
     <div class="ltpp-list-box">

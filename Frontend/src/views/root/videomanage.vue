@@ -3,7 +3,7 @@
   <div
     @contextmenu.prevent=""
     style="margin-left: auto; margin-right: auto"
-    class="no-select shadow"
+    class="no-select shadow ltpp-list-box"
   >
     <div class="ltpp-list-box">
       <div class="search shadow">
@@ -77,7 +77,9 @@
                       font-weight: bold;
                       font-size: 1.06rem;
                       color: #409eff;
-                      cursor: ${reg.test(scope.row.url) ? 'pointer' : 'default'};
+                      cursor: ${
+                        reg.test(scope.row.url) ? 'pointer' : 'default'
+                      };
                     `"
                     type="success"
                   >
@@ -339,14 +341,14 @@ export default {
   created() {
     this.issearch = false; //判断是否搜索，从而进行分页查找
   },
-  async activated() {    
+  async activated() {
     this.head = {
       Authorization: "Bearer " + window.localStorage.getItem("authorization"),
       Key: window.localStorage.getItem("key"),
-      Requestid : this.Base64Encode(new Date().getTime())
+      Requestid: this.Base64Encode(new Date().getTime()),
     };
     this.requestid_timer = setInterval(() => {
-        this.head.Requestid = this.Base64Encode(new Date().getTime())
+      this.head.Requestid = this.Base64Encode(new Date().getTime());
     }, 1000);
     this.bkvideourl = window.sessionStorage.getItem("linuxurl");
     if (!this.bkvideourl) {
@@ -403,13 +405,14 @@ export default {
       }
       this.videoList = tem_list;
     },
-    lookvideo(url) {      
-      this.reg.test(url) && this.$router.push({
-        path: "/staticfile",
-        query: {
-          path: urlencode(url, "gbk"),
-        },
-      });
+    lookvideo(url) {
+      this.reg.test(url) &&
+        this.$router.push({
+          path: "/staticfile",
+          query: {
+            path: urlencode(url, "gbk"),
+          },
+        });
     },
     cellStyle({ rowIndex }) {
       let styleRes = {

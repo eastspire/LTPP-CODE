@@ -105,6 +105,7 @@ export default {
   name: "totopbottom",
   data() {
     return {
+      timer: null,
       show_left_button: false,
       show_right_button: false,
     };
@@ -135,18 +136,26 @@ export default {
     },
     handleScroll() {
       this.changeView();
-      this.$nextTick(() => {
-        setTimeout(() => {
-          this.changeView();
-        }, 888);
-      });
+    },
+    creatTimer() {
+      try {
+        this.timer = setInterval(this.changeView, 888);
+      } catch (err) {}
+    },
+    cleatTimer() {
+      try {
+        clearInterval(this.timer);
+        this.timer = null;
+      } catch (err) {}
     },
   },
   mounted() {
     window.addEventListener("scroll", this.handleScroll);
+    this.creatTimer();
   },
   beforeDestroy() {
     window.removeEventListener("scroll", this.handleScroll);
+    this.cleatTimer();
   },
 };
 </script>
