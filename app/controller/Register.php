@@ -117,7 +117,7 @@ class Register extends Email
                     ]);
                 }
                 Robot::sendChatToOneUserMsg($my_aid, '<h2>LTPP账号注册成功</h2>' . "\n" . $content);
-                Robot::sendChatToOneUserMsg(Base::getRootId(), '<strong>【' . $now . '】</strong>用户<strong>【' . $name . '】</strong>注册成功');
+                Robot::sendChatToOneUserMsg(Base::getRobotId(), '<strong>【' . $now . '】</strong>用户<strong>【' . $name . '】</strong>注册成功');
                 return json(['code' => 1, 'msg' => '账号注册成功']);
             }
             return json(['code' => 0, 'msg' => '账号注册失败']);

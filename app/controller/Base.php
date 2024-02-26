@@ -25,7 +25,7 @@ class Base
     /**
      * 请求过期时间
      */
-    static $request_timout = 86400;
+    static $request_timout = 60;
 
     /**
      * gzip压缩率
