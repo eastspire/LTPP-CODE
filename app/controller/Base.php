@@ -23,6 +23,26 @@ class Base
     static $redis_db_num = 38;
 
     /**
+     * mysql域名
+     */
+    static $mysql_domain_name = 'mysql.ltpp.vip';
+
+    /**
+     * redis域名
+     */
+    static $redis_domain_name = 'redis.ltpp.vip';
+
+    /**
+     * mysql端口
+     */
+    static $mysql_port = 4466;
+
+    /**
+     * redis端口
+     */
+    static $redis_port = 6379;
+
+    /**
      * 请求过期时间
      */
     static $request_timout = 60;

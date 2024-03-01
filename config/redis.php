@@ -3,9 +3,9 @@
 use \app\controller\Base;
 
 $data = [
-    'host' => '127.0.0.1',
+    'host' => Base::$redis_domain_name,
     'password' => Base::$redis_password,
-    'port' => 6379,
+    'port' => Base::$redis_port,
     'database' => 0,
     'timeout' => 3600
 ];

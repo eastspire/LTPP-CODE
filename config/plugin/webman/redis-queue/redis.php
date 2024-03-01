@@ -4,7 +4,7 @@ use \app\controller\Base;
 
 return [
     'default' => [
-        'host' => 'redis://127.0.0.1:6379',
+        'host' => 'redis://' . Base::$redis_domain_name . ':' . Base::$redis_port,
         'options' => [
             // 密码，字符串类型，可选参数
             'auth' => Base::$redis_password,

@@ -9,8 +9,8 @@ return [
     'connections' => [
         'mysql' => [
             'driver' => 'mysql',
-            'host' => '127.0.0.1',
-            'port' => 4466,
+            'host' => Base::$mysql_domain_name,
+            'port' => Base::$mysql_port,
             'database' => 'ltpp',
             'username' => Base::$mysql_username,
             'password' => Base::$mysql_password,

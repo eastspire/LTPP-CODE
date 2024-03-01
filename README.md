@@ -12,9 +12,14 @@
 > 项目前端基于Vue.js2 + VueX + EventBus + WebWorker + Echarts + ElementUI + Animate.css + Electron + Flutter + Rust + Tauri开发，后端基于Webman + GatewayWorker开发，项目运行在Docker环境，其中Flutter用于APP开发，Electron和Tauri用于客户端开发
 
 ## 注意事项
-### 端口
+### 域名（根据实际内网IP进行修改）
+- Mysql域名（mysql.ltpp.vip）修改本地host文件映射即可
+- Redis域名（redis.ltpp.vip）修改本地host文件映射即可
+### 端口（请勿修改）
 - 1236（即时通讯系统注册，可忽略）
 - 3000（音乐|开启SSL）
+- 4466（Mysql）
+- 6379（Redis）
 - 40025（邮箱系统）
 - 40080（直播推流前端访问地址）
 - 41935（直播推流）
