@@ -18,12 +18,12 @@ return [
     'gateway' => [
         'handler' => Gateway::class,
         'listen' => 'websocket://0.0.0.0:47272',
-        'count' => cpu_count() > 6 ? 6 : cpu_count(),
+        'count' => (cpu_count() > 6 ? 6 : cpu_count()) * 4,
         'constructor' => [
             'config' => [
                 'lanIp' => '127.0.0.1',
                 'startPort' => 2300,
-                'pingInterval' => 25,
+                'pingInterval' => 16,
                 'pingData' => '{"type":"ping"}',
                 'registerAddress' => '127.0.0.1:1236',
                 'onConnect' => function () {
