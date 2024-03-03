@@ -86,23 +86,27 @@
             v-for="tem in shortsentenceList"
             :key="tem.index"
           >
-            <pre
+            <div
               style="
-                padding: 0.6rem 3.6rem;
+                font-family: Consolas, Monaco, DejaVu Sans Mono, monospace;
+                padding: 0.6rem 2.6rem;
                 font-size: 1.06rem;
                 color: var(--ltpp-box-text-color);
               "
-              >{{ tem.hitokoto }}</pre
             >
-            <pre
+              {{ tem.hitokoto }}
+            </div>
+            <div
               style="
+                font-family: Consolas, Monaco, DejaVu Sans Mono, monospace;
                 text-align: right;
                 font-size: 1.06rem;
-                padding: 0.6rem 3.6rem;
+                padding: 0.6rem 2.6rem;
                 color: var(--ltpp-box-text-color);
               "
-              >{{ tem.from }}</pre
             >
+              {{ tem.from }}
+            </div>
           </div>
           <div style="height: 1rem"></div>
         </div>
@@ -160,16 +164,18 @@
             >
             </mavon-editor>
           </div>
-          <pre
+          <div
             style="
+              font-family: Consolas, Monaco, DejaVu Sans Mono, monospace;
               padding: 0.6rem 2.6rem;
               text-align: right;
               font-size: 1rem;
               color: var(--ltpp-box-text-color);
               background-color: rgba(var(--ltpp-main-bk-color), 0);
             "
-            >{{ notice.time }}</pre
           >
+            {{ notice.time }}
+          </div>
           <div style="clear: both"></div>
           <el-pagination
             v-show="allnum"
@@ -202,7 +208,7 @@ export default {
     this.linuxurl = window.sessionStorage.getItem("linuxurl");
     if (!this.linuxurl) {
       await this.getlinuxurl();
-    } 
+    }
     this.getphotolist();
     this.getshortsentencelist();
     this.getNotice();
