@@ -177,6 +177,8 @@ export default {
   --ltpp-main-color: #e493d0;
   // 主题浅色
   --ltpp-light-color: 228, 147, 208;
+  // 代码背景色
+  --ltpp-code-bk-color: 40, 44, 52;
   // 主题文字颜色
   --ltpp-main-text-color: #f5f7fa;
   // 阴影色
@@ -189,6 +191,8 @@ export default {
   --ltpp-hover-text-color: rgba(245, 247, 250, 0.66);
   // 组件内容盒子背景透明度
   --ltpp-center-box-bk-opacity: 0.28;
+  // 代码背景透明度
+  --ltpp-code-bk-color-opacity: 1;
   // 组件内容盒子颜色
   --ltpp-box-text-color: #ffffffe6;
   // 表格背景透明度
@@ -235,17 +239,6 @@ blockquote {
   margin: 0.36rem 0rem !important;
   color: #ffffff !important;
   font-weight: 400;
-}
-
-pre code.hljs {
-  font-family: Consolas, Monaco, DejaVu Sans Mono, monospace;
-  line-height: 1.46;
-  padding: 2px 4px;
-  display: block;
-  overflow-x: auto;
-  padding: 1em;
-  border-radius: 0rem !important;
-  font-size: 1.06rem;
 }
 
 .main-center-box-content {
@@ -384,12 +377,24 @@ code.hljs {
 }
 
 pre {
+  font-family: Consolas, Monaco, DejaVu Sans Mono, monospace;
+  display: block;
+  overflow-x: auto;
+  font-size: 1.06rem;
   line-height: 1.56;
   white-space: pre-wrap;
   white-space: -moz-pre-wrap;
   white-space: -webkit-pre-wrap;
   white-space: -o-pre-wrap;
   word-wrap: break-word;
+  border-radius: 0rem !important;
+  background-color: rgba(
+    var(--ltpp-code-bk-color),
+    var(--ltpp-code-bk-color-opacity)
+  ) !important;
+  border-left: 6px solid rgb(var(--ltpp-main-bk-color)) !important;
+  padding: 0.66rem !important;
+  margin: 0.36rem 0rem !important;
 }
 
 .hljs-doctag {
@@ -552,12 +557,6 @@ video:focus {
     background-position: -60vmax -60vmax, 60vmax -30vmax, 10vmax 10vmax,
       -40vmax -40vmax, 50vmax 50vmax;
   }
-}
-
-.markdown-body pre {
-  word-wrap: normal;
-  background-color: rgba(40, 44, 52, 0.88) !important;
-  padding: 1rem !important;
 }
 
 .video-bk {
@@ -1248,8 +1247,12 @@ pre,
 .v-show-content th,
 .scroll-style th,
 .scroll-style-border-radius th {
-  border: none !important;
-  background-color: rgba(var(--ltpp-main-bk-color), 0) !important;
+  background-color: rgba(
+    var(--ltpp-code-bk-color),
+    var(--ltpp-code-bk-color-opacity)
+  ) !important;
+  padding: 0.66rem !important;
+  margin: 0.36rem 0rem !important;
   /* pre保持格式的同时实现自动换行 */
   white-space: pre-wrap !important;
   word-wrap: break-word !important;
