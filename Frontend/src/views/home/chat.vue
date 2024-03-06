@@ -130,7 +130,7 @@
                   class="user_name"
                   :style="`float: ${
                     tem.name == $store.state.my_name ? 'right' : 'left'
-                  }`"
+                  };margin-top:0.46rem;`"
                   @click="
                     touserpage(
                       tem.type == 'group_chat'
@@ -170,6 +170,7 @@
                       min-height: 0rem;
                       height: auto;
                       border-width: 0rem;
+                      margin-top:-1.46rem;
                       border-radius: 0.6rem; ${
                         tem.name == $store.state.my_name
                           ? 'margin-right: 4rem'
@@ -1925,7 +1926,8 @@ export default {
 
 .show_time span {
   padding: 0.4rem;
-  background-color: rgba(248, 249, 250, 0.4);
+  color: rgb(var(--ltpp-light-color));
+  background-color: rgba(var(--ltpp-main-bk-color), 1) !important;
   border-radius: 0.6rem;
 }
 
