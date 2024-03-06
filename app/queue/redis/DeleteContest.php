@@ -79,28 +79,9 @@ class DeleteContest implements Consumer
                     $redis27 = Redis::connection('db27');
                     $key = Base::$robot_contest_redis_front . $contest_id;
                     $redis27->del($key);
-                    // 删除查重缓存
-                    $redis31 = Redis::connection('db31');
-                    $key = Base::$contest_similarity_id_redis_front . $contest_id;
-                    $redis_key = $redis31->get($key);
-                    if ($redis_key) {
-                        $redis31->del($key);
-                    }
-                    // 删除ContestRank代码缓存
-                    $redis29 = Redis::connection('db29');
-                    $redis30 = Redis::connection('db30');
-                    $old_id_list = $redis30->get(Base::$redis_contest_code_list_key_name . $contest_id);
-                    if ($old_id_list) {
-                        try {
-                            $old_id_list = json_decode($old_id_list, true);
-                        } catch (Exception $e) {
-                            $old_id_list = [];
-                        }
-                        foreach ($old_id_list as &$tem_one_old) {
-                            $redis29->del($tem_one_old[0]);
-                        }
-                    }
-                    $redis30->del(Base::$redis_contest_code_list_key_name . $contest_id);
+                    // 删除查重缓存锁
+                    $redis32 = Redis::connection('db32');
+                    $redis32->del($contest_id);
                     if ($db) {
                         $title = 'DeleteContest消息队列运行结果';
                         $content = '竞赛ID为' . $contest_id . '的竞赛已删除！';

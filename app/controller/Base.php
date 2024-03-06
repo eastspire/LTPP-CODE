@@ -1609,9 +1609,9 @@ class Base
      */
     static public function saveCodeJson($code_id = 0, $json = '')
     {
-        $redis34 = Redis::connection('db34');
+        $redis29 = Redis::connection('db29');
         $key = 'CodeJson' . $code_id;
-        $redis34->setEx($key, Base::$redis_code_run_res_timeout, json_encode($json));
+        $redis29->setEx($key, Base::$redis_code_run_res_timeout, json_encode($json));
     }
 
     /**
@@ -1620,9 +1620,9 @@ class Base
     static public function deleteCodeJson($code_id = 0)
     {
         $redis33 = Redis::connection('db33');
-        $redis34 = Redis::connection('db34');
+        $redis29 = Redis::connection('db29');
         $key = 'CodeJson' . $code_id;
-        $redis34->del($key);
+        $redis29->del($key);
         $key = 'CodeData' . $code_id;
         $redis33->del($key);
     }
@@ -1632,9 +1632,9 @@ class Base
      */
     static public function getCodeJson($code_id = 0)
     {
-        $redis34 = Redis::connection('db34');
+        $redis29 = Redis::connection('db29');
         $key = 'CodeJson' . $code_id;
-        $json = $redis34->get($key);
+        $json = $redis29->get($key);
         if (!$json) {
             return [];
         }
@@ -3701,9 +3701,9 @@ class Base
      */
     static public function getStaticFileData($file_path = '')
     {
-        $redis35 = Redis::connection('db35');
-        if ($redis35->exists($file_path)) {
-            return $redis35->get($file_path);
+        $redis30 = Redis::connection('db30');
+        if ($redis30->exists($file_path)) {
+            return $redis30->get($file_path);
         }
         $db = Db::table('file_path')
             ->where('path', $file_path)
@@ -3720,7 +3720,7 @@ class Base
         if (!$db) {
             return false;
         }
-        $redis35->setEx($file_path, Base::$redis_timeout, $db->data);
+        $redis30->setEx($file_path, Base::$redis_timeout, $db->data);
         return $db->data;
     }
 
@@ -3729,8 +3729,8 @@ class Base
      */
     static public function judgeFileExist($file_path)
     {
-        $redis35 = Redis::connection('db35');
-        if ($redis35->exists($file_path)) {
+        $redis30 = Redis::connection('db30');
+        if ($redis30->exists($file_path)) {
             return true;
         }
         $db = Db::table('file_path')
@@ -3748,7 +3748,7 @@ class Base
         if (!$db) {
             return false;
         }
-        $redis35->setEx($file_path, Base::$redis_timeout, $db->data);
+        $redis30->setEx($file_path, Base::$redis_timeout, $db->data);
         return true;
     }
 
@@ -4225,7 +4225,7 @@ class Base
             if (!$file_path || !$userid) {
                 return json(['code' => -1, 'msg' => '文件不存在']);
             }
-            $redis35 = Redis::connection('db35');
+            $redis30 = Redis::connection('db30');
             $db = Db::table('file_path')
                 ->where('userid', $userid)
                 ->where('path', $file_path)
@@ -4269,7 +4269,7 @@ class Base
                 ->update([
                     'data' => $data,
                 ]);
-            $redis35->setEx($file_path, Base::$redis_timeout, $data);
+            $redis30->setEx($file_path, Base::$redis_timeout, $data);
             Base::getChineseSize($size);
             return json(['code' => 1, 'msg' => '更新成功', 'data' => $size]);
         } catch (Exception $e) {
@@ -4287,8 +4287,8 @@ class Base
             if (!$file_path || !$userid) {
                 return;
             }
-            $redis35 = Redis::connection('db35');
-            $redis35->del($file_path);
+            $redis30 = Redis::connection('db30');
+            $redis30->del($file_path);
             $db = Db::table('cloud_file_path')
                 ->where('userid', $userid)
                 ->where('path', $file_path)

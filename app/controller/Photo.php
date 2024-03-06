@@ -26,8 +26,8 @@ class Photo
             ->where('isdel', 0)
             ->pluck('path')
             ->toArray();
-        $redis35 = Redis::connection('db35');
-        $redis35->del($list_path);
+        $redis30 = Redis::connection('db30');
+        $redis30->del($list_path);
         foreach ($list_path as &$path) {
             Db::table('file_path')
                 ->where('path', $path)
@@ -111,8 +111,8 @@ class Photo
             ->update([
                 'isdel' => 1
             ]);
-        $redis35 = Redis::connection('db35');
-        $redis35->del($path);
+        $redis30 = Redis::connection('db30');
+        $redis30->del($path);
         return json(['code' => 1, 'msg' => '图片删除成功']);
     }
 

@@ -1506,21 +1506,6 @@ class Contest
         // 删除查重缓存锁
         $redis32 = Redis::connection('db32');
         $redis32->del($contest_id);
-        // 删除ContestRank代码缓存
-        $redis29 = Redis::connection('db29');
-        $redis30 = Redis::connection('db30');
-        $old_id_list = $redis30->get(Base::$redis_contest_code_list_key_name . $contest_id);
-        if ($old_id_list) {
-            try {
-                $old_id_list = json_decode($old_id_list, true);
-            } catch (Exception $e) {
-                $old_id_list = [];
-            }
-            foreach ($old_id_list as &$tem_one_old) {
-                $redis29->del($tem_one_old[0]);
-            }
-        }
-        $redis30->del(Base::$redis_contest_code_list_key_name . $contest_id);
         Contest::sendUpdateRankMQ($contest_id);
         return json(['code' => 1, 'msg' => '该竞赛缓存清理完成！']);
     }
@@ -1664,12 +1649,7 @@ class Contest
             if (!$key) {
                 return Base::notFoundPage();
             }
-            $redis29 = Redis::connection('db29');
-            if (!$redis29->exists($key)) {
-                return Base::notFoundPage();
-            }
-            // 查询ID
-            $id = $redis29->get($key);
+            $id = Base::getIdByUid($key);
             $contestrank_db = Base::getContestRankData($id);
             if ($contestrank_db) {
                 $contestrank_db->language = Base::$map_language_to_markdown[$contestrank_db->language ?? 'C++'];
@@ -1797,23 +1777,6 @@ class Contest
 
             $percentage_list = [];
             Base::$GLOBlinuxurl = Base::getSettingKeyData('GLOBlinuxurl');
-            // 删除旧的缓存
-            $redis29 = Redis::connection('db29');
-            $redis30 = Redis::connection('db30');
-            $old_id_list = $redis30->get(Base::$redis_contest_code_list_key_name . $contest_id);
-            if ($old_id_list) {
-                try {
-                    $old_id_list = json_decode($old_id_list, true);
-                } catch (Exception $e) {
-                    $old_id_list = [];
-                }
-                foreach ($old_id_list as &$tem_one_old) {
-                    $redis29->del($tem_one_old[0]);
-                }
-            }
-            $redis30->del(Base::$redis_contest_code_list_key_name . $contest_id);
-            // 索引数组
-            $contestrank_code_safe_id_list = [];
 
             foreach ($problem_list as &$t) {
                 for ($i = 0; $i < $len; ++$i) {
@@ -1834,14 +1797,8 @@ class Contest
                         if (!($duplication * 100)) {
                             continue;
                         }
-                        $code1_safe_id = md5($code1->id);
-                        $code2_safe_id = md5($code2->id);
-                        // 缓存
-                        $redis29->setNx($code1_safe_id, $code1->id);
-                        $redis29->setNx($code2_safe_id, $code2->id);
-                        // 存入索引数组
-                        $contestrank_code_safe_id_list[] = [$code1_safe_id, $code1->id];
-                        $contestrank_code_safe_id_list[] = [$code2_safe_id, $code2->id];
+                        $code1_safe_id = Base::getUidById($code1->id);
+                        $code2_safe_id = Base::getUidById($code2->id);
                         // 地址
                         $user_code_url_1 = Base::$GLOBlinuxurl . '/Contest/lookContestProblemCode?path=' . $code1_safe_id;
                         $user_code_url_2 = Base::$GLOBlinuxurl . '/Contest/lookContestProblemCode?path=' . $code2_safe_id;
@@ -1872,8 +1829,6 @@ class Contest
                     }
                 }
             }
-
-            $redis30->setNx(Base::$redis_contest_code_list_key_name . $contest_id, json_encode($contestrank_code_safe_id_list));
 
             krsort($percentage_list);
             $idx = 0;
