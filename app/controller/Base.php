@@ -352,7 +352,7 @@ class Base
     /**
      * 服务器地址
      */
-    static $GLOBlinuxurl = 'http://127.0.0.1:8787';
+    static $GLOBlinuxurl = 'http://127.0.0.1:48787';
 
     /**
      * ltpp用户id
@@ -383,11 +383,6 @@ class Base
      * RobotContest Redis前缀
      */
     static $robot_contest_redis_front = 'RobotContest';
-
-    /**
-     * 代码查重ID 前缀
-     */
-    static $contest_similarity_id_redis_front = 'ContestSimilarityId';
 
     /**
      * 代码安全信息
@@ -2583,14 +2578,6 @@ class Base
     }
 
     /**
-     * 生成临时ID
-     */
-    static public function getSafeUniqidByIdOnce($id)
-    {
-        return time() . uniqid() . '/' . md5($id  . mt_rand(1, 100000));
-    }
-
-    /**
      * 聊天用户ID转UID
      */
     static public function getChatUserUidById($id)
@@ -2602,19 +2589,6 @@ class Base
         $base_str = Base::Base64Encode(strval($id), Base::$id_char_set[$num]);
         $uid = $num . $base_str;
         return $uid;
-    }
-
-    /**
-     * 生成随机唯一竞赛查重ID
-     */
-    static public function getContestSimilarityId($contest_id)
-    {
-        if ($contest_id <= 0 || !is_numeric($contest_id)) {
-            return '';
-        }
-        $key = Base::$contest_similarity_id_redis_front . $contest_id;
-        $value = Base::getSafeUniqidByIdOnce($key);
-        return $value;
     }
 
     /**
