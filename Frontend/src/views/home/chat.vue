@@ -1055,36 +1055,38 @@ export default {
     },
     // 滚动到底部
     to_scroll_bottom(is_init = 0) {
-      this.$nextTick(() => {
-        let scrollElem = document.getElementById("chatDataScrollDiv");
-        if (scrollElem && scrollElem.scrollHeight) {
-          if (
-            Math.floor(scrollElem.scrollHeight - scrollElem.scrollTop) -
-              scrollElem.clientHeight <=
-            1
-          ) {
-            return;
-          }
-          if (is_init == 1) {
-            // 首次打开该用户聊天框，迅速加载
-            scrollElem.scrollTop = Math.max(
-              2000,
-              scrollElem.scrollHeight - 2000
-            );
-          }
-          let scroll_bottom = setInterval(() => {
+      setTimeout(() => {
+        this.$nextTick(() => {
+          let scrollElem = document.getElementById("chatDataScrollDiv");
+          if (scrollElem && scrollElem.scrollHeight) {
             if (
               Math.floor(scrollElem.scrollHeight - scrollElem.scrollTop) -
                 scrollElem.clientHeight <=
               1
             ) {
-              clearInterval(scroll_bottom);
-              scroll_bottom = null;
+              return;
             }
-            scrollElem.scrollTop += 16;
-          }, 1);
-        }
-      });
+            if (is_init == 1) {
+              // 首次打开该用户聊天框，迅速加载
+              scrollElem.scrollTop = Math.max(
+                2000,
+                scrollElem.scrollHeight - 2000
+              );
+            }
+            let scroll_bottom = setInterval(() => {
+              if (
+                Math.floor(scrollElem.scrollHeight - scrollElem.scrollTop) -
+                  scrollElem.clientHeight <=
+                1
+              ) {
+                clearInterval(scroll_bottom);
+                scroll_bottom = null;
+              }
+              scrollElem.scrollTop += 16;
+            }, 1);
+          }
+        });
+      }, 0);
     },
     async searchuser() {
       const { data: res } = await this.$ajax({
