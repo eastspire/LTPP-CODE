@@ -1942,7 +1942,7 @@ export default {
 
 ::-webkit-scrollbar {
   z-index: 1000000;
-  width: 0.16rem !important;
+  width: 0.36rem !important;
   height: 0rem !important;
   border-radius: 0rem;
   background-color: rgba(var(--ltpp-main-bk-color), 0);
@@ -1958,7 +1958,7 @@ export default {
 
 /* 滚动条上的滚动滑块. */
 ::-webkit-scrollbar-thumb {
-  background-color: rgb(183, 185, 186);
+  background-color: rgba(var(--ltpp-main-bk-color), 1);
   border-radius: 0rem;
 }
 
