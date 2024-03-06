@@ -16,16 +16,14 @@
       v-show="scroll_percent"
       style="
         position: fixed;
-        top: -0.66rem;
+        top: 0rem;
         width: 100vw;
         z-index: 1000010 !important;
       "
     >
-      <el-progress
-        :text-inside="true"
-        :percentage="scroll_percent"
-        color="#409EFF"
-      ></el-progress>
+      <div
+        :style="`width:${scroll_percent}vw;background-color:#409EFF;height:0.26rem;`"
+      ></div>
     </div>
     <div v-if="$store.state.login && lookmusic == 1">
       <music v-domDrag class="musicdiv"></music>
