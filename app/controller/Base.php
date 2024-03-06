@@ -2534,19 +2534,18 @@ class Base
      */
     static public function getIdByUid($uid)
     {
-        if (!is_string($uid)) {
-            return 0;
-        }
-        if (strlen($uid) == 0) {
-            return 0;
-        }
+        $id = 0;
         try {
+            if (!is_string($uid)) {
+                return $id;
+            }
+            if (strlen($uid) == 0) {
+                return $id;
+            }
             $loc = ord($uid[0]) - ord('0');
             $base_str = substr($uid, 1);
             $id = Base::Base64Decode($base_str, Base::$id_char_set[$loc]);
         } catch (Exception $e) {
-            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
-            return 0;
         }
         return $id;
     }
@@ -2556,12 +2555,16 @@ class Base
      */
     static public function getUidById($id)
     {
-        if ($id <= 0 || !is_numeric($id)) {
-            return '';
+        $uid = '';
+        try {
+            if ($id <= 0 || !is_numeric($id)) {
+                return '';
+            }
+            $num = rand(0, sizeof(Base::$id_char_set) - 1);
+            $base_str = Base::Base64Encode(strval($id), Base::$id_char_set[$num]);
+            $uid = $num . $base_str;
+        } catch (Exception $e) {
         }
-        $num = rand(0, sizeof(Base::$id_char_set) - 1);
-        $base_str = Base::Base64Encode(strval($id), Base::$id_char_set[$num]);
-        $uid = $num . $base_str;
         return $uid;
     }
 
