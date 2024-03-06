@@ -208,44 +208,15 @@
           </p>
           <div v-show="isshow">
             <div v-show="iswrong" @dblclick="copy(wrong)">
-              <div
-                v-show="!istestres"
-                style="
-                  border-radius: 1rem;
-                  padding: 1rem;
-                  background-color: rgb(242, 222, 222);
-                  border-color: rgb(242, 222, 222);
-                  color: rgb(169, 68, 66);
-                  min-height: 1rem;
-                "
-              >
+              <div v-show="!istestres" style="color: #dd4c35; min-height: 1rem">
                 <pre>{{ wrong }}</pre>
               </div>
-              <div
-                v-show="istestres"
-                style="
-                  border-radius: 1rem;
-                  padding: 1rem;
-                  background-color: rgba(var(--ltpp-light-color), 1);
-                  border-color: rgba(var(--ltpp-light-color), 1);
-                  color: rgb(254, 255, 255);
-                  min-height: 1rem;
-                "
-              >
+              <div v-show="istestres" style="min-height: 1rem">
                 <pre>{{ wrong }}</pre>
               </div>
             </div>
             <div v-show="isac">
-              <div
-                style="
-                  text-align: center;
-                  border-radius: 1rem;
-                  padding: 1rem;
-                  background-color: #67c23a;
-                  border-color: rgb(235, 204, 209);
-                  color: #ffffff;
-                "
-              >
+              <div style="text-align: center; color: #4ec150; min-height: 1rem">
                 <pre style="font-size: 1.6rem">{{ ac }}</pre>
               </div>
             </div>
