@@ -34,6 +34,11 @@ class WebcodeRun implements Consumer
             if (!$my_aid || !$code_id || !$userlanguage) {
                 return;
             }
+            $userlanguage = strtolower($userlanguage);
+            if (!isset(Base::$language_map[$userlanguage])) {
+                return;
+            }
+            $userlanguage = Base::$language_map[$userlanguage];
             $json = Webcode::run($my_aid, $code_id, $code, $userlanguage, $testin);
             Base::saveCodeJson($code_id, $json);
         } catch (Exception $e) {

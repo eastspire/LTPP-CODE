@@ -1652,7 +1652,7 @@ class Contest
             $id = Base::getIdByUid($key);
             $contestrank_db = Base::getContestRankData($id);
             if ($contestrank_db) {
-                $contestrank_db->language = Base::$map_language_to_markdown[$contestrank_db->language ?? 'C++'];
+                $contestrank_db->language = Base::$language_map[$contestrank_db->language ?? 'C++'];
                 return Base::codeToHTML($contestrank_db->code ?? '', $contestrank_db->language);
             }
         } catch (Exception $e) {

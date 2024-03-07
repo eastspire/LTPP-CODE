@@ -304,7 +304,11 @@ class PrivateRobot extends ChatBase
                 if (!isset($check_safe_json['code']) || $check_safe_json['code'] != 1) {
                     continue;
                 }
-
+                $userlanguage = strtolower($userlanguage);
+                if (!isset(Base::$language_map[$userlanguage])) {
+                    continue;
+                }
+                $userlanguage = Base::$language_map[$userlanguage];
                 $md5aid = md5($my_aid);
                 $mainfile = '';
                 //用户文件夹

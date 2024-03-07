@@ -73,3 +73,10 @@ Route::any(Base::$LTPP_public_static_path . '/' . '[{path:.+}]', function (Reque
     }
     return Base::notFoundPage($path, $file_extion);
 });
+
+
+Route::fallback(function (Request $request) {
+    $path = $request->path();
+    $file_extion = Base::getDbFileExtion($path);
+    return Base::notFoundPage($path, $file_extion);
+});

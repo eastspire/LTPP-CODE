@@ -200,24 +200,24 @@
           >
             输出/运行结果{{
               "（ 时间消耗：" +
-              usetime +
+              (usetime ? usetime : 0) +
               " MS ，内存消耗：" +
-              usememory +
+              (usememory ? usememory : 0) +
               " KB ）"
             }}
           </p>
           <div v-show="isshow">
             <div v-show="iswrong" @dblclick="copy(wrong)">
               <div v-show="!istestres" style="color: #dd4c35; min-height: 1rem">
-                <pre>{{ wrong }}</pre>
+                <pre>{{ wrong ? wrong : "\n" }}</pre>
               </div>
               <div v-show="istestres" style="min-height: 1rem">
-                <pre>{{ wrong }}</pre>
+                <pre>{{ wrong ? wrong : "\n" }}</pre>
               </div>
             </div>
             <div v-show="isac">
               <div style="text-align: center; color: #4ec150; min-height: 1rem">
-                <pre style="font-size: 1.6rem">{{ ac }}</pre>
+                <pre style="font-size: 1.6rem">{{ ac ? ac : "\n" }}</pre>
               </div>
             </div>
           </div>
