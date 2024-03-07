@@ -30,17 +30,12 @@ class JudgecodeRun implements Consumer
             $my_aid = $data['my_aid'] ?? 0;
             $code_id = $data['code_id'] ?? 0;
             $code = $data['code'] ?? '';
-            $userlanguage = $data['userlanguage'] ?? 'C++';
+            $userlanguage = $data['userlanguage'];
             $contest_id = $data['contest_id'];
             $problem_id = $data['problem_id'];
             if (!$my_aid || !$problem_id || !$code_id || !$userlanguage) {
                 return;
             }
-            $userlanguage = strtolower($userlanguage);
-            if (!isset(Base::$language_map[$userlanguage])) {
-                return;
-            }
-            $userlanguage = Base::$language_map[$userlanguage];
             Db::table('oj')
                 ->where('id', $problem_id)
                 ->where('isdel', 0)

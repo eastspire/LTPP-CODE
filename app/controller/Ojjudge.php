@@ -231,6 +231,12 @@ class Ojjudge
                 'msg' => '参数错误'
             ]);
         }
+        $old_userlanguage = $userlanguage;
+        $userlanguage = strtolower($userlanguage);
+        if (!isset(Base::$language_map[$userlanguage])) {
+            return;
+        }
+        $userlanguage = Base::$language_map[$userlanguage];
         //代码检测
         $check_safe_json = Base::judgeCodeSafe($code, $userlanguage);
         if (!isset($check_safe_json['code']) || $check_safe_json['code'] != 1) {
@@ -243,7 +249,7 @@ class Ojjudge
             'usetime' => 0,
             'usememory' => 0,
             'code' => $code,
-            'language' => $userlanguage,
+            'language' => $old_userlanguage,
             'contestid' => $contest_id,
             'problemid' => $problem_id
         ]);
