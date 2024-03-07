@@ -51,8 +51,9 @@ class LTPPErrorHandler extends ExceptionHandler
                     json_encode($json, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)
                 );
             }
-            $error = $this->debug ? nl2br((string)$exception) : Base::notFoundPage();
-            return new Response(500, [], $error);
+            if ($this->debug) {
+                return new Response(500, [], nl2br((string)$exception));
+            }
         } catch (Throwable $e) {
             Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
         }
