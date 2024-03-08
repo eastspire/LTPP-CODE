@@ -3253,11 +3253,11 @@ class Base
             case Language::ruby:
                 break;
             default:
-                return [
+                return json([
                     'code' => -1,
-                    'msg' => '请选择语言后提交！',
-                    'code_id' => 0
-                ];
+                    'msg' => '参数错误',
+                    'code_id' => 0,
+                ]);
         }
         return [
             'code' => 1,

@@ -231,10 +231,17 @@ class Ojjudge
                 'msg' => '参数错误'
             ]);
         }
+        if (!$userlanguage) {
+            $userlanguage = '';
+        }
         $old_userlanguage = $userlanguage;
         $userlanguage = strtolower($userlanguage);
         if (!isset(Base::$language_map[$userlanguage])) {
-            return;
+            return json([
+                'code' => -1,
+                'msg' => '参数错误',
+                'code_id' => 0,
+            ]);
         }
         $userlanguage = Base::$language_map[$userlanguage];
         //代码检测

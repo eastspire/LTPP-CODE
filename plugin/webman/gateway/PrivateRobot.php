@@ -294,6 +294,9 @@ class PrivateRobot extends ChatBase
 
             foreach ($list as &$tem) {
                 $userlanguage = $tem->language;
+                if (!$userlanguage) {
+                    $userlanguage = '';
+                }
                 $code = $tem->code;
                 $user_id = $tem->userid;
                 if ($code == '') {
