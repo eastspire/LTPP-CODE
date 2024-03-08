@@ -3528,10 +3528,22 @@ class Base
         $msg = '';
         try {
             $res = json_decode($str, true);
-            $status = (int) $res['status'] ?? 0;
-            $time_used = (int) $res['time_used'] ?? 0;
-            $memory_used = (int) $res['memory_used'] ?? 0;
-            $msg = $res['msg'] ?? '';
+            if (!isset($res['status']) || !$res['status']) {
+                $res['status'] = 0;
+            }
+            if (!isset($res['time_used']) || !$res['time_used']) {
+                $res['time_used'] = 0;
+            }
+            if (!isset($res['memory_used']) || !$res['memory_used']) {
+                $res['memory_used'] = 0;
+            }
+            if (!isset($res['msg']) || !$res['msg']) {
+                $res['msg'] = '';
+            }
+            $status = (int) $res['status'];
+            $time_used = (int) $res['time_used'];
+            $memory_used = (int) $res['memory_used'];
+            $msg = $res['msg'];
         } catch (Exception $e) {
             Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
             // 触发错误的情况是判题机输出 Segmentation fault (core dumped) 导致解析json失败 而判题机触发该错误是不断分配内存不回收触发安全机制导致程序崩溃
