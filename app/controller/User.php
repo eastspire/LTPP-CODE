@@ -991,9 +991,10 @@ class User
             return \json(['code' => -1, 'msg' => '该名称已存在']);
         }
 
-        if (strripos($data['email'], '@qq.com') === false) {
-            return \json(['code' => -1, 'msg' => '邮箱请填写QQ邮箱']);
+        if (!$data['email']) {
+            return \json(['code' => -1, 'msg' => '请填写邮箱']);
         }
+
         if (filter_var($data['headimage'], FILTER_VALIDATE_URL) === false) {
             $data['headimage'] = Base::getEmailImageToLtppUrl($data['email']);
         }
@@ -1007,8 +1008,6 @@ class User
         if ($password != '' && $password) {
             //说明用户密码改了
             $data['password'] = Base::passwordEncryption($password);
-        } else {
-            unset($data['password']);
         }
         $UpdataBlogandCommentName = Db::table('user')
             ->where('id', $data['id'])
@@ -1060,14 +1059,33 @@ class User
             }
         }
 
-        if (isset($data['user_aid'])) {
-            unset($data['user_aid']);
+        $res_data = [
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'grade' => $data['grade'],
+            'musiclovelistid' => $data['musiclovelistid'],
+            'musicuid' => $data['musicuid'],
+            'mysay' => $data['mysay'],
+            'sex' => $data['sex'],
+            'student_number' => $data['student_number'],
+            'enrollment_year' => $data['enrollment_year'],
+            'school' => $data['school'],
+            'college' => $data['college'],
+            'subject' => $data['subject'],
+            'class' => $data['class'],
+            'root_css' => $data['root_css'],
+            'money' => $data['money'],
+            'headimage' => $data['headimage'],
+        ];
+
+        if (isset($data['password']) && $data['password']) {
+            $res_data['password'] = $data['password'];
         }
 
         $info = Db::table('user')
             ->where('id', $data['id'])
             ->where('isdel', 0)
-            ->update($data);
+            ->update($res_data);
 
         Base::updateUserDataRedis($data['id']);
 
