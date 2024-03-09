@@ -447,19 +447,27 @@ Vue.prototype.initDevice = function () {
 Vue.prototype.logoutRemove = function (is_force = false) {
     try {
         store.commit("reset");
-        window.localStorage.removeItem('key');
-        window.localStorage.removeItem('authorization');
-        let storage = window.localStorage;
-        for (let i = 0, len = storage.length; i < len; i++) {
-            let key = storage.key(i);
-            if (key && (key.indexOf('Chat') != -1 ||
-                key.indexOf('idecode') != -1) ||
-                key.indexOf('://') != -1 ||
-                (is_force === true && key == 'time')) {
-                window.localStorage.removeItem(key);
+        try {
+            window.localStorage.removeItem('key');
+            window.localStorage.removeItem('authorization');
+            let storage = window.localStorage;
+            for (let i = 0, len = storage.length; i < len; i++) {
+                let key = storage.key(i);
+                if (key?.indexOf('idecode') != -1 && !is_force) {
+                    continue;
+                }
+                if (
+                    key?.indexOf('Chat') != -1 ||
+                    key?.indexOf('://') != -1 ||
+                    is_force === true
+                ) {
+                    window.localStorage.removeItem(key);
+                }
             }
+            window.sessionStorage.clear();
+        } catch (err) {
+            console.log(err);
         }
-        window.sessionStorage.clear();
         EventBus.$emit('closeWs');
         if (
             router?.history?.current?.fullPath != '/login' &&
