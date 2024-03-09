@@ -581,7 +581,7 @@ class Article extends Image
     {
         $writerid = Base::getRobotId();
         if (!$writerid) {
-            Base::sendErrorNotice($e->getTraceAsString(), '机器人账号不存在！');
+            Base::sendErrorNotice('', '机器人账号不存在！');
             $writerid = Base::getRobotId();
         }
         $db = Db::table('article')
