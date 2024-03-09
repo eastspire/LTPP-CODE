@@ -3394,7 +3394,7 @@ class Base
     {
         $out = [];
         try {
-            $timeout_time = ceil($limittime / 1000);
+            $timeout_time = ceil($limittime / 1000) << 2;
             $run_exec_code = 0;
             //编译
             switch ($userlanguage) {
@@ -3444,7 +3444,7 @@ class Base
                     return ['code' => -1, 'result' => '请选择语言后提交！', 'usememory' => 0, 'usetime' => 0];
             }
             if (Base::judgeIsTimeout($run_exec_code)) {
-                return ['code' => -1, 'data' => Base::$timout_error_msg, 'memory' => 0, 'time' => 0];
+                return ['code' => -1, 'result' => Base::$timout_error_msg, 'usememory' => 0, 'usetime' => 0];
             }
         } catch (Exception $e) {
             Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
