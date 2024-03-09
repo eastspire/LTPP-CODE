@@ -78,15 +78,12 @@ class Image
                     if (!$id) {
                         continue;
                     }
-                    $id = Base::insertToDb('file_path', [
+                    Base::insertToDb('file_path', [
                         'path' => $path,
                         'file_id' => $id,
                         'userid' => $root_id,
                         'time' => date('Y-m-d H:i:s', time())
                     ]);
-                    if (!$id) {
-                        continue;
-                    }
                     $data[] = [
                         'url' => Base::$GLOBlinuxurl . $path
                     ];
