@@ -331,6 +331,7 @@
       <div style="height: 1rem"></div>
       <div style="text-align: right">
         <el-button
+          v-if="!goods_data.id"
           type="success"
           size="small"
           @click="addGoods()"
@@ -569,9 +570,9 @@ export default {
         id: 0,
       },
       isseetip: false,
-      linuxurl: "",
-      save_file_url: "",
-      save_more_file_url: "",
+      linuxurl: window?.location?.href,
+      save_file_url: window?.location?.href,
+      save_more_file_url: window?.location?.href,
       see_add_dialog: false,
       see_update_dialog: false,
       see_more_add_dialog: false,

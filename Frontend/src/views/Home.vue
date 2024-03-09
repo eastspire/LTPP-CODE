@@ -663,7 +663,7 @@ export default {
   data() {
     return {
       global_notice_use_js: false,
-      socketurl: "",
+      socketurl: window?.location?.href,
       msgtypeObj: {
         heart: "heart",
         private_chat: "private_chat",
@@ -685,7 +685,7 @@ export default {
       socket_timer: null,
       activeIndex: "1",
       lookmusic: 0,
-      classurl: "",
+      classurl: window?.location?.href,
       websocket: null,
       isseenotice: false,
       notice: "",

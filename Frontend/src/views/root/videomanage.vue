@@ -386,7 +386,7 @@ export default {
       requestid_timer: null,
       tag: "",
       lastkey: "",
-      bkvideourl: "",
+      bkvideourl: window?.location?.href,
       head: {
         authorization: "Bearer " + window.localStorage.getItem("authorization"),
         key: window.localStorage.getItem("key"),
@@ -401,7 +401,7 @@ export default {
       key: "",
       id: 0,
       name: "",
-      url: "",
+      url: window?.location?.href,
     };
   },
   methods: {

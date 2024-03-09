@@ -514,7 +514,7 @@ export default {
         key: window.localStorage.getItem("key"),
         Requestid: this.Base64Encode(new Date().getTime()),
       },
-      linuxurl: "",
+      linuxurl: window?.location?.href,
       bkimage: "",
       videoimage: "",
       headimage: "",

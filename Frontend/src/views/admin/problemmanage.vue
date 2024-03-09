@@ -229,7 +229,7 @@ export default {
     return {
       lastkey: "",
       isseetip: true,
-      linuxurl: "",
+      linuxurl: window?.location?.href,
       passparam: {
         id: "",
       },

@@ -58,7 +58,7 @@ export default {
 
   data() {
     return {
-      url: "",
+      url: window?.location?.href,
     };
   },
 };

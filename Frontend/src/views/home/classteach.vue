@@ -102,14 +102,14 @@ export default {
   data() {
     return {
       timer: null,
-      socketurl: "",
+      socketurl: window?.location?.href,
       name: "",
       finish: 0,
       isroot: false,
       mymessage: "",
       messagedata: [],
       dplayer: null,
-      classurl: "",
+      classurl: window?.location?.href,
       websocket: null,
     };
   },

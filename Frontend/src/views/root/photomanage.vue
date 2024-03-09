@@ -110,7 +110,8 @@ export default {
       this.head.Requestid = this.Base64Encode(new Date().getTime());
     }, 1000);
     this.linuxurl = window.sessionStorage.getItem("linuxurl");
-    this.backurl = window.sessionStorage.getItem("linuxurl");
+    this.backurl =
+      window.sessionStorage.getItem("linuxurl") || window?.location?.href;
     if (!this.linuxurl) {
       await this.getlinuxurl();
     } else {
@@ -127,10 +128,10 @@ export default {
     return {
       requestid_timer: null,
       isadd: false,
-      linuxurl: "",
+      linuxurl: window?.location?.href,
       head: {},
       photo_list: [],
-      backurl: "",
+      backurl: window?.location?.href,
       photo_path: "",
     };
   },

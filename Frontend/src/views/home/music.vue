@@ -90,7 +90,7 @@ export default {
       loadfinish: false,
       ip: "116.25.142.177",
       key: "",
-      musicbackurl: "",
+      musicbackurl: window?.location?.href,
       isloginmusic: false,
       loginimage: "",
       uid: "469690124",

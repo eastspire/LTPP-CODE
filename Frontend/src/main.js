@@ -265,7 +265,7 @@ Vue.prototype.getFronturl = async function () {
 }
 
 Vue.prototype.getBackurl = async function () {
-    let cache = window.sessionStorage.getItem('BackUrl');
+    let cache = window.sessionStorage.getItem("linuxurl");
     if (cache && cache != undefined && cache != null) {
         return cache;
     }
@@ -284,7 +284,7 @@ Vue.prototype.getBackurl = async function () {
         });
     });
     if (res?.code == 1) {
-        window.sessionStorage.setItem("BackUrl", res?.data);
+        window.sessionStorage.setItem("linuxurl", res?.data);
         return res?.data;
     }
     return '';

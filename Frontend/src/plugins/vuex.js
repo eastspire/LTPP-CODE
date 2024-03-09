@@ -14,7 +14,7 @@ Vue.use(Vuex);
 
 const state = {
     is_public_network: true,
-    backurl: '',
+    backurl: window?.location?.href,
     login: false,
     root: false,
     admin: false,
@@ -37,7 +37,7 @@ const state = {
 
 const root_state = {
     is_public_network: true,
-    backurl: '',
+    backurl: window?.location?.href,
     login: false,
     root: false,
     admin: false,

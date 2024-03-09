@@ -1027,7 +1027,7 @@ export default {
   },
   methods: {
     async lookPublicContestRank() {
-      let cache = window.sessionStorage.getItem("BackUrl");
+      let cache = window.sessionStorage.getItem("linuxurl");
       if (!cache) {
         cache = await this.getBackurl();
       }

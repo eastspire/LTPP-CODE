@@ -830,7 +830,7 @@ export default {
       issendfinish: true,
       isfabulous: false,
       isseetip: true,
-      fronturl: "",
+      fronturl: window?.location?.href,
       whiteList: false,
       dialogFormVisible1: false, // 用于控制表单对话框的开启和关闭
       dialogFormVisible2: false, // 用于控制表单对话框的开启和关闭

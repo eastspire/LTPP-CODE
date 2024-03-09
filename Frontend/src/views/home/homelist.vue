@@ -239,7 +239,7 @@ export default {
       whiteList: false,
       page: 1,
       allnum: 0,
-      linuxurl: "",
+      linuxurl: window?.location?.href,
       photoList: [],
       notice: {},
       shortsentenceList: [],

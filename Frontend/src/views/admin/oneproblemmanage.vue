@@ -499,7 +499,7 @@ export default {
         katex_css: () => "md/katex/katex.min.css",
         katex_js: () => "md/katex/katex.min.js",
       },
-      linuxbkurl: "",
+      linuxbkurl: window?.location?.href,
       head: {},
       passparam: {
         id: "",
