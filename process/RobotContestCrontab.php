@@ -42,7 +42,7 @@ class RobotContestCrontab
                 ->get();
             return $db;
         } catch (Exception $e) {
-            Base::sendErrorNotice($e->getTraceAsString(), '定时任务进程<strong>【RobotContestCrontab】</strong>运行错误：' . $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), '定时任务进程<strong>【RobotContestCrontab】</strong>运行出错：' . $e->getMessage());
         }
         return [];
     }
@@ -76,7 +76,7 @@ class RobotContestCrontab
                     ]);
                 }
             } catch (Exception $e) {
-                Base::sendErrorNotice($e->getTraceAsString(), '定时任务进程<strong>【RobotContestCrontab】</strong>运行错误：' . $e->getMessage());
+                Base::sendErrorNotice($e->getTraceAsString(), '定时任务进程<strong>【RobotContestCrontab】</strong>运行出错：' . $e->getMessage());
             }
         });
     }

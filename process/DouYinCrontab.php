@@ -31,7 +31,7 @@ class DouYinCrontab
             // 长度限制
             $preview_title = Base::utfsubstr($preview_title, 0, Base::$video_name_limit);
         } catch (Exception $e) {
-            Base::sendErrorNotice($e->getTraceAsString(), '定时任务进程<strong>【DouYinCrontab】</strong>运行错误：' . $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), '定时任务进程<strong>【DouYinCrontab】</strong>运行出错：' . $e->getMessage());
         }
         return $preview_title;
     }
@@ -54,7 +54,7 @@ class DouYinCrontab
             }
             $preview_title = Base::utfsubstr($preview_title, 0, Base::$video_name_limit);
         } catch (Exception $e) {
-            Base::sendErrorNotice($e->getTraceAsString(), '定时任务进程<strong>【DouYinCrontab】</strong>运行错误：' . $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), '定时任务进程<strong>【DouYinCrontab】</strong>运行出错：' . $e->getMessage());
         }
         return $preview_title;
     }
@@ -84,7 +84,7 @@ class DouYinCrontab
                 ->where('time', '<', date('Y-m-d H:i:s', time() - $noupdate_limit_seconds))
                 ->update(['isdel' => 1]);
         } catch (Exception $e) {
-            Base::sendErrorNotice($e->getTraceAsString(), '定时任务进程<strong>【DouYinCrontab】</strong>运行错误：' . $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), '定时任务进程<strong>【DouYinCrontab】</strong>运行出错：' . $e->getMessage());
         }
     }
 
@@ -113,7 +113,7 @@ class DouYinCrontab
             ];
             $res = json_decode(Base::postRequest($url, $headers, $data), true);
         } catch (Exception $e) {
-            Base::sendErrorNotice($e->getTraceAsString(), '定时任务进程<strong>【DouYinCrontab】</strong>运行错误：' . $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), '定时任务进程<strong>【DouYinCrontab】</strong>运行出错：' . $e->getMessage());
         }
         return $res;
     }
@@ -242,7 +242,7 @@ class DouYinCrontab
                 }
             }
         } catch (Exception $e) {
-            Base::sendErrorNotice($e->getTraceAsString(), '定时任务进程<strong>【DouYinCrontab】</strong>运行错误：' . $e->getMessage());
+            Base::sendErrorNotice($e->getTraceAsString(), '定时任务进程<strong>【DouYinCrontab】</strong>运行出错：' . $e->getMessage());
         }
     }
 
@@ -253,7 +253,7 @@ class DouYinCrontab
             try {
                 $this->run();
             } catch (Exception $e) {
-                Base::sendErrorNotice($e->getTraceAsString(), '定时任务进程<strong>【DouYinCrontab】</strong>运行错误：' . $e->getMessage());
+                Base::sendErrorNotice($e->getTraceAsString(), '定时任务进程<strong>【DouYinCrontab】</strong>运行出错：' . $e->getMessage());
             }
         });
     }

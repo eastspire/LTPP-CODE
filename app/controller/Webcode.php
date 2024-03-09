@@ -158,7 +158,7 @@ class Webcode
         Base::writeToFile($errpath, '');
 
         //编译
-        $compiler_res_json = Base::compiler($userlanguage, $code, $filepath, $runcodefilepath);
+        $compiler_res_json = Base::compiler($userlanguage, $code, $filepath, $runcodefilepath, $limittime);
 
         if (!isset($compiler_res_json['code']) || $compiler_res_json['code'] != 1) {
             Webcode::updateCodeStatus($code_id, '编译出错', 0, 0);

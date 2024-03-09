@@ -43,7 +43,7 @@ class ContestRankCrontab
                 $obj = null;
             } catch (Exception $e) {
                 // 发送通知
-                Base::sendErrorNotice($e->getTraceAsString(), '定时任务进程<strong>【ContestRankCrontab】</strong>运行错误：' . $e->getMessage());
+                Base::sendErrorNotice($e->getTraceAsString(), '定时任务进程<strong>【ContestRankCrontab】</strong>运行出错：' . $e->getMessage());
             }
         });
 
@@ -79,7 +79,7 @@ class ContestRankCrontab
                 }
             } catch (Exception $e) {
                 // 发送通知
-                Base::sendErrorNotice($e->getTraceAsString(), '定时任务进程<strong>【ContestRankCrontab】</strong>运行错误：' . $e->getMessage());
+                Base::sendErrorNotice($e->getTraceAsString(), '定时任务进程<strong>【ContestRankCrontab】</strong>运行出错：' . $e->getMessage());
             }
         });
     }

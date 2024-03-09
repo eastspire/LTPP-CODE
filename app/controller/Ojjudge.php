@@ -451,7 +451,7 @@ class Ojjudge
         $runcodefilepath = $filepath . 'main';
         $out = [];
         //编译
-        $compiler_res_json = Base::compiler($userlanguage, $code, $filepath, $runcodefilepath);
+        $compiler_res_json = Base::compiler($userlanguage, $code, $filepath, $runcodefilepath, $limittime);
 
         if (!isset($compiler_res_json['code']) || $compiler_res_json['code'] != 1) {
             Ojjudge::updateCodeStatus($code_id, '编译出错', 0, 0);
@@ -551,7 +551,7 @@ class Ojjudge
                 return ['code' => -1, 'result' => '判题机运行异常！' . "\n" . $msg, 'usetime' => $time_used, 'usememory' => $memory_used];
             }
 
-            //运行错误
+            //运行出错
             if ($status == Base::$judge_code_error) {
                 $code .= "\n\n\n报错详情：\n";
                 $err_data = '运行出错' . "\n";

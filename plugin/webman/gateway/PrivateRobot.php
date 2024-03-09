@@ -338,12 +338,27 @@ class PrivateRobot extends ChatBase
                 $runcodefilepath = $filepath . 'main';
                 //编译
                 $out = [];
-                $compiler_res_json = Base::compiler($userlanguage, $code, $filepath, $runcodefilepath);
+                $now = date('Y-m-d H:i:s', time());
+                $compiler_res_json = Base::compiler($userlanguage, $code, $filepath, $runcodefilepath, $limittime);
                 if (!isset($compiler_res_json['code']) || $compiler_res_json['code'] != 1) {
+                    RedisQueue::send(Base::$redis_queue_update_oj_name, [
+                        'problem_id' => $problem_id,
+                        'is_ac' => false
+                    ]);
+                    Base::insertToDb('codehistory', [
+                        'userid' => $user_id,
+                        'status' => '运行出错',
+                        'problemid' => $problem_id,
+                        'time' => $now,
+                        'usetime' => 0,
+                        'usememory' => 0,
+                        'code' => $code,
+                        'language' => $userlanguage,
+                        'contestid' => $contest_id
+                    ]);
                     continue;
                 }
                 $out = $compiler_res_json['result'];
-                $now = date('Y-m-d H:i:s', time());
                 if (!empty($out)) {
                     Base::deleteAllFile($filepath);
                     $code = $code . "\n\n\n报错详情：\n";
@@ -423,7 +438,7 @@ class PrivateRobot extends ChatBase
                         continue;
                     }
 
-                    //运行错误
+                    //运行出错
                     if ($status == Base::$judge_code_error) {
                         //读取输出
                         $code .= "\n\n\n报错详情：\n";
