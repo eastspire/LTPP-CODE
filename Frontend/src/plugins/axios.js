@@ -29,11 +29,13 @@ let config = {
 };
 
 const _axios = axios.create(config);
-var musicbkurl = '';
+let musicbkurl = '';
+let request_url = '';
 
 _axios.interceptors.request.use(
     async function (config) {
         try {
+            request_url = config?.baseURL + config?.url;
             config.baseURL = store.state.is_public_network ? public_network_url : private_network_url;
             // Do something before request is sent
             let char_set = [];
@@ -87,7 +89,6 @@ _axios.interceptors.request.use(
         return config;
     },
     function (error) {
-        // Do something with request error
         return Promise.reject(error);
     }
 );
@@ -97,11 +98,28 @@ _axios.interceptors.response.use(
     function (response) {
         if (response?.data?.code == 500) {
             Vue.prototype.logoutRemove(true);
+            return response;
+        }
+        const key = response?.request?.responseURL;
+        if (key) {
+            window.localStorage.setItem(key, JSON.stringify(response?.data));
         }
         return response;
     },
     function (error) {
-        // Do something with response error
+        try {
+            // Do something with response error
+            if (request_url) {
+                const cache_data = window.localStorage.getItem(request_url);
+                const cache_res = JSON.parse(cache_data);
+                const res = {
+                    data: cache_res
+                };
+                return res;
+            }
+        } catch (err) {
+
+        }
         const res = {
             data: {
                 code: -1,
