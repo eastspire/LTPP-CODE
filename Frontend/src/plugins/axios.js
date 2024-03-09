@@ -18,7 +18,10 @@ import store from '../plugins/vuex.js'
 // axios.defaults.baseURL = process.env.baseURL || process.env.apiUrl || '';
 // axios.defaults.headers.common['Authorization'] = AUTH_TOKEN;
 // axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
-
+const skip_key_list = [
+    'timerstamp='
+];
+const skip_key_list_len = skip_key_list?.length;
 let public_network_url = 'https://api.ltpp.vip';
 let private_network_url = 'http://hbnuoj.ltpp.vip:48787';
 
@@ -100,8 +103,19 @@ _axios.interceptors.response.use(
             Vue.prototype.logoutRemove(true);
             return response;
         }
+
+        let skip = false;
         const key = response?.request?.responseURL;
-        if (key) {
+        if (!key) {
+            return response;
+        }
+        for (let i = 0; i < skip_key_list_len; ++i) {
+            if (key?.indexOf(skip_key_list[i]) != -1) {
+                skip = true;
+                break;
+            }
+        }
+        if (!skip) {
             window.localStorage.setItem(key, JSON.stringify(response?.data));
         }
         return response;

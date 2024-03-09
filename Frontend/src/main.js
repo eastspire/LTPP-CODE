@@ -452,7 +452,10 @@ Vue.prototype.logoutRemove = function (is_force = false) {
         let storage = window.localStorage;
         for (let i = 0, len = storage.length; i < len; i++) {
             let key = storage.key(i);
-            if (key && (key.indexOf('Chat') != -1 || key.indexOf('idecode') != -1) || (is_force === true && key == 'time')) {
+            if (key && (key.indexOf('Chat') != -1 ||
+                key.indexOf('idecode') != -1) ||
+                key.indexOf('://') != -1 ||
+                (is_force === true && key == 'time')) {
                 window.localStorage.removeItem(key);
             }
         }
