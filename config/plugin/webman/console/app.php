@@ -14,7 +14,7 @@ return [
     'enable' => true,
     'phar_file_output_dir' => BASE_PATH . DIRECTORY_SEPARATOR . 'build',
     'phar_filename' => 'LTPP.phar',
-    'bin_filename' => 'LTPP.bin',
+    'bin_filename' => 'LTPP',
     'signature_algorithm' => Phar::SHA256,
     //set the signature algorithm for a phar and apply it. The signature algorithm must be one of Phar::MD5, Phar::SHA1, Phar::SHA256, Phar::SHA512, or Phar::OPENSSL.
     'private_key_file' => '',
