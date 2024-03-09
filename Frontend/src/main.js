@@ -466,7 +466,6 @@ Vue.prototype.logoutRemove = function (is_force = false) {
             }
             window.sessionStorage.clear();
         } catch (err) {
-            console.log(err);
         }
         EventBus.$emit('closeWs');
         if (
