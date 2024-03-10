@@ -608,6 +608,10 @@ export default {
           userlanguage: this.$SqsGlobal.language_map[this.my_language],
         },
       }).catch((t) => {
+        try {
+          clearInterval(this.up_timer);
+          this.up_timer = null;
+        } catch (err) {}
         this.isup = false;
         this.istest = false;
         this.$msg({
@@ -619,6 +623,10 @@ export default {
         return;
       });
       if (res?.code == 1) {
+        try {
+          clearInterval(this.up_timer);
+          this.up_timer = null;
+        } catch (err) {}
         this.code_id = res?.code_id;
         this.up_timer = setInterval(() => {
           this.testQueryOne(this.code_id);
@@ -713,6 +721,10 @@ export default {
           contest_id: this.contest_id,
         },
       }).catch((t) => {
+        try {
+          clearInterval(this.up_timer);
+          this.up_timer = null;
+        } catch (err) {}
         this.isup = false;
         this.istest = false;
         this.$msg({
@@ -725,9 +737,13 @@ export default {
       });
       if (res?.code == 1) {
         this.code_id = res?.code_id;
+        try {
+          clearInterval(this.up_timer);
+          this.up_timer = null;
+        } catch (err) {}
         this.up_timer = setInterval(() => {
           this.submitQueryOne(this.code_id);
-        }, 100);
+        }, 1000);
       } else {
         this.isup = false;
         this.istest = false;

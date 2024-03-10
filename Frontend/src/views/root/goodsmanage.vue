@@ -313,7 +313,12 @@
       <el-upload
         v-show="goods_data.id"
         class="upload-demo"
-        style="width: 100%;margin-left=auto;margin-right:auto;text-align:center"
+        style="
+          width: 100%;
+          margin-left: auto;
+          margin-right: auto;
+          text-align: center;
+        "
         :headers="head"
         drag
         ref="upload_add"
@@ -438,7 +443,12 @@
       <el-upload
         v-show="goods_data.id"
         class="upload-demo"
-        style="width: 100%;margin-left=auto;margin-right:auto;text-align:center"
+        style="
+          width: 100%;
+          margin-left: auto;
+          margin-right: auto;
+          text-align: center;
+        "
         :headers="head"
         drag
         ref="upload_update"
@@ -505,7 +515,12 @@
     >
       <el-upload
         class="upload-demo"
-        style="width: 100%;margin-left=auto;margin-right:auto;text-align:center"
+        style="
+          width: 100%;
+          margin-left: auto;
+          margin-right: auto;
+          text-align: center;
+        "
         :headers="head"
         drag
         ref="upload_large_num"

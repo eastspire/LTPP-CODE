@@ -303,7 +303,12 @@
         <div style="margin-top: 2rem">
           <el-upload
             class="upload-demo"
-            style="width: 100%;margin-left=auto;margin-right:auto;text-align:center"
+            style="
+              width: 100%;
+              margin-left: auto;
+              margin-right: auto;
+              text-align: center;
+            "
             :headers="head"
             drag
             ref="upload"
@@ -358,11 +363,11 @@ export default {
     this.requestid_timer = setInterval(() => {
       this.head.Requestid = this.Base64Encode(new Date().getTime());
     }, 1000);
-    this.bkvideourl = window.sessionStorage.getItem("linuxurl");
-    if (!this.bkvideourl) {
+    const tem_bkvideourl = window.sessionStorage.getItem("linuxurl");
+    if (!tem_bkvideourl) {
       await this.getlinuxurl();
     } else {
-      this.bkvideourl += "/Video/uploadvideo";
+      this.bkvideourl = tem_bkvideourl + "/Video/uploadvideo";
     }
     this.page = 1;
     this.limit = 50;

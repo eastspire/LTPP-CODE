@@ -110,12 +110,10 @@ export default {
       this.head.Requestid = this.Base64Encode(new Date().getTime());
     }, 1000);
     this.linuxurl = window.sessionStorage.getItem("linuxurl");
-    this.backurl =
-      window.sessionStorage.getItem("linuxurl") || window?.location?.href;
     if (!this.linuxurl) {
       await this.getlinuxurl();
     } else {
-      this.backurl += "/Photo/addphoto";
+      this.backurl = this.linuxurl + "/Photo/addphoto";
     }
     this.photo_list = [];
     await this.getlist();

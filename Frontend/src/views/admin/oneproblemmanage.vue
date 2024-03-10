@@ -418,7 +418,7 @@ export default {
     if (!tem_linuxbkurl) {
       this.getlinuxbkurl();
     } else {
-      this.linuxbkurl += "/Testupload/savetest";
+      this.linuxbkurl = tem_linuxbkurl + "/Testupload/savetest";
     }
 
     this.tableData.id = urlencode.decode(this.$route.query.path, "gbk"); //问题id

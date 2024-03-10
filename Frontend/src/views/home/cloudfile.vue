@@ -483,11 +483,22 @@
           :append-to-body="true"
         >
           <div
-            style="width: 100%;margin-left=auto;margin-right:auto;text-align:center;height:auto;"
+            style="
+              width: 100%;
+              margin-left: auto;
+              margin-right: auto;
+              text-align: center;
+              height: auto;
+            "
           >
             <el-upload
               class="upload-demo"
-              style="width: 100%;margin-left=auto;margin-right:auto;text-align:center"
+              style="
+                width: 100%;
+                margin-left: auto;
+                margin-right: auto;
+                text-align: center;
+              "
               :headers="head"
               drag
               ref="upload"
