@@ -1302,7 +1302,6 @@ class Base
                 Base::sendErrorNotice('', '发送POST请求异常信息：' . curl_error($ch));
             }
         } catch (Exception $e) {
-            Base::sendErrorNotice($e->getTraceAsString(), '发送POST请求异常信息：' . $e->getMessage());
         } finally {
             curl_close($ch);
         }
@@ -1337,7 +1336,6 @@ class Base
                 Base::sendErrorNotice('', '发送GET请求异常信息：' . curl_error($ch));
             }
         } catch (Exception $e) {
-            Base::sendErrorNotice($e->getTraceAsString(), '发送GET请求异常信息：' . $e->getMessage());
         } finally {
             curl_close($ch);
         }
@@ -4560,5 +4558,61 @@ class Base
             Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
         }
         return false;
+    }
+
+    /**
+     * 代码运行创建目录和代码
+     * @param int $user_id
+     * @param string $testin 
+     */
+    static public function creatCodeRunDirFile($user_id = 0, $testin = '', $is_problem = false)
+    {
+        // 子目录名称
+        $mainfile = '';
+        // 完整路径
+        $filepath = '';
+        // 可执行文件完整路径
+        $runcodefilepath = '';
+        // 输入文件完整路径
+        $inpath = '';
+        // 输出文件完整路径
+        $outpath = '';
+        // 错误文件完整路径
+        $errpath = '';
+        try {
+            $md5aid = md5($user_id);
+            //代码存放路径
+            do {
+                $mainfile = $md5aid . '-' . uniqid() . mt_rand(1, 100000) . time() . '/';
+                $filepath = Base::$sandbox_path .  $mainfile;
+            } while (file_exists($filepath));
+            if (!file_exists($filepath)) {
+                Base::judgeCreatPath($filepath, 0777);
+            }
+            // 可执行文件不能提前生成或写入
+            // 如果提前生成或写入会导致编译器生成可执行文件失败
+            $runcodefilepath = $filepath . 'main';
+            if (!$is_problem) {
+                //输入文件
+                $inpath = $runcodefilepath . '.in';
+                Base::writeToFile($inpath, $testin);
+            }
+            //输出文件
+            $outpath = $runcodefilepath . '.out';
+            Base::writeToFile($outpath, '');
+            //错误文件
+            $errpath = $runcodefilepath . '.err';
+            Base::writeToFile($errpath, '');
+        } catch (Exception $e) {
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
+        }
+        return [
+            'mainfile' => $mainfile,
+            'filepath' => $filepath,
+            'runcodefilepath' => $runcodefilepath,
+            'inpath' => $inpath,
+            'outpath' => $outpath,
+            'errpath' => $errpath,
+        ];
     }
 };

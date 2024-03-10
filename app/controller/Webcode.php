@@ -132,31 +132,13 @@ class Webcode
         }
         $limittime = (int) Base::getSettingKeyData('idemaxtime');
         $limitmemory = ((int) Base::getSettingKeyData('idemaxmemory') ?? 0) << 20;
-        $md5aid = md5($my_aid);
-        $mainfile = '';
-        //用户文件夹
-        $filepath = '';
-        //代码存放路径
-        do {
-            $mainfile = uniqid() . mt_rand(1, 100000) . time();
-            $filepath = Base::$sandbox_path . $md5aid . '/' . $mainfile . '/';
-        } while (file_exists($filepath));
-
-        if (!file_exists($filepath)) {
-            Base::judgeCreatPath($filepath, 0777);
-        }
-
-        $runcodefilepath = $filepath . 'main';
-        //输入文件
-        $inpath = $runcodefilepath . '.in';
-        Base::writeToFile($inpath, $testin);
-        //输出文件
-        $outpath = $runcodefilepath . '.out';
-        Base::writeToFile($outpath, '');
-        //错误文件
-        $errpath = $runcodefilepath . '.err';
-        Base::writeToFile($errpath, '');
-
+        $dir_res = Base::creatCodeRunDirFile($my_aid, $testin);
+        $mainfile = $dir_res['mainfile'];
+        $filepath = $dir_res['filepath'];
+        $runcodefilepath = $dir_res['runcodefilepath'];
+        $inpath = $dir_res['inpath'];
+        $outpath = $dir_res['outpath'];
+        $errpath = $dir_res['errpath'];
         //编译
         $compiler_res_json = Base::compiler($userlanguage, $code, $filepath, $runcodefilepath, $limittime);
 
@@ -175,10 +157,8 @@ class Webcode
             foreach ($out as &$tem) {
                 $err_data .= $tem . "\n";
             }
-            $tp = Base::utfsubstr(Base::$sandbox_path, 1, strlen(Base::$sandbox_path)) . $md5aid . '/' . $mainfile . '/';
-            $err_data = str_replace($tp, '', $err_data);
-            $tp = $md5aid . '/' . $mainfile . '/';
-            $err_data = str_replace($tp, '', $err_data);
+            $tp = Base::utfsubstr(Base::$sandbox_path, 1, strlen(Base::$sandbox_path)) . $mainfile;
+            $err_data = str_replace([$tp, $mainfile], '', $err_data);
             Base::removeBr($err_data);
             $code .= $err_data;
             $res_data .= $err_data;
@@ -219,10 +199,8 @@ class Webcode
             $resout = Base::getFileText($errpath);
             Base::deleteAllFile($filepath);
             // 去除路径信息
-            $tp = Base::utfsubstr(Base::$sandbox_path, 1, strlen(Base::$sandbox_path)) . $md5aid . '/' . $mainfile . '/';
-            $resout = str_replace($tp, '', $resout);
-            $tp = $md5aid . '/' . $mainfile . '/';
-            $resout = str_replace($tp, '', $resout);
+            $tp = Base::utfsubstr(Base::$sandbox_path, 1, strlen(Base::$sandbox_path)) . $mainfile;
+            $resout = str_replace([$tp, $mainfile], '', $resout);
             Base::removeBr($resout);
 
             if (strlen($resout) > Base::$code_out_limit) {
@@ -242,10 +220,8 @@ class Webcode
         //读取输出
         $resout = Base::getFileText($outpath);
         // 去除路径信息
-        $tp = Base::utfsubstr(Base::$sandbox_path, 1, strlen(Base::$sandbox_path)) . $md5aid . '/' . $mainfile . '/';
-        $resout = str_replace($tp, '', $resout);
-        $tp = $md5aid . '/' . $mainfile . '/';
-        $resout = str_replace($tp, '', $resout);
+        $tp = Base::utfsubstr(Base::$sandbox_path, 1, strlen(Base::$sandbox_path)) . $mainfile;
+        $resout = str_replace([$tp, $mainfile], '', $resout);
         Base::removeBr($resout);
 
         if (strlen($resout) > Base::$code_out_limit) {

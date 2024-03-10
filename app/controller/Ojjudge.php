@@ -396,19 +396,12 @@ class Ojjudge
         $limittime = (int) $db->Time;
         $limitmemory = ((int) $db->Memory) << 20;
 
-        $md5aid = md5($my_aid);
-        $mainfile = '';
-        //用户文件夹
-        $filepath = '';
-        //代码存放路径
-        do {
-            $mainfile = uniqid() . mt_rand(1, 100000) . time() . $problem_id;
-            $filepath = Base::$sandbox_path . $md5aid . '/' . $mainfile . '/';
-        } while (file_exists($filepath));
-
-        if (!file_exists($filepath)) {
-            Base::judgeCreatPath($filepath, 0777);
-        }
+        $dir_res = Base::creatCodeRunDirFile($my_aid, '', true);
+        $mainfile = $dir_res['mainfile'];
+        $filepath = $dir_res['filepath'];
+        $runcodefilepath = $dir_res['runcodefilepath'];
+        $outpath = $dir_res['outpath'];
+        $errpath = $dir_res['errpath'];
 
         $md5_problem_id = Base::doubleMd5($problem_id);
         $alltestpath = Base::$testdata_path . $md5_problem_id . '/';
@@ -469,10 +462,8 @@ class Ojjudge
             foreach ($out as &$tem) {
                 $err_data .= $tem . "\n";
             }
-            $tp = Base::utfsubstr(Base::$sandbox_path, 1, strlen(Base::$sandbox_path)) . $md5aid . '/' . $mainfile . '/';
-            $err_data = str_replace($tp, '', $err_data);
-            $tp = $md5aid . '/' . $mainfile . '/';
-            $err_data = str_replace($tp, '', $err_data);
+            $tp = Base::utfsubstr(Base::$sandbox_path, 1, strlen(Base::$sandbox_path)) . $mainfile;
+            $err_data = str_replace([$tp, $mainfile], '', $err_data);
             Base::removeBr($err_data);
 
             $code .= $err_data;
@@ -509,20 +500,16 @@ class Ojjudge
             ];
         }
 
-        //输出文件
-        $outpath = $filepath . 'main.out';
-        Base::writeToFile($outpath, '');
-        //错误文件
-        $errpath = $filepath . 'main.err';
-        Base::writeToFile($errpath, '');
-
         $maxtime = '';
         $maxmemory = '';
         // 开始运行，当前判题数目加一
 
         // 遍历测试样例
         foreach ($test_data_list as &$one_oj_test_data_db) {
+            // 清空输出
             Base::writeToFile($outpath, '');
+            // 清空错误
+            Base::writeToFile($errpath, '');
             //文件前缀名
             $testname = $one_oj_test_data_db->id;
             $out = [];
@@ -559,10 +546,8 @@ class Ojjudge
                 $resout = Base::getFileText($errpath);
                 Base::deleteallfile($filepath);
                 // 去除路径信息
-                $tp = Base::utfsubstr(Base::$sandbox_path, 1, strlen(Base::$sandbox_path)) . $md5aid . '/' . $mainfile . '/';
-                $resout = str_replace($tp, '', $resout);
-                $tp = $md5aid . '/' . $mainfile . '/';
-                $resout = str_replace($tp, '', $resout);
+                $tp = Base::utfsubstr(Base::$sandbox_path, 1, strlen(Base::$sandbox_path)) . $mainfile;
+                $resout = str_replace([$tp, $mainfile], '', $resout);
                 Base::removeBr($resout);
 
                 if (strlen($resout) > Base::$code_out_limit) {
