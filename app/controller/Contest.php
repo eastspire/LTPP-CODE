@@ -604,7 +604,9 @@ class Contest
 
         $redis4 = Redis::connection('db4');
         //缓存存在读取缓存
-        if ($redis4->get('Contest' . $contest_id . 'problemdata' . $my_aid)) {
+        // 添加ismycontest判断，防止出现A用户创建的比赛，B用户有权限但是没报名导致读取的缓存
+        // 然后竞赛修改了赛题，赛题缓存只清理报名的用户，所以导致B用户赛题列表依然是旧的数据
+        if (!$ismycontest && $redis4->get('Contest' . $contest_id . 'problemdata' . $my_aid)) {
             $redispro = json_decode($redis4->get('Contest' . $contest_id . 'problemdata' . $my_aid) ?? '', true);
             return json(['code' => 1, 'msg' => '赛题列表加载完成', 'data' => $redispro]);
         }
@@ -647,8 +649,10 @@ class Contest
             $res[] = $temdb;
         }
         Base::dataToSafe($res);
-        //存入缓存
-        $redis4->set('Contest' . $contest_id . 'problemdata' . $my_aid, json_encode($res));
+        if (!$ismycontest) {
+            //存入缓存
+            $redis4->set('Contest' . $contest_id . 'problemdata' . $my_aid, json_encode($res));
+        }
         return json(['code' => 1, 'msg' => '竞赛题目列表加载完成', 'data' => $res]);
     }
 
@@ -937,18 +941,18 @@ class Contest
                 ]
             );
         $problemdata = $request->post('problemdata');
+        if (!$problemdata) {
+            return json(['code' => -1, 'msg' => '竞赛题目不能为空！']);
+        }
         foreach ($problemdata as &$tem) {
             $tem = Base::getIdByUid($tem);
         }
-
         //先清空之前该竞赛题目，再插入新竞赛题目
         Db::table('contestproblem')
             ->where('contestid', $contest_id)
             ->where('isdel', 0)
             ->update(['isdel' => 1]);
-        if (!$problemdata) {
-            return json(['code' => -1, 'msg' => '竞赛题目不能为空！']);
-        }
+
         foreach ($problemdata as &$tem) {
             $prodb = Db::table('oj')
                 ->where('id', $tem)
