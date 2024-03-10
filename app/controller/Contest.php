@@ -595,11 +595,9 @@ class Contest
             return json(['code' => -1, 'msg' => '无该竞赛']);
         }
         $begintime = strtotime($contest_db->begin);
-        if ($now < $begintime) {
-            $ismycontest = Contest::judgeIsMyContest($contest_id, $my_aid);
-            if (!$ismycontest) {
-                return json(['code' => -1, 'msg' => '竞赛未开始！无法查看赛题列表！']);
-            }
+        $ismycontest = Contest::judgeIsMyContest($contest_id, $my_aid);
+        if ($now < $begintime && !$ismycontest) {
+            return json(['code' => -1, 'msg' => '竞赛未开始！无法查看赛题列表！']);
         }
 
         $redis4 = Redis::connection('db4');
