@@ -38,7 +38,12 @@
               <template slot-scope="scope">
                 <p
                   @click="lookimg(scope.row)"
-                  style="font-weight: bold; font-size: 1.06rem; color: #409eff"
+                  style="
+                    font-weight: bold;
+                    font-size: 1.06rem;
+                    color: #409eff;
+                    cursor: pointer;
+                  "
                   type="success"
                 >
                   {{ scope.row.substr(0, 40) }}

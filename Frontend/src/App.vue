@@ -23,7 +23,7 @@ export default {
   name: "app",
   data() {
     return {
-      version: "2.1.0",
+      version: "2.1.1",
       get_version_lock: false,
     };
   },
@@ -52,14 +52,14 @@ export default {
           title: "系统资源检查",
           dangerouslyUseHTMLString: true,
           message: "系统资源更新中",
-          duration: 3600,
+          duration: 1600,
           offset: 80,
         });
         window.localStorage.setItem(key, now);
         if (!is_electron) {
           setTimeout(() => {
-            location.reload(true);
-          }, 888);
+            window.location.reload(true);
+          }, 360);
           return;
         }
       }
@@ -76,7 +76,7 @@ export default {
         title: "系统资源检查",
         dangerouslyUseHTMLString: true,
         message: "系统资源检查完成",
-        duration: 3600,
+        duration: 1600,
         offset: 80,
       });
       let is_public_network = window.localStorage.getItem("is_public_network");
@@ -133,12 +133,12 @@ export default {
               title: "发现新版本！",
               dangerouslyUseHTMLString: true,
               message: "系统自动更新中",
-              duration: 3600,
+              duration: 1600,
               offset: 80,
             });
             setTimeout(() => {
-              location.reload(true);
-            }, 888);
+              window.location.reload(true);
+            }, 360);
           } else {
             this.$notice({
               title: "发现新版本！",
