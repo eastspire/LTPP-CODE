@@ -1592,6 +1592,24 @@
     webpack-virtual-modules "^0.4.2"
     whatwg-fetch "^3.6.2"
 
+"@vue/cli-shared-utils@5.0.6":
+  version "5.0.6"
+  resolved "https://registry.npmmirror.com/@vue/cli-shared-utils/-/cli-shared-utils-5.0.6.tgz#f47202d68dfd4c2e41160c63721263b39cd97d1e"
+  integrity sha512-5HmlRtMByOCFO0P3mMUx8dVruTRhZ3pqQ0f1cCH9TmAoDjetmD/Ib7yx/5KxTHV8QY3xZJxYvgAmOU5C49K5xA==
+  dependencies:
+    "@achrinza/node-ipc" "^9.2.5"
+    chalk "^4.1.2"
+    execa "^1.0.0"
+    joi "^17.4.0"
+    launch-editor "^2.2.1"
+    lru-cache "^6.0.0"
+    node-fetch "^2.6.7"
+    open "^8.0.2"
+    ora "^5.3.0"
+    read-pkg "^5.1.1"
+    semver "^7.3.4"
+    strip-ansi "^6.0.0"
+
 "@vue/cli-shared-utils@^5.0.6", "@vue/cli-shared-utils@^5.0.8":
   version "5.0.8"
   resolved "https://registry.npmmirror.com/@vue/cli-shared-utils/-/cli-shared-utils-5.0.8.tgz#75fc96528eba2b1c7e33cb7e989a984ddef99c8a"
