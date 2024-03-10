@@ -626,7 +626,7 @@ export default {
         return styleRes;
       } else {
         /* 正确率低于100大于80 */
-        styleRes.color = "#chartreuse";
+        styleRes.color = "chartreuse";
         return styleRes;
       }
     },
