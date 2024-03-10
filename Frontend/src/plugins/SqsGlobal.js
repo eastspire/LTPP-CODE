@@ -12,7 +12,7 @@
 import c_tips from './code/c';
 import cpp_tips from './code/cpp';
 import java_tips from './code/java';
-import go_tips from './code/go';
+import go_tips from './code/golang';
 import javascript_tips from './code/javascript';
 import rust_tips from './code/rust';
 import php_tips from './code/php';
@@ -83,17 +83,17 @@ const map_language = {
 };
 
 const language_tips = {
-    c: c + c_tips.key,
-    cpp: cpp + cpp_tips.key,
-    java: java + java_tips.key,
-    python: python + python_tips.key,
-    go: go + go_tips.key,
-    php: php + php_tips.key,
-    javascript: javascript + javascript_tips.key,
-    rust: rust + rust_tips.key,
-    typescript: typescript + typescript_tips.key,
-    csharp: csharp + csharp_tips.key,
-    ruby: ruby + ruby_tips.key
+    c: c_tips.key,
+    cpp: cpp_tips.key,
+    java: java_tips.key,
+    python: python_tips.key,
+    go: go_tips.key,
+    php: php_tips.key,
+    javascript: javascript_tips.key,
+    rust: rust_tips.key,
+    typescript: typescript_tips.key,
+    csharp: csharp_tips.key,
+    ruby: ruby_tips.key
 };
 
 const map_language_file = {

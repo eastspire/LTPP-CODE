@@ -75,16 +75,6 @@
           </div>
         </div>
 
-        <div
-          :ref="ide_base_id"
-          :id="ide_base_id"
-          style="
-            height: 0px !important;
-            width: 0px !important;
-            display: none !important;
-          "
-        ></div>
-
         <!-- IDE -->
         <div style="height: 66vh; overflow: hidden">
           <div
@@ -322,6 +312,7 @@ export default {
               horizontal: "auto", // 水平滚动条根据内容溢出自动显示
             },
           });
+          this.loadCodeTips(this.my_language);
         } catch (err) {}
         if (this.editor) {
           let layout_timer = setInterval(() => {
@@ -348,7 +339,6 @@ export default {
           this.onExit();
           this.editor.onDidChangeModelContent(this.save);
         }
-        this.refreshBase();
       });
     }, 0);
   },
@@ -356,7 +346,6 @@ export default {
     try {
       this.test_query_one_can_next = true;
       this.save(true);
-      this.ide_base && this.ide_base.dispose();
       this.editor && this.editor.dispose();
     } catch (err) {}
     try {
@@ -373,8 +362,6 @@ export default {
       code_id: "",
       up_timer: null,
       my_language: "cpp",
-      ide_base_id: "my_ide_base",
-      ide_base: null,
       my_ide_id: "",
       isac: false,
       iswrong: false,
@@ -394,6 +381,56 @@ export default {
     };
   },
   methods: {
+    loadCodeTips(now_language) {
+      monaco.languages.registerCompletionItemProvider(now_language, {
+        provideCompletionItems: (model, position) => {
+          const suggestions_list = [];
+          if (this.$SqsGlobal.language_tips[now_language]) {
+            this.$SqsGlobal.language_tips[now_language].forEach((tem) => {
+              suggestions_list.push({
+                label: tem,
+                kind: monaco.languages.CompletionItemKind.Text,
+                insertText: tem,
+                range: {
+                  startLineNumber: position.lineNumber,
+                  endLineNumber: position.lineNumber,
+                  startColumn: position.column,
+                  endColumn: position.column,
+                },
+              });
+            });
+          }
+          const inputText = model.getValueInRange({
+            startLineNumber: position.lineNumber,
+            endLineNumber: position.lineNumber,
+            startColumn: 1,
+            endColumn: position.column,
+          });
+          const filtered_suggestions = this.$SqsGlobal.language_tips[
+            now_language
+          ]
+            .filter((tip) => {
+              return tip.startsWith(inputText);
+            })
+            .map((tip) => {
+              return {
+                label: tip,
+                kind: monaco.languages.CompletionItemKind.Text,
+                insertText: tip,
+                range: {
+                  startLineNumber: position.lineNumber,
+                  endLineNumber: position.lineNumber,
+                  startColumn: 1,
+                  endColumn: position.column,
+                },
+              };
+            });
+          return {
+            suggestions: filtered_suggestions,
+          };
+        },
+      });
+    },
     onExit() {
       let element_dom = document.getElementById(this.my_ide_id);
       if (!element_dom) {
@@ -480,26 +517,7 @@ export default {
       !this.iscloudfile &&
         window.localStorage.setItem("language", this.my_language);
       this.initcode();
-      this.refreshBase();
-    },
-    refreshBase() {
-      try {
-        this.ide_base && this.ide_base.dispose();
-        this.ide_base = null;
-        this.$nextTick(() => {
-          setTimeout(() => {
-            if (!this.$refs[this.ide_base_id]) {
-              return;
-            }
-            this.ide_base = monaco.editor.create(this.$refs[this.ide_base_id], {
-              value: this.$SqsGlobal.language_tips[this.my_language],
-              language: this.my_language,
-              contextmenu: false,
-              automaticLayout: false,
-            });
-          }, 0);
-        });
-      } catch (err) {}
+      this.loadCodeTips(this.my_language);
     },
     ChangeCacheTheme() {
       this.editor &&
