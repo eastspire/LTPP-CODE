@@ -35,25 +35,33 @@ const ruby = `def main()\n    res = '';\n    input = gets.chomp\n    \n    \n   
 const csharp = `using System;\n\nnamespace Main\n{\n    class Program\n    {\n        static void Main(string[] args)\n        {\n            string input = Console.ReadLine();\n            \n            \n            Console.WriteLine(input);\n        }\n    }\n}`;
 const websocket_connect_str = '@ltpp@';
 const loading_tips = '加载中';
+const code_light_css = '--mtk1: #7c4dff !important;--mtk5: #3dc9b0 !important;--mtk6: #fa278e !important;--mtk7: #437aed !important;--mtk8: #d365e5 !important;--mtk9: #437aed !important;--mtk20: #3dc9b0 !important;--mtk23: #3dc9b0 !important;';
+const code_dark_css = '--mtk1: #d365e5 !important;--mtk5: #3dc9b0 !important;--mtk6: #ff9070 !important;--mtk7: #00bec4 !important;--mtk8: #fa278e !important;--mtk9: #E6A23C !important;--mtk20: #3dc9b0 !important;--mtk23: #d365e5 !important;';
+
 // 编辑器主题
 const themelist = [
     {
         value: "vs-dark",
         label: "暗黑主题",
+        css: code_dark_css
     },
     {
         value: "vs",
         label: "亮色主题",
+        css: code_light_css
     },
     {
         value: "hc-black",
         label: "暗黑高亮",
+        css: code_dark_css
     },
     {
         value: "hc-light",
         label: "亮色高亮",
+        css: code_light_css
     }
 ];
+
 const language_map = {
     c: 'C',
     cpp: 'C++',

@@ -229,6 +229,48 @@ export default {
   width: 100%;
 }
 
+.mtk1 {
+  color: var(--mtk1) !important;
+}
+
+.mtk5 {
+  color: var(--mtk5) !important;
+  font-weight: bold !important;
+}
+
+.mtk6 {
+  color: var(--mtk6) !important;
+  font-weight: bold !important;
+}
+
+.mtk7 {
+  color: var(--mtk7) !important;
+}
+
+.mtk8 {
+  color: var(--mtk8) !important;
+  font-weight: bold !important;
+}
+
+.mtk9 {
+  color: var(--mtk9) !important;
+  font-weight: bold !important;
+}
+
+.mtk20 {
+  color: var(--mtk20) !important;
+  font-weight: bold !important;
+}
+
+.mtk23 {
+  color: var(--mtk23) !important;
+  font-weight: bold !important;
+}
+
+.monaco-editor.showUnused .squiggly-inline-unnecessary {
+  opacity: 0.68 !important;
+}
+
 blockquote {
   background-color: rgba(
     var(--ltpp-main-bk-color),
@@ -412,10 +454,6 @@ span.hljs-function,
 
 span.hljs-string {
   font-weight: bold;
-}
-
-.monaco-editor .view-lines {
-  font-weight: bold !important;
 }
 
 .el-menu {

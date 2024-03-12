@@ -291,7 +291,7 @@ export default {
             language: this.my_language,
             theme: this.usertheme,
             accessibilityHelpUrl: "",
-            fontSize: 17,
+            fontSize: 18,
             tabSize: 4,
             scrollBeyondLastLine: true,
             smoothScrolling: true,
@@ -313,6 +313,7 @@ export default {
             },
           });
           this.loadCodeTips(this.my_language);
+          this.changeCodeCSS(this.usertheme);
         } catch (err) {}
         if (this.editor) {
           let layout_timer = setInterval(() => {
@@ -353,6 +354,15 @@ export default {
       this.up_timer = null;
     } catch (err) {}
   },
+  watch: {
+    usertheme: {
+      handler(new_value, old_value) {
+        this.changeCodeCSS(new_value);
+      },
+      immediate: true,
+      deep: true,
+    },
+  },
   data() {
     return {
       test_query_one_can_next: true,
@@ -381,6 +391,17 @@ export default {
     };
   },
   methods: {
+    changeCodeCSS(will_theme) {
+      const theme_obj_list = this.$SqsGlobal.themelist;
+      const theme_obj_list_len = theme_obj_list?.length;
+      for (let i = 0; i < theme_obj_list_len; ++i) {
+        const tem_theme_obj = theme_obj_list[i];
+        if (tem_theme_obj?.value === will_theme) {
+          this.setRootCSS(tem_theme_obj?.css, "ltpp-code-ide");
+          return;
+        }
+      }
+    },
     loadCodeTips(now_language) {
       monaco.languages.registerCompletionItemProvider(now_language, {
         provideCompletionItems: (model, position) => {

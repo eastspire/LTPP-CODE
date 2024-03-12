@@ -113,19 +113,22 @@ Vue.prototype.getCss = async function () {
         return;
     });
     if (res?.code == 1) {
-        const ltpp_css_dom_id = "ltpp-css";
-        let style_tag = document.getElementById(ltpp_css_dom_id);
-        if (!style_tag) {
-            style_tag = document.createElement("style");
-            style_tag.id = ltpp_css_dom_id;
-            document.head?.appendChild(style_tag);
-        }
-        try {
-            style_tag.innerHTML = `:root{${res?.data}}`;
-        } catch (e) {
-            // 异常情况下删除新增的CSS配置，使用默认的配置
-            style_tag.parentNode.removeChild(style_tag);
-        }
+        this.setRootCSS(res?.data);
+    }
+};
+
+Vue.prototype.setRootCSS = function (data = '', ltpp_css_dom_id = 'ltpp-css') {
+    let style_tag = document.getElementById(ltpp_css_dom_id);
+    if (!style_tag) {
+        style_tag = document.createElement("style");
+        style_tag.id = ltpp_css_dom_id;
+        document.head?.appendChild(style_tag);
+    }
+    try {
+        style_tag.innerHTML = `:root{${data}}`;
+    } catch (e) {
+        // 异常情况下删除新增的CSS配置，使用默认的配置
+        style_tag.parentNode.removeChild(style_tag);
     }
 };
 
