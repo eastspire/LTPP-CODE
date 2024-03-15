@@ -125,14 +125,17 @@ _axios.interceptors.response.use(
             // Do something with response error
             if (request_url) {
                 const cache_data = window.localStorage.getItem(request_url);
-                const cache_res = JSON.parse(cache_data);
+                const cache_res = JSON.parse(cache_data) || {
+                    data: [],
+                    code: -1,
+                    msg: `【请求失败】${error?.message}`
+                };
                 const res = {
                     data: cache_res
                 };
                 return res;
             }
         } catch (err) {
-
         }
         const res = {
             data: {
