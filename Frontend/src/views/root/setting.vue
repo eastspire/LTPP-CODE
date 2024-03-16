@@ -17,7 +17,7 @@
             margin: 1rem 0rem 1rem 0rem;
           "
         >
-          IP黑名单
+          黑名单
         </p>
         <el-input
           style="font-size: 1.06rem"
@@ -37,7 +37,7 @@
             class="pulse-enter-active"
             style="font-size: 1.06rem; margin: 0.4rem 10rem; color: deeppink"
             @click="showadd = true"
-            >添加IP黑名单</el-button
+            >添加用户黑名单</el-button
           >
           <el-button
             type="text"
@@ -62,6 +62,14 @@
             :data="iplist"
             style="width: 100%"
           >
+            <el-table-column label="用户名" width="400" align="center">
+              <template slot-scope="scope">
+                <a
+                  style="font-weight: bold; font-size: 1.06rem; color: deeppink"
+                  >{{ scope.row.username.substr(0, 20) }}</a
+                >
+              </template>
+            </el-table-column>
             <el-table-column label="ip" width="400">
               <template slot-scope="scope">
                 <a
@@ -72,14 +80,6 @@
                     color: #409eff;
                   "
                   >{{ scope.row.ip.substr(0, 20) }}</a
-                >
-              </template>
-            </el-table-column>
-            <el-table-column label="用户名" width="400" align="center">
-              <template slot-scope="scope">
-                <a
-                  style="font-weight: bold; font-size: 1.06rem; color: deeppink"
-                  >{{ scope.row.username.substr(0, 20) }}</a
                 >
               </template>
             </el-table-column>
@@ -101,7 +101,6 @@
               </template>
             </el-table-column>
           </el-table>
-
           <div style="height: 3.4rem"></div>
           <el-pagination
             background
@@ -1340,55 +1339,26 @@
             >
           </el-input>
 
-          <!-- IP对话框 -->
           <el-dialog
             :close-on-click-modal="false"
-            title="添加IP黑名单"
+            title="添加用户黑名单"
             :append-to-body="true"
             :visible.sync="showadd"
             :width="
               ($store.state.max_width / $store.state.now_width) * 100 + '%'
             "
           >
-            <p
-              style="
-                font-size: 1.06rem;
-                text-align: left;
-                font-weight: bold;
-                margin: 0rem 0rem 1rem 0rem;
-              "
-            >
-              添加IP黑名单
-            </p>
             <el-input
               style="font-size: 1.06rem"
-              placeholder="请输入需要添加的IP名称"
-              v-model.lazy="ip"
-              @keyup.enter.native="addip()"
+              placeholder="请输入需要添加的用户名"
+              v-model.lazy="username"
+              @keyup.enter.native="addBlackUser()"
             ></el-input>
-            <div style="height: 1rem"></div>
-            <p
-              style="
-                font-size: 1.06rem;
-                text-align: left;
-                font-weight: bold;
-                margin: 1rem 0rem 1rem 0rem;
-              "
-            >
-              添加用户ID黑名单
-            </p>
-            <el-input
-              style="font-size: 1.06rem"
-              placeholder="请输入需要添加的用户ID"
-              v-model.lazy="aid"
-              @keyup.enter.native="addip()"
-            ></el-input>
-
             <el-button
               class="pulse-enter-active"
               slot="append"
               icon="el-icon-search"
-              @click="addip()"
+              @click="addBlackUser()"
               >添加</el-button
             >
 
@@ -1397,7 +1367,7 @@
               <el-button
                 type="danger"
                 @click="
-                  addip();
+                  addBlackUser();
                   showadd = false;
                 "
                 style="margin-left: 2rem; font-weight: bold"
@@ -1515,7 +1485,7 @@ export default {
       page: 1,
       issearch: false,
       ip: "",
-      aid: 0,
+      username: "",
       showadd: false,
       showlinux: false,
       linuxdata: [],
@@ -1864,16 +1834,16 @@ export default {
         });
       }
     },
-    async addip() {
+    async addBlackUser() {
       const { data: res } = await this.$ajax({
         method: "post",
-        url: "/Setting/addBlackIpUser",
+        url: "/Setting/addBlackUser",
         portType: {
           process: "8797",
         },
         data: {
           ip: this.ip,
-          user_id: this.aid,
+          user_name: this.username,
         },
       }).catch((t) => {
         this.$msg({

@@ -958,11 +958,11 @@ class Setting extends Image
     }
 
     /**
-     * 添加ip和用户黑名单
+     * 添加i用户黑名单
      * @param Request $request 请求
      * @return string $res json
      */
-    public function addBlackIpUser(Request $request)
+    public function addBlackUser(Request $request)
     {
         $my_uid = JwtToken::getCurrentId();
         $my_aid = Base::getIdByUid($my_uid);
@@ -970,19 +970,19 @@ class Setting extends Image
         if (!$isroot) {
             return json(['code' => -1, 'msg' => '无权限']);
         }
-        $ip = $request->post('ip');
-        $user_id = $request->post('user_id');
+        $user_name = $request->post('user_name');
+        $user_db = Db::table('user')
+            ->where('name', $user_name)
+            ->where('isdel', 0)
+            ->select('id')
+            ->first();
+        if (!$user_db) {
+            return json(['code' => -1, 'msg' => '用户不存在']);
+        }
+        $user_id = $user_db->id;
         $redis0 = Redis::connection('db0');
-        if (!$user_id || !is_numeric($user_id)) {
-            return json(['code' => -1, 'msg' => '用户ID应为数字']);
-        }
         $redis0->set('BlackID' . $user_id, 1);
-        if (!$ip) {
-            $ip = '0.0.0.0';
-        }
-        if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) === false) {
-            return json(['code' => -1, 'msg' => 'IP不合法']);
-        }
+        $ip = '0.0.0.0';
         $db = Db::table('blackip')
             ->where('user_id', $user_id)
             ->where('isdel', 0)
