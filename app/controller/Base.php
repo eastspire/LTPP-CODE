@@ -514,23 +514,16 @@ class Base
      * 语言转换
      */
     static $language_map = [
-        'C' => Language::c,
-        'C++' => Language::cpp,
-        'Java' => Language::java,
-        'Python3' => Language::python,
-        'Go' => Language::golang,
-        'PHP' => Language::php,
-        'JavaScript' => Language::javascript,
-        'Rust' => Language::rust,
-        'TypeScript' => Language::typescript,
-        'C#' => Language::csharp,
-        'Ruby' => Language::ruby,
-        'csharp' => Language::csharp,
-        'c#' => Language::csharp,
+        'c' => Language::c,
         'c++' => Language::cpp,
         'cpp' => Language::cpp,
+        'rs' => Language::rust,
+        'rust' => Language::rust,
         'java' => Language::java,
-        'c' => Language::c,
+        'go' => Language::golang,
+        'golang' => Language::golang,
+        'php' => Language::php,
+        'inc' => Language::php,
         'javascript' => Language::javascript,
         'js' => Language::javascript,
         'node' => Language::javascript,
@@ -540,19 +533,16 @@ class Base
         'python2' => Language::python,
         'python3' => Language::python,
         'rusthon' => Language::python,
-        'rust' => Language::rust,
-        'golang' => Language::golang,
-        'go' => Language::golang,
+        'c#' => Language::csharp,
+        'Ruby' => Language::ruby,
+        'csharp' => Language::csharp,
         'ruby' => Language::ruby,
         'jruby' => Language::ruby,
         'macruby' => Language::ruby,
         'rake' => Language::ruby,
         'rb' => Language::ruby,
         'rbx' => Language::ruby,
-        'inc' => Language::php,
-        'php' => Language::php
     ];
-
 
     /**
      * 代码文件后缀对应语言
@@ -3245,6 +3235,18 @@ class Base
                 'code_id' => 0
             ];
         }
+        if (!$userlanguage) {
+            $userlanguage = '';
+        }
+        $userlanguage = strtolower($userlanguage);
+        if (!isset(Base::$language_map[$userlanguage])) {
+            return [
+                'code' => -1,
+                'msg' => '参数错误',
+                'code_id' => 0
+            ];
+        }
+        $userlanguage = Base::$language_map[$userlanguage];
         switch ($userlanguage) {
             case Language::c:
                 break;
@@ -3392,6 +3394,14 @@ class Base
     {
         $out = [];
         try {
+            if (!$userlanguage) {
+                $userlanguage = '';
+            }
+            $userlanguage = strtolower($userlanguage);
+            if (!isset(Base::$language_map[$userlanguage])) {
+                return ['code' => -1, 'result' => '参数错误', 'usememory' => 0, 'usetime' => 0];
+            }
+            $userlanguage = Base::$language_map[$userlanguage];
             $timeout_time = ceil($limittime / 1000) << 2;
             $run_exec_code = 0;
             //编译
@@ -3466,8 +3476,22 @@ class Base
     {
         $out = [];
         try {
+            if (!$userlanguage) {
+                $userlanguage = '';
+            }
+            $userlanguage = strtolower($userlanguage);
+            if (!isset(Base::$language_map[$userlanguage])) {
+                return [json_encode([
+                    'status' => 0,
+                    'time_used' => 0,
+                    'memory_used' => 0,
+                    'msg' => '参数错误'
+                ])];
+            }
+            $userlanguage = Base::$language_map[$userlanguage];
             $timeout_time = ceil($limittime / 1000) << 2;
             $run_exec_code = 0;
+            // 运行
             switch ($userlanguage) {
                 case Language::rust:
                     exec('timeout ' . $timeout_time . ' ' . Base::$judgepath . ' ' . $runcodefilepath . ' ' . $limittime . ' ' . $limitmemory . ' ' . $inpath . ' ' . $outpath . ' ' . $errpath . ' 2>&1', $out, $run_exec_code);
