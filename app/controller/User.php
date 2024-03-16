@@ -1190,11 +1190,6 @@ class User
         }
 
         if ($UpdataBlogandCommentName->name != $data['name']) {
-            // 更新对应文章的作者名称
-            Db::table('article')
-                ->where('writerid', $my_aid)
-                ->where('isdel', 0)
-                ->update(['writer' => $data['name']]);
             // 更新文章评论用户名
             Db::table('articlecomment')
                 ->where('userid', $my_aid)
