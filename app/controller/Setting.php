@@ -973,19 +973,10 @@ class Setting extends Image
         $ip = $request->post('ip');
         $user_id = $request->post('user_id');
         $redis0 = Redis::connection('db0');
-        $redis0->set('BlackIP' . $ip, 1);
-        if ($user_id && $user_id != '') {
-            $redis0->set('BlackID' . $user_id, 1);
-        }
-        if ($ip) {
-            $redis0->set('BlackIP' . $ip, 1);
-        }
-        if (!$user_id) {
-            $user_id = 0;
-        }
-        if (!is_numeric($user_id)) {
+        if (!$user_id || !is_numeric($user_id)) {
             return json(['code' => -1, 'msg' => '用户ID应为数字']);
         }
+        $redis0->set('BlackID' . $user_id, 1);
         if (!$ip) {
             $ip = '0.0.0.0';
         }
@@ -993,12 +984,11 @@ class Setting extends Image
             return json(['code' => -1, 'msg' => 'IP不合法']);
         }
         $db = Db::table('blackip')
-            ->where('ip', $ip)
             ->where('user_id', $user_id)
             ->where('isdel', 0)
             ->exists();
         if ($db) {
-            return json(['code' => -1, 'msg' => '该ip和用户已经拉黑']);
+            return json(['code' => -1, 'msg' => '该用户已经拉黑']);
         }
         Base::insertToDb('blackip', [
             'ip' => $ip,
@@ -1032,8 +1022,6 @@ class Setting extends Image
             ->where('isdel', 0)
             ->update(['isdel' => 1]);
         $redis0 = Redis::connection('db0');
-        $blackip = $db->ip;
-        $redis0->del('BlackIP' . $blackip);
         $blackid = $db->user_id;
         $redis0->del('BlackID' . $blackid);
         return json(['code' => 1, 'msg' => '删除成功']);
@@ -1074,7 +1062,7 @@ class Setting extends Image
             }
         }
         $allnum = Db::table('blackip')
-            ->where('ip', $ip)
+            ->where('ip', 'like', '%' . $ip . '%')
             ->where('isdel', 0)
             ->count();
         return json(['code' => 1, 'data' => $db, 'allnum' => $allnum, 'msg' => '搜索到' . $allnum . '条结果']);

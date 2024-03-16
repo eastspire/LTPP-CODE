@@ -154,7 +154,7 @@ class AuthCheckTest implements MiddlewareInterface
             return $handler($request);
         }
 
-        if ($redis0->get('BlackIP' . $loc) || $redis0->get('BlackID' . $my_aid)) {
+        if ($redis0->get('BlackID' . $my_aid)) {
             return \json(['code' => 500, 'msg' => '您已被拉黑！请联系管理员解除黑名单！', 'data' => []]);
         } else {
             $black_aid_db = Db::table('blackip')
@@ -163,14 +163,6 @@ class AuthCheckTest implements MiddlewareInterface
                 ->exists();
             if ($black_aid_db) {
                 $redis0->set('BlackID' . $my_aid, 1);
-                return \json(['code' => 500, 'msg' => '您已被拉黑！请联系管理员解除黑名单！', 'data' => []]);
-            }
-            $black_ip_db = Db::table('blackip')
-                ->where('ip', $loc)
-                ->where('isdel', 0)
-                ->exists();
-            if ($black_ip_db) {
-                $redis0->set('BlackIP' . $loc, 1);
                 return \json(['code' => 500, 'msg' => '您已被拉黑！请联系管理员解除黑名单！', 'data' => []]);
             }
         }
@@ -191,7 +183,6 @@ class AuthCheckTest implements MiddlewareInterface
             if ($requestnum >= $GLOBipblack) {
                 $isblack = Db::table('blackip')
                     ->where('user_id', $my_aid)
-                    ->where('ip', $loc)
                     ->where('isdel', 0)
                     ->exists();
                 if (!$isblack) {
@@ -207,7 +198,6 @@ class AuthCheckTest implements MiddlewareInterface
                         'ip' => $loc
                     ]);
                 }
-                $redis1->set('BlackIP' . $loc, 1);
                 return \json(['code' => 500, 'msg' => '您已被拉黑！请联系管理员解除黑名单！', 'data' => []]);
             } else {
                 //频率过快，屏蔽

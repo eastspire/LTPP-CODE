@@ -90,7 +90,7 @@ class Login
         if (!Base::judgeIsRoot($my_aid)) {
             //ip黑名单判断
             $redis0 = Redis::connection('db0');
-            if ($redis0->get('BlackIP' . $loc) || $redis0->get('BlackID' . $my_aid)) {
+            if ($redis0->get('BlackID' . $my_aid)) {
                 return \json(['code' => 500, 'msg' => '您已被拉黑！请联系管理员解除黑名单！']);
             } else {
                 $black_aid_db = Db::table('blackip')
@@ -99,14 +99,6 @@ class Login
                     ->exists();
                 if ($black_aid_db) {
                     $redis0->set('BlackID' . $my_aid, 1);
-                    return \json(['code' => 500, 'msg' => '您已被拉黑！请联系管理员解除黑名单！']);
-                }
-                $black_ip_db = Db::table('blackip')
-                    ->where('ip', $loc)
-                    ->where('isdel', 0)
-                    ->exists();
-                if ($black_ip_db) {
-                    $redis0->set('BlackIP' . $loc, 1);
                     return \json(['code' => 500, 'msg' => '您已被拉黑！请联系管理员解除黑名单！']);
                 }
             }
