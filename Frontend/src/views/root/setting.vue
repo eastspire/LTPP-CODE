@@ -1366,10 +1366,7 @@
             <div style="float: left">
               <el-button
                 type="danger"
-                @click="
-                  addBlackUser();
-                  showadd = false;
-                "
+                @click="addBlackUser()"
                 style="margin-left: 2rem; font-weight: bold"
                 width="auto"
                 class="el-icon-check pulse-enter-active"
@@ -1842,7 +1839,6 @@ export default {
           process: "8797",
         },
         data: {
-          ip: this.ip,
           user_name: this.username,
         },
       }).catch((t) => {
@@ -1854,6 +1850,7 @@ export default {
         });
       });
       if (res?.code == 1) {
+        showadd = false;
         this.$msg({
           type: "success",
           message: res?.msg,
@@ -1868,8 +1865,6 @@ export default {
           offset: 80,
         });
       }
-      this.ip = "";
-      this.showadd = false;
       this.lookiplist();
     },
     async deleteip(id) {

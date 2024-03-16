@@ -403,54 +403,56 @@ export default {
       }
     },
     loadCodeTips(now_language) {
-      monaco.languages.registerCompletionItemProvider(now_language, {
-        provideCompletionItems: (model, position) => {
-          const suggestions_list = [];
-          if (this.$SqsGlobal.language_tips[now_language]) {
-            this.$SqsGlobal.language_tips[now_language].forEach((tem) => {
-              suggestions_list.push({
-                label: tem,
-                kind: monaco.languages.CompletionItemKind.Text,
-                insertText: tem,
-                range: {
-                  startLineNumber: position.lineNumber,
-                  endLineNumber: position.lineNumber,
-                  startColumn: position.column,
-                  endColumn: position.column,
-                },
+      try {
+        monaco.languages.registerCompletionItemProvider(now_language, {
+          provideCompletionItems: (model, position) => {
+            const suggestions_list = [];
+            if (this.$SqsGlobal.language_tips[now_language]) {
+              this.$SqsGlobal.language_tips[now_language].forEach((tem) => {
+                suggestions_list.push({
+                  label: tem,
+                  kind: monaco.languages.CompletionItemKind.Text,
+                  insertText: tem,
+                  range: {
+                    startLineNumber: position.lineNumber,
+                    endLineNumber: position.lineNumber,
+                    startColumn: position.column,
+                    endColumn: position.column,
+                  },
+                });
               });
+            }
+            const inputText = model.getValueInRange({
+              startLineNumber: position.lineNumber,
+              endLineNumber: position.lineNumber,
+              startColumn: 1,
+              endColumn: position.column,
             });
-          }
-          const inputText = model.getValueInRange({
-            startLineNumber: position.lineNumber,
-            endLineNumber: position.lineNumber,
-            startColumn: 1,
-            endColumn: position.column,
-          });
-          const filtered_suggestions = this.$SqsGlobal.language_tips[
-            now_language
-          ]
-            .filter((tip) => {
-              return tip.startsWith(inputText);
-            })
-            .map((tip) => {
-              return {
-                label: tip,
-                kind: monaco.languages.CompletionItemKind.Text,
-                insertText: tip,
-                range: {
-                  startLineNumber: position.lineNumber,
-                  endLineNumber: position.lineNumber,
-                  startColumn: 1,
-                  endColumn: position.column,
-                },
-              };
-            });
-          return {
-            suggestions: filtered_suggestions,
-          };
-        },
-      });
+            const filtered_suggestions = this.$SqsGlobal.language_tips[
+              now_language
+            ]
+              .filter((tip) => {
+                return tip.startsWith(inputText);
+              })
+              .map((tip) => {
+                return {
+                  label: tip,
+                  kind: monaco.languages.CompletionItemKind.Text,
+                  insertText: tip,
+                  range: {
+                    startLineNumber: position.lineNumber,
+                    endLineNumber: position.lineNumber,
+                    startColumn: 1,
+                    endColumn: position.column,
+                  },
+                };
+              });
+            return {
+              suggestions: filtered_suggestions,
+            };
+          },
+        });
+      } catch (err) {}
     },
     onExit() {
       let element_dom = document.getElementById(this.my_ide_id);
