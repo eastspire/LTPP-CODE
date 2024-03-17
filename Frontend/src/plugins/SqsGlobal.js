@@ -35,8 +35,8 @@ const ruby = `def main()\n    res = '';\n    input = gets.chomp\n    \n    \n   
 const csharp = `using System;\n\nnamespace Main\n{\n    class Program\n    {\n        static void Main(string[] args)\n        {\n            string input = Console.ReadLine();\n            \n            \n            Console.WriteLine(input);\n        }\n    }\n}`;
 const websocket_connect_str = '@ltpp@';
 const loading_tips = '加载中';
-const code_light_css = '--mtk1: #7c4dff !important;--mtk5: #3dc9b0 !important;--mtk6: #fa278e !important;--mtk7: #437aed !important;--mtk8: #d365e5 !important;--mtk9: #437aed !important;--mtk20: #3dc9b0 !important;--mtk23: #3dc9b0 !important;';
-const code_dark_css = '--mtk1: #d365e5 !important;--mtk5: #3dc9b0 !important;--mtk6: #ff9070 !important;--mtk7: #00bec4 !important;--mtk8: #fa278e !important;--mtk9: #E6A23C !important;--mtk20: #3dc9b0 !important;--mtk23: #d365e5 !important;';
+const code_light_css = '--mtk1:#7c4dff !important;--mtk5:#3dc9b0 !important;--mtk6:#fa278e !important;--mtk7:#437aed !important;--mtk8:#d365e5 !important;--mtk9:#437aed !important;--mtk20:#3dc9b0 !important;--mtk22:#fa278e !important;--mtk23:#3dc9b0 !important;';
+const code_dark_css = '--mtk1:#21e016 !important;--mtk5:#3dc9b0 !important;--mtk6:#ff9070 !important;--mtk7:#ffef00 !important;--mtk8:#fa278e !important;--mtk9:#ff9900 !important;--mtk20:#3dc9b0 !important;--mtk22:#00d7ff !important;--mtk23:#d365e5 !important;';
 
 c_tips.key.unshift(c);
 cpp_tips.key.unshift(cpp);
