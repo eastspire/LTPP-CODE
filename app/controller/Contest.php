@@ -1651,7 +1651,7 @@ class Contest
             if (!$key) {
                 return Base::notFoundPage();
             }
-            $id = Base::getIdByUid($key);
+            $id = Base::getIdByUuid($key);
             $contestrank_db = Base::getContestRankData($id);
             if ($contestrank_db) {
                 $contestrank_db->language = Base::$language_map[$contestrank_db->language ?? 'C++'];
@@ -1800,8 +1800,8 @@ class Contest
                         if (!($duplication * 100)) {
                             continue;
                         }
-                        $code1_safe_id = Base::getUidById($code1->id);
-                        $code2_safe_id = Base::getUidById($code2->id);
+                        $code1_safe_id = Base::getUuidById($code1->id);
+                        $code2_safe_id = Base::getUuidById($code2->id);
                         // 地址
                         $user_code_url_1 = Base::$GLOBlinuxurl . '/Contest/lookContestProblemCode?path=' . $code1_safe_id;
                         $user_code_url_2 = Base::$GLOBlinuxurl . '/Contest/lookContestProblemCode?path=' . $code2_safe_id;
