@@ -1658,6 +1658,7 @@ class Contest
                 return Base::codeToHTML($contestrank_db->code ?? '', $contestrank_db->language);
             }
         } catch (Exception $e) {
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
         }
         return Base::notFoundPage();
     }
