@@ -1648,19 +1648,26 @@ class Contest
     {
         try {
             $key = $request->get('path');
+            $request_path = $request->path();
+            $file_extion = Base::getDbFileExtion($request_path);
             if (!$key) {
-                return Base::notFoundPage();
+                return Base::notFoundPage($request_path, $file_extion);
             }
             $id = Base::getIdByUuid($key);
             $contestrank_db = Base::getContestRankData($id);
             if ($contestrank_db) {
                 $contestrank_db->language = Base::$language_map[$contestrank_db->language ?? 'C++'];
-                return Base::codeToHTML($contestrank_db->code ?? '', $contestrank_db->language);
+                return Base::codeToHTML(
+                    $contestrank_db->code ?? '',
+                    $contestrank_db->language,
+                    $request_path,
+                    $file_extion
+                );
             }
         } catch (Exception $e) {
             Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
         }
-        return Base::notFoundPage();
+        return Base::notFoundPage($request_path, $file_extion);
     }
 
     /**
