@@ -257,6 +257,11 @@ export default {
   font-weight: bold !important;
 }
 
+.mtk14 {
+  color: var(--mtk14) !important;
+  font-weight: bold !important;
+}
+
 .mtk20 {
   color: var(--mtk20) !important;
   font-weight: bold !important;
