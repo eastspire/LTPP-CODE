@@ -434,6 +434,7 @@ class Ojjudge
         $compiler_res_json = Base::compiler($userlanguage, $code, $filepath, $runcodefilepath, $limittime);
 
         if (!isset($compiler_res_json['code']) || $compiler_res_json['code'] != 1) {
+            Base::deleteallfile($filepath);
             Ojjudge::updateCodeStatus($code_id, '编译出错', 0, 0);
             return $compiler_res_json;
         }
@@ -504,6 +505,7 @@ class Ojjudge
             $out = Base::run($userlanguage, $filepath, $alltestpath . $testname . '.in', $outpath, $errpath, $runcodefilepath, $limittime, $limitmemory);
 
             if (!$out || empty($out)) {
+                Base::deleteallfile($filepath);
                 Ojjudge::updateCodeStatus($code_id, '运行出错', 0, 0);
                 return ['code' => -1, 'result' => '判题机运行异常！', 'usememory' => 0, 'usetime' => 0];
             }
@@ -511,6 +513,7 @@ class Ojjudge
             $run_resource_consumption = Base::getCodeTimeMemory($out);
 
             if (!$run_resource_consumption || !isset($run_resource_consumption['status'])) {
+                Base::deleteallfile($filepath);
                 Ojjudge::updateCodeStatus($code_id, '运行出错', 0, 0);
                 return ['code' => -1, 'result' => '判题机运行异常！', 'usetime' => 0, 'usememory' => 0];
             }
@@ -520,6 +523,7 @@ class Ojjudge
             $memory_used = $run_resource_consumption['memory_used'] ?? 0;
 
             if ($status == Base::$judge_server_error) {
+                Base::deleteallfile($filepath);
                 $msg = $run_resource_consumption['msg'];
                 Ojjudge::updateCodeStatus($code_id, '运行出错', 0, 0);
                 return ['code' => -1, 'result' => '判题机运行异常！' . "\n" . $msg, 'usetime' => $time_used, 'usememory' => $memory_used];

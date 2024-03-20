@@ -130,6 +130,7 @@ class Webcode
         $compiler_res_json = Base::compiler($userlanguage, $code, $filepath, $runcodefilepath, $limittime);
 
         if (!isset($compiler_res_json['code']) || $compiler_res_json['code'] != 1) {
+            Base::deleteallfile($filepath);
             Webcode::updateCodeStatus($code_id, '编译出错', 0, 0);
             return $compiler_res_json;
         }
@@ -159,12 +160,14 @@ class Webcode
         $out = Base::run($userlanguage, $filepath, $inpath, $outpath, $errpath, $runcodefilepath, $limittime, $limitmemory);
 
         if (!$out || empty($out)) {
+            Base::deleteallfile($filepath);
             Webcode::updateCodeStatus($code_id, '运行出错', 0, 0);
             return ['code' => -1, 'result' => '判题机运行异常！', 'usememory' => 0, 'usetime' => 0];
         }
         $out = $out[0];
         $run_resource_consumption = Base::getCodeTimeMemory($out);
         if (!$run_resource_consumption || !isset($run_resource_consumption['status'])) {
+            Base::deleteallfile($filepath);
             Webcode::updateCodeStatus($code_id, '运行出错', 0, 0);
             return ['code' => -1, 'result' => '判题机运行异常！', 'usememory' => 0, 'usetime' => 0];
         }
@@ -174,6 +177,7 @@ class Webcode
         $memory_used = $run_resource_consumption['memory_used'] ?? 0;
 
         if ($status == Base::$judge_server_error) {
+            Base::deleteallfile($filepath);
             $msg = $run_resource_consumption['msg'];
             Webcode::updateCodeStatus($code_id, '运行出错', 0, 0);
             return ['code' => -1, 'result' => '判题机运行异常！' . "\n" . $msg, 'usememory' => 0, 'usetime' => 0];

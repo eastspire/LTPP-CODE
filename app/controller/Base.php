@@ -3501,7 +3501,7 @@ class Base
             }
         } catch (Exception $e) {
             Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
-            return ['code' => -1, 'result' => '判题机异常！' . $e->getMessage(), 'usememory' => 0, 'usetime' => 0];
+            return ['code' => -1, 'result' => '判题机编译异常！' . $e->getMessage(), 'usememory' => 0, 'usetime' => 0];
         }
         return ['code' => 1, 'result' => $out, 'usememory' => 0, 'usetime' => 0];
     }
@@ -3527,7 +3527,7 @@ class Base
             $userlanguage = strtolower($userlanguage);
             if (!isset(Base::$language_map[$userlanguage])) {
                 return [json_encode([
-                    'status' => 0,
+                    'status' => Base::$judge_server_error,
                     'time_used' => 0,
                     'memory_used' => 0,
                     'msg' => '参数错误'
@@ -3574,7 +3574,7 @@ class Base
             }
             if (Base::judgeIsTimeout($run_exec_code)) {
                 return [json_encode([
-                    'status' => 0,
+                    'status' => Base::$judge_server_error,
                     'time_used' => 0,
                     'memory_used' => 0,
                     'msg' => Base::$timout_error_msg
@@ -3583,7 +3583,7 @@ class Base
         } catch (Exception $e) {
             Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
             return [json_encode([
-                'status' => 0,
+                'status' => Base::$judge_server_error,
                 'time_used' => 0,
                 'memory_used' => 0,
                 'msg' => $e->getMessage()
@@ -4652,7 +4652,7 @@ class Base
             $md5aid = md5($user_id);
             //代码存放路径
             do {
-                $mainfile = $md5aid . '-' . uniqid() . mt_rand(1, 100000) . time() . '/';
+                $mainfile = $md5aid . uniqid() . mt_rand(1, 100000) . time() . '/';
                 $filepath = Base::$sandbox_path .  $mainfile;
             } while (file_exists($filepath));
             if (!file_exists($filepath)) {
