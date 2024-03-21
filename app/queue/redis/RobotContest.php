@@ -202,7 +202,7 @@ class RobotContest implements Consumer
             'userid' => $my_id,
             'problemid' => $problem_id,
             'language' => $db->language,
-            'status' => $is_ac ? '正常运行' : '答案错误',
+            'status' => $is_ac ? Base::$code_run_success  : Base::$code_run_wrong,
             'time' => $now,
             'usetime' => rand(10, 100),
             'usememory' => rand(10, 100),

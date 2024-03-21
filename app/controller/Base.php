@@ -93,6 +93,36 @@ class Base
     static $code_up_running = '运行中';
 
     /**
+     * 代码TLE关键词
+     */
+    static $code_run_tle = 'TLE';
+
+    /**
+     * 代码RE关键词
+     */
+    static $code_run_re = 'RE';
+
+    /**
+     * 代码MLE关键词
+     */
+    static $code_run_mle = 'MLE';
+
+    /**
+     * 代码正常运行关键词
+     */
+    static $code_run_success = '正常运行';
+
+    /**
+     * 代码AC关键词
+     */
+    static $code_run_ac = 'AC';
+
+    /**
+     * 代码Wrong关键词
+     */
+    static $code_run_wrong = '答案错误';
+
+    /**
      * 题库AC代码默认提示词
      */
     static $oj_ac_code_default = '无';

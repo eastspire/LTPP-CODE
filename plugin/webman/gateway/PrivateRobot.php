@@ -469,13 +469,13 @@ class PrivateRobot extends ChatBase
                         $tips = '';
                         switch ($status) {
                             case Base::$judge_code_tle:
-                                $tips = 'TLE';
+                                $tips = Base::$code_run_tle;
                                 break;
                             case Base::$judge_code_mle:
-                                $tips = 'MLE';
+                                $tips = Base::$code_run_mle;
                                 break;
                             case Base::$judge_code_re:
-                                $tips = 'RE';
+                                $tips = Base::$code_run_re;
                                 break;
                             default:
                                 break;
@@ -552,7 +552,7 @@ class PrivateRobot extends ChatBase
                 if ($resscore == 100) {
                     Base::insertToDb('codehistory', [
                         'userid' => $user_id,
-                        'status' => 'AC',
+                        'status' => Base::$code_run_ac,
                         'problemid' => $problem_id,
                         'time' => $now,
                         'usetime' => $maxtime,
@@ -564,7 +564,7 @@ class PrivateRobot extends ChatBase
                 } else {
                     Base::insertToDb('codehistory', [
                         'userid' => $user_id,
-                        'status' => '答案错误',
+                        'status' => Base::$code_run_wrong,
                         'problemid' => $problem_id,
                         'time' => $now,
                         'usetime' => $maxtime,
