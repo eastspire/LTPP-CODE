@@ -222,15 +222,15 @@ class Webcode
             case Base::$judge_code_tle:
                 Base::deleteAllFile($filepath);
                 Webcode::updateCodeStatus($code_id, Base::$code_run_tle, $time_used, $memory_used);
-                return ['code' => -1, 'result' => Base::$judge_code_tle . '！请更改代码后再次尝试哦！' . ($resout ? "\n" . $resout : ''), 'usetime' => $time_used, 'usememory' => $memory_used];
+                return ['code' => -1, 'result' => Base::$code_run_tle . '！请更改代码后再次尝试哦！' . ($resout ? "\n" . $resout : ''), 'usetime' => $time_used, 'usememory' => $memory_used];
             case Base::$judge_code_mle:
                 Base::deleteAllFile($filepath);
                 Webcode::updateCodeStatus($code_id, Base::$code_run_mle, $time_used, $memory_used);
-                return ['code' => -1, 'result' => Base::$judge_code_mle . '！请更改代码后再次尝试哦！' . ($resout ? "\n" . $resout : ''), 'usetime' => $time_used, 'usememory' => $memory_used];
+                return ['code' => -1, 'result' => Base::$code_run_mle . '！请更改代码后再次尝试哦！' . ($resout ? "\n" . $resout : ''), 'usetime' => $time_used, 'usememory' => $memory_used];
             case Base::$judge_code_re:
                 Base::deleteAllFile($filepath);
                 Webcode::updateCodeStatus($code_id, Base::$code_run_re, $time_used, $memory_used);
-                return ['code' => -1, 'result' => Base::$judge_code_re . '！请更改代码后再次尝试哦！' . ($resout ? "\n" . $resout : ''), 'usetime' => $time_used, 'usememory' => $memory_used];
+                return ['code' => -1, 'result' => Base::$code_run_re . '！请更改代码后再次尝试哦！' . ($resout ? "\n" . $resout : ''), 'usetime' => $time_used, 'usememory' => $memory_used];
             default:
                 break;
         }
