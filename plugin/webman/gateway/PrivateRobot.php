@@ -427,20 +427,8 @@ class PrivateRobot extends ChatBase
 
                     //运行出错
                     if ($status == Base::$judge_code_error) {
-                        //读取输出
-                        $code .= "\n\n\n报错详情：\n";
-                        $resout = Base::getFileText($errpath);
                         Base::deleteallfile($filepath);
-                        // 去除路径信息                    
-                        $tp = Base::utfsubstr(Base::$sandbox_path, 1, strlen(Base::$sandbox_path)) . $mainfile;
-                        $resout = str_replace([$tp, $mainfile], '', $resout);
-                        Base::removeBr($resout);
-
-                        if (strlen($resout) > Base::$code_out_limit) {
-                            $code = Base::utfsubstr($code, 0, Base::$code_out_limit, true) . "\n" . '（仅显示前' . Base::$code_out_limit . '个字符）';
-                        }
-                        $code .= $resout . "\n";
-
+                        // 去除路径信息
                         Base::insertToDb('codehistory', [
                             'userid' => $user_id,
                             'status' => Base::$code_run_running_wrong,

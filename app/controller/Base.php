@@ -133,7 +133,12 @@ class Base
     static $code_run_wrong = '答案错误';
 
     /**
-     * 题库AC代码默认提示词
+     * 判题机出错关键词
+     */
+    static $judge_error_msg = '判题机运行异常';
+
+    /**
+     * 题库管理AC代码字段默认提示词
      */
     static $oj_ac_code_default = '无';
 
