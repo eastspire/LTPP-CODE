@@ -3539,16 +3539,36 @@ class Base
                     exec('timeout ' . $timeout_time . ' /usr/bin/mcs -out:' . $runcodefilepath . ' ' . $runcodefilepath . '.cs 2>&1', $out, $run_exec_code);
                     break;
                 default:
-                    return ['code' => -1, 'result' => '请选择语言后提交！', 'usememory' => 0, 'usetime' => 0];
+                    return [
+                        'code' => -1,
+                        'result' => '请选择语言后提交！',
+                        'usememory' => 0,
+                        'usetime' => 0
+                    ];
             }
             if (Base::judgeIsTimeout($run_exec_code)) {
-                return ['code' => -1, 'result' => Base::$timout_error_msg, 'usememory' => 0, 'usetime' => 0];
+                return [
+                    'code' => -1,
+                    'result' => Base::$timout_error_msg,
+                    'usememory' => 0,
+                    'usetime' => 0
+                ];
             }
         } catch (Exception $e) {
             Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
-            return ['code' => -1, 'result' => '判题机编译异常！' . $e->getMessage(), 'usememory' => 0, 'usetime' => 0];
+            return [
+                'code' => -1,
+                'result' => '判题机编译异常！' . $e->getMessage(),
+                'usememory' => 0,
+                'usetime' => 0
+            ];
         }
-        return ['code' => 1, 'result' => $out, 'usememory' => 0, 'usetime' => 0];
+        return [
+            'code' => 1,
+            'result' => $out,
+            'usememory' => 0,
+            'usetime' => 0
+        ];
     }
 
     /**
@@ -3618,12 +3638,14 @@ class Base
                     break;
             }
             if (Base::judgeIsTimeout($run_exec_code)) {
-                return [json_encode([
-                    'status' => Base::$judge_server_error,
-                    'time_used' => 0,
-                    'memory_used' => 0,
-                    'msg' => Base::$timout_error_msg
-                ])];
+                return [
+                    json_encode([
+                        'status' => Base::$judge_server_error,
+                        'time_used' => 0,
+                        'memory_used' => 0,
+                        'msg' => Base::$timout_error_msg
+                    ])
+                ];
             }
         } catch (Exception $e) {
             Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());

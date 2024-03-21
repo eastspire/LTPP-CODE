@@ -24,7 +24,6 @@ class LTPPErrorHandler extends ExceptionHandler
         try {
             // 通知
             Base::sendErrorNotice($exception->getTraceAsString(), '系统未捕获的异常：' . $exception->getMessage());
-            parent::report($exception);
         } catch (Throwable $e) {
             Base::sendErrorNotice($e->getTraceAsString(), '系统未捕获的异常：' . $e->getMessage());
         }
@@ -37,23 +36,17 @@ class LTPPErrorHandler extends ExceptionHandler
                 return $response;
             }
             $err_code = $exception->getCode();
-            if ($request->expectsJson()) {
-                $json = [
-                    'code' => -1,
-                    'err_code' => $err_code,
-                    'msg' => $this->debug ? $exception->getMessage() : Base::$server_error_msg,
-                    'data' => [],
-                ];
-                $this->debug && $json['traces'] = (string)$exception;
-                return new Response(
-                    200,
-                    ['Content-Type' => 'application/json'],
-                    json_encode($json, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)
-                );
-            }
-            if ($this->debug) {
-                return new Response(500, [], nl2br((string)$exception));
-            }
+            $json = [
+                'code' => -1,
+                'err_code' => $err_code,
+                'msg' => $this->debug ? '系统未捕获的异常：' . $exception->getMessage() . "\n" . (string)$exception : Base::$server_error_msg,
+                'data' => [],
+            ];
+            return new Response(
+                200,
+                ['Content-Type' => 'application/json'],
+                json_encode($json, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)
+            );
         } catch (Throwable $e) {
             Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
         }
