@@ -159,7 +159,6 @@ class Webcode
         //运行
         $out = Base::run($userlanguage, $filepath, $inpath, $outpath, $errpath, $runcodefilepath, $limittime, $limitmemory);
 
-        Base::sendErrorNotice('', json_encode($out));
         if (!$out || empty($out)) {
             Base::deleteallfile($filepath);
             Webcode::updateCodeStatus($code_id, Base::$code_run_running_wrong, 0, 0);
@@ -170,7 +169,7 @@ class Webcode
         if (!$run_resource_consumption || !isset($run_resource_consumption['status'])) {
             Base::deleteallfile($filepath);
             Webcode::updateCodeStatus($code_id, Base::$code_run_running_wrong, 0, 0);
-            return ['code' => -1, 'result' => Base::$judge_error_msg . '！!', 'usememory' => 0, 'usetime' => 0];
+            return ['code' => -1, 'result' => Base::$judge_error_msg . '！', 'usememory' => 0, 'usetime' => 0];
         }
 
         $status = $run_resource_consumption['status'] ?? 0;

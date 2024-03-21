@@ -1,5 +1,10 @@
 /**
- * 编译需要加上-lcap参数
+ * @file judge.c
+ * @author SQS (root@ltpp.vip)
+ * @details g++ -O3 judge.c -o judge -lcap
+ * @version 1.0
+ * @date 2024-03-21
+ * @copyright Copyright (c) 2024
  */
 #include <stdio.h>
 #include <cerrno>
@@ -43,6 +48,10 @@
 const int N = 1e5;
 const int deep_chroot = 2;
 const int ltpp_uid = 1000;
+// 根目录
+const char *root_path = "/";
+// 沙箱目录
+const char *sandbox_path = "/home/LTPPSANDBOX";
 
 /**
  * time_limit精确到MS
@@ -53,17 +62,14 @@ struct result
     int status;
     unsigned long long int time_used;
     unsigned long long int memory_used;
-    const char *msg;
+    const char *msg;    
 };
 
 struct rlimit rl;
 struct result *res_data = (struct result *)malloc(sizeof(struct result));
 unsigned long long int global_time_max_limit = 0;
 
-// 根目录
-const char *root_path = "/";
-// 沙箱目录
-const char *sandbox_path = "/home/LTPPSANDBOX";
+bool has_printf_res = false;
 
 void cout();
 void childMemoryUsed();
@@ -175,14 +181,14 @@ void setProcessLimit(const unsigned long long int time_limit, const unsigned lon
 }
 
 /**
- * 子进程时间监控
+ * 子线程时间监控
  */
 void childTimeLimit()
 {
     pthread_t tid;
     if (pthread_create(&tid, NULL, timeoutExit, NULL) != 0)
     {
-        updateErrorResault(LTPP_SERVER_ERROR, "子进程监控程序创建失败", strerror(errno));
+        updateErrorResault(LTPP_SERVER_ERROR, "子线程监控程序创建失败", strerror(errno));
         exit(LTPP_SERVER_ERROR);
     }
 }
@@ -313,7 +319,8 @@ void closeDup(int &newstdin, int &newstdout, int &newstderr)
  */
 void exitDeleteAllProcess()
 {
-    system("pkill -TERM -P $PPID");
+    int res = system("pkill -TERM -P $PPID");
+    
     exit(LTPP_FINISH);
 }
 
@@ -476,6 +483,10 @@ void run(char *args[], const unsigned long long int time_limit, const unsigned l
  */
 void cout()
 {
+    if(has_printf_res){
+        return;
+    }
+    has_printf_res = true;
     printf("{\"status\":\"%d\",\"time_used\":\"%llu\",\"memory_used\":\"%llu\",\"msg\":\"%s\"}", res_data->status, res_data->time_used, res_data->memory_used, res_data->msg);
 }
 

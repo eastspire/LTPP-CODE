@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "d:/git/LTPP/InstallMust/JudgeServer",
-      "program": "d:/git/LTPP/InstallMust/JudgeServer/build/Debug/outDebug",
+      "cwd": "e:/项目/git/LTPP-CODE/InstallMust/JudgeServer",
+      "program": "e:/项目/git/LTPP-CODE/InstallMust/JudgeServer/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
