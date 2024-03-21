@@ -131,7 +131,7 @@ class Webcode
 
         if (!isset($compiler_res_json['code']) || $compiler_res_json['code'] != 1) {
             Base::deleteallfile($filepath);
-            Webcode::updateCodeStatus($code_id, '编译出错', 0, 0);
+            Webcode::updateCodeStatus($code_id, Base::$code_run_compiler_wrong, 0, 0);
             return $compiler_res_json;
         }
 
@@ -139,7 +139,7 @@ class Webcode
         if (!empty($out)) {
             Base::deleteAllFile($filepath);
             $code = $code . "\n\n\n报错详情：\n";
-            $res_data = '编译出错！' . "\n";
+            $res_data = Base::$code_run_compiler_wrong . "！\n";
             $err_data = '';
             // 去除路径信息
             foreach ($out as &$tem) {
@@ -150,7 +150,7 @@ class Webcode
             Base::removeBr($err_data);
             $code .= $err_data;
             $res_data .= $err_data;
-            Webcode::updateCodeStatus($code_id, '编译出错', 0, 0);
+            Webcode::updateCodeStatus($code_id, Base::$code_run_compiler_wrong, 0, 0);
             return ['code' => -1, 'result' => $res_data, 'usememory' => 0, 'usetime' => 0];
         }
 
@@ -161,14 +161,14 @@ class Webcode
 
         if (!$out || empty($out)) {
             Base::deleteallfile($filepath);
-            Webcode::updateCodeStatus($code_id, '运行出错', 0, 0);
+            Webcode::updateCodeStatus($code_id, Base::$code_run_running_wrong, 0, 0);
             return ['code' => -1, 'result' => '判题机运行异常！', 'usememory' => 0, 'usetime' => 0];
         }
         $out = $out[0];
         $run_resource_consumption = Base::getCodeTimeMemory($out);
         if (!$run_resource_consumption || !isset($run_resource_consumption['status'])) {
             Base::deleteallfile($filepath);
-            Webcode::updateCodeStatus($code_id, '运行出错', 0, 0);
+            Webcode::updateCodeStatus($code_id, Base::$code_run_running_wrong, 0, 0);
             return ['code' => -1, 'result' => '判题机运行异常！', 'usememory' => 0, 'usetime' => 0];
         }
 
@@ -179,13 +179,13 @@ class Webcode
         if ($status == Base::$judge_server_error) {
             Base::deleteallfile($filepath);
             $msg = $run_resource_consumption['msg'];
-            Webcode::updateCodeStatus($code_id, '运行出错', 0, 0);
+            Webcode::updateCodeStatus($code_id, Base::$code_run_running_wrong, 0, 0);
             return ['code' => -1, 'result' => '判题机运行异常！' . "\n" . $msg, 'usememory' => 0, 'usetime' => 0];
         }
 
         if ($status == Base::$judge_code_error) {
             $code .= "\n\n\n报错详情：\n";
-            $err_data = '运行出错' . "\n";
+            $err_data = Base::$code_run_running_wrong . "\n";
             //读取输出
             $resout = Base::getFileText($errpath);
             Base::deleteAllFile($filepath);
@@ -199,7 +199,7 @@ class Webcode
             }
             $code .= $resout . "\n";
             $err_data .= $resout;
-            Webcode::updateCodeStatus($code_id, '运行出错', $time_used, $memory_used);
+            Webcode::updateCodeStatus($code_id, Base::$code_run_running_wrong, $time_used, $memory_used);
             return [
                 'code' => -1,
                 'result' => $err_data,

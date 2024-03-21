@@ -298,7 +298,7 @@ class Ojjudge
         }
 
         if (!Base::judgeJudgeInstall()) {
-            Ojjudge::updateCodeStatus($code_id, '运行出错', 0, 0);
+            Ojjudge::updateCodeStatus($code_id, Base::$code_run_running_wrong, 0, 0);
             return [
                 'code' => -1,
                 'result' => '判题机未安装',
@@ -316,7 +316,7 @@ class Ojjudge
 
         $db = Base::getOjData($problem_id);
         if (!$db) {
-            Ojjudge::updateCodeStatus($code_id, '运行出错', 0, 0);
+            Ojjudge::updateCodeStatus($code_id, Base::$code_run_running_wrong, 0, 0);
             return [
                 'code' => -1,
                 'result' => '题目不存在！',
@@ -332,7 +332,7 @@ class Ojjudge
         if ($contest_id != 0) {
             $contestdb = Base::getContestData($contest_id);
             if (!$contestdb) {
-                Ojjudge::updateCodeStatus($code_id, '运行出错', 0, 0);
+                Ojjudge::updateCodeStatus($code_id, Base::$code_run_running_wrong, 0, 0);
                 return [
                     'code' => -1,
                     'result' => '竞赛不存在！',
@@ -348,7 +348,7 @@ class Ojjudge
                     ->where('isdel', 0)
                     ->first();
                 if (!$isjoin) {
-                    Ojjudge::updateCodeStatus($code_id, '运行出错', 0, 0);
+                    Ojjudge::updateCodeStatus($code_id, Base::$code_run_running_wrong, 0, 0);
                     return [
                         'code' => -1,
                         'result' => '您未报名该竞赛！',
@@ -358,7 +358,7 @@ class Ojjudge
                 }
                 //竞赛是否存在判断
                 if (!$contestdb) {
-                    Ojjudge::updateCodeStatus($code_id, '运行出错', 0, 0);
+                    Ojjudge::updateCodeStatus($code_id, Base::$code_run_running_wrong, 0, 0);
                     return [
                         'code' => -1,
                         'result' => '竞赛不存在！',
@@ -369,7 +369,7 @@ class Ojjudge
                 $endtime = strtotime($contestdb->end);
                 $begintime = strtotime($contestdb->begin);
                 if ($begintime > $time && !$is_my_pro) {
-                    Ojjudge::updateCodeStatus($code_id, '运行出错', 0, 0);
+                    Ojjudge::updateCodeStatus($code_id, Base::$code_run_running_wrong, 0, 0);
                     return [
                         'code' => -1,
                         'result' => '竞赛未开始！权限不足！',
@@ -394,7 +394,7 @@ class Ojjudge
         $alltestpath = Base::$testdata_path . $md5_problem_id . '/';
         $test_data_list = Base::getOjTestDataList($problem_id);
         if (sizeof($test_data_list) <= 0) {
-            Ojjudge::updateCodeStatus($code_id, '运行出错', 0, 0);
+            Ojjudge::updateCodeStatus($code_id, Base::$code_run_running_wrong, 0, 0);
             return [
                 'code' => -1,
                 'result' => '题目测试样例不存在！',
@@ -412,7 +412,7 @@ class Ojjudge
             $testfilein = glob($alltestpath . '*.in');
             $alltestnum = sizeof($testfilein);
             if ($alltestnum <= 0) {
-                Ojjudge::updateCodeStatus($code_id, '运行出错', 0, 0);
+                Ojjudge::updateCodeStatus($code_id, Base::$code_run_running_wrong, 0, 0);
                 return [
                     'code' => -1,
                     'result' => '题目测试样例不存在！',
@@ -435,7 +435,7 @@ class Ojjudge
 
         if (!isset($compiler_res_json['code']) || $compiler_res_json['code'] != 1) {
             Base::deleteallfile($filepath);
-            Ojjudge::updateCodeStatus($code_id, '编译出错', 0, 0);
+            Ojjudge::updateCodeStatus($code_id, Base::$code_run_compiler_wrong, 0, 0);
             return $compiler_res_json;
         }
 
@@ -445,7 +445,7 @@ class Ojjudge
             Base::deleteallfile($filepath);
             $code .= "\n\n\n报错详情：\n";
             // 去除路径信息
-            $res_data = '编译出错！' . "\n";
+            $res_data = Base::$code_run_compiler_wrong . "！\n";
             $err_data = '';
             foreach ($out as &$tem) {
                 $err_data .= $tem . "\n";
@@ -456,7 +456,7 @@ class Ojjudge
 
             $code .= $err_data;
             $res_data .= $err_data;
-            Ojjudge::updateCodeStatus($code_id, '编译出错', 0, 0);
+            Ojjudge::updateCodeStatus($code_id, Base::$code_run_compiler_wrong, 0, 0);
 
             if ($contest_id != 0) {
                 if ($begintime <= $time && $time <= $endtime) {
@@ -506,7 +506,7 @@ class Ojjudge
 
             if (!$out || empty($out)) {
                 Base::deleteallfile($filepath);
-                Ojjudge::updateCodeStatus($code_id, '运行出错', 0, 0);
+                Ojjudge::updateCodeStatus($code_id, Base::$code_run_running_wrong, 0, 0);
                 return ['code' => -1, 'result' => '判题机运行异常！', 'usememory' => 0, 'usetime' => 0];
             }
             $out = $out[0];
@@ -514,7 +514,7 @@ class Ojjudge
 
             if (!$run_resource_consumption || !isset($run_resource_consumption['status'])) {
                 Base::deleteallfile($filepath);
-                Ojjudge::updateCodeStatus($code_id, '运行出错', 0, 0);
+                Ojjudge::updateCodeStatus($code_id, Base::$code_run_running_wrong, 0, 0);
                 return ['code' => -1, 'result' => '判题机运行异常！', 'usetime' => 0, 'usememory' => 0];
             }
 
@@ -525,14 +525,14 @@ class Ojjudge
             if ($status == Base::$judge_server_error) {
                 Base::deleteallfile($filepath);
                 $msg = $run_resource_consumption['msg'];
-                Ojjudge::updateCodeStatus($code_id, '运行出错', 0, 0);
+                Ojjudge::updateCodeStatus($code_id, Base::$code_run_running_wrong, 0, 0);
                 return ['code' => -1, 'result' => '判题机运行异常！' . "\n" . $msg, 'usetime' => $time_used, 'usememory' => $memory_used];
             }
 
             //运行出错
             if ($status == Base::$judge_code_error) {
                 $code .= "\n\n\n报错详情：\n";
-                $err_data = '运行出错' . "\n";
+                $err_data = Base::$code_run_running_wrong . "\n";
                 //读取输出
                 $resout = Base::getFileText($errpath);
                 Base::deleteallfile($filepath);
@@ -546,7 +546,7 @@ class Ojjudge
                 }
                 $code .= $resout . "\n";
                 $err_data .= $resout;
-                Ojjudge::updateCodeStatus($code_id, '运行出错', $time_used, $memory_used);
+                Ojjudge::updateCodeStatus($code_id, Base::$code_run_running_wrong, $time_used, $memory_used);
                 if ($contest_id != 0) {
                     if ($begintime <= $time || $time <= $endtime) {
                         //插入记录

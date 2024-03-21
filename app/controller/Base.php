@@ -113,6 +113,16 @@ class Base
     static $code_run_success = '正常运行';
 
     /**
+     * 代码编译出错关键词
+     */
+    static $code_run_compiler_wrong = '编译出错';
+
+    /**
+     * 代码运行出错关键词
+     */
+    static $code_run_running_wrong = '运行出错';
+
+    /**
      * 代码AC关键词
      */
     static $code_run_ac = 'AC';

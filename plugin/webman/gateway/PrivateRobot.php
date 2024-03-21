@@ -340,7 +340,7 @@ class PrivateRobot extends ChatBase
                     ]);
                     Base::insertToDb('codehistory', [
                         'userid' => $user_id,
-                        'status' => '运行出错',
+                        'status' => Base::$code_run_running_wrong,
                         'problemid' => $problem_id,
                         'time' => $now,
                         'usetime' => 0,
@@ -372,7 +372,7 @@ class PrivateRobot extends ChatBase
                         ->update(['score' => 0]);
                     Base::insertToDb('codehistory', [
                         'userid' => $user_id,
-                        'status' => '编译出错',
+                        'status' => Base::$code_run_compiler_wrong,
                         'problemid' => $problem_id,
                         'time' => $now,
                         'usetime' => 0,
@@ -443,7 +443,7 @@ class PrivateRobot extends ChatBase
 
                         Base::insertToDb('codehistory', [
                             'userid' => $user_id,
-                            'status' => '运行出错',
+                            'status' => Base::$code_run_running_wrong,
                             'problemid' => $problem_id,
                             'time' => $now,
                             'usetime' => $time_used,
