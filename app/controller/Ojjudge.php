@@ -457,7 +457,9 @@ class Ojjudge
             $code .= $err_data;
             $res_data .= $err_data;
             Ojjudge::updateCodeStatus($code_id, Base::$code_run_compiler_wrong, 0, 0);
-
+            if (strlen($res_data) > Base::$code_out_limit) {
+                $res_data = Base::utfsubstr($res_data, 0, Base::$code_out_limit, true) . "\n" . '【仅显示前' . Base::$code_out_limit . '个字符】';
+            }
             if ($contest_id != 0) {
                 if ($begintime <= $time && $time <= $endtime) {
                     //插入记录
@@ -526,6 +528,9 @@ class Ojjudge
                 Base::deleteallfile($filepath);
                 $msg = $run_resource_consumption['msg'];
                 Ojjudge::updateCodeStatus($code_id, Base::$code_run_running_wrong, 0, 0);
+                if (strlen($msg) > Base::$code_out_limit) {
+                    $resout = Base::utfsubstr($msg, 0, Base::$code_out_limit, true) . "\n" . '【仅显示前' . Base::$code_out_limit . '个字符】';
+                }
                 return ['code' => -1, 'result' => Base::$judge_error_msg . "！\n" . $msg, 'usetime' => $time_used, 'usememory' => $memory_used];
             }
 
@@ -542,7 +547,7 @@ class Ojjudge
                 Base::removeBr($resout);
 
                 if (strlen($resout) > Base::$code_out_limit) {
-                    $resout = Base::utfsubstr($resout, 0, Base::$code_out_limit, true) . "\n" . '（仅显示前' . Base::$code_out_limit . '个字符）';
+                    $resout = Base::utfsubstr($resout, 0, Base::$code_out_limit, true) . "\n" . '【仅显示前' . Base::$code_out_limit . '个字符】';
                 }
                 $code .= $resout . "\n";
                 $err_data .= $resout;
@@ -586,7 +591,7 @@ class Ojjudge
                     $testin = '';
                 }
                 if (strlen($testin) > Base::$code_out_limit) {
-                    $testin = Base::utfsubstr($testin, 0, Base::$code_out_limit, true) . "\n" . '（仅显示前' . Base::$code_out_limit . '个字符）';
+                    $testin = Base::utfsubstr($testin, 0, Base::$code_out_limit, true) . "\n" . '【仅显示前' . Base::$code_out_limit . '个字符】';
                 }
                 switch ($status) {
                     case Base::$judge_code_tle:
@@ -620,7 +625,7 @@ class Ojjudge
                     $testin = Base::getFileText($alltestpath . $testname . '.in');
 
                     if (strlen($testin) > Base::$code_out_limit) {
-                        $testin = Base::utfsubstr($testin, 0, Base::$code_out_limit, true) . "\n" . '（仅显示前' . Base::$code_out_limit . '个字符）';
+                        $testin = Base::utfsubstr($testin, 0, Base::$code_out_limit, true) . "\n" . '【仅显示前' . Base::$code_out_limit . '个字符】';
                     }
                     return [
                         'code' => -1,

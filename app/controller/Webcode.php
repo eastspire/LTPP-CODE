@@ -151,7 +151,7 @@ class Webcode
             $code .= $err_data;
             $res_data .= $err_data;
             if (strlen($res_data) > Base::$code_out_limit) {
-                $res_data = Base::utfsubstr($res_data, 0, Base::$code_out_limit, true) . "\n" . '（仅显示前' . Base::$code_out_limit . '个字符）';
+                $res_data = Base::utfsubstr($res_data, 0, Base::$code_out_limit, true) . "\n" . '【仅显示前' . Base::$code_out_limit . '个字符】';
             }
             Webcode::updateCodeStatus($code_id, Base::$code_run_compiler_wrong, 0, 0);
             return ['code' => -1, 'result' => $res_data, 'usememory' => 0, 'usetime' => 0];
@@ -183,7 +183,7 @@ class Webcode
             Base::deleteallfile($filepath);
             $msg = $run_resource_consumption['msg'];
             if (strlen($msg) > Base::$code_out_limit) {
-                $resout = Base::utfsubstr($msg, 0, Base::$code_out_limit, true) . "\n" . '（仅显示前' . Base::$code_out_limit . '个字符）';
+                $resout = Base::utfsubstr($msg, 0, Base::$code_out_limit, true) . "\n" . '【仅显示前' . Base::$code_out_limit . '个字符】';
             }
             Webcode::updateCodeStatus($code_id, Base::$code_run_running_wrong, 0, 0);
             return ['code' => -1, 'result' => Base::$judge_error_msg . "！\n" . $msg, 'usememory' => 0, 'usetime' => 0];
@@ -201,7 +201,7 @@ class Webcode
             Base::removeBr($resout);
 
             if (strlen($resout) > Base::$code_out_limit) {
-                $resout = Base::utfsubstr($resout, 0, Base::$code_out_limit, true) . "\n" . '（仅显示前' . Base::$code_out_limit . '个字符）';
+                $resout = Base::utfsubstr($resout, 0, Base::$code_out_limit, true) . "\n" . '【仅显示前' . Base::$code_out_limit . '个字符】';
             }
             $code .= $resout . "\n";
             $err_data .= $resout;
@@ -222,7 +222,7 @@ class Webcode
         Base::removeBr($resout);
 
         if (strlen($resout) > Base::$code_out_limit) {
-            $resout = Base::utfsubstr($resout, 0, Base::$code_out_limit, true) . "\n" . '（仅显示前' . Base::$code_out_limit . '个字符）';
+            $resout = Base::utfsubstr($resout, 0, Base::$code_out_limit, true) . "\n" . '【仅显示前' . Base::$code_out_limit . '个字符】';
         }
         switch ($status) {
             case Base::$judge_code_tle:
