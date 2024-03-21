@@ -159,6 +159,7 @@ class Webcode
         //运行
         $out = Base::run($userlanguage, $filepath, $inpath, $outpath, $errpath, $runcodefilepath, $limittime, $limitmemory);
 
+        Base::sendErrorNotice('', json_encode($out));
         if (!$out || empty($out)) {
             Base::deleteallfile($filepath);
             Webcode::updateCodeStatus($code_id, Base::$code_run_running_wrong, 0, 0);

@@ -133,6 +133,11 @@ class Base
     static $code_run_wrong = '答案错误';
 
     /**
+     * 判题机编译出错关键词
+     */
+    static $judge_compiler_error_msg = '判题机编译异常';
+
+    /**
      * 判题机出错关键词
      */
     static $judge_error_msg = '判题机运行异常';
@@ -3550,7 +3555,7 @@ class Base
                 return [
                     'code' => -1,
                     'result' => Base::$timout_error_msg,
-                    'usememory' => 0,
+                    'usememory' => $timeout_time * 1000,
                     'usetime' => 0
                 ];
             }
@@ -3558,7 +3563,7 @@ class Base
             Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
             return [
                 'code' => -1,
-                'result' => '判题机编译异常！' . $e->getMessage(),
+                'result' => Base::$judge_compiler_error_msg . '！',
                 'usememory' => 0,
                 'usetime' => 0
             ];
@@ -3640,8 +3645,8 @@ class Base
             if (Base::judgeIsTimeout($run_exec_code)) {
                 return [
                     json_encode([
-                        'status' => Base::$judge_server_error,
-                        'time_used' => 0,
+                        'status' => Base::$judge_code_tle,
+                        'time_used' => $timeout_time * 1000,
                         'memory_used' => 0,
                         'msg' => Base::$timout_error_msg
                     ])
@@ -3649,12 +3654,14 @@ class Base
             }
         } catch (Exception $e) {
             Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
-            return [json_encode([
-                'status' => Base::$judge_server_error,
-                'time_used' => 0,
-                'memory_used' => 0,
-                'msg' => $e->getMessage()
-            ])];
+            return [
+                json_encode([
+                    'status' => Base::$judge_server_error,
+                    'time_used' => 0,
+                    'memory_used' => 0,
+                    'msg' => $e->getMessage()
+                ])
+            ];
         }
         return $out;
     }
