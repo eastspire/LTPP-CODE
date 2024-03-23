@@ -451,7 +451,7 @@ code.hljs {
 }
 
 .hljs-doctag {
-  color: gray !important;
+  color: #f6ff00 !important;
 }
 
 .hljs-params {
