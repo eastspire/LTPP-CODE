@@ -398,6 +398,7 @@ code.hljs {
 .hljs-template-tag,
 .hljs-type {
   color: #ffbb00 !important;
+  font-weight: bold !important;
 }
 
 .hljs-section,
