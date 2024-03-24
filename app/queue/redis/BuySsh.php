@@ -108,7 +108,7 @@ class BuySsh implements Consumer
             while (1) {
                 try {
                     $port = $this->getPort();
-                    $res = Base::postRequest('http://' . Base::$ssh_domain_name, [], [
+                    $res = Base::postRequest('http://' . Base::$ssh_domain_name . ':' . Base::$ssh_port, [], [
                         'user_id' => $my_aid,
                         'port' => $port,
                         'password' => $password

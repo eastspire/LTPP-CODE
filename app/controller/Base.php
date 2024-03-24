@@ -48,7 +48,7 @@ class Base
     static $redis_domain_name = 'redis.ltpp.vip';
 
     /**
-     * ssh域名
+     * ltpp-ssh域名
      */
     static $ssh_domain_name = 'ssh.ltpp.vip';
 
@@ -66,6 +66,11 @@ class Base
      * redis端口
      */
     static $redis_port = 6379;
+
+    /**
+     * ltpp-ssh端口
+     */
+    static $ssh_port = 49999;
 
     /**
      * clash端口
