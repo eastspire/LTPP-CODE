@@ -303,7 +303,7 @@ class Video
         if ($info) {
             return json(['code' => 1, 'data' => $info, 'msg' => '查找视频成功']);
         }
-        return json(['code' => -1, 'data' => [], 'msg' => '未找到符合条件的视频']);
+        return json(['code' => -1, 'data' => [], 'msg' => '没有更多啦！']);
     }
 
     /**
@@ -411,7 +411,7 @@ class Video
         if ($info) {
             return json(['code' => 1, 'data' => $info, 'allnum' => $allnum, 'msg' => '查找视频成功']);
         }
-        return json(['code' => -1, 'data' => [], 'allnum' => 0, 'msg' => '未找到符合条件的视频']);
+        return json(['code' => -1, 'data' => [], 'allnum' => 0, 'msg' => '没有更多啦！']);
     }
 
     /**
@@ -934,7 +934,7 @@ class Video
         if ($res) {
             return json(['code' => 1, 'data' => $res, 'allnum' => $allnum, 'msg' => '查找视频成功']);
         }
-        return json(['code' => -1, 'data' => $res, 'allnum' => $allnum, 'msg' => '未找到符合条件的视频']);
+        return json(['code' => -1, 'data' => $res, 'allnum' => $allnum, 'msg' => '没有更多啦！']);
     }
 
     /**
@@ -977,7 +977,7 @@ class Video
         if ($res) {
             return json(['code' => 1, 'data' => $res, 'allnum' => $allnum, 'msg' => '查找视频成功']);
         }
-        return json(['code' => -1, 'data' => $res, 'allnum' => $allnum, 'msg' => '未找到符合条件的视频']);
+        return json(['code' => -1, 'data' => $res, 'allnum' => $allnum, 'msg' => '没有更多啦！']);
     }
 
     /**

@@ -36,7 +36,7 @@ class Monitor implements Consumer
         } catch (Exception $e) {
             $title = 'Monitor消息队列异常';
             $content = $e->getMessage();
-            Base::sendErrorNotice($e->getTraceAsString(), '<h4>' . $title . "</h4>\n" . $content);
+            Base::sendErrorNotice($e->getTraceAsString(), '<h4>' . $title . "</h4>\n\n" . $content);
         }
     }
 }
