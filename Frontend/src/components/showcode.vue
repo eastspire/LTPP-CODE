@@ -50,6 +50,7 @@ export default {
     },
   },
   created() {
+    this.changeCodeCSS(this.usertheme);
     this.loadfinish = false;
     this.my_ide_id = this.randomString();
   },
@@ -85,7 +86,6 @@ export default {
             },
           });
         } catch (err) {}
-        this.changeCodeCSS(this.usertheme);
         if (this.editor) {
           this.onExit();
         }

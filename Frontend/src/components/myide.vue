@@ -251,6 +251,7 @@ export default {
     },
   },
   created() {
+    this.changeCodeCSS(this.usertheme);
     this.my_ide_id = this.randomString();
     this.istestres = false;
     this.isshow = false;
@@ -264,10 +265,6 @@ export default {
   },
   mounted() {
     this.local_testin = this.testin;
-    let theme = window.localStorage.getItem("theme") ?? "vs-dark";
-    if (theme) {
-      this.usertheme = theme;
-    }
     if (!this.iscloudfile) {
       let language = window.localStorage.getItem("language") ?? "cpp";
       if (language) {
@@ -313,7 +310,6 @@ export default {
             },
           });
           this.loadCodeTips(this.my_language);
-          this.changeCodeCSS(this.usertheme);
         } catch (err) {}
         if (this.editor) {
           let layout_timer = setInterval(() => {
@@ -382,7 +378,7 @@ export default {
       editor: null,
       usememory: 0,
       usetime: 0,
-      usertheme: "vs-dark",
+      usertheme: window.localStorage.getItem("theme") ?? "vs-dark",
       my_code: "",
       wrong: "",
       ac: "",
