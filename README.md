@@ -16,11 +16,13 @@
 - Mysql域名（mysql.ltpp.vip）修改本地host文件映射即可
 - Redis域名（redis.ltpp.vip）修改本地host文件映射即可
 - LTPP-SSH域名（ssh.ltpp.vip）修改本地host文件映射即可
+- Clash域名（clash.ltpp.vip）修改本地host文件映射即可
 
 ```sh
 127.0.0.1       mysql.ltpp.vip
 127.0.0.1       redis.ltpp.vip
 127.0.0.1       ssh.ltpp.vip
+172.17.0.1      clash.ltpp.vip
 ```
 
 ### 端口（请勿修改）

@@ -53,6 +53,11 @@ class Base
     static $ssh_domain_name = 'ssh.ltpp.vip';
 
     /**
+     * clash域名
+     */
+    static $clash_domain_name = 'clash.ltpp.vip';
+
+    /**
      * mysql端口
      */
     static $mysql_port = 4466;
@@ -61,6 +66,11 @@ class Base
      * redis端口
      */
     static $redis_port = 6379;
+
+    /**
+     * clash端口
+     */
+    static $clash_port = 7890;
 
     /**
      * 请求过期时间
@@ -1337,7 +1347,7 @@ class Base
             curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
-            curl_setopt($ch, CURLOPT_PROXY, 'http://172.17.0.1:7890');
+            curl_setopt($ch, CURLOPT_PROXY, 'http://' . Base::$clash_domain_name . ':' . Base::$clash_port);
             // 禁用 SSL 证书验证
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
             // 禁用主机验证
@@ -1370,7 +1380,7 @@ class Base
             curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-            curl_setopt($ch, CURLOPT_PROXY, 'http://172.17.0.1:7890');
+            curl_setopt($ch, CURLOPT_PROXY, 'http://' . Base::$clash_domain_name . ':' . Base::$clash_port);
             // 禁用 SSL 证书验证
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
             // 禁用主机验证
