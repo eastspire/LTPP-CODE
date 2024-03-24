@@ -85,8 +85,8 @@ export default {
             },
           });
         } catch (err) {}
+        this.changeCodeCSS(this.usertheme);
         if (this.editor) {
-          this.changeCodeCSS(this.usertheme);
           this.onExit();
         }
       });
