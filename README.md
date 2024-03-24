@@ -17,6 +17,12 @@
 - Redis域名（redis.ltpp.vip）修改本地host文件映射即可
 - LTPP-SSH域名（ssh.ltpp.vip）修改本地host文件映射即可
 
+```sh
+127.0.0.1       mysql.ltpp.vip
+127.0.0.1       redis.ltpp.vip
+127.0.0.1       ssh.ltpp.vip
+```
+
 ### 端口（请勿修改）
 - 1236（即时通讯系统注册，可忽略）
 - 3000（音乐|开启SSL）
