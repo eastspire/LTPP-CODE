@@ -48,6 +48,11 @@ class Base
     static $redis_domain_name = 'redis.ltpp.vip';
 
     /**
+     * ssh域名
+     */
+    static $ssh_domain_name = 'ssh.ltpp.vip';
+
+    /**
      * mysql端口
      */
     static $mysql_port = 4466;
@@ -1341,9 +1346,8 @@ class Base
             if (curl_errno($ch)) {
                 Base::sendErrorNotice('', '发送POST请求异常信息：' . curl_error($ch));
             }
-        } catch (Exception $e) {
-        } finally {
             curl_close($ch);
+        } catch (Exception $e) {
         }
         return $res;
     }
@@ -1375,9 +1379,8 @@ class Base
             if (curl_errno($ch)) {
                 Base::sendErrorNotice('', '发送GET请求异常信息：' . curl_error($ch));
             }
-        } catch (Exception $e) {
-        } finally {
             curl_close($ch);
+        } catch (Exception $e) {
         }
         return $res;
     }

@@ -15,6 +15,8 @@
 ### 域名（根据实际内网IP进行修改）
 - Mysql域名（mysql.ltpp.vip）修改本地host文件映射即可
 - Redis域名（redis.ltpp.vip）修改本地host文件映射即可
+- LTPP-SSH域名（ssh.ltpp.vip）修改本地host文件映射即可
+
 ### 端口（请勿修改）
 - 1236（即时通讯系统注册，可忽略）
 - 3000（音乐|开启SSL）

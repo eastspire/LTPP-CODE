@@ -108,12 +108,11 @@ class BuySsh implements Consumer
             while (1) {
                 try {
                     $port = $this->getPort();
-                    $res = Base::postRequest(Base::getSettingKeyData('ssh_back_url'), [], [
+                    $res = Base::postRequest(Base::$ssh_domain_name, [], [
                         'user_id' => $my_aid,
                         'port' => $port,
                         'password' => $password
                     ]);
-
                     if (!$res) {
                         $redis22->del($key);
                         $msg = 'LTPP-SSH服务未启动！购买失败！请重试！';
