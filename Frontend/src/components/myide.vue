@@ -391,17 +391,6 @@ export default {
     };
   },
   methods: {
-    changeCodeCSS(will_theme) {
-      const theme_obj_list = this.$SqsGlobal.themelist;
-      const theme_obj_list_len = theme_obj_list?.length;
-      for (let i = 0; i < theme_obj_list_len; ++i) {
-        const tem_theme_obj = theme_obj_list[i];
-        if (tem_theme_obj?.value === will_theme) {
-          this.setRootCSS(tem_theme_obj?.css, "ltpp-code-ide");
-          return;
-        }
-      }
-    },
     loadCodeTips(now_language) {
       try {
         monaco.languages.registerCompletionItemProvider(now_language, {
