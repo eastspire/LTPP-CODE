@@ -25,39 +25,6 @@
 127.0.0.1       clash.ltpp.vip
 ```
 
-### Clash配置
-```yaml
-mixed-port: 7890
-allow-lan: true
-bind-address: '*'
-mode: rule
-log-level: info
-ipv6: false
-unified-delay: true
-tcp-concurrent: true
-experimental:
-    sniff-tls-sni: true
-sniffer:
-    enable: true
-    force-dns-mapping: true
-    parse-pure-ip: true
-    override-destination: true
-    sniff: { TLS: { ports: [443, 8443] }, HTTP: { ports: [80, 8080-8880], override-destination: true } }
-    force-domain: [+.v2ex.com]
-    skip-domain: ['Mijia Cloud', dlg.io.mi.com, +.apple.com]
-dns:
-    enable: true
-    ipv6: false
-    default-nameserver: [223.5.5.5, 119.29.29.29]
-    enhanced-mode: fake-ip
-    fake-ip-range: 198.18.0.1/16
-    use-hosts: true
-    proxy-server-nameserver: [223.5.5.5]
-    nameserver: ['https://doh.pub/dns-query', 'https://dns.alidns.com/dns-query']
-    fallback: ['https://doh.360.cn/dns-query', 'https://101.101.101.101/dns-query']
-    fallback-filter: { geoip: true, ipcidr: [240.0.0.0/4, 0.0.0.0/32] }
-```
-
 ### 端口（请勿修改）
 - 1236（即时通讯系统注册，可忽略）
 - 3000（音乐|开启SSL）
