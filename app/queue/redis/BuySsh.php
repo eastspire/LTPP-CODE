@@ -81,7 +81,8 @@ class BuySsh implements Consumer
                 // 已经购买过
                 $url = Base::getSettingKeyData('ssh_back_url');
                 $ssh_ip = Base::getIp($url);
-                $msg = '您已购买过本产品！' . "\n" . '登录命令：ssh -p ' . ($has_buy->port ?? '') . ' ltpp@' . $ssh_ip . "\n" . '登陆密码：' . ($has_buy->password ?? '');
+                $msg = '您已购买过本产品！' . "\n" . '登录命令：ssh -p ' . ($has_buy->port ?? '') . ' ltpp@' . $ssh_ip . "\n" . '登陆密码：' . ($has_buy->password ?? '') . "\n\n" .
+                    '> 一共可用' . Base::$ssh_default_open_ports_num . '个公网端口【' . $has_buy->port . '-' . max($has_buy->port, $has_buy->port + Base::$ssh_default_open_ports_num - 1) . '】';
                 return;
             }
 
@@ -189,7 +190,8 @@ class BuySsh implements Consumer
             $ssh_ip = Base::getIp($url);
             $content = '> 您的SSH登录命令为：ssh -p ' . $port . ' ltpp@' . $ssh_ip . "\n" .
                 '> ltpp用户登录密码：' . $password . "\n" . '> root用户（默认关闭root用户远程登陆）密码：ltpp' . "\n\n" .
-                '> 在线版本VSCODE访问地址：http://' . $ssh_ip . ':' . ($port + 1) . "\n" . '> 在线版本VSCODE访问密码：' . $password;
+                '> 在线版本VSCODE访问地址：http://' . $ssh_ip . ':' . ($port + 1) . "\n" . '> 在线版本VSCODE访问密码：' . $password . "\n\n" .
+                '> 一共可用' . Base::$ssh_default_open_ports_num . '个公网端口【' . $port . '-' . max($port, $port + Base::$ssh_default_open_ports_num - 1) . '】';
             Robot::sendChatToOneUserMsg($my_aid, '<h4>' . $title . "</h4>\n\n" . $content);
             $redis22->del($key);
         } catch (Exception $e) {
