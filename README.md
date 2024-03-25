@@ -22,7 +22,7 @@
 127.0.0.1       mysql.ltpp.vip
 127.0.0.1       redis.ltpp.vip
 127.0.0.1       ssh.ltpp.vip
-172.17.0.1      clash.ltpp.vip
+127.0.0.1       clash.ltpp.vip
 ```
 
 ### 端口（请勿修改）

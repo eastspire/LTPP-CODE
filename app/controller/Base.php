@@ -48,9 +48,9 @@ class Base
     static $redis_domain_name = 'redis.ltpp.vip';
 
     /**
-     * ltpp-ssh ip
+     * ltpp-ssh域名
      */
-    static $ssh_ip = '127.0.0.1';
+    static $ssh_domain_name = 'ssh.ltpp.vip';
 
     /**
      * clash域名
