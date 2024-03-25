@@ -34,7 +34,7 @@ class BuySsh implements Consumer
         $redis22 = Redis::connection('db22');
         $port = $redis22->get($key);
         if ($port) {
-            $redis22->setNx($key, $port + 2);
+            $redis22->setNx($key, $port + Base::$ssh_default_open_ports_num);
             return (int) $port;
         }
         $db = Db::table('ssh')
@@ -43,13 +43,13 @@ class BuySsh implements Consumer
             ->first();
         if ($db) {
             // 当前端口
-            $port = $db->port + 2;
+            $port = $db->port + Base::$ssh_default_open_ports_num;
         } else {
             // 当前端口
             $port = Ssh::$port_begin;
         }
         // 更新下一个端口
-        $redis22->set($key, $port + 2);
+        $redis22->set($key, $port + Base::$ssh_default_open_ports_num);
         return (int) $port;
     }
 
@@ -111,7 +111,8 @@ class BuySsh implements Consumer
                     $res = Base::postRequest('http://' . Base::$ssh_domain_name . ':' . Base::$ssh_port, [], [
                         'user_id' => $my_aid,
                         'port' => $port,
-                        'password' => $password
+                        'password' => $password,
+                        'port_num' => Base::$ssh_default_open_ports_num
                     ]);
                     if (!$res) {
                         $redis22->del($key);
@@ -183,7 +184,7 @@ class BuySsh implements Consumer
                 ->decrement('money', Ssh::$price);
             Base::updateUserDataRedis($my_aid);
             // 更新下一个端口
-            $redis22->setNx(Ssh::$port_key, $port + 2);
+            $redis22->setNx(Ssh::$port_key, $port + Base::$ssh_default_open_ports_num);
             $url = Base::getSettingKeyData('ssh_back_url');
             $ssh_ip = Base::getIp($url);
             $content = '> 您的SSH登录命令为：ssh -p ' . $port . ' ltpp@' . $ssh_ip . "\n" .

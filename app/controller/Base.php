@@ -83,6 +83,11 @@ class Base
     static $request_timout = 60;
 
     /**
+     * 默认SSH开放端口数目
+     */
+    static $ssh_default_open_ports_num = 4;
+
+    /**
      * gzip压缩率
      */
     static $gzip_num = 5;
