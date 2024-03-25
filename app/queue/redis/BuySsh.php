@@ -67,8 +67,9 @@ class BuySsh implements Consumer
             if (!$password) {
                 $password = rand(100000, 999999);
             }
-            // 余额不足
-            if ($my_data->money < Ssh::$price) {
+            $is_root = Base::judgeIsRoot($my_aid);
+            // 非root用户并且余额不足
+            if ($my_data->money < Ssh::$price && !$is_root) {
                 $msg = '余额不足！购买失败！';
                 Robot::sendChatToOneUserMsg($my_aid, '<h4>' . $title . "</h4>\n\n" . $msg);
                 return;
@@ -132,11 +133,14 @@ class BuySsh implements Consumer
 
             Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '<strong>【' . $now . '】</strong>用户<strong>【' . $my_data->name . '】</strong>购买LTPP-SSH成功' . "\n" . json_encode($data));
 
-            $res = Db::table('user')
-                ->where('id', $my_aid)
-                ->where('isdel', 0)
-                ->decrement('money', Ssh::$price);
-            Base::updateUserDataRedis($my_aid);
+            if (!$is_root) {
+                // 非 root 用户 扣钱
+                $res = Db::table('user')
+                    ->where('id', $my_aid)
+                    ->where('isdel', 0)
+                    ->decrement('money', Ssh::$price);
+                Base::updateUserDataRedis($my_aid);
+            }
             $content = Ssh::getHasBuyMsg($my_aid);
             Robot::sendChatToOneUserMsg($my_aid, '<h4>' . $title . "</h4>\n\n" . $content);
         } catch (Exception $e) {

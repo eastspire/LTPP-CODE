@@ -86,10 +86,6 @@ class Ssh
             if (!$my_data || !isset($my_data->email)) {
                 return '用户不存在！';
             }
-            if ($my_data->money < Ssh::$price) {
-                $msg = '余额不足！购买失败！';
-                return $msg;
-            }
             RedisQueue::send(Base::$redis_queue_buy_ssh_name, [
                 'my_aid' => $my_aid,
                 'my_password' => $my_password
