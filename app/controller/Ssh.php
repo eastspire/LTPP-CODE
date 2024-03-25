@@ -37,12 +37,6 @@ class Ssh
     static $port_begin = 50000;
 
     /**
-     * port缓存
-     * @var int $port_key
-     */
-    static $port_key = 'port';
-
-    /**
      * 用户购买锁的key
      * @var int $port_user_buy_cache_key
      */
@@ -55,17 +49,25 @@ class Ssh
     static $price = 9.9;
 
     /**
-     * 判断是否购买过
+     * 获取购买过的信息合集
      * @param int $user_id
      * @return {*} $res
      */
-    static public function judgeHasBuy($user_id)
+    static public function getHasBuyMsg($user_id)
     {
         $db = Db::table('ssh')
             ->where('userid', $user_id)
             ->where('isdel', 0)
-            ->first();
-        return $db;
+            ->select('port')
+            ->get();
+        $msg = '';
+        $url = Base::getSettingKeyData('ssh_back_url');
+        $ssh_ip = Base::getIp($url);
+        foreach ($db as &$tem) {
+            $msg .= '<h5>您已购买过本产品！</h5>' . "\n\n" . '> 登录命令：ssh -p ' . ($tem->port ?? '') . ' ltpp@' . $ssh_ip . "\n\n" . '> 登陆密码：' . ($tem->password ?? '') . "\n\n" .
+                '> 一共可用' . Base::$ssh_default_open_ports_num . '个公网端口【' . $tem->port . '-' . max($tem->port, $tem->port + Base::$ssh_default_open_ports_num - 1) . '】' . "\n\n";
+        }
+        return $msg;
     }
 
     /**
@@ -81,20 +83,8 @@ class Ssh
                 return '参数错误！';
             }
             $my_data = Base::getUserData($my_aid);
-
             if (!$my_data || !isset($my_data->email)) {
                 return '用户不存在！';
-            }
-            $has_buy = Ssh::judgeHasBuy($my_aid);
-            if ($has_buy) {
-                $url = Base::getSettingKeyData('ssh_back_url');
-                $ssh_ip = Base::getIp($url);
-                $port = $has_buy->port ?? '';
-                $password = $has_buy->password ?? '';
-                $msg = '<h4>您已购买过本产品！</h4>' . "\n\n" . '> 您的SSH登录命令为：ssh -p ' . $port . ' ltpp@' . $ssh_ip . "\n" .
-                    '> ltpp用户登录密码：' . $password . "\n" . '> root用户（默认关闭root用户远程登陆）密码：ltpp' . "\n\n" .
-                    '> 在线版本VSCODE访问地址：http://' . $ssh_ip . ':' . ($port + 1) . "\n" . '> 在线版本VSCODE访问密码：' . $password;
-                return $msg;
             }
             if ($my_data->money < Ssh::$price) {
                 $msg = '余额不足！购买失败！';

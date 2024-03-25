@@ -50,7 +50,8 @@ return [
     app\controller\Base::$redis_queue_buy_ssh_name => [
         'handler' => Webman\RedisQueue\Process\Consumer::class,
         // 可以设置多进程同时消费
-        'count' => cpu_count() > 4 ? 4 : cpu_count(),
+        // 单进程购买即可取消并发情况下脏数据问题
+        'count' => 1,
         'constructor' => [
             // 消费者类目录
             'consumer_dir' => app_path() . '/queue/redis'
