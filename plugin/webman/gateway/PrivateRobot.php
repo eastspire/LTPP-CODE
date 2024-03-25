@@ -69,7 +69,8 @@ class PrivateRobot extends ChatBase
         '|19|购买私人轻量云服务器，系统自带多种编程语言的运行环境和在线VSCODE|19 LTPP（PS：序号后第一个空格后为SSH登录密码，若不设置系统会自动生成随机密码，若已购买可查看登录命令和密码）|' . "\n" .
         '|20|查询当前在线客户端总数|20|' . "\n" .
         '|21|重置所有机器人账号的密码|21|' . "\n" .
-        '|22|查看机器人用户个数和非机器人用户个数|22|';
+        '|22|查看机器人用户个数和非机器人用户个数|22|' . "\n" .
+        '|23|查看自己购买的LTPP-SSH服务器信息|23|';
 
     static $robot_admin_default =
     '<h4>您可以输入以下单个序号来进行操作</h4>' . "\n\n" .
@@ -986,6 +987,9 @@ class PrivateRobot extends ChatBase
                     ->where('isdel', 0)
                     ->count();
                 $reply = '机器人用户个数【' . $robot_num . '】<br>非机器人用户个数【' . $people_num . '】';
+                break;
+            case '23':
+                $reply = Ssh::getHasBuyMsg($db_my->id);
                 break;
             case '帮助':
                 $reply = PrivateChat::$robot_root_default . '（仅限购一个，价格' . Ssh::$price . '学虫币）';
