@@ -75,14 +75,7 @@ class PrivateRobot extends ChatBase
     '<h4>您可以输入以下单个序号来进行操作</h4>' . "\n\n" .
         '|序号|操作|示例|' . "\n" .
         '|-|-|-|' . "\n" .
-        '|1|重判题目在竞赛中的代码|1 A+B（PS：序号后第一个空格后为重判的题目完整标题）|' . "\n" .
-        '|2|购买私人轻量云服务器，系统自带多种编程语言的运行环境和在线VSCODE|2 LTPP（PS：序号后第一个空格后为SSH登录密码，若不设置系统会自动生成随机密码，若已购买可查看登录命令和密码）|';
-
-    static $robot_user_default =
-    '<h4>您可以输入以下单个序号来进行操作</h4>' . "\n\n" .
-        '|序号|操作|示例|' . "\n" .
-        '|-|-|-|' . "\n" .
-        '|1|购买私人轻量云服务器，系统自带多种编程语言的运行环境和在线VSCODE|1 LTPP（PS：序号后第一个空格后为SSH登录密码，若不设置系统会自动生成随机密码，若已购买可查看登录命令和密码）|';
+        '|1|重判题目在竞赛中的代码|1 A+B（PS：序号后第一个空格后为重判的题目完整标题）|';
 
     /**
      * 判断用户是否发给机器人消息
@@ -1072,9 +1065,6 @@ class PrivateRobot extends ChatBase
             case '1':
                 $reply = PrivateRobot::rejudgeOneProblem($client_id, $db_my->id, $reply, $user_db);
                 break;
-            case '2':
-                $reply = Ssh::buy($db_my->id, $reply);
-                break;
             case '帮助':
                 $reply = PrivateChat::$robot_admin_default . '（仅限购一个，价格' . Ssh::$price . '学虫币）';
                 break;
@@ -1137,37 +1127,7 @@ class PrivateRobot extends ChatBase
     {
         $now = date('Y-m-d H:i:s', time());
         $reply = '';
-        $do = '';
-        for ($i = 0; $i < strlen($msg); ++$i) {
-            if ($msg[$i] == ' ') {
-                for ($j = $i + 1; $j < strlen($msg); ++$j) {
-                    $reply .= $msg[$j];
-                }
-                break;
-            }
-            $do .= $msg[$i];
-        }
-        $res_msg = '';
-        switch ($do) {
-            case '1':
-                $reply = Ssh::buy($db_my->id, $reply);
-                break;
-            case '帮助':
-                $reply = PrivateChat::$robot_user_default . '（仅限购一个，价格' . Ssh::$price . '学虫币）';
-                break;
-            case '？':
-                $reply = PrivateChat::$robot_user_default . '（仅限购一个，价格' . Ssh::$price . '学虫币）';
-                break;
-            case 'help':
-                $reply = PrivateChat::$robot_user_default . '（仅限购一个，价格' . Ssh::$price . '学虫币）';
-                break;
-            case '?':
-                $reply = PrivateChat::$robot_user_default . '（仅限购一个，价格' . Ssh::$price . '学虫币）';
-                break;
-            default:
-                $res_msg = PrivateRobot::gptAnswer($db_my->id, $msg, $reply);
-                break;
-        }
+        $res_msg = PrivateRobot::gptAnswer($db_my->id, $msg, $reply);
 
         $msg_id = Base::insertToDb(
             'privatechat',

@@ -78,10 +78,9 @@ class BuySsh implements Consumer
                 try {
                     $port = $this->getPort();
                     $res = Base::postRequest('http://' . Base::$ssh_ip . ':' . Base::$ssh_port, [], [
-                        'user_id' => $my_aid,
-                        'port' => $port,
-                        'password' => $password,
-                        'port_num' => Base::$ssh_default_open_ports_num
+                        'port' => (int)$port,
+                        'password' => (string)$password,
+                        'port_num' => (int)Base::$ssh_default_open_ports_num
                     ]);
                     if (!$res) {
                         $msg = 'LTPP-SSH服务未启动！购买失败！请重试！';
