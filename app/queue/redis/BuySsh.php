@@ -30,12 +30,12 @@ class BuySsh implements Consumer
     public function getPort()
     {
         $db = Db::table('ssh')
-            ->orderBy('id', 'desc')
+            ->orderBy('end_port', 'desc')
             ->select('end_port')
             ->first();
         if ($db) {
             // 当前端口
-            $port = $db->port + 1;
+            $port = $db->end_port + 1;
         } else {
             // 当前端口
             $port = Ssh::$port_begin;
@@ -79,10 +79,10 @@ class BuySsh implements Consumer
                 try {
                     $name = Base::creatDockerName($port);
                     $res = Base::postRequest('http://' . Base::$ssh_ip . ':' . Base::$ssh_port, [], [
+                        'name' => $name,
                         'port' => (int)$port,
                         'password' => (string)$password,
                         'port_num' => (int)Base::$ssh_default_open_ports_num,
-                        'name' => $name
                     ]);
                     if (!$res) {
                         $msg = 'LTPP-SSH服务未启动！购买失败！请重试！';
