@@ -58,7 +58,7 @@ class Ssh
         $db = Db::table('ssh')
             ->where('userid', $user_id)
             ->where('isdel', 0)
-            ->select('port')
+            ->select('port', 'password')
             ->get();
         $msg = '';
         $url = Base::getSettingKeyData('ssh_back_url');
