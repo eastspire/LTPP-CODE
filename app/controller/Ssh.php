@@ -66,7 +66,7 @@ class Ssh
         $ssh_ip = Base::getIp($url);
         foreach ($db as &$tem) {
             $msg .= '<h5>您已购买过本产品！</h5>' . "\n\n" . '> 登录命令：ssh -p ' . ($tem->begin_port ?? '') . ' ltpp@' . $ssh_ip . "\n\n" . '> 登陆密码：' . ($tem->password ?? '') . "\n\n" .
-                '> 在线版本VSCODE访问地址：http://' . $ssh_ip . ($tem->begin_port ? (':' . $tem->begin_port) : '') . "\n\n" .
+                '> 在线版本VSCODE访问地址：http://' . $ssh_ip . ($tem->begin_port ? (':' . $tem->begin_port + 1) : '') . "\n\n" .
                 '> 一共可用' . Base::$ssh_default_open_ports_num . '个公网端口【' . $tem->begin_port . '-' . $tem->end_port . '】' . "\n\n";
         }
         return $msg;
