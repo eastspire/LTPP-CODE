@@ -73,10 +73,9 @@ class BuySsh implements Consumer
                 Robot::sendChatToOneUserMsg($my_aid, '<h4>' . $title . "</h4>\n\n" . $msg);
                 return;
             }
-            $port = 0;
+            $port = $this->getPort();
             while (1) {
                 try {
-                    $port = $this->getPort();
                     $res = Base::postRequest('http://' . Base::$ssh_ip . ':' . Base::$ssh_port, [], [
                         'port' => (int)$port,
                         'password' => (string)$password,
@@ -105,6 +104,7 @@ class BuySsh implements Consumer
                         Robot::sendChatToOneUserMsg($my_aid, '<h4>' . $title . "</h4>\n\n" . $msg);
                         return;
                     }
+                    ++$port;
                 } catch (Exception $e) {
                     $title = '用户【' . $my_data->name . '】购买LTPP-SSH异常';
                     $content = $e->getMessage();
