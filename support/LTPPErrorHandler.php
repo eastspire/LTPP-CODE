@@ -45,7 +45,7 @@ class LTPPErrorHandler extends ExceptionHandler
             return new Response(
                 200,
                 ['Content-Type' => 'application/json'],
-                json_encode($json, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)
+                json_encode($json, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)
             );
         } catch (Throwable $e) {
             Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
