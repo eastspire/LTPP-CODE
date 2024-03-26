@@ -1619,6 +1619,10 @@ class Base
             if (!$db_name || !$data) {
                 return $resid;
             }
+            if ($db_name == 'ssh') {
+                Db::table($db_name)->insert($data);
+                return $resid;
+            }
             if ($db_name == 'file_path') {
                 // 路径为空或者不包含static目录则返回
                 if (!isset($data['path']) || strripos($data['path'], Base::$LTPP_public_static_path) === false) {
@@ -1629,6 +1633,7 @@ class Base
                 $resid = Db::table($db_name)->insertGetId($data);
             }
         } catch (Exception $e) {
+            $resid = null;
             Base::sendErrorNotice($e->getTraceAsString(), '插入数据' . json_encode($data ?? []) . '到数据表' . $db_name . '出错:' . $e->getMessage());
         }
         return $resid;
@@ -1700,6 +1705,15 @@ class Base
             return false;
         }
         return $user_data->email == Base::getRobotEmail();
+    }
+
+    /**
+     * 生成容器名称
+     * @param int $port 端口
+     **/
+    static public function creatDockerName($port = 0)
+    {
+        return md5(Base::getUidById($port));
     }
 
     /**

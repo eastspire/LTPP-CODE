@@ -31,11 +31,11 @@ class BuySsh implements Consumer
     {
         $db = Db::table('ssh')
             ->orderBy('id', 'desc')
-            ->select('port')
+            ->select('end_port')
             ->first();
         if ($db) {
             // 当前端口
-            $port = $db->port + Base::$ssh_default_open_ports_num;
+            $port = $db->port + 1;
         } else {
             // 当前端口
             $port = Ssh::$port_begin;
@@ -73,13 +73,16 @@ class BuySsh implements Consumer
                 Robot::sendChatToOneUserMsg($my_aid, '<h4>' . $title . "</h4>\n\n" . $msg);
                 return;
             }
+            Base::$ssh_default_open_ports_num = max(Base::$ssh_default_open_ports_num, 2);
             $port = $this->getPort();
             while (1) {
                 try {
+                    $name = Base::creatDockerName($port);
                     $res = Base::postRequest('http://' . Base::$ssh_ip . ':' . Base::$ssh_port, [], [
                         'port' => (int)$port,
                         'password' => (string)$password,
-                        'port_num' => (int)Base::$ssh_default_open_ports_num
+                        'port_num' => (int)Base::$ssh_default_open_ports_num,
+                        'name' => $name
                     ]);
                     if (!$res) {
                         $msg = 'LTPP-SSH服务未启动！购买失败！请重试！';
@@ -115,15 +118,17 @@ class BuySsh implements Consumer
 
             $now = date('Y-m-d H:i:s', time());
             $data = [
+                'name' => $name,
                 'userid' => $my_aid,
-                'port' => (int) $port,
+                'begin_port' => (int) $port,
+                'end_port' => (int) ($port + Base::$ssh_default_open_ports_num - 1),
                 'password' => (string) $password,
                 'buy_time' => $now
             ];
 
             $res = Base::insertToDb('ssh', $data);
 
-            if (!$res) {
+            if ($res === null) {
                 $msg = '购买失败！请重试！';
                 Robot::sendChatToOneUserMsg($my_aid, '<h4>' . $title . "</h4>\n\n" . $msg);
                 Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '<strong>【' . $now . '】</strong>用户<strong>【' . $my_data->name . '】</strong>购买LTPP-SSH失败' . "\n" . $msg);
