@@ -17,7 +17,6 @@ use app\controller\Robot;
 use app\controller\Ssh;
 use Exception;
 use support\Db;
-use support\Redis;
 use Webman\RedisQueue\Consumer;
 
 class BuySsh implements Consumer
