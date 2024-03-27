@@ -25,6 +25,7 @@ export default {
     return {
       version: "2.1.7",
       get_version_lock: false,
+      electron_show_update: false,
     };
   },
   beforeCreate() {
@@ -139,7 +140,8 @@ export default {
             setTimeout(() => {
               window.location.reload(true);
             }, 360);
-          } else {
+          } else if (!this.electron_show_update) {
+            this.electron_show_update = true;
             this.$notice({
               title: "发现新版本！",
               dangerouslyUseHTMLString: true,
@@ -181,6 +183,10 @@ export default {
   --ltpp-code-bk-color: 40, 44, 52;
   // 主题文字颜色
   --ltpp-main-text-color: #f5f7fa;
+  // 顶部滚动条颜色
+  --ltpp-top-scroll-color: #409eff;
+  // 滚动条颜色
+  --ltpp-scroll-color: 117, 63, 178;
   // 阴影色
   --ltpp-shadow-color: rgba(var(--ltpp-main-bk-color), 0.08);
   // 阴影宽度
@@ -529,7 +535,7 @@ video:focus {
   transform: translate(-50%, -50%);
   height: 100%;
   width: 100%;
-  background-color: rgba(var(--ltpp-main-bk-color), 0) !important;
+  background-color: transparent !important;
   z-index: -1000000;
   will-change: transform;
 }
@@ -619,7 +625,7 @@ video:focus {
   transform: translate(-50%, -50%);
   height: 100%;
   width: auto;
-  background-color: #282c34 !important;
+  background-color: transparent !important;
   z-index: -100000;
   will-change: transform;
 }
@@ -640,16 +646,16 @@ video:focus {
 .is-active {
   border: 0rem !important;
   font-size: 1.06rem !important;
-  border-color: rgba(var(--ltpp-main-bk-color), 0) !important;
+  border-color: transparent !important;
   color: deepskyblue !important;
-  background-color: rgba(var(--ltpp-main-bk-color), 0) !important;
+  background-color: transparent !important;
 }
 
 .no-select,
 .el-menu--horizontal,
 .el-menu-item {
   border: 0rem !important;
-  border-color: rgba(var(--ltpp-main-bk-color), 0) !important;
+  border-color: transparent !important;
   font-size: 1rem !important;
   z-index: 1000006 !important;
 }
@@ -667,7 +673,7 @@ video:focus {
 .is-top {
   border: 0rem !important;
   font-size: 1.06rem !important;
-  border-color: rgba(var(--ltpp-main-bk-color), 0) !important;
+  border-color: transparent !important;
   background-color: rgba(53, 61, 68, 1) !important;
 }
 
@@ -676,7 +682,7 @@ video:focus {
 .el-tabs__content {
   border-radius: 0;
   border: 0rem !important;
-  border-color: rgba(var(--ltpp-main-bk-color), 0) !important;
+  border-color: transparent !important;
   background-color: rgba(53, 61, 68, 0.6) !important;
 }
 
@@ -701,7 +707,7 @@ video:focus {
 }
 
 .el-input__count-inner {
-  background-color: rgba(var(--ltpp-main-bk-color), 0) !important;
+  background-color: transparent !important;
 }
 
 .el-autocomplete-suggestion,
@@ -888,8 +894,8 @@ a:active {
 .v-note-navigation-title,
 .v-note-navigation-content {
   border-width: 0 !important;
-  border-color: rgba(var(--ltpp-main-bk-color), 0) !important;
-  background-color: rgba(var(--ltpp-main-bk-color), 0) !important;
+  border-color: transparent !important;
+  background-color: transparent !important;
 }
 
 .add-image-link,
@@ -905,7 +911,7 @@ a:active {
 }
 
 .in-range {
-  background-color: rgba(var(--ltpp-main-bk-color), 0) !important;
+  background-color: transparent !important;
   border-width: 0 !important;
   color: rgba(var(--ltpp-main-bk-color), 1) !important;
 }
@@ -994,8 +1000,8 @@ a:active {
 .content-input,
 .auto-textarea-wrapper,
 .markdown-body {
-  background-color: rgba(var(--ltpp-main-bk-color), 0) !important;
-  border-color: rgba(var(--ltpp-main-bk-color), 0) !important;
+  background-color: transparent !important;
+  border-color: transparent !important;
   border-width: 0rem !important;
   p {
     margin: 0px !important;
@@ -1230,7 +1236,7 @@ a:active {
 }
 
 .v-show-content {
-  background-color: rgba(var(--ltpp-main-bk-color), 0) !important;
+  background-color: transparent !important;
   border-width: 0rem !important;
   font-size: 1.06rem;
 }
@@ -1281,9 +1287,9 @@ a:active {
 }
 
 .hljs {
-  border-color: rgba(var(--ltpp-main-bk-color), 0) !important;
+  border-color: transparent !important;
   font-size: 1.16rem !important;
-  background-color: rgba(var(--ltpp-main-bk-color), 0) !important;
+  background-color: transparent !important;
 }
 
 .hljs-params {
@@ -1446,7 +1452,7 @@ pre,
 .v-right-item,
 .transition {
   color: var(--ltpp-main-text-color) !important;
-  background-color: rgba(var(--ltpp-main-bk-color), 0) !important;
+  background-color: transparent !important;
   border-width: 0rem !important;
   padding: 0rem 0rem;
 }
@@ -1468,12 +1474,12 @@ pre,
 .content-input-wrapper,
 .v-note-edit.diletea-wrapper.scroll-style.transition {
   color: var(--ltpp-main-text-color) !important;
-  background-color: rgba(var(--ltpp-main-bk-color), 0) !important;
+  background-color: transparent !important;
 }
 
 .op-icon {
   color: var(--ltpp-main-text-color) !important;
-  background-color: rgba(var(--ltpp-main-bk-color), 0) !important;
+  background-color: transparent !important;
 }
 
 .op-icon:hover {
@@ -1484,7 +1490,7 @@ pre,
 .v-show-content,
 .scroll-style,
 .scroll-style-border-radius {
-  background-color: rgba(var(--ltpp-main-bk-color), 0) !important;
+  background-color: transparent !important;
   padding: 0rem 0rem;
   border-width: 0rem !important;
 }
@@ -1495,7 +1501,7 @@ pre,
 .el-range-editor,
 .el-data-editor--datetimerange {
   color: var(--ltpp-main-text-color) !important;
-  background-color: rgba(var(--ltpp-main-bk-color), 0) !important;
+  background-color: transparent !important;
   border-width: 0rem !important;
 }
 
@@ -1530,12 +1536,12 @@ pre,
   border-width: 0rem !important;
   width: 0rem !important;
   height: 0rem !important;
-  background-color: rgba(var(--ltpp-main-bk-color), 0) !important;
+  background-color: transparent !important;
 }
 
 .el-icon-arrow-left:before,
 .el-icon-arrow-right:before {
-  background-color: rgba(var(--ltpp-main-bk-color), 0) !important;
+  background-color: transparent !important;
 }
 
 .el-picker-panel__link-btn,
@@ -1566,26 +1572,23 @@ pre,
 
 .el-scrollbar__bar,
 .is-horizontal {
-  background-color: rgba(var(--ltpp-main-bk-color), 0) !important;
+  background-color: transparent !important;
   color: var(--ltpp-main-text-color) !important;
   height: 0rem !important;
   border: none !important;
 }
 
 ::-webkit-scrollbar {
-  z-index: 1000000 !important;
-  width: 0rem;
+  z-index: 1000000;
+  width: 0rem !important;
   height: 0.36rem !important;
-  border-radius: 3rem;
-  background-color: rgba(
-    var(--ltpp-light-color),
-    var(--ltpp-center-box-bk-opacity)
-  );
+  border-radius: 0rem;
+  background-color: transparent;
 }
 
 /* 滚动条上的按钮 (上下箭头). */
 ::-webkit-scrollbar-button {
-  background-color: Transparent;
+  background-color: transparent;
   border-radius: 0rem;
   height: 0rem;
   width: 0rem;
@@ -1593,34 +1596,25 @@ pre,
 
 /* 滚动条上的滚动滑块. */
 ::-webkit-scrollbar-thumb {
-  background-color: rgb(183, 185, 186);
-  border-radius: 3rem;
+  background-color: rgba(var(--ltpp-scroll-color), 1);
+  border-radius: 0rem;
 }
 
 /*  滚动条轨道. */
 ::-webkit-scrollbar-track {
-  border-radius: 3rem;
-  background-color: rgba(
-    var(--ltpp-light-color),
-    var(--ltpp-center-box-bk-opacity)
-  );
+  border-radius: 0rem;
+  background-color: transparent;
 }
 
 /* 滚动条没有滑块的轨道部分 */
 ::-webkit-scrollbar-track-piece {
-  background-color: rgba(
-    var(--ltpp-light-color),
-    var(--ltpp-center-box-bk-opacity)
-  );
+  background-color: transparent;
 }
 
 /* 当同时有垂直滚动条和水平滚动条时交汇的部分. */
 ::-webkit-scrollbar-corner {
-  background-color: rgba(
-    var(--ltpp-light-color),
-    var(--ltpp-center-box-bk-opacity)
-  );
-  border-radius: 3rem;
+  background-color: transparent;
+  border-radius: 0rem;
 }
 
 /* 某些元素的corner部分的部分样式(例:textarea的可拖动按钮). */

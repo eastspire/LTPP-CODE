@@ -580,6 +580,8 @@ export default {
   name: "chat",
   data() {
     return {
+      check_can_scroll_timer: null,
+      can_scroll: true,
       chat_list_loadfinish: false,
       load_msg_list_finish: false,
       requestid_timer: null,
@@ -692,7 +694,7 @@ export default {
     }
     await this.loadCharset();
     // 获取聊天列表
-    await this.getUserAndGroupList();
+    this.getUserAndGroupList();
   },
   activated() {
     try {
@@ -707,16 +709,9 @@ export default {
       }, 1000);
       let list = document.getElementById("list");
       list.addEventListener("click", this.onclicklist);
-      this.chat_msg_list = this.chat_msg_list.slice(-50);
-      window.localStorage.setItem(
-        "Chat " + this.now_user.type + " " + this.now_user.id,
-        JSON.stringify(this.chat_msg_list.slice(-50))
-      );
-      this.getHistoryChatData(true);
+      this.checkCanScroll();
     } catch (err) {}
-    this.$nextTick(() => {
-      this.to_scroll_bottom(1);
-    });
+    this.to_scroll_bottom(1);
   },
   async mounted() {
     let authorization = window.localStorage.getItem("authorization");
@@ -727,6 +722,7 @@ export default {
   },
   deactivated() {
     clearInterval(this.requestid_timer);
+    this.deleteCheckCanScroll();
     this.requestid_timer = null;
     let list = document.getElementById("list");
     try {
@@ -739,6 +735,7 @@ export default {
   destroyed() {
     try {
       clearInterval(this.timer);
+      this.deleteCheckCanScroll();
     } catch (e) {
       this.timer = null;
       return;
@@ -747,7 +744,7 @@ export default {
   },
 
   methods: {
-    async changeNowWindow(tem) {
+    changeNowWindow(tem) {
       this.id = 0;
       tem.no_look_num = 0;
       this.now_post_type = tem.type;
@@ -756,7 +753,7 @@ export default {
       this.isSeeLastBtn = false;
       this.passparam.user_id = tem.id;
       this.clearNolookNum();
-      await this.getLatestChatData();
+      this.getLatestChatData();
     },
     videoLink() {
       // 准备链接模板
@@ -1036,68 +1033,92 @@ export default {
     // 滚动到顶部
     to_scroll_Top() {
       this.$nextTick(() => {
-        let scrollElem = document.getElementById("chatDataScrollDiv");
-        if (scrollElem && scrollElem.scrollHeight) {
+        let scroll_dom = document.getElementById("chatDataScrollDiv");
+        if (scroll_dom && scroll_dom.scrollHeight) {
           let scroll_top = setInterval(() => {
-            if (Math.floor(scrollElem.scrollTop) <= 1) {
+            if (Math.floor(scroll_dom.scrollTop) <= 1) {
               clearInterval(scroll_top);
               scroll_bottom = null;
             }
-            scrollElem.scrollTop--;
+            scroll_dom.scrollTop--;
           }, 1);
         }
       });
+    },
+    checkCanScroll() {
+      this.check_can_scroll_timer = setInterval(() => {
+        let scroll_dom = document.getElementById("chatDataScrollDiv");
+        if (!scroll_dom) {
+          return;
+        }
+        let scrollHeight = scroll_dom.scrollHeight;
+        let scrollTop = scroll_dom.scrollTop;
+        let clientHeight = scroll_dom.clientHeight;
+        let distanceToBottom = scrollHeight - (scrollTop + clientHeight);
+        if (distanceToBottom > 88) {
+          this.can_scroll = false;
+        } else {
+          this.can_scroll = true;
+        }
+      }, 360);
+    },
+    deleteCheckCanScroll() {
+      clearInterval(this.check_can_scroll_timer);
+      this.check_can_scroll_timer = null;
     },
     // 加载历史消息滚到之前的视图
     to_last_scroll() {
       this.$nextTick(() => {
         let sign_dom = null;
-        let scrollElem = document.getElementById("chatDataScrollDiv");
-        for (let i = 0; i < scrollElem.children[1].children.length; ++i) {
-          if (scrollElem.children[1].children[i].id === this.last_dom_id) {
-            sign_dom = scrollElem.children[1].children[i];
+        let scroll_dom = document.getElementById("chatDataScrollDiv");
+        for (let i = 0; i < scroll_dom.children[1].children.length; ++i) {
+          if (scroll_dom.children[1].children[i].id === this.last_dom_id) {
+            sign_dom = scroll_dom.children[1].children[i];
             break;
           }
         }
-        if (scrollElem && sign_dom && scrollElem.scrollHeight) {
-          scrollElem.scrollTop = sign_dom.offsetTop - 148.6;
+        if (scroll_dom && sign_dom && scroll_dom.scrollHeight) {
+          scroll_dom.scrollTop = sign_dom.offsetTop - 148.6;
         }
       });
     },
     // 滚动到底部
     to_scroll_bottom(is_init = 0) {
-      setTimeout(() => {
-        this.$nextTick(() => {
-          let scrollElem = document.getElementById("chatDataScrollDiv");
-          if (scrollElem && scrollElem.scrollHeight) {
+      if (!is_init && !this.can_scroll) {
+        return;
+      }
+      this.$nextTick(() => {
+        setTimeout(() => {
+          let scroll_dom = document.getElementById("chatDataScrollDiv");
+          if (scroll_dom && scroll_dom.scrollHeight) {
             if (
-              Math.floor(scrollElem.scrollHeight - scrollElem.scrollTop) -
-                scrollElem.clientHeight <=
+              Math.floor(scroll_dom.scrollHeight - scroll_dom.scrollTop) -
+                scroll_dom.clientHeight <=
               1
             ) {
               return;
             }
             if (is_init == 1) {
               // 首次打开该用户聊天框，迅速加载
-              scrollElem.scrollTop = Math.max(
+              scroll_dom.scrollTop = Math.max(
                 2000,
-                scrollElem.scrollHeight - 2000
+                scroll_dom.scrollHeight - 2000
               );
             }
             let scroll_bottom = setInterval(() => {
               if (
-                Math.floor(scrollElem.scrollHeight - scrollElem.scrollTop) -
-                  scrollElem.clientHeight <=
+                Math.floor(scroll_dom.scrollHeight - scroll_dom.scrollTop) -
+                  scroll_dom.clientHeight <=
                 1
               ) {
                 clearInterval(scroll_bottom);
                 scroll_bottom = null;
               }
-              scrollElem.scrollTop += 16;
+              scroll_dom.scrollTop += 16;
             }, 1);
           }
-        });
-      }, 0);
+        }, 66);
+      });
     },
     async searchuser() {
       const { data: res } = await this.$ajax({
@@ -1139,35 +1160,31 @@ export default {
       this.user_list = res?.data;
       this.chat_list_loadfinish = true;
       // 初始化显示第一个用户聊天框
-      setTimeout(() => {
-        this.$nextTick(async () => {
-          let list = document.getElementById("list");
-          if (
-            list &&
-            this.user_list &&
-            typeof this.user_list == "object" &&
-            this.user_list.length > 0 &&
-            list.children[0] &&
-            list.children[0].style
-          ) {
-            list.children[0].style = this.user_deep_color;
-            this.now_user = this.user_list[0];
-            if (this.now_user.type == "group_chat") {
-              this.now_post_type = "group_chat";
-            } else if (this.now_user.type == "private_chat") {
-              this.now_post_type = "private_chat";
-            }
-            this.passparam.user_id = this.now_user.id;
-            for (let i = 1; i < this.now_user.length; ++i) {
-              list.children[i].style = this.user_no_deep_color;
-            }
-            await this.getLatestChatData();
+      this.$nextTick(async () => {
+        let list = document.getElementById("list");
+        if (
+          list &&
+          this.user_list &&
+          typeof this.user_list == "object" &&
+          this.user_list.length > 0 &&
+          list.children[0] &&
+          list.children[0].style
+        ) {
+          list.children[0].style = this.user_deep_color;
+          this.now_user = this.user_list[0];
+          if (this.now_user.type == "group_chat") {
+            this.now_post_type = "group_chat";
+          } else if (this.now_user.type == "private_chat") {
+            this.now_post_type = "private_chat";
           }
-          this.$nextTick(() => {
-            this.to_scroll_bottom(1);
-          });
-        });
-      }, 0);
+          this.passparam.user_id = this.now_user.id;
+          for (let i = 1; i < this.now_user.length; ++i) {
+            list.children[i].style = this.user_no_deep_color;
+          }
+          await this.getLatestChatData();
+        }
+        this.to_scroll_bottom(1);
+      });
       return res;
     },
     // 判断是否以及在聊天列表
@@ -1372,10 +1389,8 @@ export default {
           });
         }
         this.load_msg_list_finish = true;
-        this.getHistoryChatData(true);
-        this.$nextTick(() => {
-          this.to_scroll_bottom(1);
-        });
+        await this.getHistoryChatData(true);
+        this.to_scroll_bottom(1);
       } catch (err) {
         this.load_msg_list_finish = true;
       }
@@ -1384,13 +1399,12 @@ export default {
     async getHistoryChatData(is_init = false) {
       this.isSeeLastBtn = false;
       if (!this.now_user.id || !this.now_user.type) {
-        !is_init &&
-          this.$msg({
-            type: "error",
-            message: "用户加载出错",
-            duration: 1600,
-            offset: 80,
-          });
+        this.$msg({
+          type: "error",
+          message: "用户加载出错",
+          duration: 1600,
+          offset: 80,
+        });
         return;
       }
 
@@ -1405,13 +1419,12 @@ export default {
       }
 
       if (!this.id) {
-        !is_init &&
-          this.$msg({
-            type: "success",
-            message: "没有更久远的历史记录啦",
-            duration: 1600,
-            offset: 80,
-          });
+        this.$msg({
+          type: "success",
+          message: "没有更久远的历史记录啦",
+          duration: 1600,
+          offset: 80,
+        });
         return;
       }
 
@@ -1432,7 +1445,7 @@ export default {
           user_id: this.now_user.id,
         },
       }).catch((t) => {
-        !is_init &&
+        is_init &&
           this.$msg({
             type: "error",
             message: t,
@@ -1443,11 +1456,11 @@ export default {
       });
       if (res?.code == 1) {
         let len = res?.data.length;
-        if (is_init && len > 0) {
+        if (len > 0) {
           this.isSeeLastBtn = true;
         }
         if (len <= 0) {
-          !is_init &&
+          is_init &&
             this.$msg({
               type: "success",
               message: "没有更久远的历史记录啦",
@@ -1456,13 +1469,13 @@ export default {
             });
           return;
         }
-        if (!is_init) {
+        if (is_init) {
           res.data = res?.data.reverse();
           this.chat_msg_list = [...res?.data, ...this.chat_msg_list];
           this.to_last_scroll();
         }
       } else {
-        !is_init &&
+        is_init &&
           this.$msg({
             type: "error",
             message: res?.msg,
@@ -1470,7 +1483,7 @@ export default {
             offset: 80,
           });
       }
-      !is_init && this.getHistoryChatData(true);
+      is_init && this.getHistoryChatData();
     },
     // 累加未读消息
     addNoLookNum(id) {
@@ -1501,7 +1514,7 @@ export default {
               : temdata.post_user_id;
           if (this.now_user.id != tem_id) {
             if (tem_chat_list) {
-              await tem_chat_list.push(temdata);
+              tem_chat_list.push(temdata);
               // 不是当前擦窗口的用户 且 该用户在本地 有缓存
               window.localStorage.setItem(
                 "Chat " + temdata.type + " " + tem_id,
@@ -1510,16 +1523,20 @@ export default {
             }
           } else {
             // 是当前窗口的用户直接显示
-            this.clearNolookNum();
+            this.to_scroll_bottom(0);
+            if (this.can_scroll) {
+              for (let i = 0; i < this.user_list.length; ++i) {
+                if (this.user_list[i].id == this.now_user.id) {
+                  this.user_list[i].no_look_num = 0;
+                  break;
+                }
+              }
+              this.clearNolookNum();
+            } else {
+              this.addNoLookNum(tem_id);
+            }
             this.chat_msg_list.push(temdata);
-            this.chat_msg_list = this.chat_msg_list.slice(-50);
-            window.localStorage.setItem(
-              "Chat " + temdata.type + " " + tem_id,
-              JSON.stringify(this.chat_msg_list.slice(-50))
-            );
-            this.$nextTick(() => {
-              this.to_scroll_bottom(0);
-            });
+            window.localStorage.setItem("Chat " + temdata.type + " " + tem_id);
           }
           // 判断用户是否在用户列表
           if (!this.judge_user_list_has_persion(tem_id)) {
@@ -1542,8 +1559,8 @@ export default {
               });
             }
           } else {
-            // 在列表且不是当前窗口，累加未读消息
-            if (this.now_user.id != tem_id) {
+            // 在列表且不是当前窗口 或者 当前窗口未到底部，累加未读消息
+            if (this.now_user.id != tem_id || !this.can_scroll) {
               this.addNoLookNum(tem_id);
             }
           }
@@ -1558,7 +1575,7 @@ export default {
             this.addNoLookNum(temdata.group_data.id);
             return;
           }
-          await this.user_list.push({
+          this.user_list.push({
             type: temdata.type,
             id: temdata.group_data.id,
             group_data: temdata.group_data,

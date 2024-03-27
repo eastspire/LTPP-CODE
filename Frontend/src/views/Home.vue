@@ -22,7 +22,7 @@
       "
     >
       <div
-        :style="`width:${scroll_percent}vw;background-color:#409EFF;height:0.26rem;`"
+        :style="`width:${scroll_percent}vw;background-color:var(--ltpp-top-scroll-color);height:0.26rem;`"
       ></div>
     </div>
     <div v-if="$store.state.login && lookmusic == 1">
