@@ -25,7 +25,6 @@ export default {
     return {
       version: "2.1.8",
       get_version_lock: false,
-      electron_show_update: false,
     };
   },
   beforeCreate() {
@@ -39,11 +38,6 @@ export default {
   async mounted() {
     try {
       this.init();
-      let is_electron = false;
-      is_electron =
-        typeof navigator !== "undefined" &&
-        navigator.userAgent.toLowerCase().indexOf("electron") !== -1;
-
       let key = "time";
       const max_time = 86400;
       let last = window.localStorage.getItem(key);
@@ -57,18 +51,16 @@ export default {
           offset: 80,
         });
         window.localStorage.setItem(key, now);
-        if (!is_electron) {
-          setTimeout(() => {
-            window.location.reload(true);
-          }, 360);
-          return;
-        }
+        setTimeout(() => {
+          window.location.reload(true);
+        }, 360);
+        return;
       }
       window.localStorage.setItem(key, now);
       setInterval(() => {
-        this.getVersion(is_electron);
+        this.getVersion();
       }, 6000);
-      await this.getVersion(is_electron);
+      this.getVersion();
     } catch (err) {}
   },
   methods: {
@@ -93,7 +85,7 @@ export default {
     updateSeverError(server_error = false) {
       this.$store.commit("updateObj", { server_error: server_error });
     },
-    async getVersion(is_electron = false) {
+    async getVersion() {
       if (this.get_version_lock) {
         return;
       }
@@ -127,36 +119,19 @@ export default {
             path: "/homelist",
             replace: true,
           });
+          return;
         }
         if (this.version < res.version) {
-          if (!is_electron) {
-            this.$notice({
-              title: "发现新版本！",
-              dangerouslyUseHTMLString: true,
-              message: "系统自动更新中",
-              duration: 1600,
-              offset: 80,
-            });
-            setTimeout(() => {
-              window.location.reload(true);
-            }, 360);
-          } else if (!this.electron_show_update) {
-            this.electron_show_update = true;
-            this.$notice({
-              title: "发现新版本！",
-              dangerouslyUseHTMLString: true,
-              message: "请手动安装新版本",
-              duration: 0,
-              offset: 80,
-            });
-            if (this.judgeSystemIsWin()) {
-              res?.ltpp_win_download_url &&
-                window.open(res.ltpp_win_download_url, "_blank");
-            } else {
-              res?.ltpp_mac_download_url &&
-                window.open(res.ltpp_mac_download_url, "_blank");
-            }
-          }
+          this.$notice({
+            title: "发现新版本！",
+            dangerouslyUseHTMLString: true,
+            message: "系统自动更新中",
+            duration: 1600,
+            offset: 80,
+          });
+          setTimeout(() => {
+            window.location.reload(true);
+          }, 360);
         }
       } else if (++err_times > max_err_times) {
         this.updateSeverError(true);
