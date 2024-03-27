@@ -23,7 +23,7 @@ export default {
   name: "app",
   data() {
     return {
-      version: "2.1.7",
+      version: "2.1.8",
       get_version_lock: false,
       electron_show_update: false,
     };
