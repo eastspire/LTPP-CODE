@@ -314,16 +314,16 @@ hr {
 }
 
 pre {
-  font-family: Consolas, Monaco, DejaVu Sans Mono, monospace;
-  display: block;
-  overflow-x: auto;
-  font-size: 1.06rem;
-  line-height: 1.56;
-  white-space: pre-wrap;
-  white-space: -moz-pre-wrap;
-  white-space: -webkit-pre-wrap;
-  white-space: -o-pre-wrap;
-  word-wrap: break-word;
+  font-family: Consolas, Monaco, DejaVu Sans Mono, monospace !important;
+  display: block !important;
+  overflow-x: auto !important;
+  font-size: 1.06rem !important;
+  line-height: 1.56 !important;
+  white-space: pre-wrap !important;
+  white-space: -moz-pre-wrap !important;
+  white-space: -webkit-pre-wrap !important;
+  white-space: -o-pre-wrap !important;
+  word-wrap: break-word !important;
   border-radius: 0rem !important;
   background-color: rgba(
     var(--ltpp-code-bk-color),
