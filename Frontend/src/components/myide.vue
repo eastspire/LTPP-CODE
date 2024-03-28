@@ -264,6 +264,7 @@ export default {
     this.usememory = 0;
   },
   mounted() {
+    this.listenKeydown();
     this.local_testin = this.testin;
     if (!this.iscloudfile) {
       let language = window.localStorage.getItem("language") ?? "cpp";
@@ -341,6 +342,7 @@ export default {
   },
   destroyed() {
     try {
+      this.removeListenKeydown();
       this.test_query_one_can_next = true;
       this.save(true);
       this.editor && this.editor.dispose();
@@ -387,6 +389,33 @@ export default {
     };
   },
   methods: {
+    keydownTestCode(e) {
+      if (e.keyCode == 116) {
+        e.preventDefault();
+        this.testone();
+      }
+    },
+    listenKeydown() {
+      try {
+        window.addEventListener("keydown", this.keydownTestCode);
+      } catch (err) {}
+    },
+    removeListenKeydown() {
+      try {
+        window.removeEventListener("keydown", this.keydownTestCode);
+      } catch (err) {}
+    },
+    scrollDown() {
+      this.$nextTick(() => {
+        try {
+          window.scrollBy({
+            top: 95.55,
+            left: 0,
+            behavior: "smooth",
+          });
+        } catch (err) {}
+      });
+    },
     loadCodeTips(now_language) {
       try {
         monaco.languages.registerCompletionItemProvider(now_language, {
@@ -611,6 +640,7 @@ export default {
       }
       this.isshow = true;
       this.istest = false;
+      this.scrollDown();
     },
     async testone() {
       if (!this.editor) {
