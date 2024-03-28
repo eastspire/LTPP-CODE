@@ -1460,13 +1460,6 @@ export default {
           this.isSeeLastBtn = true;
         }
         if (len <= 0) {
-          is_init &&
-            this.$msg({
-              type: "success",
-              message: "没有更久远的历史记录啦",
-              duration: 1600,
-              offset: 80,
-            });
           return;
         }
         if (is_init) {
@@ -1475,13 +1468,12 @@ export default {
           this.to_last_scroll();
         }
       } else {
-        is_init &&
-          this.$msg({
-            type: "error",
-            message: res?.msg,
-            duration: 1600,
-            offset: 80,
-          });
+        this.$msg({
+          type: "error",
+          message: res?.msg,
+          duration: 1600,
+          offset: 80,
+        });
       }
       is_init && this.getHistoryChatData();
     },
