@@ -29,6 +29,11 @@ class Consumer
     protected $_consumerDir = '';
 
     /**
+     * @var array
+     */
+    protected $_consumers = [];
+
+    /**
      * StompConsumer constructor.
      * @param string $consumer_dir
      */
@@ -60,8 +65,17 @@ class Consumer
                     $consumer = Container::get($class);
                     $connection_name = $consumer->connection ?? 'default';
                     $queue = $consumer->queue;
+                    $this->_consumers[$queue] = $consumer;
                     $connection = Client::connection($connection_name);
                     $connection->subscribe($queue, [$consumer, 'consume']);
+                    if (method_exists($connection, 'onConsumeFailure')) {
+                        $connection->onConsumeFailure(function ($exeption, $package) {
+                            $consumer = $this->_consumers[$package['queue']] ?? null;
+                            if ($consumer && method_exists($consumer, 'onConsumeFailure')) {
+                                return call_user_func([$consumer, 'onConsumeFailure'], $exeption, $package);
+                            }
+                        });
+                    }
                 }
             }
         }

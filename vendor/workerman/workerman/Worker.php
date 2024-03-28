@@ -34,7 +34,7 @@ class Worker
      *
      * @var string
      */
-    const VERSION = '4.1.14';
+    const VERSION = '4.1.15';
 
     /**
      * Status starting.
@@ -943,7 +943,7 @@ class Worker
             exit;
         }
 
-        $statistics_file =  static::$statusFile ? static::$statusFile : __DIR__ . "/../workerman-$master_pid.$command";
+        $statistics_file =  static::$statusFile ? static::$statusFile : __DIR__ . "/../workerman-$master_pid.status";
 
         // execute command.
         switch ($command) {
@@ -1064,6 +1064,9 @@ class Worker
         try {
             $workerInfo = unserialize($info[0], ['allowed_classes' => false]);
         } catch (Throwable $exception) {}
+        if (!is_array($workerInfo)) {
+            $workerInfo = [];
+        }
         \ksort($workerInfo, SORT_NUMERIC);
         unset($info[0]);
         $data_waiting_sort = array();

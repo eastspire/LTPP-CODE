@@ -27,6 +27,11 @@ $worker->onWorkerStart = function () {
         echo "user-2\n";
         var_export($data);
     });
+    $client->onConsumeFailure(function (\Throwable $exception, $package) {
+        echo "consume failure\n";
+        echo $exception->getMessage(), "\n";
+        var_export($package);
+    });
     Timer::add(1, function()use($client){
         $client->send('user-1', ['some', 'data']);
     });

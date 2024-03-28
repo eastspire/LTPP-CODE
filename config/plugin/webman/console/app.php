@@ -10,8 +10,24 @@
  * Copyright (c) 2023 by ${git_name_email}, All Rights Reserved. 
  */
 
+/**
+ * 有些 ini 设置不能通过 ini_set 临时改变，原因是 PHP 在执行脚本之前就需要这些值。
+ * 当上传发生时，目标脚本在上传完成后执行，因此 PHP 需要事先知道最大大小。
+ * 如果你确实想打包为 bin ，可以事先定义一些 ini 设置，
+ * 修改 config/plugin/webman/console/app.php 里面的 custom_ini 配置项，
+ * 一行一行配置，和 php.ini 文件的格式一样。
+ * 如果没有这个配置项请更新 webman/console 。
+ * https://www.workerman.net/q/11438
+ */
+
 return [
     'enable' => true,
+    'custom_ini' => '
+        memory_limit=-1
+        upload_max_filesize=1024G
+        post_max_size=1024G
+        max_execution_time=0
+    ',
     'phar_file_output_dir' => BASE_PATH . DIRECTORY_SEPARATOR . 'build',
     'phar_filename' => 'LTPP.phar',
     'bin_filename' => 'LTPP',

@@ -82,6 +82,7 @@ class $class implements Consumer
         // 无需反序列化
         var_export(\$data);
     }
+            
 }
 
 EOF;

@@ -64,13 +64,16 @@ class Client
      */
     public function request($url, $options = [])
     {
-        $address = $this->parseAddress($url, $options);
+        $address = $this->parseAddress($url, $options, true);
         $options['url'] = $url;
         $needSuspend = !isset($options['success']) && class_exists(EventLoop::class, false);
         if ($needSuspend) {
             $suspension = EventLoop::getSuspension();
             $options['success'] = function ($response) use ($suspension) {
                 $suspension->resume($response);
+            };
+            $options['error'] = function ($response) use ($suspension) {
+                $suspension->throw($response);
             };
         }
         $this->queuePush($address, ['url' => $url, 'address' => $address, 'options' => $options]);
@@ -248,16 +251,21 @@ class Client
      *
      * @param $url
      * @param $options
+     * @param $throwException
      * @return string
      */
-    protected function parseAddress($url, $options)
+    protected function parseAddress($url, $options, $throwException = false)
     {
         $info = parse_url($url);
         if (empty($info) || !isset($info['host'])) {
             $e = new \Exception("invalid url: $url");
+            if ($throwException) {
+                throw $e;
+            }
             if (!empty($options['error'])) {
                 call_user_func($options['error'], $e);
             }
+            return '';
         }
         $port = isset($info['port']) ? $info['port'] : (strpos($url, 'https') === 0 ? 443 : 80);
         return "tcp://{$info['host']}:{$port}";
