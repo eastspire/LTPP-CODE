@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of webman.
  *
@@ -19,7 +20,7 @@ return [
                 'class' => Monolog\Handler\RotatingFileHandler::class,
                 'constructor' => [
                     runtime_path() . '/logs/redis-queue/queue.log',
-                    7, //$maxFiles
+                    366, //$maxFiles
                     Monolog\Logger::DEBUG,
                 ],
                 'formatter' => [
