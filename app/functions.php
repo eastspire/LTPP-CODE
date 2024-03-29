@@ -1,5 +1,5 @@
 <?php
-// 取消内存限制
-ini_set('memory_limit', '-1');
+// 内存限制
+ini_set('memory_limit', '100G');
 // gzip
 ob_start("ob_gzhandler");
