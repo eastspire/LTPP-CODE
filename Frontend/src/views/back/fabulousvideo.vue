@@ -871,11 +871,6 @@ export default {
   text-align: center;
 }
 
-.comment-pre {
-  font-size: 1.06rem;
-  padding: 0.4rem;
-}
-
 .video-box {
   position: relative;
 }

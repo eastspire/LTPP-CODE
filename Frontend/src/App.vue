@@ -334,6 +334,14 @@ pre {
   margin: 0.36rem 0rem !important;
 }
 
+.comment-pre {
+  margin-right: 1rem !important;
+  background-color: transparent !important;
+  color: var(--ltpp-box-text-color);
+  border: 1px solid
+    rgba(var(--ltpp-light-color), var(--ltpp-center-box-bk-opacity)) !important;
+}
+
 code.hljs {
   padding: 3px 5px;
 }

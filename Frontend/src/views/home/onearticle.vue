@@ -349,7 +349,7 @@
                           font-size: 1.06rem !important;
                           color: deeppink;
                           float: left;
-                          margin-left: 1rem;
+                          margin-left: 0.16rem;
                           margin-top: 0.2rem;
                         "
                         @click="touserpage(temcomment.userid)"
@@ -456,7 +456,7 @@
                               font-size: 1.06rem !important;
                               color: deeppink;
                               float: left;
-                              margin-left: 1rem;
+                              margin-left: 0.16rem;
                               margin-top: 0.4rem;
                             "
                             @click="touserpage(temtousercomment.userid)"
@@ -500,7 +500,7 @@
                               font-size: 1.06rem !important;
                               color: deeppink;
                               float: left;
-                              margin-left: 1rem;
+                              margin-left: 0.16rem;
                               margin-top: 0.4rem;
                             "
                             @click="touserpage(temtousercomment.touserid)"
