@@ -154,6 +154,7 @@ class CreatContestCrontab
             Db::table('contestproblem')
                 ->insert($insert_pro_list);
         }
+        $insert_pro_list = [];
     }
 
     /**
@@ -199,6 +200,9 @@ class CreatContestCrontab
                     $this->addProblem($res_id, $pro_list);
                     $this->addUser($res_id, $user_list);
                     Contest::sendUpdateRankMQ($res_id);
+                    $pro_list = [];
+                    $user_list = [];
+                    $time_list = [];
                 }
             } catch (Exception $e) {
                 Base::sendErrorNotice($e->getTraceAsString(), '定时任务进程<strong>【CreatContestCrontab】</strong>运行出错：' . $e->getMessage());

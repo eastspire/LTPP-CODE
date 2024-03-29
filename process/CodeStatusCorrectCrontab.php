@@ -42,17 +42,15 @@ class CodeStatusCorrectCrontab
                             ->where('time', '<=', date('Y-m-d H:i:s', $time))
                             ->where('isdel', 0);
                     })
-                    ->select('id', 'userid', 'code', 'language', 'time')
+                    ->select('id')
                     ->get();
                 foreach ($db as &$tem) {
-                    // 发送给消息队列
-                    RedisQueue::send(Base::$redis_queue_webcode_run_name, [
-                        'my_aid' => $tem->userid,
-                        'code_id' => $tem->id,
-                        'code' => $tem->code,
-                        'userlanguage' => $tem->language,
-                        'testin' => ''
-                    ]);
+                    // 使用单条记录更新，防止锁表
+                    Db::table('codehistory')
+                        ->where('id', $tem->id)
+                        ->update([
+                            'status' => Base::$code_run_running_wrong
+                        ]);
                 }
             } catch (Exception $e) {
                 Base::sendErrorNotice($e->getTraceAsString(), '定时任务进程<strong>【CodeStatusCorrectCrontab】</strong>运行出错：' . $e->getMessage());
