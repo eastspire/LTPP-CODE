@@ -643,7 +643,7 @@ export default {
       this.scrollDown();
     },
     async testone() {
-      if (!this.editor) {
+      if (!this.editor || this.isup || this.istest) {
         return;
       }
       this.save();
@@ -755,7 +755,7 @@ export default {
       this.scrollDown();
     },
     async submit() {
-      if (!this.editor) {
+      if (!this.editor || this.isup || this.istest) {
         return;
       }
       this.save();
