@@ -148,6 +148,18 @@ export default {
 
 <style lang="less">
 /**
+// h1颜色
+--ltpp-h1-color: #fa278e;
+// h2颜色
+--ltpp-h2-color: #21e016;
+// h3颜色
+--ltpp-h3-color: #00f7ff;
+// h4颜色
+--ltpp-h4-color: #00bdff;
+// h5颜色
+--ltpp-h5-color: #ffbb00;
+// h6颜色
+--ltpp-h6-color: #e06c75;
 // 主题背景色
 --ltpp-main-bk-color: 117, 63, 178;
 // 主题色
