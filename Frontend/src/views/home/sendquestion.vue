@@ -237,9 +237,7 @@ export default {
       box.innerHTML = this.form.link;
       // 判断不同的视频原链接类型
       if (this.form.region == "url") {
-        let linkFrameStart = `<div align="center" width="100%" style="border-width:0rem"><video style="height: ${
-          (window.innerHeight / 4) * 3 + "px"
-        }; width: 100%" controls controlslist="nodownload"><source src="`;
+        let linkFrameStart = `<div align="center" width="100%" style="border-width:0rem"><video style="height:46vh; width: 100%" controls controlslist="nodownload"><source src="`;
         let linkFrameEnd = `" type="video/mp4" /></video></div>`;
 
         linkFrame = linkFrameStart + this.form.link + linkFrameEnd;
@@ -288,7 +286,7 @@ export default {
     async $imgAdd(pos, $file) {
       // 第一步.将图片上传到服务器.
       let formdata = new FormData();
-      formdata.append('file', $file);
+      formdata.append("file", $file);
       await this.$ajax({
         url: "/File/saveImage",
         method: "post",
