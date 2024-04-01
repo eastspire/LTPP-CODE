@@ -160,6 +160,10 @@ export default {
   --ltpp-main-text-color: #f5f7fa;
   // 顶部滚动条颜色
   --ltpp-top-scroll-color: #409eff;
+  // blockquote颜色
+  --ltpp-blockquote-color: 0, 162, 60;
+  // blockquote背景透明度
+  --ltpp-blockquote-opacity: 0.18;
   // 滚动条颜色
   --ltpp-scroll-color: 117, 63, 178;
   // 阴影色
@@ -264,10 +268,10 @@ export default {
 
 blockquote {
   background-color: rgba(
-    var(--ltpp-main-bk-color),
-    var(--ltpp-list-box-bk-opacity)
+    var(--ltpp-blockquote-color),
+    var(--ltpp-blockquote-opacity)
   ) !important;
-  border-left: 6px solid var(--ltpp-main-color) !important;
+  border-left: 6px solid rgb(var(--ltpp-blockquote-color)) !important;
   padding: 0.66rem !important;
   margin: 0.36rem 0rem !important;
   color: #ffffff !important;
@@ -275,19 +279,19 @@ blockquote {
 }
 
 .main-center-box-content {
-  color: var(--ltpp-box-text-color);
-  border-width: 0rem;
-  width: 100%;
-  margin-left: auto;
-  margin-right: auto;
+  color: var(--ltpp-box-text-color) !important;
+  border-width: 0rem !important;
+  width: 100% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  background-color: rgba(
+    var(--ltpp-main-bk-color),
+    var(--ltpp-center-box-bk-opacity)
+  ) !important;
   border-color: rgba(
     var(--ltpp-light-color),
     var(--ltpp-center-box-bk-opacity)
-  );
-  background-color: rgba(
-    var(--ltpp-light-color),
-    var(--ltpp-center-box-bk-opacity)
-  );
+  ) !important;
 }
 
 .el-input-group--prepend,
