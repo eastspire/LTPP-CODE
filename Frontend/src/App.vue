@@ -147,41 +147,66 @@ export default {
 </script>
 
 <style lang="less">
+/**
+// 主题背景色
+--ltpp-main-bk-color: 117, 63, 178;
+// 主题色
+--ltpp-main-color: #e493d0;
+// 主题浅色
+--ltpp-light-color: 228, 147, 208;
+// 代码背景色
+--ltpp-code-bk-color: 40, 44, 52;
+// 主题文字颜色
+--ltpp-main-text-color: #f5f7fa;
+// 顶部滚动条颜色
+--ltpp-top-scroll-color: #409eff;
+// blockquote颜色
+--ltpp-blockquote-color: 0, 162, 60;
+// blockquote背景透明度
+--ltpp-blockquote-opacity: 0.18;
+// 滚动条颜色
+--ltpp-scroll-color: 117, 63, 178;
+// 阴影宽度
+--ltpp-shadow-border-width: 1px;
+// 弹出框悬浮文字颜色
+--ltpp-hover-text-color: rgba(245, 247, 250, 0.66);
+// 组件内容盒子背景透明度
+--ltpp-center-box-bk-opacity: 0.28;
+// 代码背景透明度
+--ltpp-code-bk-color-opacity: 1;
+// 组件内容盒子颜色
+--ltpp-box-text-color: #ffffffe6;
+// 表格背景透明度
+--ltpp-list-box-bk-opacity: 0.28;
+// 阴影色
+--ltpp-shadow-color: rgba(var(--ltpp-main-bk-color), 0.08);
+// 弹出框背景悬浮颜色
+--ltpp-hover-bk-color: rgba(var(--ltpp-light-color), 0.36);
+*/
 :root {
-  // 主题背景色
+  --ltpp-h1-color: #fa278e;
+  --ltpp-h2-color: #21e016;
+  --ltpp-h3-color: #00f7ff;
+  --ltpp-h4-color: #00bdff;
+  --ltpp-h5-color: #ffbb00;
+  --ltpp-h6-color: #e06c75;
   --ltpp-main-bk-color: 117, 63, 178;
-  // 主题色
   --ltpp-main-color: #e493d0;
-  // 主题浅色
   --ltpp-light-color: 228, 147, 208;
-  // 代码背景色
   --ltpp-code-bk-color: 40, 44, 52;
-  // 主题文字颜色
   --ltpp-main-text-color: #f5f7fa;
-  // 顶部滚动条颜色
   --ltpp-top-scroll-color: #409eff;
-  // blockquote颜色
   --ltpp-blockquote-color: 0, 162, 60;
-  // blockquote背景透明度
   --ltpp-blockquote-opacity: 0.18;
-  // 滚动条颜色
   --ltpp-scroll-color: 117, 63, 178;
-  // 阴影色
-  --ltpp-shadow-color: rgba(var(--ltpp-main-bk-color), 0.08);
-  // 阴影宽度
   --ltpp-shadow-border-width: 1px;
-  // 弹出框背景悬浮颜色
-  --ltpp-hover-bk-color: rgba(var(--ltpp-light-color), 0.36);
-  // 弹出框悬浮文字颜色
   --ltpp-hover-text-color: rgba(245, 247, 250, 0.66);
-  // 组件内容盒子背景透明度
   --ltpp-center-box-bk-opacity: 0.28;
-  // 代码背景透明度
   --ltpp-code-bk-color-opacity: 1;
-  // 组件内容盒子颜色
   --ltpp-box-text-color: #ffffffe6;
-  // 表格背景透明度
   --ltpp-list-box-bk-opacity: 0.28;
+  --ltpp-shadow-color: rgba(var(--ltpp-main-bk-color), 0.08);
+  --ltpp-hover-bk-color: rgba(var(--ltpp-light-color), 0.36);
 }
 
 * {
@@ -1240,37 +1265,37 @@ a:active {
 .v-show-content h1,
 .scroll-style h1,
 .scroll-style-border-radius h1 {
-  color: red !important;
+  color: var(--ltpp-h1-color) !important;
 }
 
 .v-show-content h2,
 .scroll-style h2,
 .scroll-style-border-radius h2 {
-  color: rgb(255, 66, 66) !important;
+  color: var(--ltpp-h2-color) !important;
 }
 
 .v-show-content h3,
 .scroll-style h3,
 .scroll-style-border-radius h3 {
-  color: deepskyblue !important;
+  color: var(--ltpp-h3-color) !important;
 }
 
 .v-show-content h4,
 .scroll-style h4,
 .scroll-style-border-radius h4 {
-  color: rgb(66, 210, 255) !important;
+  color: var(--ltpp-h4-color) !important;
 }
 
 .v-show-content h5,
 .scroll-style h5,
 .scroll-style-border-radius h5 {
-  color: deeppink !important;
+  color: var(--ltpp-h5-color) !important;
 }
 
 .v-show-content h6,
 .scroll-style h6,
 .scroll-style-border-radius h6 {
-  color: rgb(255, 66, 167) !important;
+  color: var(--ltpp-h5-color) !important;
 }
 
 .hljs {
