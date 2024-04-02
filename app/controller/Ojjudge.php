@@ -431,62 +431,17 @@ class Ojjudge
         $runcodefilepath = $filepath . 'main';
         $out = '';
         //编译
-        $compiler_res_json = Base::compiler($userlanguage, $code, $filepath, $runcodefilepath);
+        $compiler_res_json = Base::writeCodeToFile($userlanguage, $code, $filepath, $runcodefilepath);
 
         if (!isset($compiler_res_json['code']) || $compiler_res_json['code'] != 1) {
-            Base::deleteallfile($filepath);
-            Ojjudge::updateCodeStatus($code_id, Base::$code_run_compiler_wrong, 0, 0);
-            return $compiler_res_json;
-        }
-
-        $out = $compiler_res_json['result'];
-
-        if ($out) {
-            Base::deleteallfile($filepath);
-            // 去除路径信息
-            $res_data = Base::$code_run_compiler_wrong . "！\n";
-            $tp = Base::utfsubstr(Base::$sandbox_path, 1, strlen(Base::$sandbox_path)) . $mainfile;
-            $out = str_replace([$tp, $mainfile], '', $out);
-            Base::removeBr($out);
-            $res_data .= $out;
-            Ojjudge::updateCodeStatus($code_id, Base::$code_run_compiler_wrong, 0, 0);
-            if (strlen($res_data) > Base::$code_out_limit) {
-                $res_data = Base::utfsubstr($res_data, 0, Base::$code_out_limit, true) . "\n" . '【仅显示前' . Base::$code_out_limit . '个字符】';
-            }
-            if ($contest_id != 0) {
-                if ($begintime <= $time && $time <= $endtime) {
-                    //插入记录
-                    Db::table('contestrank')
-                        ->insert([
-                            'userid' => $my_aid,
-                            'contestid' => $contest_id,
-                            'problemid' => $problem_id,
-                            'score' => 0,
-                            'code' => $code,
-                            'submittime' => date('Y-m-d H:i:s', $time),
-                            'language' => $userlanguage
-                        ]);
-                    Contest::sendUpdateRankMQ($contest_id);
-                    return [
-                        'code' => -1,
-                        'result' => $res_data,
-                        'usememory' => 0,
-                        'usetime' => 0
-                    ];
-                }
-            }
-            return [
-                'code' => -1,
-                'result' => $res_data,
-                'usememory' => 0,
-                'usetime' => 0
-            ];
+            Base::deleteAllFile($filepath);
+            Ojjudge::updateCodeStatus($code_id, Base::$judge_server_error, 0, 0);
+            return json($compiler_res_json);
         }
 
         $maxtime = '';
         $maxmemory = '';
         // 开始运行，当前判题数目加一
-
         // 遍历测试样例
         foreach ($test_data_list as &$one_oj_test_data_db) {
             // 清空输出
@@ -502,7 +457,7 @@ class Ojjudge
             $run_resource_consumption = Base::getCodeTimeMemory($out);
 
             if (!$run_resource_consumption || !isset($run_resource_consumption['status'])) {
-                Base::deleteallfile($filepath);
+                Base::deleteAllFile($filepath);
                 Ojjudge::updateCodeStatus($code_id, Base::$code_run_running_wrong, 0, 0);
                 return ['code' => -1, 'result' => Base::$judge_error_msg . '！', 'usetime' => 0, 'usememory' => 0];
             }
@@ -510,61 +465,6 @@ class Ojjudge
             $status = $run_resource_consumption['status'] ?? 0;
             $time_used = $run_resource_consumption['time_used'] ?? 0;
             $memory_used = $run_resource_consumption['memory_used'] ?? 0;
-
-            if ($status == Base::$judge_server_error) {
-                Base::deleteallfile($filepath);
-                $msg = $run_resource_consumption['msg'];
-                Ojjudge::updateCodeStatus($code_id, Base::$code_run_running_wrong, 0, 0);
-                if (strlen($msg) > Base::$code_out_limit) {
-                    $resout = Base::utfsubstr($msg, 0, Base::$code_out_limit, true) . "\n" . '【仅显示前' . Base::$code_out_limit . '个字符】';
-                }
-                return ['code' => -1, 'result' => Base::$judge_error_msg . "！\n" . $msg, 'usetime' => $time_used, 'usememory' => $memory_used];
-            }
-
-            //运行出错
-            if ($status == Base::$judge_code_error) {
-                $err_data = Base::$code_run_running_wrong . "\n";
-                //读取输出
-                $resout = Base::getFileText($errpath);
-                Base::deleteallfile($filepath);
-                // 去除路径信息
-                $tp = Base::utfsubstr(Base::$sandbox_path, 1, strlen(Base::$sandbox_path)) . $mainfile;
-                $resout = str_replace([$tp, $mainfile], '', $resout);
-                Base::removeBr($resout);
-
-                if (strlen($resout) > Base::$code_out_limit) {
-                    $resout = Base::utfsubstr($resout, 0, Base::$code_out_limit, true) . "\n" . '【仅显示前' . Base::$code_out_limit . '个字符】';
-                }
-                $err_data .= $resout;
-                Ojjudge::updateCodeStatus($code_id, Base::$code_run_running_wrong, $time_used, $memory_used);
-                if ($contest_id != 0) {
-                    if ($begintime <= $time || $time <= $endtime) {
-                        //插入记录
-                        Db::table('contestrank')->insert([
-                            'userid' => $my_aid,
-                            'contestid' => $contest_id,
-                            'problemid' => $problem_id,
-                            'score' => 0,
-                            'code' => $code,
-                            'submittime' => date('Y-m-d H:i:s', $time),
-                            'language' => $userlanguage
-                        ]);
-                        Contest::sendUpdateRankMQ($contest_id);
-                        return [
-                            'code' => -1,
-                            'result' => $err_data,
-                            'usetime' => $time_used,
-                            'usememory' => $memory_used
-                        ];
-                    }
-                }
-                return [
-                    'code' => -1,
-                    'result' => $err_data,
-                    'usetime' => $time_used,
-                    'usememory' => $memory_used
-                ];
-            }
 
             $maxtime = max($maxtime, $time_used);
             $maxmemory = max($maxmemory, $memory_used);
@@ -579,6 +479,99 @@ class Ojjudge
                     $testin = Base::utfsubstr($testin, 0, Base::$code_out_limit, true) . "\n" . '【仅显示前' . Base::$code_out_limit . '个字符】';
                 }
                 switch ($status) {
+                    case Base::$judge_code_compiler_error:
+                        $err_data = Base::$code_run_compiler_wrong . "！\n";
+                        //读取输出
+                        $resout = Base::getFileText($errpath);
+                        Base::deleteAllFile($filepath);
+                        // 去除路径信息
+                        $tp = Base::utfsubstr(Base::$sandbox_path, 1, strlen(Base::$sandbox_path)) . $mainfile;
+                        $resout = str_replace([$tp, $mainfile], '', $resout);
+                        Base::removeBr($resout);
+
+                        if (strlen($resout) > Base::$code_out_limit) {
+                            $resout = Base::utfsubstr($resout, 0, Base::$code_out_limit, true) . "\n" . '【仅显示前' . Base::$code_out_limit . '个字符】';
+                        }
+                        $err_data .= $resout;
+                        Ojjudge::updateCodeStatus($code_id, Base::$code_run_compiler_wrong, $time_used, $memory_used);
+                        if ($contest_id != 0) {
+                            if ($begintime <= $time || $time <= $endtime) {
+                                //插入记录
+                                Db::table('contestrank')->insert([
+                                    'userid' => $my_aid,
+                                    'contestid' => $contest_id,
+                                    'problemid' => $problem_id,
+                                    'score' => 0,
+                                    'code' => $code,
+                                    'submittime' => date('Y-m-d H:i:s', $time),
+                                    'language' => $userlanguage
+                                ]);
+                                Contest::sendUpdateRankMQ($contest_id);
+                                return [
+                                    'code' => -1,
+                                    'result' => $err_data,
+                                    'usetime' => $time_used,
+                                    'usememory' => $memory_used
+                                ];
+                            }
+                        }
+                        return [
+                            'code' => -1,
+                            'result' => $err_data,
+                            'usetime' => $time_used,
+                            'usememory' => $memory_used
+                        ];
+                    case Base::$judge_code_error:
+                        $msg = $run_resource_consumption['msg'];
+                        $err_data = Base::$code_run_running_wrong . "！\n" . $msg . "\n";
+                        //读取输出
+                        $resout = Base::getFileText($errpath);
+                        Base::deleteAllFile($filepath);
+                        // 去除路径信息
+                        $tp = Base::utfsubstr(Base::$sandbox_path, 1, strlen(Base::$sandbox_path)) . $mainfile;
+                        $resout = str_replace([$tp, $mainfile], '', $resout);
+                        Base::removeBr($resout);
+
+                        if (strlen($resout) > Base::$code_out_limit) {
+                            $resout = Base::utfsubstr($resout, 0, Base::$code_out_limit, true) . "\n" . '【仅显示前' . Base::$code_out_limit . '个字符】';
+                        }
+                        $err_data .= $resout;
+                        Ojjudge::updateCodeStatus($code_id, Base::$code_run_running_wrong, $time_used, $memory_used);
+                        if ($contest_id != 0) {
+                            if ($begintime <= $time || $time <= $endtime) {
+                                //插入记录
+                                Db::table('contestrank')->insert([
+                                    'userid' => $my_aid,
+                                    'contestid' => $contest_id,
+                                    'problemid' => $problem_id,
+                                    'score' => 0,
+                                    'code' => $code,
+                                    'submittime' => date('Y-m-d H:i:s', $time),
+                                    'language' => $userlanguage
+                                ]);
+                                Contest::sendUpdateRankMQ($contest_id);
+                                return [
+                                    'code' => -1,
+                                    'result' => $err_data,
+                                    'usetime' => $time_used,
+                                    'usememory' => $memory_used
+                                ];
+                            }
+                        }
+                        return [
+                            'code' => -1,
+                            'result' => $err_data,
+                            'usetime' => $time_used,
+                            'usememory' => $memory_used
+                        ];
+                    case Base::$judge_server_error:
+                        Base::deleteAllFile($filepath);
+                        $msg = $run_resource_consumption['msg'];
+                        Ojjudge::updateCodeStatus($code_id, Base::$code_run_running_wrong, 0, 0);
+                        if (strlen($msg) > Base::$code_out_limit) {
+                            $resout = Base::utfsubstr($msg, 0, Base::$code_out_limit, true) . "\n" . '【仅显示前' . Base::$code_out_limit . '个字符】';
+                        }
+                        return ['code' => -1, 'result' => Base::$judge_error_msg . "！\n" . $msg, 'usetime' => $time_used, 'usememory' => $memory_used];
                     case Base::$judge_code_tle:
                         return Ojjudge::error($code_id, $filepath, $testin, Base::$code_run_tle, $type, $my_aid, $problem_id, $time, $maxtime, $maxmemory, $code, $userlanguage, $contest_id, $begintime, $endtime);
                     case Base::$judge_code_mle:
@@ -605,7 +598,7 @@ class Ojjudge
                     RedisQueue::send(Base::$redis_queue_update_oj_name, [
                         'problem_id' => $problem_id,
                     ]);
-                    Base::deleteallfile($filepath);
+                    Base::deleteAllFile($filepath);
                     //读取出错测试样例输入
                     $testin = Base::getFileText($alltestpath . $testname . '.in');
 
@@ -623,11 +616,11 @@ class Ojjudge
                 ++$actestnum;
             }
             //删除新建文件下当前输出
-            Base::deleteallfile($outpath);
+            Base::deleteAllFile($outpath);
         }
 
         //最后删除文件夹
-        Base::deleteallfile($filepath);
+        Base::deleteAllFile($filepath);
 
         if ($maxtime == '') {
             $maxtime = '0';

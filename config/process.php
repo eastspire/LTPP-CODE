@@ -32,10 +32,10 @@ return [
         'handler' => process\CodeStatusCorrectCrontab::class,
         'count' => 1
     ],
-    'WebcodeCrontab' => [
-        'handler' => process\WebcodeCrontab::class,
-        'count' => max((cpu_count() > 6 ? 6 : cpu_count()) / 3, 2),
-    ],
+    // 'WebcodeCrontab' => [
+    //     'handler' => process\WebcodeCrontab::class,
+    //     'count' => max((cpu_count() > 6 ? 6 : cpu_count()) / 3, 2),
+    // ],
     'CreatContestCrontab' => [
         'handler' => process\CreatContestCrontab::class,
         'count' => 1

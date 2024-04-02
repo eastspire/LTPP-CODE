@@ -252,43 +252,9 @@ class PrivateRobot extends ChatBase
                 //编译
                 $out = '';
                 $now = date('Y-m-d H:i:s', time());
-                $compiler_res_json = Base::compiler($userlanguage, $code, $filepath, $runcodefilepath);
+                $compiler_res_json = Base::writeCodeToFile($userlanguage, $code, $filepath, $runcodefilepath);
                 if (!isset($compiler_res_json['code']) || $compiler_res_json['code'] != 1) {
-                    RedisQueue::send(Base::$redis_queue_update_oj_name, [
-                        'problem_id' => $problem_id,
-                        'is_ac' => false
-                    ]);
-                    Base::insertToDb('codehistory', [
-                        'userid' => $user_id,
-                        'status' => Base::$code_run_running_wrong,
-                        'problemid' => $problem_id,
-                        'time' => $now,
-                        'usetime' => 0,
-                        'usememory' => 0,
-                        'code' => $code,
-                        'language' => $userlanguage,
-                        'contestid' => $contest_id
-                    ]);
-                    continue;
-                }
-                $out = $compiler_res_json['result'];
-                if ($out) {
                     Base::deleteAllFile($filepath);
-                    Db::table('contestrank')
-                        ->where('id', $tem->id)
-                        ->where('isdel', 0)
-                        ->update(['score' => 0]);
-                    Base::insertToDb('codehistory', [
-                        'userid' => $user_id,
-                        'status' => Base::$code_run_compiler_wrong,
-                        'problemid' => $problem_id,
-                        'time' => $now,
-                        'usetime' => 0,
-                        'usememory' => 0,
-                        'code' => $code,
-                        'language' => $userlanguage,
-                        'contestid' => $contest_id
-                    ]);
                     continue;
                 }
                 $maxtime = '';
@@ -317,45 +283,56 @@ class PrivateRobot extends ChatBase
                     $time_used = $run_resource_consumption['time_used'] ?? 0;
                     $memory_used = $run_resource_consumption['memory_used'] ?? 0;
 
-                    if ($status == Base::$judge_server_error) {
-                        RedisQueue::send(Base::$redis_queue_update_oj_name, [
-                            'problem_id' => $problem_id,
-                            'is_ac' => false
-                        ]);
-                        continue;
-                    }
-
-                    //运行出错
-                    if ($status == Base::$judge_code_error) {
-                        Base::deleteallfile($filepath);
-                        // 去除路径信息
-                        Base::insertToDb('codehistory', [
-                            'userid' => $user_id,
-                            'status' => Base::$code_run_running_wrong,
-                            'problemid' => $problem_id,
-                            'time' => $now,
-                            'usetime' => $time_used,
-                            'usememory' => $memory_used,
-                            'code' => $code,
-                            'language' => $userlanguage,
-                            'contestid' => $contest_id
-                        ]);
-                        RedisQueue::send(Base::$redis_queue_update_oj_name, [
-                            'problem_id' => $problem_id,
-                            'is_ac' => false
-                        ]);
-                        continue;
-                    }
-
                     $maxtime = max($maxtime, $time_used);
                     $maxmemory = max($maxmemory, $memory_used);
 
                     $testout = '';
 
                     if ($status != Base::$judge_code_finish) {
-                        Base::deleteallfile($filepath);
+                        Base::deleteAllFile($outpath);
                         $tips = '';
                         switch ($status) {
+                            case Base::$judge_code_compiler_error:
+                                Db::table('contestrank')
+                                    ->where('id', $tem->id)
+                                    ->where('isdel', 0)
+                                    ->update(['score' => 0]);
+                                Base::insertToDb('codehistory', [
+                                    'userid' => $user_id,
+                                    'status' => Base::$code_run_compiler_wrong,
+                                    'problemid' => $problem_id,
+                                    'time' => $now,
+                                    'usetime' => 0,
+                                    'usememory' => 0,
+                                    'code' => $code,
+                                    'language' => $userlanguage,
+                                    'contestid' => $contest_id
+                                ]);
+                                break;
+                            case Base::$judge_server_error:
+                                RedisQueue::send(Base::$redis_queue_update_oj_name, [
+                                    'problem_id' => $problem_id,
+                                    'is_ac' => false
+                                ]);
+                                break;
+                            case Base::$judge_code_error:
+                                // 去除路径信息
+                                Base::insertToDb('codehistory', [
+                                    'userid' => $user_id,
+                                    'status' => Base::$code_run_running_wrong,
+                                    'problemid' => $problem_id,
+                                    'time' => $now,
+                                    'usetime' => $time_used,
+                                    'usememory' => $memory_used,
+                                    'code' => $code,
+                                    'language' => $userlanguage,
+                                    'contestid' => $contest_id
+                                ]);
+                                RedisQueue::send(Base::$redis_queue_update_oj_name, [
+                                    'problem_id' => $problem_id,
+                                    'is_ac' => false
+                                ]);
+                                break;
                             case Base::$judge_code_tle:
                                 $tips = Base::$code_run_tle;
                                 break;
@@ -397,10 +374,10 @@ class PrivateRobot extends ChatBase
                         ++$actestnum;
                     }
                     //删除新建文件下当前输出
-                    Base::deleteallfile($outpath);
+                    Base::deleteAllFile($outpath);
                 }
                 //最后删除文件夹
-                Base::deleteallfile($filepath);
+                Base::deleteAllFile($filepath);
                 // AC               
                 RedisQueue::send(Base::$redis_queue_update_oj_name, [
                     'problem_id' => $problem_id,

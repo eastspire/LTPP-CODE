@@ -778,7 +778,7 @@
               margin: 1rem 0rem 1rem 0rem;
             "
           >
-            用户代码最长编译时间（单位：S）
+            用户代码最长编译时间（单位：MS）
           </p>
           <el-input
             type="password"
