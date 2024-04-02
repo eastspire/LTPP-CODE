@@ -50,12 +50,18 @@ class WebcodeCrontab
     {
         $db = Db::table('codehistory')
             ->where('language', $userlanguage)
+            ->where('status', '!=', Base::$code_run_running_wrong)
+            ->where('status', '!=', Base::$code_run_compiler_wrong)
+            ->where('status', '!=', Base::$code_up_waiting)
+            ->where('status', '!=', Base::$code_up_running)
             ->where('isdel', 0)
             ->orderBy('id', 'asc')
             ->select('code')
             ->first();
         if (!$db) {
             $db = Db::table('codehistory')
+                ->where('status', '!=', Base::$code_run_running_wrong)
+                ->where('status', '!=', Base::$code_run_compiler_wrong)
                 ->where('status', '!=', Base::$code_up_waiting)
                 ->where('status', '!=', Base::$code_up_running)
                 ->where('isdel', 0)
