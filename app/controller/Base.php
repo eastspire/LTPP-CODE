@@ -3529,13 +3529,12 @@ class Base
      * @param string $userlanguage
      * @param string $code
      * @param string $filepath
-     * @param string $runcodefilepath
-     * @param int $limittime
+     * @param string $runcodefilepath     
      * @return array $res
      */
-    static public function compiler($userlanguage, $code, $filepath, $runcodefilepath, $limittime)
+    static public function compiler($userlanguage, $code, $filepath, $runcodefilepath)
     {
-        $out = [];
+        $out = '';
         try {
             if (!$userlanguage) {
                 $userlanguage = '';
@@ -3545,7 +3544,7 @@ class Base
                 return ['code' => -1, 'result' => '参数错误', 'usememory' => 0, 'usetime' => 0];
             }
             $userlanguage = Base::$language_map[$userlanguage];
-            $timeout_time = ceil($limittime / 1000) << 1;
+            $timeout_time = intval(Base::getSettingKeyData('compiler_time_limit'));
             $run_exec_code = 0;
             //编译
             switch ($userlanguage) {
@@ -3687,7 +3686,7 @@ class Base
      */
     static public function run($userlanguage, $filepath, $inpath, $outpath, $errpath, $runcodefilepath, $limittime, $limitmemory)
     {
-        $out = [];
+        $out = '';
         try {
             if (!$userlanguage) {
                 $userlanguage = '';

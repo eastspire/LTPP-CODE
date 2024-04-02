@@ -770,7 +770,31 @@
             @click="largeadduser()"
             >生成</el-button
           >
-
+          <p
+            style="
+              font-size: 1.06rem;
+              text-align: left;
+              font-weight: bold;
+              margin: 1rem 0rem 1rem 0rem;
+            "
+          >
+            用户代码最长编译时间（单位：S）
+          </p>
+          <el-input
+            type="password"
+            show-password
+            style="font-size: 1.06rem"
+            placeholder="用户代码最长编译时间"
+            v-model.lazy="resdata.compiler_time_limit"
+            @keyup.enter.native="updatesetting()"
+          >
+            <el-button
+              slot="append"
+              icon="el-icon-upload"
+              @click="updatesetting()"
+              >更新</el-button
+            >
+          </el-input>
           <p
             style="
               font-size: 1.06rem;
@@ -1480,7 +1504,7 @@ export default {
       username: "",
       showadd: false,
       showlinux: false,
-      linuxdata: "",
+      linuxdata: "加载中！",
     };
   },
   methods: {

@@ -127,7 +127,7 @@ class Webcode
         $outpath = $dir_res['outpath'];
         $errpath = $dir_res['errpath'];
         //编译
-        $compiler_res_json = Base::compiler($userlanguage, $code, $filepath, $runcodefilepath, $limittime);
+        $compiler_res_json = Base::compiler($userlanguage, $code, $filepath, $runcodefilepath);
 
         if (!isset($compiler_res_json['code']) || $compiler_res_json['code'] != 1) {
             Base::deleteallfile($filepath);

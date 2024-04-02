@@ -233,13 +233,7 @@ class PrivateRobot extends ChatBase
                 if (!isset($check_safe_json['code']) || $check_safe_json['code'] != 1) {
                     continue;
                 }
-                $userlanguage = strtolower($userlanguage);
-                if (!isset(Base::$language_map[$userlanguage])) {
-                    continue;
-                }
-                $userlanguage = Base::$language_map[$userlanguage];
                 $dir_res = Base::creatCodeRunDirFile($my_aid, '', true);
-                $mainfile = $dir_res['mainfile'];
                 $filepath = $dir_res['filepath'];
                 $runcodefilepath = $dir_res['runcodefilepath'];
                 $outpath = $dir_res['outpath'];
@@ -256,9 +250,9 @@ class PrivateRobot extends ChatBase
                 //代码所在路径+前缀名称main
                 $runcodefilepath = $filepath . 'main';
                 //编译
-                $out = [];
+                $out = '';
                 $now = date('Y-m-d H:i:s', time());
-                $compiler_res_json = Base::compiler($userlanguage, $code, $filepath, $runcodefilepath, $limittime);
+                $compiler_res_json = Base::compiler($userlanguage, $code, $filepath, $runcodefilepath);
                 if (!isset($compiler_res_json['code']) || $compiler_res_json['code'] != 1) {
                     RedisQueue::send(Base::$redis_queue_update_oj_name, [
                         'problem_id' => $problem_id,
@@ -278,16 +272,8 @@ class PrivateRobot extends ChatBase
                     continue;
                 }
                 $out = $compiler_res_json['result'];
-                if (!empty($out)) {
+                if ($out) {
                     Base::deleteAllFile($filepath);
-                    // 去除路径信息
-                    $err_data = '';
-                    foreach ($out as &$err_tem) {
-                        $err_data .= $err_tem . "\n";
-                    }
-                    $tp = Base::utfsubstr(Base::$sandbox_path, 1, strlen(Base::$sandbox_path)) . $mainfile;
-                    $err_data = str_replace([$tp, $mainfile], '', $err_data);
-                    Base::removeBr($err_data);
                     Db::table('contestrank')
                         ->where('id', $tem->id)
                         ->where('isdel', 0)
