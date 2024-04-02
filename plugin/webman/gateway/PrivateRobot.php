@@ -148,74 +148,6 @@ class PrivateRobot extends ChatBase
     }
 
     /**
-     * 加载服务器配置
-     * @param string $reply 消息
-     */
-    static private function loadLinuxMore(&$reply)
-    {
-        $res = [];
-        $out = [];
-        $name = '服务器信息：';
-        $res[] = array($name);
-        exec('lsb_release -a 2>&1', $out);
-        $res[] = $out;
-        $out = [];
-        exec('uname -a 2>&1', $out);
-        $res[] = $out;
-        $out = [];
-        $name = 'CPU型号：';
-        $res[] = array($name);
-        exec("grep 'model name' /proc/cpuinfo |uniq", $out);
-        $res[] = $out;
-        $out = [];
-        $name = 'CPU物理个数 ：';
-        $res[] = array($name);
-        exec("grep 'physical id' /proc/cpuinfo |sort |uniq |wc -l", $out);
-        $res[] = $out;
-        $out = [];
-        $name = 'CPU核心数 ：';
-        $res[] = array($name);
-        exec("grep 'cpu cores' /proc/cpuinfo |uniq", $out);
-        $res[] = $out;
-        $name = 'CPU使用情况：';
-        $res[] = array($name);
-        exec("mpstat", $out);
-        $res[] = $out;
-        $name = '内存信息：';
-        $res[] = array($name);
-        $out = [];
-        exec('free -h 2>&1', $out);
-        $res[] = $out;
-        $out = [];
-        exec('free -m 2>&1', $out);
-        $res[] = $out;
-        $out = [];
-        exec('vmstat 2>&1', $out);
-        $res[] = $out;
-        $out = [];
-        exec('cat /proc/meminfo 2>&1', $out);
-        $res[] = $out;
-        $out = [];
-        $name = '磁盘信息：';
-        $res[] = array($name);
-        $out = [];
-        exec('df -h 2>&1', $out);
-        $res[] = $out;
-        $out = [];
-        $name = '当前进程：';
-        $res[] = array($name);
-        $out = [];
-        exec('ps -ef 2>&1', $out);
-        $res[] = $out;
-        $out = [];
-        foreach ($res as &$t) {
-            foreach ($t as &$tt) {
-                $reply .= $tt . "\n";
-            }
-        }
-    }
-
-    /**
      * 竞赛赛题重判
      * @param string $client_id
      * @param string $my_aid
@@ -348,7 +280,6 @@ class PrivateRobot extends ChatBase
                 $out = $compiler_res_json['result'];
                 if (!empty($out)) {
                     Base::deleteAllFile($filepath);
-                    $code = $code . "\n\n\n报错详情：\n";
                     // 去除路径信息
                     $err_data = '';
                     foreach ($out as &$err_tem) {
@@ -357,9 +288,6 @@ class PrivateRobot extends ChatBase
                     $tp = Base::utfsubstr(Base::$sandbox_path, 1, strlen(Base::$sandbox_path)) . $mainfile;
                     $err_data = str_replace([$tp, $mainfile], '', $err_data);
                     Base::removeBr($err_data);
-
-                    $code .= $err_data;
-
                     Db::table('contestrank')
                         ->where('id', $tem->id)
                         ->where('isdel', 0)
@@ -388,16 +316,8 @@ class PrivateRobot extends ChatBase
                     //文件前缀名
                     $testname = $one_oj_test_data_db->id;
                     //运行
-                    $out = [];
+                    $out = '';
                     $out = Base::run($userlanguage, $filepath, $alltestpath . $testname . '.in', $outpath, $errpath, $runcodefilepath, $limittime, $limitmemory);
-                    if (!$out || empty($out)) {
-                        RedisQueue::send(Base::$redis_queue_update_oj_name, [
-                            'problem_id' => $problem_id,
-                            'is_ac' => false
-                        ]);
-                        continue;
-                    }
-                    $out = $out[0];
                     $run_resource_consumption = Base::getCodeTimeMemory($out);
                     if (!$run_resource_consumption || !isset($run_resource_consumption['status'])) {
                         RedisQueue::send(Base::$redis_queue_update_oj_name, [
@@ -868,7 +788,7 @@ class PrivateRobot extends ChatBase
                 $reply = '私聊的消息总数为：' . Db::table('privatechat')->where('isdel', 0)->count() . "\n" . '群聊的消息总数为：' . Db::table('groupchat')->where('isdel', 0)->count();
                 break;
             case '8':
-                PrivateRobot::loadLinuxMore($reply);
+                Base::loadLinuxData($reply);
                 break;
             case '9':
                 PrivateRobot::loadAdminRootUser($reply);

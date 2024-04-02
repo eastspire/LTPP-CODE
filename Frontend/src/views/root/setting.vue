@@ -1396,12 +1396,7 @@
               ($store.state.max_width / $store.state.now_width) * 100 + '%'
             "
           >
-            <div v-for="tem in linuxdata" :key="tem.index">
-              <div v-for="tt in tem" :key="tt.index">
-                <pre style="font-size: 1.06rem">{{ tt }}</pre>
-              </div>
-              <div style="height: 2rem"></div>
-            </div>
+            <pre style="font-size: 1.06rem">{{ linuxdata }}</pre>
             <div style="height: 2rem"></div>
             <div style="text-align: right">
               <el-button
@@ -1485,7 +1480,7 @@ export default {
       username: "",
       showadd: false,
       showlinux: false,
-      linuxdata: [],
+      linuxdata: "",
     };
   },
   methods: {
@@ -1786,9 +1781,6 @@ export default {
         portType: {
           process: "8797",
         },
-        data: {
-          dowhat: "lookbase",
-        },
       }).catch((t) => {
         this.$msg({
           type: "error",
@@ -1797,7 +1789,7 @@ export default {
           offset: 80,
         });
       });
-      this.linuxdata = res?.data;
+      this.linuxdata = res?.data ?? "";
     },
 
     async lookiplist() {

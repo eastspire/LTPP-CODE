@@ -136,20 +136,14 @@ class Webcode
         }
 
         $out = $compiler_res_json['result'];
-        if (!empty($out)) {
+        if ($out) {
             Base::deleteAllFile($filepath);
-            $code = $code . "\n\n\n报错详情：\n";
             $res_data = Base::$code_run_compiler_wrong . "！\n";
-            $err_data = '';
             // 去除路径信息
-            foreach ($out as &$tem) {
-                $err_data .= $tem . "\n";
-            }
             $tp = Base::utfsubstr(Base::$sandbox_path, 1, strlen(Base::$sandbox_path)) . $mainfile;
-            $err_data = str_replace([$tp, $mainfile], '', $err_data);
-            Base::removeBr($err_data);
-            $code .= $err_data;
-            $res_data .= $err_data;
+            $out = str_replace([$tp, $mainfile], '', $out);
+            Base::removeBr($out);
+            $res_data .= $out;
             if (strlen($res_data) > Base::$code_out_limit) {
                 $res_data = Base::utfsubstr($res_data, 0, Base::$code_out_limit, true) . "\n" . '【仅显示前' . Base::$code_out_limit . '个字符】';
             }
@@ -157,18 +151,13 @@ class Webcode
             return ['code' => -1, 'result' => $res_data, 'usememory' => 0, 'usetime' => 0];
         }
 
-        $out = [];
+        $out = '';
 
         //运行
         $out = Base::run($userlanguage, $filepath, $inpath, $outpath, $errpath, $runcodefilepath, $limittime, $limitmemory);
 
-        if (!$out || empty($out)) {
-            Base::deleteallfile($filepath);
-            Webcode::updateCodeStatus($code_id, Base::$code_run_running_wrong, 0, 0);
-            return ['code' => -1, 'result' => Base::$judge_error_msg . '！', 'usememory' => 0, 'usetime' => 0];
-        }
-        $out = $out[0];
         $run_resource_consumption = Base::getCodeTimeMemory($out);
+
         if (!$run_resource_consumption || !isset($run_resource_consumption['status'])) {
             Base::deleteallfile($filepath);
             Webcode::updateCodeStatus($code_id, Base::$code_run_running_wrong, 0, 0);
@@ -190,7 +179,6 @@ class Webcode
         }
 
         if ($status == Base::$judge_code_error) {
-            $code .= "\n\n\n报错详情：\n";
             $err_data = Base::$code_run_running_wrong . "\n";
             //读取输出
             $resout = Base::getFileText($errpath);
@@ -203,7 +191,6 @@ class Webcode
             if (strlen($resout) > Base::$code_out_limit) {
                 $resout = Base::utfsubstr($resout, 0, Base::$code_out_limit, true) . "\n" . '【仅显示前' . Base::$code_out_limit . '个字符】';
             }
-            $code .= $resout . "\n";
             $err_data .= $resout;
             Webcode::updateCodeStatus($code_id, Base::$code_run_running_wrong, $time_used, $memory_used);
             return [

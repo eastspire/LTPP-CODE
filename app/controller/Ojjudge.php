@@ -429,7 +429,7 @@ class Ojjudge
 
         //代码所在路径+名称main
         $runcodefilepath = $filepath . 'main';
-        $out = [];
+        $out = '';
         //编译
         $compiler_res_json = Base::compiler($userlanguage, $code, $filepath, $runcodefilepath, $limittime);
 
@@ -441,21 +441,14 @@ class Ojjudge
 
         $out = $compiler_res_json['result'];
 
-        if (!empty($out)) {
+        if ($out) {
             Base::deleteallfile($filepath);
-            $code .= "\n\n\n报错详情：\n";
             // 去除路径信息
             $res_data = Base::$code_run_compiler_wrong . "！\n";
-            $err_data = '';
-            foreach ($out as &$tem) {
-                $err_data .= $tem . "\n";
-            }
             $tp = Base::utfsubstr(Base::$sandbox_path, 1, strlen(Base::$sandbox_path)) . $mainfile;
-            $err_data = str_replace([$tp, $mainfile], '', $err_data);
-            Base::removeBr($err_data);
-
-            $code .= $err_data;
-            $res_data .= $err_data;
+            $out = str_replace([$tp, $mainfile], '', $out);
+            Base::removeBr($out);
+            $res_data .= $out;
             Ojjudge::updateCodeStatus($code_id, Base::$code_run_compiler_wrong, 0, 0);
             if (strlen($res_data) > Base::$code_out_limit) {
                 $res_data = Base::utfsubstr($res_data, 0, Base::$code_out_limit, true) . "\n" . '【仅显示前' . Base::$code_out_limit . '个字符】';
@@ -502,16 +495,10 @@ class Ojjudge
             Base::writeToFile($errpath, '');
             //文件前缀名
             $testname = $one_oj_test_data_db->id;
-            $out = [];
+            $out = '';
             //运行
             $out = Base::run($userlanguage, $filepath, $alltestpath . $testname . '.in', $outpath, $errpath, $runcodefilepath, $limittime, $limitmemory);
 
-            if (!$out || empty($out)) {
-                Base::deleteallfile($filepath);
-                Ojjudge::updateCodeStatus($code_id, Base::$code_run_running_wrong, 0, 0);
-                return ['code' => -1, 'result' => Base::$judge_error_msg . '！', 'usememory' => 0, 'usetime' => 0];
-            }
-            $out = $out[0];
             $run_resource_consumption = Base::getCodeTimeMemory($out);
 
             if (!$run_resource_consumption || !isset($run_resource_consumption['status'])) {
@@ -536,7 +523,6 @@ class Ojjudge
 
             //运行出错
             if ($status == Base::$judge_code_error) {
-                $code .= "\n\n\n报错详情：\n";
                 $err_data = Base::$code_run_running_wrong . "\n";
                 //读取输出
                 $resout = Base::getFileText($errpath);
@@ -549,7 +535,6 @@ class Ojjudge
                 if (strlen($resout) > Base::$code_out_limit) {
                     $resout = Base::utfsubstr($resout, 0, Base::$code_out_limit, true) . "\n" . '【仅显示前' . Base::$code_out_limit . '个字符】';
                 }
-                $code .= $resout . "\n";
                 $err_data .= $resout;
                 Ojjudge::updateCodeStatus($code_id, Base::$code_run_running_wrong, $time_used, $memory_used);
                 if ($contest_id != 0) {

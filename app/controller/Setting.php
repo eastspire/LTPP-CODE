@@ -147,7 +147,7 @@ class Setting extends Image
         $out = array();
         Base::deleteAllFile(Base::$judge_install_path);
         Base::judgeCreatPath(Base::$judge_install_path);
-        exec('cp -f /home/LTPP/InstallMust/JudgeServer/judge ' . Base::$judge_install_path . ' 2>&1', $out);
+        Base::runExec('cp -f /home/LTPP/InstallMust/JudgeServer/judge ' . Base::$judge_install_path, $out);
         Base::chmodFile('/JudgeServer', 0555);
         if (!empty($out)) {
             foreach ($out as $tem) {
@@ -355,18 +355,8 @@ class Setting extends Image
         if (!$isroot) {
             return json(['code' => -1, 'msg' => '无权限']);
         }
-        $port = '3000';
-        // 获取音乐后端端口
-        $musicbkurl = Base::getSettingKeyData('musicbkurl');
-        $port = Base::getPort($musicbkurl);
-        if (!$port) {
-            $port = '3000';
-        }
-        $out = [];
-        exec('pkill -9 node 2>&1', $out);
-        $out = [];
-        exec('PORT=' . $port . ' node /home/LTPP/Music/app.js > /home/LTPP/Music/music.log 2>&1 &', $out);
-        $out = [];
+        Base::runExec('pkill -f node');
+        Base::runExec('PORT=' . Base::$music_port . ' node /home/LTPP/Music/app.js > /home/LTPP/Music/music.log 2>&1 &');
         return json(['code' => 1, 'msg' => '重启成功！']);
     }
 
@@ -1081,65 +1071,7 @@ class Setting extends Image
         if (!$isroot) {
             return json(['code' => -1, 'msg' => '无权限']);
         }
-        $do = $request->post('dowhat');
-        $res = array();
-        $out = [];
-        if ($do == 'lookbase') {
-            $out = [];
-            $name = '服务器信息：';
-            $res[] = array($name);
-            exec('lsb_release -a 2>&1', $out);
-            $res[] = $out;
-            $out = [];
-            exec('uname -a 2>&1', $out);
-            $res[] = $out;
-            $out = [];
-            $name = 'CPU型号：';
-            $res[] = array($name);
-            exec("grep 'model name' /proc/cpuinfo |uniq", $out);
-            $res[] = $out;
-            $out = [];
-            $name = 'CPU物理个数 ：';
-            $res[] = array($name);
-            exec("grep 'physical id' /proc/cpuinfo |sort |uniq |wc -l", $out);
-            $res[] = $out;
-            $out = [];
-            $name = 'CPU核心数 ：';
-            $res[] = array($name);
-            exec("grep 'cpu cores' /proc/cpuinfo |uniq", $out);
-            $res[] = $out;
-            $name = 'CPU使用情况：';
-            $res[] = array($name);
-            exec("mpstat", $out);
-            $res[] = $out;
-            $name = '内存信息：';
-            $res[] = array($name);
-            $out = [];
-            exec('free -h 2>&1', $out);
-            $res[] = $out;
-            $out = [];
-            exec('free -m 2>&1', $out);
-            $res[] = $out;
-            $out = [];
-            exec('vmstat 2>&1', $out);
-            $res[] = $out;
-            $out = [];
-            exec('cat /proc/meminfo 2>&1', $out);
-            $res[] = $out;
-            $out = [];
-            $name = '磁盘信息：';
-            $res[] = array($name);
-            $out = [];
-            exec('df -h 2>&1', $out);
-            $res[] = $out;
-            $out = [];
-            $name = '当前进程：';
-            $res[] = array($name);
-            $out = [];
-            exec('ps -ef 2>&1', $out);
-            $res[] = $out;
-            $out = [];
-        }
+        Base::loadLinuxData($res);
         return json(['data' => $res]);
     }
 }

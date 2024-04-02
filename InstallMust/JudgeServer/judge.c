@@ -319,8 +319,7 @@ void closeDup(int &newstdin, int &newstdout, int &newstderr)
  */
 void exitDeleteAllProcess()
 {
-    int res = system("pkill -TERM -P $PPID");
-    
+    int res = system("pkill -TERM -P $PPID");    
     exit(LTPP_FINISH);
 }
 

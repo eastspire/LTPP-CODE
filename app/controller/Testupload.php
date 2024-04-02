@@ -41,7 +41,7 @@ class Testupload extends Oj
         Base::creatFilePath($alltestpath);
         $out = '';
         if ($file->getUploadExtension() === 'zip') {
-            exec('unzip -d ' . $alltestpath . ' ' . $file->getRealPath() . ' 2>&1', $out);
+            Base::runExec('unzip -d ' . $alltestpath . ' ' . $file->getRealPath());
             //获取所有输入输出样例文件名称
             $testfilein = glob($alltestpath . '*.in');
             if (sizeof($testfilein) == 0) {

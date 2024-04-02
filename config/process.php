@@ -52,8 +52,8 @@ return [
         'handler' => process\ContestRankCrontab::class,
         'count' => 1
     ],
-    'CleanRobotDb' => [
-        'handler' => process\CleanRobotDb::class,
+    'CleanRobotDbCrontab' => [
+        'handler' => process\CleanRobotDbCrontab::class,
         'count' => 1
     ],
     // 'Register' => [
