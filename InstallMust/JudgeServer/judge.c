@@ -1,7 +1,7 @@
 /**
  * @file judge.c
  * @author SQS (root@ltpp.vip)
- * @details g++ -O3 judge.c -o judge -lcap
+ * @details g++ -O2 -O3 judge.c -o judge -lcap
  * @version 1.0
  * @date 2024-03-21
  * @copyright Copyright (c) 2024
