@@ -31,29 +31,163 @@
 #pragma GCC optimize(2)
 #pragma GCC optimize(3)
 
-#define LTPP_CODE_ERROR -1
-#define LTPP_SERVER_ERROR 0
-#define LTPP_CHILD_SUCCESS 0
-#define LTPP_FINISH 1
-#define LTPP_TLE 2
-#define LTPP_MLE 3
-#define LTPP_RE 4
-#define LTPP_CHILD_ERROR 5
-#define LTPP_CHILD_FailedToCreateNamespace 6
-#define LTPP_CHILD_FailedToMountNamespace 7
-#define LTPP_CHILD_FailedToSwitchUsers 8
-#define LTPP_CHILD_FailedToCreateQuarantineEnvironment 9
-#define LTPP_CHILD_RedirectFailure 10
+/**
+ * @brief 获取最大值
+ */
+#define __max(a, b) (((a) > (b)) ? (a) : (b))
 
+/**
+ * @brief 结果状态未更新
+ */
+#define LTPP_CODE_NO_INIT -2
+
+/**
+ * @brief 代码运行错误
+ */
+#define LTPP_CODE_ERROR -1
+
+/**
+ * @brief 服务器错误
+ */
+#define LTPP_SERVER_ERROR 0
+
+/**
+ * @brief 子进程成功退出
+ */
+#define LTPP_CHILD_SUCCESS 0
+
+/**
+ * @brief 运行正常
+ */
+#define LTPP_FINISH 1
+
+/**
+ * @brief 编译错误
+ */
+#define LTPP_COMPILER_ERROR 2
+
+/**
+ * @brief 运行超时
+ */
+#define LTPP_TLE 3
+
+/**
+ * @brief 运行超内存
+ */
+#define LTPP_MLE 4
+
+/**
+ * @brief RE错误
+ */
+#define LTPP_RE 5
+
+/**
+ * @brief 用户代码运行出错
+ */
+#define LTPP_CHILD_ERROR 6
+
+/**
+ * @brief 创建命名空间失败
+ */
+#define LTPP_CHILD_FailedToCreateNamespace 7
+
+/**
+ * @brief 挂载命名空间失败
+ */
+#define LTPP_CHILD_FailedToMountNamespace 8
+
+/**
+ * @brief 切换用户失败
+ */
+#define LTPP_CHILD_FailedToSwitchUsers 9
+
+/**
+ * @brief 创建隔离环境失败
+ */
+#define LTPP_CHILD_FailedToCreateQuarantineEnvironment 10
+
+/**
+ * @brief 重定向流失败
+ */
+#define LTPP_CHILD_RedirectFailure 11
+
+/**
+ * @brief 数组长度
+ */
 const int N = 1e5;
+
+/**
+ * @brief chroot次数
+ */
 const int deep_chroot = 2;
+
+/**
+ * @brief 系统LTPP用户的uid
+ */
 const int ltpp_uid = 1000;
-// 根目录
+
+/**
+ * @brief 换行
+ */
+const char *br = "\n";
+
+/**
+ * @brief 空字符串
+ */
+const char *empty_str = "";
+
+/**
+ * @brief 根目录
+ */
 const char *root_path = "/";
-// 沙箱目录
+
+/**
+ * @brief 沙箱目录
+ */
 const char *sandbox_path = "/home/LTPPSANDBOX";
 
 /**
+ * @brief 标准输入
+ */
+const char *stdin_path = "";
+
+/**
+ * @brief 标准输出
+ */
+const char *stdout_path = "";
+
+/**
+ * @brief 标准错误
+ */
+const char *stderr_path = "";
+
+/**
+ * @brief 编译时间限制
+ */
+const unsigned long long int *compiler_time_limit = NULL;
+
+/**
+ * @brief 运行时间限制
+ */
+const unsigned long long int *run_time_limit = NULL;
+
+/**
+ * @brief 运行内存限制
+ */
+const unsigned long long int *run_memory_limit = NULL;
+
+/**
+ * @brief 时间限制
+ */
+const unsigned long long int *time_limit = NULL;
+
+/**
+ * @brief 内存限制
+ */
+const unsigned long long int *memory_limit = NULL;
+
+/**
+ * @brief 结果结构体
  * time_limit精确到MS
  * memory_limit精确到字节
  */
@@ -62,44 +196,79 @@ struct result
     int status;
     unsigned long long int time_used;
     unsigned long long int memory_used;
-    const char *msg;    
+    const char *msg;
 };
 
+/**
+ * @brief 资源限制
+ */
 struct rlimit rl;
+
+/**
+ * @brief 结果结构体实例
+ */
 struct result *res_data = (struct result *)malloc(sizeof(struct result));
+
+/**
+ * @brief 全局子进程最大运行时间
+ */
 unsigned long long int global_time_max_limit = 0;
 
+/**
+ * @brief 是否以及输出过结果
+ */
 bool has_printf_res = false;
 
 void cout();
-void childMemoryUsed();
+void initResData();
 void childTimeLimit();
+void childMemoryUsed();
+void setProcessLimit();
+void stdoutToResDataMsg();
 void exitDeleteAllProcess();
 void lowerFilePermissions();
 void *timeoutExit(void *argc);
+char *readFile(const char *filename);
+void monitor(pid_t pid, bool is_compiler);
+void run(char *run_cmd[], bool is_compiler);
 void split(char **arr, char *str, const char *del);
+void runCode(char *run_cmd[], pid_t pid, bool is_compiler);
 char *concatenateStrings(const char *str1, const char *str2);
 void closeDup(int &newstdin, int &newstdout, int &newstderr);
+void creatNamespace(int newstdin, int newstdout, int newstderr);
+void joinDeepChroot(int newstdin, int newstdout, int newstderr);
 void removePrivileges(int newstdin, int newstdout, int newstderr);
 void updateErrorResault(int status, const char *custom_msg, const char *error_msg);
-void creatNamespace(const char *sandbox_path, int newstdin, int newstdout, int newstderr);
-void joinDeepChroot(const char *sandbox_path, int newstdin, int newstdout, int newstderr);
-void setProcessLimit(const unsigned long long int time_limit, const unsigned long long int memory_limit);
-void monitor(pid_t pid, const unsigned long long int time_limit, const unsigned long long int memory_limit, const char *err);
-void run(char *args[], const unsigned long long int time_limit, const unsigned long long int memory_limit, const char *in, const char *out, const char *err);
-void runCode(char *args[], const unsigned long long int time_limit, const unsigned long long int memory_limit, const char *in, const char *out, const char *err, pid_t pid);
 
 /**
- * 更新错误结果
+ * @brief 更新错误结果（状态仅允许改变一次）
+ * @param status 状态码
+ * @param custom_msg 简约消息
+ * @param error_msg 错误消息
  */
 void updateErrorResault(int status, const char *custom_msg, const char *error_msg)
 {
+    if (res_data->status != LTPP_CODE_NO_INIT && res_data->status != LTPP_FINISH)
+    {
+        return;
+    }
     res_data->status = status;
-    res_data->msg = concatenateStrings(custom_msg, error_msg);
+    if (error_msg == empty_str)
+    {
+        res_data->msg = concatenateStrings(custom_msg, error_msg);
+    }
+    else
+    {
+        const char *tmp_error_msg = concatenateStrings(br, error_msg);
+        res_data->msg = concatenateStrings(custom_msg, tmp_error_msg);
+    }
 }
 
 /**
- * 判断文件是否为空
+ * @brief 判断文件是否为空
+ * @param file_path 文件绝对路径
+ * @return true 文件为空
+ * @return false 文件不为空
  */
 bool isFileEmpty(const char *file_path)
 {
@@ -119,7 +288,41 @@ bool isFileEmpty(const char *file_path)
 }
 
 /**
- * 字符串拼接
+ * @brief 读取文件内容
+ * @param filename 文件绝对路径
+ * @return char* 读取的文件内容
+ */
+char *readFile(const char *filename)
+{
+    FILE *file = fopen(filename, "r");
+    if (file == NULL)
+    {
+        file = fopen(filename, "w+");
+        if (file == NULL)
+        {
+            return NULL;
+        }
+    }
+    fseek(file, 0, SEEK_END);
+    long size = ftell(file);
+    fseek(file, 0, SEEK_SET);
+    char *buffer = (char *)malloc(size + 1);
+    if (buffer == NULL)
+    {
+        fclose(file);
+        return NULL;
+    }
+    fread(buffer, 1, size, file);
+    buffer[size] = '\0';
+    fclose(file);
+    return buffer;
+}
+
+/**
+ * @brief 字符串拼接
+ * @param str1 第一个字符串
+ * @param str2 第二个字符串
+ * @return char* 拼接后的字符串
  */
 char *concatenateStrings(const char *str1, const char *str2)
 {
@@ -135,7 +338,7 @@ char *concatenateStrings(const char *str1, const char *str2)
 }
 
 /**
- * 获取内存使用
+ * @brief 获取内存使用
  */
 void childMemoryUsed()
 {
@@ -148,7 +351,9 @@ void childMemoryUsed()
 }
 
 /**
- * 超时退出
+ * @brief 超时退出
+ * @param argc 参数
+ * @return void*
  */
 void *timeoutExit(void *argc)
 {
@@ -161,18 +366,19 @@ void *timeoutExit(void *argc)
     }
     childMemoryUsed();
     res_data->time_used = global_time_max_limit * 1000;
-    updateErrorResault(LTPP_TLE, "", "");
+    updateErrorResault(LTPP_TLE, "用户代码运行超时", "");
+    stdoutToResDataMsg();
     cout();
     exitDeleteAllProcess();
     return NULL;
 }
 
 /**
- * 资源限制
+ * @brief 资源限制
  */
-void setProcessLimit(const unsigned long long int time_limit, const unsigned long long int memory_limit)
+void setProcessLimit()
 {
-    rl.rlim_cur = time_limit / 1000 + 1;
+    rl.rlim_cur = *time_limit / 1000 + 1;
     rl.rlim_max = rl.rlim_cur + 1;
     setrlimit(RLIMIT_CPU, &rl);
     rl.rlim_cur = RLIM_INFINITY;
@@ -181,7 +387,7 @@ void setProcessLimit(const unsigned long long int time_limit, const unsigned lon
 }
 
 /**
- * 子线程时间监控
+ * @brief 子线程时间监控
  */
 void childTimeLimit()
 {
@@ -194,61 +400,73 @@ void childTimeLimit()
 }
 
 /**
- * 运行代码
+ * @brief 运行代码
+ * @param run_cmd 运行命令
+ * @param pid 进程PID
+ * @param is_compiler 是否是编译模式
  */
-void runCode(char *args[], const unsigned long long int time_limit, const unsigned long long int memory_limit, const char *in, const char *out, const char *err, pid_t pid)
+void runCode(char *run_cmd[], pid_t pid, bool is_compiler)
 {
     errno = 0;
     int cnt = 0;
     int path_loc = 0;
-    while (args[cnt] != NULL)
+    int newstdin = -1;
+    int newstdout = -1;
+    int newstderr = -1;
+    if (!is_compiler)
     {
-        if (strstr(args[cnt], sandbox_path) != NULL)
+        while (run_cmd[cnt] != NULL)
         {
-            path_loc = cnt;
+            if (strstr(run_cmd[cnt], sandbox_path) != NULL)
+            {
+                path_loc = cnt;
+            }
+            ++cnt;
         }
-        ++cnt;
+        --cnt;
+        // 替换为沙箱内的绝对路径
+        run_cmd[path_loc] = strstr(run_cmd[path_loc], sandbox_path) + strlen(sandbox_path);
     }
-    --cnt;
-    // 替换为沙箱内的绝对路径
-    args[path_loc] = strstr(args[path_loc], sandbox_path) + strlen(sandbox_path);
-    int newstdin = open(in, O_RDWR | O_CREAT, 0644);
-    int newstdout = open(out, O_RDWR | O_CREAT, 0644);
-    int newstderr = open(err, O_RDWR | O_CREAT, 0644);
-    setProcessLimit(time_limit, memory_limit);
-
+    newstdin = open(stdin_path, O_RDWR | O_CREAT, 0644);
+    newstdout = open(stdout_path, O_RDWR | O_CREAT, 0644);
+    newstderr = open(stderr_path, O_RDWR | O_CREAT, 0644);
+    setProcessLimit();
     if (newstdout != -1 && newstdin != -1 && newstderr != -1)
     {
         dup2(newstdin, fileno(stdin));
         dup2(newstdout, fileno(stdout));
         dup2(newstderr, fileno(stderr));
-        // 创建命名空间
-        creatNamespace(sandbox_path, newstdin, newstdout, newstderr);
-        // 创建沙箱
-        joinDeepChroot(sandbox_path, newstdin, newstdout, newstderr);
-        // 移除特权Capability
-        removePrivileges(newstdin, newstdout, newstderr);
-        // 降低文件权限
-        lowerFilePermissions();
+        if (!is_compiler)
+        {
+            // 运行模式下需要限制权限
+            // 创建命名空间
+            creatNamespace(newstdin, newstdout, newstderr);
+            // 创建沙箱
+            joinDeepChroot(newstdin, newstdout, newstderr);
+            // 移除特权Capability
+            removePrivileges(newstdin, newstdout, newstderr);
+            // 降低文件权限
+            lowerFilePermissions();
+        }
         // 运行用户代码
-        if (execvp(args[0], args) == -1)
+        if (execvp(run_cmd[0], run_cmd) == -1)
         {
             closeDup(newstdin, newstdout, newstderr);
-            exit(LTPP_CHILD_ERROR);
+            exit(is_compiler ? LTPP_COMPILER_ERROR : LTPP_CHILD_ERROR);
         }
         closeDup(newstdin, newstdout, newstderr);
+        exit(LTPP_CHILD_SUCCESS);
     }
-    else
-    {
-        exit(LTPP_CHILD_RedirectFailure);
-    }
-    exit(LTPP_CHILD_SUCCESS);
+    exit(LTPP_CHILD_RedirectFailure);
 }
 
 /**
- * 创建命名空间
+ * @brief 创建命名空间
+ * @param newstdin 标准输入重定向
+ * @param newstdout 标准输出重定向
+ * @param newstderr 标准错误重定向
  */
-void creatNamespace(const char *sandbox_path, int newstdin, int newstdout, int newstderr)
+void creatNamespace(int newstdin, int newstdout, int newstderr)
 {
     // 创建命名空间
     if (unshare(CLONE_NEWNS) == -1)
@@ -265,7 +483,7 @@ void creatNamespace(const char *sandbox_path, int newstdin, int newstdout, int n
 }
 
 /**
- * 降低文件权限
+ * @brief 降低文件权限
  */
 void lowerFilePermissions()
 {
@@ -273,7 +491,10 @@ void lowerFilePermissions()
 }
 
 /**
- * 移除特权
+ * @brief 移除特权
+ * @param newstdin 标准输入重定向
+ * @param newstdout 标准输出重定向
+ * @param newstderr 标准错误重定向
  */
 void removePrivileges(int newstdin, int newstdout, int newstderr)
 {
@@ -289,9 +510,12 @@ void removePrivileges(int newstdin, int newstdout, int newstderr)
 }
 
 /**
- * 防止逃逸
+ * @brief 防止逃逸
+ * @param newstdin 标准输入重定向
+ * @param newstdout 标准输出重定向
+ * @param newstderr 标准错误重定向
  */
-void joinDeepChroot(const char *sandbox_path, int newstdin, int newstdout, int newstderr)
+void joinDeepChroot(int newstdin, int newstdout, int newstderr)
 {
     for (int i = 0; i < deep_chroot; ++i)
     {
@@ -305,7 +529,10 @@ void joinDeepChroot(const char *sandbox_path, int newstdin, int newstdout, int n
 }
 
 /**
- * 关闭重定向
+ * @brief 关闭重定向
+ * @param newstdin 标准输入重定向
+ * @param newstdout 标准输出重定向
+ * @param newstderr 标准错误重定向
  */
 void closeDup(int &newstdin, int &newstdout, int &newstderr)
 {
@@ -315,18 +542,20 @@ void closeDup(int &newstdin, int &newstdout, int &newstderr)
 }
 
 /**
- * 终止自身及其所有子进程
+ * @brief 终止自身及其所有子进程
  */
 void exitDeleteAllProcess()
 {
-    int res = system("pkill -TERM -P $PPID");    
+    int res = system("pkill -TERM -P $PPID");
     exit(LTPP_FINISH);
 }
 
 /**
- * 监控
+ * @brief 监控
+ * @param pid 进程PID
+ * @param is_compiler 是否是编译模式
  */
-void monitor(pid_t pid, const unsigned long long int time_limit, const unsigned long long int memory_limit, const char *err)
+void monitor(pid_t pid, bool is_compiler)
 {
     errno = 0;
     int status;
@@ -350,7 +579,15 @@ void monitor(pid_t pid, const unsigned long long int time_limit, const unsigned 
             case LTPP_CHILD_ERROR:
             {
                 status = LTPP_SERVER_ERROR;
-                updateErrorResault(status, "用户代码运行出错", "");
+                const char *err_msg = readFile(stderr_path);
+                updateErrorResault(status, "用户代码运行出错", err_msg);
+                return;
+            }
+            case LTPP_COMPILER_ERROR:
+            {
+                status = LTPP_SERVER_ERROR;
+                const char *err_msg = readFile(stderr_path);
+                updateErrorResault(status, "用户代码编译出错", err_msg);
                 return;
             }
             case LTPP_CHILD_FailedToCreateNamespace:
@@ -387,13 +624,23 @@ void monitor(pid_t pid, const unsigned long long int time_limit, const unsigned 
             {
                 status = LTPP_TLE;
                 res_data->time_used = global_time_max_limit * 1000;
-                updateErrorResault(status, "", "");
+                updateErrorResault(status, "用户代码运行超时", "");
                 return;
             }
             default:
             {
-                status = LTPP_CODE_ERROR;
-                updateErrorResault(status, "用户代码运行错误", "");
+                if (is_compiler)
+                {
+                    status = LTPP_COMPILER_ERROR;
+                    const char *err_msg = readFile(stderr_path);
+                    updateErrorResault(status, "用户代码编译错误", err_msg);
+                }
+                else
+                {
+                    status = LTPP_CODE_ERROR;
+                    const char *err_msg = readFile(stderr_path);
+                    updateErrorResault(status, "用户代码运行错误", err_msg);
+                }
                 return;
             }
             }
@@ -405,11 +652,11 @@ void monitor(pid_t pid, const unsigned long long int time_limit, const unsigned 
         {
         case SIGSEGV:
         {
-            if (res_data->time_used > time_limit)
+            if (res_data->time_used > *time_limit)
             {
                 res_data->status = LTPP_TLE;
             }
-            else if (memory_used > memory_limit)
+            else if (memory_used > *memory_limit)
             {
                 res_data->status = LTPP_MLE;
             }
@@ -427,7 +674,8 @@ void monitor(pid_t pid, const unsigned long long int time_limit, const unsigned 
         }
         default:
         {
-            // 子进程被其他信号终止则为超时，因为只有一个线程单独处理超时
+            // 子进程被其他信号终止则为超时
+            // 因为只有一个线程单独处理超时
             res_data->status = LTPP_TLE;
             break;
         }
@@ -435,54 +683,103 @@ void monitor(pid_t pid, const unsigned long long int time_limit, const unsigned 
     }
     else
     {
-        if (res_data->time_used > time_limit)
+        if (res_data->time_used > *time_limit)
         {
             res_data->status = LTPP_TLE;
         }
-        else if (memory_used > memory_limit)
+        else if (memory_used > *memory_limit)
         {
             res_data->status = LTPP_MLE;
         }
-        else if (!isFileEmpty(err))
+        else if (!isFileEmpty(stderr_path))
         {
-            updateErrorResault(LTPP_CODE_ERROR, "用户代码运行错误", "");
+            if (is_compiler)
+            {
+                status = LTPP_COMPILER_ERROR;
+                const char *err_msg = readFile(stderr_path);
+                updateErrorResault(status, "用户代码编译错误", err_msg);
+            }
+            else
+            {
+                status = LTPP_CODE_ERROR;
+                const char *err_msg = readFile(stderr_path);
+                updateErrorResault(status, "用户代码运行错误", err_msg);
+            }
         }
     }
 }
 
 /**
- * 运行子进程
+ * @brief 标准输出内容保存到结果信息
  */
-void run(char *args[], const unsigned long long int time_limit, const unsigned long long int memory_limit, const char *in, const char *out, const char *err)
+void stdoutToResDataMsg()
+{
+    char *out_msg = readFile(stdout_path);
+    res_data->msg = concatenateStrings(res_data->msg, out_msg);
+}
+
+/**
+ * @brief 运行
+ * @param cmd 运行命令
+ * @param is_compiler 是否是编译模式
+ */
+void run(char *cmd[], bool is_compiler)
 {
     errno = 0;
-    global_time_max_limit = time_limit / 1000 + 2;
+    global_time_max_limit = *time_limit / 1000 + 2;
     pid_t pid = vfork();
-    // 监控时间，防止CPU时间计算异常，由于主进程设置了子进程的时间，所以不能放在子进程监控，否则会被超时杀死，达不到监控目的
-    childTimeLimit();
     if (pid < 0)
     {
-        updateErrorResault(LTPP_SERVER_ERROR, "判题机创建子进程出错", strerror(errno));
+        updateErrorResault(LTPP_SERVER_ERROR, "判题机创建运行子进程出错", strerror(errno));
+        stdoutToResDataMsg();
         cout();
     }
     else if (pid == 0)
     {
-        runCode(args, time_limit, memory_limit, in, out, err, pid);
+        runCode(cmd, pid, is_compiler);
     }
     else
     {
-        monitor(pid, time_limit, memory_limit, err);
-        cout();
-        exitDeleteAllProcess();
+        // 监控时间，防止CPU时间计算异常
+        // 由于主进程设置了子进程的时间，所以不能放在子进程监控
+        // 否则会被超时杀死，达不到监控目的
+        childTimeLimit();
+        monitor(pid, is_compiler);
+        if (!is_compiler)
+        {
+            stdoutToResDataMsg();
+            cout();
+            exitDeleteAllProcess();
+        }
     }
 }
 
 /**
- * 输出
+ * @brief 命令行参数解析（将分割字符替换成空格）
+ * @param arr 结果数组
+ * @param str 待处理字符串
+ * @param del 分割字符
+ */
+void split(char **arr, char *str, const char *del)
+{
+    char *s = NULL;
+    s = strtok(str, del);
+    int i = 0;
+    while (s != NULL && i < N - 1)
+    {
+        arr[i++] = s;
+        s = strtok(NULL, del);
+    }
+    arr[i] = NULL;
+}
+
+/**
+ * @brief 输出结果
  */
 void cout()
 {
-    if(has_printf_res){
+    if (has_printf_res)
+    {
         return;
     }
     has_printf_res = true;
@@ -490,27 +787,57 @@ void cout()
 }
 
 /**
- * 命令行参数解析
+ * @brief 初始化结果结构体
  */
-void split(char **arr, char *str, const char *del)
+void initResData()
 {
-    char *s = NULL;
-    s = strtok(str, del);
-    while (s != NULL)
-    {
-        *arr++ = s;
-        s = strtok(NULL, del);
-    }
-    *arr++ = NULL;
+    const char *msg = "";
+    res_data->msg = msg;
+    res_data->status = LTPP_CODE_NO_INIT;
+    res_data->time_used = 0;
+    res_data->memory_used = 0;
 }
 
+/**
+ * @brief 程序入口
+ * 编译命令: argv[1]
+ * 运行命令: argv[2]
+ * 编译时间限制: argv[3]
+ * 运行时间限制: argv[4]
+ * 运行内存限制: argv[5]
+ * 输入文件绝对路径: argv[6]
+ * 输出文件绝对路径: argv[7]
+ * 错误文件绝对路径: argv[8]
+ * @param argc 参数数量
+ * @param argv 参数数组
+ * @return int 返回结果
+ */
 int main(int argc, char *argv[])
 {
-    res_data->msg = "";
-    char *cmd[N];
-    // 解析命令行
-    split(cmd, argv[1], "@");
-    // 代码或可执行文件路径 时间 内存 输入文件 输出文件 错误文件
-    run(cmd, atoll(argv[2]), atoll(argv[3]), argv[4], argv[5], argv[6]);
+    initResData();
+    char *compiler_cmd[N] = {NULL};
+    char *run_cmd[N] = {NULL};
+    // 解析编译命令行
+    split(compiler_cmd, argv[1], "@");
+    // 解析运行命令行
+    split(run_cmd, argv[2], "@");
+    stdin_path = argv[6];
+    stdout_path = argv[7];
+    stderr_path = argv[8];
+    unsigned long long int tmp_compiler_time_limit = atoll(argv[3]);
+    unsigned long long int tmp_run_time_limit = atoll(argv[4]);
+    unsigned long long int tmp_run_memory_limit = atoll(argv[5]);
+    compiler_time_limit = &tmp_compiler_time_limit;
+    run_time_limit = &tmp_run_time_limit;
+    run_memory_limit = &tmp_run_memory_limit;
+    memory_limit = run_memory_limit;
+    // 更新时间限制为编译时间限制
+    time_limit = compiler_time_limit;
+    // 编译程序
+    run(compiler_cmd, true);
+    // 更新时间限制为运行时间限制
+    time_limit = run_time_limit;
+    // 运行程序
+    run(run_cmd, false);
     return 0;
 }
