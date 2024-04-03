@@ -3726,6 +3726,7 @@ class Base
                 case Language::java:
                     $limittime <<= 1;
                     $limitmemory <<= 1;
+                    $runcodefilepath = $filepath . 'Main';
                     $compiler_cmd = '/usr/bin/javac@-J-Dfile.encoding=UTF-8@' . $runcodefilepath . '.java';
                     $run_cmd = '/usr/bin/java@-cp@' . $filepath . '@Main';
                     Base::runExec(Base::$judgepath . ' ' . $compiler_cmd . ' ' . $run_cmd . ' ' . $compiler_timeout_time . ' ' . $limittime . ' ' . $limitmemory . ' ' . $inpath . ' ' . $outpath . ' ' . $errpath, $out);
