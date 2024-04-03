@@ -134,7 +134,7 @@ class Webcode
         $out = '';
         // 运行
         $out = Base::run($userlanguage, $filepath, $inpath, $outpath, $errpath, $runcodefilepath, $limittime, $limitmemory);
-        Robot::mailto('root@ltpp.vip', 'out', json_encode($out, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
+
         $run_resource_consumption = Base::getCodeTimeMemory($out);
 
         if (!$run_resource_consumption || !isset($run_resource_consumption['status'])) {
@@ -142,7 +142,6 @@ class Webcode
             Webcode::updateCodeStatus($code_id, Base::$code_run_running_wrong, 0, 0);
             return ['code' => -1, 'result' => Base::$judge_error_msg . '！', 'usememory' => 0, 'usetime' => 0];
         }
-        Robot::mailto('root@ltpp.vip', 'run_resource_consumption', json_encode($run_resource_consumption, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
         $status = $run_resource_consumption['status'] ?? 0;
         $time_used = $run_resource_consumption['time_used'] ?? 0;
         $memory_used = $run_resource_consumption['memory_used'] ?? 0;

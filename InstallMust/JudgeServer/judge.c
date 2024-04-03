@@ -1,7 +1,7 @@
 /**
  * @file judge.c
  * @author SQS (root@ltpp.vip)
- * @details g++ -O2 -O3 judge.c -o judge -lcap
+ * @details g++ -O2 -O3 judge.c -o judge -lcap -std=c++2a
  * @version 1.0
  * @date 2024-03-21
  * @copyright Copyright (c) 2024
@@ -30,6 +30,8 @@
 #include <sys/capability.h>
 #pragma GCC optimize(2)
 #pragma GCC optimize(3)
+
+typedef unsigned long long int ull;
 
 /**
  * @brief 获取最大值
@@ -132,9 +134,14 @@ const int ltpp_uid = 1000;
 const char *br = "\n";
 
 /**
+ * @brief 空字符数组
+ */
+char empty_str_arr[] = "";
+
+/**
  * @brief 空字符串
  */
-const char *empty_str = "";
+const char *empty_str = empty_str_arr;
 
 /**
  * @brief 根目录
@@ -164,27 +171,32 @@ const char *stderr_path = "";
 /**
  * @brief 编译时间限制
  */
-const unsigned long long int *compiler_time_limit = NULL;
+const ull *compiler_time_limit = NULL;
 
 /**
  * @brief 运行时间限制
  */
-const unsigned long long int *run_time_limit = NULL;
+const ull *run_time_limit = NULL;
 
 /**
  * @brief 运行内存限制
  */
-const unsigned long long int *run_memory_limit = NULL;
+const ull *run_memory_limit = NULL;
 
 /**
  * @brief 时间限制
  */
-const unsigned long long int *time_limit = NULL;
+const ull *time_limit = NULL;
 
 /**
  * @brief 内存限制
  */
-const unsigned long long int *memory_limit = NULL;
+const ull *memory_limit = NULL;
+
+/**
+ * @brief 服务器异常提示信息
+ */
+const char *server_error_msg = "服务器异常";
 
 /**
  * @brief 结果结构体
@@ -194,8 +206,8 @@ const unsigned long long int *memory_limit = NULL;
 struct result
 {
     int status;
-    unsigned long long int time_used;
-    unsigned long long int memory_used;
+    ull time_used;
+    ull memory_used;
     const char *msg;
 };
 
@@ -212,7 +224,7 @@ struct result *res_data = (struct result *)malloc(sizeof(struct result));
 /**
  * @brief 全局子进程最大运行时间
  */
-unsigned long long int global_time_max_limit = 0;
+ull global_time_max_limit = 0;
 
 /**
  * @brief 是否以及输出过结果
@@ -228,10 +240,12 @@ void stdoutToResDataMsg();
 void exitDeleteAllProcess();
 void lowerFilePermissions();
 void *timeoutExit(void *argc);
+char *jsonEncodeValue(const char *str);
 char *readFile(const char *filename);
 void monitor(pid_t pid, bool is_compiler);
 void run(char *run_cmd[], bool is_compiler);
 void split(char **arr, char *str, const char *del);
+bool judgeSameString(const char *str1, const char *str2);
 void runCode(char *run_cmd[], pid_t pid, bool is_compiler);
 char *concatenateStrings(const char *str1, const char *str2);
 void closeDup(int &newstdin, int &newstdout, int &newstderr);
@@ -239,6 +253,19 @@ void creatNamespace(int newstdin, int newstdout, int newstderr);
 void joinDeepChroot(int newstdin, int newstdout, int newstderr);
 void removePrivileges(int newstdin, int newstdout, int newstderr);
 void updateErrorResault(int status, const char *custom_msg, const char *error_msg);
+
+/**
+ * @brief 判断字符串是否相同
+ * @param str1 第一个字符串
+ * @param str2 第二个字符串
+ * @return true 两个字符串相同
+ * @return false 两个字符串不同
+ */
+bool judgeSameString(const char *str1, const char *str2)
+{
+    const int res = strcmp(str1, str2);
+    return res == 0;
+}
 
 /**
  * @brief 更新错误结果（状态仅允许改变一次）
@@ -253,7 +280,7 @@ void updateErrorResault(int status, const char *custom_msg, const char *error_ms
         return;
     }
     res_data->status = status;
-    if (error_msg == empty_str)
+    if (judgeSameString(error_msg, empty_str))
     {
         res_data->msg = concatenateStrings(custom_msg, error_msg);
     }
@@ -358,7 +385,7 @@ void childMemoryUsed()
 void *timeoutExit(void *argc)
 {
     errno = 0;
-    unsigned long long int time_cnt = global_time_max_limit;
+    ull time_cnt = global_time_max_limit;
     while (time_cnt > 0)
     {
         --time_cnt;
@@ -542,6 +569,66 @@ void closeDup(int &newstdin, int &newstdout, int &newstderr)
 }
 
 /**
+ * @brief JSON序列化字符串中某一部分
+ * @param str 待序列化字符串
+ * @return char* 序列化后的字符串
+ */
+char *jsonEncodeValue(const char *str)
+{
+    if (judgeSameString(str, empty_str))
+    {
+        // 空串需要单独处理
+        return empty_str_arr;
+    }
+    ull len = strlen(str);
+    // 预留足够大的空间存储编码后的字符串
+    // 乘2因为特殊字符串转义后长度为之前2倍
+    // 加1因为最后需要一个终止字符
+    char *encoded_str = (char *)malloc((len * 2 + 1) * sizeof(char));
+    if (encoded_str == NULL)
+    {
+        updateErrorResault(LTPP_SERVER_ERROR, "判题机信息序列化异常", strerror(errno));
+        return empty_str_arr;
+    }
+    char *p = encoded_str;
+    for (ull i = 0; i < len; ++i)
+    {
+        switch (str[i])
+        {
+        case '\\':
+            *p++ = '\\';
+            *p++ = '\\';
+            break;
+        case '\b':
+            *p++ = '\\';
+            *p++ = 'b';
+            break;
+        case '\f':
+            *p++ = '\\';
+            *p++ = 'f';
+            break;
+        case '\n':
+            *p++ = '\\';
+            *p++ = 'n';
+            break;
+        case '\r':
+            *p++ = '\\';
+            *p++ = 'r';
+            break;
+        case '\t':
+            *p++ = '\\';
+            *p++ = 't';
+            break;
+        default:
+            *p++ = str[i];
+            break;
+        }
+    }
+    *p = '\0';
+    return encoded_str;
+}
+
+/**
  * @brief 终止自身及其所有子进程
  */
 void exitDeleteAllProcess()
@@ -567,7 +654,7 @@ void monitor(pid_t pid, bool is_compiler)
     }
     res_data->time_used = ru.ru_utime.tv_sec * 1000 + ru.ru_utime.tv_usec / 1000 + ru.ru_stime.tv_sec * 1000 + ru.ru_stime.tv_usec / 1000;
     res_data->memory_used = ru.ru_maxrss;
-    const unsigned long long int memory_used = ru.ru_maxrss << 10;
+    const ull memory_used = ru.ru_maxrss << 10;
     res_data->status = LTPP_FINISH;
     if (WIFEXITED(status))
     {
@@ -783,7 +870,15 @@ void cout()
         return;
     }
     has_printf_res = true;
-    printf("{\"status\":\"%d\",\"time_used\":\"%llu\",\"memory_used\":\"%llu\",\"msg\":\"%s\"}", res_data->status, res_data->time_used, res_data->memory_used, res_data->msg);
+    ull length = snprintf(NULL, 0, "{\"status\":\"%d\",\"time_used\":\"%llu\",\"memory_used\":\"%llu\",\"msg\":\"%s\"}", res_data->status, res_data->time_used, res_data->memory_used, res_data->msg);
+    char *json = (char *)malloc((length + 1) * sizeof(char));
+    if (json == NULL)
+    {
+        updateErrorResault(LTPP_SERVER_ERROR, server_error_msg, strerror(errno));
+    }
+    res_data->msg = jsonEncodeValue(res_data->msg);
+    sprintf(json, "{\"status\":\"%d\",\"time_used\":\"%llu\",\"memory_used\":\"%llu\",\"msg\":\"%s\"}", res_data->status, res_data->time_used, res_data->memory_used, res_data->msg);
+    printf("%s", json);
 }
 
 /**
@@ -791,8 +886,7 @@ void cout()
  */
 void initResData()
 {
-    const char *msg = "";
-    res_data->msg = msg;
+    res_data->msg = empty_str;
     res_data->status = LTPP_CODE_NO_INIT;
     res_data->time_used = 0;
     res_data->memory_used = 0;
@@ -824,9 +918,9 @@ int main(int argc, char *argv[])
     stdin_path = argv[6];
     stdout_path = argv[7];
     stderr_path = argv[8];
-    unsigned long long int tmp_compiler_time_limit = atoll(argv[3]);
-    unsigned long long int tmp_run_time_limit = atoll(argv[4]);
-    unsigned long long int tmp_run_memory_limit = atoll(argv[5]);
+    ull tmp_compiler_time_limit = atoll(argv[3]);
+    ull tmp_run_time_limit = atoll(argv[4]);
+    ull tmp_run_memory_limit = atoll(argv[5]);
     compiler_time_limit = &tmp_compiler_time_limit;
     run_time_limit = &tmp_run_time_limit;
     run_memory_limit = &tmp_run_memory_limit;

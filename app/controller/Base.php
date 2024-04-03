@@ -3729,49 +3729,49 @@ class Base
                     $limitmemory <<= 1;
                     $compiler_cmd = '/usr/bin/javac@-J-Dfile.encoding=UTF-8@' . $runcodefilepath . '.java';
                     $run_cmd = '/usr/bin/java@-cp@' . $filepath . '@Main';
-                    Base::runExec(Base::$judgepath . ' ' . $compiler_cmd . ' ' . $run_cmd . ' ' . $limittime . ' ' . $limitmemory . ' ' . $inpath . ' ' . $outpath . ' ' . $errpath, $out);
+                    Base::runExec(Base::$judgepath . ' ' . $compiler_cmd . ' ' . $run_cmd . ' ' . $compiler_timeout_time . ' ' . $limittime . ' ' . $limitmemory . ' ' . $inpath . ' ' . $outpath . ' ' . $errpath, $out);
                     break;
                 case Language::javascript:
                     $limittime <<= 1;
                     $limitmemory <<= 1;
                     $compiler_cmd = '""';
                     $run_cmd = '/usr/bin/node@' . $runcodefilepath . '.js';
-                    Base::runExec(Base::$judgepath . ' ' . $compiler_cmd . ' ' . $run_cmd . ' ' . $limittime . ' ' . $limitmemory . ' ' . $inpath . ' ' . $outpath . ' ' . $errpath, $out);
+                    Base::runExec(Base::$judgepath . ' ' . $compiler_cmd . ' ' . $run_cmd . ' ' . $compiler_timeout_time . ' ' . $limittime . ' ' . $limitmemory . ' ' . $inpath . ' ' . $outpath . ' ' . $errpath, $out);
                     break;
                 case Language::typescript:
                     $limittime <<= 1;
                     $limitmemory <<= 1;
                     $compiler_cmd = '/usr/local/nodejs/bin/tsc@-t@es2022@--outFile@' . $runcodefilepath . '.js' . $runcodefilepath . '.ts';
                     $run_cmd =  '/usr/bin/node@' . $runcodefilepath . '.js';
-                    Base::runExec(Base::$judgepath . ' ' . $compiler_cmd . ' ' . $run_cmd . ' ' . $limittime . ' ' . $limitmemory . ' ' . $inpath . ' ' . $outpath . ' ' . $errpath, $out);
+                    Base::runExec(Base::$judgepath . ' ' . $compiler_cmd . ' ' . $run_cmd . ' ' . $compiler_timeout_time . ' ' . $limittime . ' ' . $limitmemory . ' ' . $inpath . ' ' . $outpath . ' ' . $errpath, $out);
                     break;
                 case Language::php:
                     $limittime <<= 1;
                     $limitmemory <<= 1;
                     $compiler_cmd = '""';
                     $run_cmd = '/usr/bin/php@' . $runcodefilepath . '.php';
-                    Base::runExec(Base::$judgepath . ' ' . $compiler_cmd . ' ' . $run_cmd . ' ' . $limittime . ' ' . $limitmemory . ' ' . $inpath . ' ' . $outpath . ' ' . $errpath, $out);
+                    Base::runExec(Base::$judgepath . ' ' . $compiler_cmd . ' ' . $run_cmd . ' ' . $compiler_timeout_time . ' ' . $limittime . ' ' . $limitmemory . ' ' . $inpath . ' ' . $outpath . ' ' . $errpath, $out);
                     break;
                 case Language::python:
                     $limittime <<= 1;
                     $limitmemory <<= 1;
                     $compiler_cmd = '""';
                     $run_cmd = '/usr/bin/python3@' . $runcodefilepath . '.py';
-                    Base::runExec(Base::$judgepath . ' ' . $compiler_cmd . ' ' . $run_cmd . ' ' . $limittime . ' ' . $limitmemory . ' ' . $inpath . ' ' . $outpath . ' ' . $errpath, $out);
+                    Base::runExec(Base::$judgepath . ' ' . $compiler_cmd . ' ' . $run_cmd . ' ' . $compiler_timeout_time . ' ' . $limittime . ' ' . $limitmemory . ' ' . $inpath . ' ' . $outpath . ' ' . $errpath, $out);
                     break;
                 case Language::ruby:
                     $limittime <<= 1;
                     $limitmemory <<= 1;
                     $compiler_cmd = '""';
                     $run_cmd = '/usr/bin/ruby@' . $runcodefilepath . '.rb';
-                    Base::runExec(Base::$judgepath . ' ' . $compiler_cmd . ' ' . $run_cmd . ' ' . $limittime . ' ' . $limitmemory . ' ' . $inpath . ' ' . $outpath . ' ' . $errpath, $out);
+                    Base::runExec(Base::$judgepath . ' ' . $compiler_cmd . ' ' . $run_cmd . ' ' . $compiler_timeout_time . ' ' . $limittime . ' ' . $limitmemory . ' ' . $inpath . ' ' . $outpath . ' ' . $errpath, $out);
                     break;
                 case Language::csharp:
                     $limittime <<= 1;
                     $limitmemory <<= 1;
                     $compiler_cmd = '/usr/bin/mcs@-out:' . $runcodefilepath . ' ' . $runcodefilepath . '.cs';
                     $run_cmd = '/usr/bin/mono@' . $runcodefilepath;
-                    Base::runExec(Base::$judgepath . ' ' . $compiler_cmd . ' ' . $run_cmd . ' ' . $limittime . ' ' . $limitmemory . ' ' . $inpath . ' ' . $outpath . ' ' . $errpath, $out);
+                    Base::runExec(Base::$judgepath . ' ' . $compiler_cmd . ' ' . $run_cmd . ' ' . $compiler_timeout_time . ' ' . $limittime . ' ' . $limitmemory . ' ' . $inpath . ' ' . $outpath . ' ' . $errpath, $out);
                 default:
                     break;
             }
@@ -3907,17 +3907,27 @@ class Base
             if (!isset($res['msg']) || !$res['msg']) {
                 $res['msg'] = '';
             }
-            $status = (int) $res['status'];
-            $time_used = (int) $res['time_used'];
-            $memory_used = (int) $res['memory_used'];
+            $status = intval($res['status']);
+            $time_used = intval($res['time_used']);
+            $memory_used = intval($res['memory_used']);
             $msg = $res['msg'];
         } catch (Exception $e) {
             Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
             // 触发错误的情况是判题机输出 Segmentation fault (core dumped) 导致解析json失败 而判题机触发该错误是不断分配内存不回收触发安全机制导致程序崩溃
             // 由于具体分配内存大小不确定，所以按照 RE 处理
-            return ['status' => 4, 'time_used' => $time_used, 'memory_used' => $memory_used, 'msg' => $msg];
+            return [
+                'status' => 4,
+                'time_used' => $time_used,
+                'memory_used' => $memory_used,
+                'msg' => $msg
+            ];
         }
-        return ['status' => $status, 'time_used' => $time_used, 'memory_used' => $memory_used, 'msg' => $msg];
+        return [
+            'status' => $status,
+            'time_used' => $time_used,
+            'memory_used' => $memory_used,
+            'msg' => $msg
+        ];
     }
 
     /**
