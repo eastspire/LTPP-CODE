@@ -465,34 +465,18 @@ class Ojjudge
             $status = $run_resource_consumption['status'] ?? 0;
             $time_used = $run_resource_consumption['time_used'] ?? 0;
             $memory_used = $run_resource_consumption['memory_used'] ?? 0;
+            $msg = $run_resource_consumption['msg'] ?? '';
 
             $maxtime = max($maxtime, $time_used);
             $maxmemory = max($maxmemory, $memory_used);
             $testout = '';
             // 不是竞赛赛题或者是SQS赛制判题遇到错误就结束
             if ($contest_id == 0 || $type == "SQS") {
-                $testin = Base::getFileText($alltestpath . $testname . '.in');
-                if (!$testin) {
-                    $testin = '';
-                }
-                if (strlen($testin) > Base::$code_out_limit) {
-                    $testin = Base::utfsubstr($testin, 0, Base::$code_out_limit, true) . "\n" . '【仅显示前' . Base::$code_out_limit . '个字符】';
-                }
                 switch ($status) {
                     case Base::$judge_code_compiler_error:
-                        $err_data = Base::$code_run_compiler_wrong . "！\n";
-                        //读取输出
-                        $resout = Base::getFileText($errpath);
                         Base::deleteAllFile($filepath);
                         // 去除路径信息
-                        $tp = Base::utfsubstr(Base::$sandbox_path, 1, strlen(Base::$sandbox_path)) . $mainfile;
-                        $resout = str_replace([$tp, $mainfile], '', $resout);
-                        Base::removeBr($resout);
-
-                        if (strlen($resout) > Base::$code_out_limit) {
-                            $resout = Base::utfsubstr($resout, 0, Base::$code_out_limit, true) . "\n" . '【仅显示前' . Base::$code_out_limit . '个字符】';
-                        }
-                        $err_data .= $resout;
+                        $resout = Base::removeMsgSandboxPath($filepath, $msg);
                         Ojjudge::updateCodeStatus($code_id, Base::$code_run_compiler_wrong, $time_used, $memory_used);
                         if ($contest_id != 0) {
                             if ($begintime <= $time || $time <= $endtime) {
@@ -509,7 +493,7 @@ class Ojjudge
                                 Contest::sendUpdateRankMQ($contest_id);
                                 return [
                                     'code' => -1,
-                                    'result' => $err_data,
+                                    'result' => $msg,
                                     'usetime' => $time_used,
                                     'usememory' => $memory_used
                                 ];
@@ -517,25 +501,14 @@ class Ojjudge
                         }
                         return [
                             'code' => -1,
-                            'result' => $err_data,
+                            'result' => $msg,
                             'usetime' => $time_used,
                             'usememory' => $memory_used
                         ];
                     case Base::$judge_code_error:
-                        $msg = $run_resource_consumption['msg'];
-                        $err_data = Base::$code_run_running_wrong . "！\n" . $msg . "\n";
-                        //读取输出
-                        $resout = Base::getFileText($errpath);
                         Base::deleteAllFile($filepath);
                         // 去除路径信息
-                        $tp = Base::utfsubstr(Base::$sandbox_path, 1, strlen(Base::$sandbox_path)) . $mainfile;
-                        $resout = str_replace([$tp, $mainfile], '', $resout);
-                        Base::removeBr($resout);
-
-                        if (strlen($resout) > Base::$code_out_limit) {
-                            $resout = Base::utfsubstr($resout, 0, Base::$code_out_limit, true) . "\n" . '【仅显示前' . Base::$code_out_limit . '个字符】';
-                        }
-                        $err_data .= $resout;
+                        $resout = Base::removeMsgSandboxPath($filepath, $msg);
                         Ojjudge::updateCodeStatus($code_id, Base::$code_run_running_wrong, $time_used, $memory_used);
                         if ($contest_id != 0) {
                             if ($begintime <= $time || $time <= $endtime) {
@@ -552,7 +525,7 @@ class Ojjudge
                                 Contest::sendUpdateRankMQ($contest_id);
                                 return [
                                     'code' => -1,
-                                    'result' => $err_data,
+                                    'result' => $msg,
                                     'usetime' => $time_used,
                                     'usememory' => $memory_used
                                 ];
@@ -560,34 +533,41 @@ class Ojjudge
                         }
                         return [
                             'code' => -1,
-                            'result' => $err_data,
+                            'result' => $msg,
                             'usetime' => $time_used,
                             'usememory' => $memory_used
                         ];
                     case Base::$judge_server_error:
                         Base::deleteAllFile($filepath);
-                        $msg = $run_resource_consumption['msg'];
-                        Ojjudge::updateCodeStatus($code_id, Base::$code_run_running_wrong, 0, 0);
-                        if (strlen($msg) > Base::$code_out_limit) {
-                            $resout = Base::utfsubstr($msg, 0, Base::$code_out_limit, true) . "\n" . '【仅显示前' . Base::$code_out_limit . '个字符】';
-                        }
-                        return ['code' => -1, 'result' => Base::$judge_error_msg . "！\n" . $msg, 'usetime' => $time_used, 'usememory' => $memory_used];
+                        // 去除路径信息
+                        $resout = Base::removeMsgSandboxPath($filepath, $msg);
+                        return [
+                            'code' => -1,
+                            'result' => $msg,
+                            'usetime' => $time_used,
+                            'usememory' => $memory_used
+                        ];
                     case Base::$judge_code_tle:
+                        Base::deleteAllFile($filepath);
+                        $testin = Base::getTestinFileData($alltestpath . $testname . '.in');
                         return Ojjudge::error($code_id, $filepath, $testin, Base::$code_run_tle, $type, $my_aid, $problem_id, $time, $maxtime, $maxmemory, $code, $userlanguage, $contest_id, $begintime, $endtime);
                     case Base::$judge_code_mle:
+                        Base::deleteAllFile($filepath);
+                        $testin = Base::getTestinFileData($alltestpath . $testname . '.in');
                         return Ojjudge::error($code_id, $filepath, $testin, Base::$code_run_mle, $type, $my_aid, $problem_id, $time, $maxtime, $maxmemory, $code, $userlanguage, $contest_id, $begintime, $endtime);
                     case Base::$judge_code_re:
+                        Base::deleteAllFile($filepath);
+                        $testin = Base::getTestinFileData($alltestpath . $testname . '.in');
                         return Ojjudge::error($code_id, $filepath, $testin, Base::$code_run_re, $type, $my_aid, $problem_id, $time, $maxtime, $maxmemory, $code, $userlanguage, $contest_id, $begintime, $endtime);
                     default:
                         break;
                 }
             }
             //读取输出
-            $resout = Base::getFileText($outpath);
             $testout = Base::textToSafeText($one_oj_test_data_db->test_out);
             //处理空格和换行错误
             $testout = str_replace([' ', "\n", "\r", "\r\n"], '', $testout);
-            $resout = str_replace([' ', "\n", "\r", "\r\n"], '', $resout);
+            $resout = str_replace([' ', "\n", "\r", "\r\n"], '', $msg);
 
             //答案错误
             if ($testout != $resout) {
@@ -600,11 +580,7 @@ class Ojjudge
                     ]);
                     Base::deleteAllFile($filepath);
                     //读取出错测试样例输入
-                    $testin = Base::getFileText($alltestpath . $testname . '.in');
-
-                    if (strlen($testin) > Base::$code_out_limit) {
-                        $testin = Base::utfsubstr($testin, 0, Base::$code_out_limit, true) . "\n" . '【仅显示前' . Base::$code_out_limit . '个字符】';
-                    }
+                    $testin = Base::getTestinFileData($alltestpath . $testname . '.in');
                     return [
                         'code' => -1,
                         'result' => '错误的输入样例：' . "\n" . $testin,

@@ -148,12 +148,7 @@ class Webcode
         $msg = $run_resource_consumption['msg'] ?? '';
         Base::deleteAllFile($filepath);
         // 去除路径信息
-        $tp = Base::utfsubstr(Base::$sandbox_path, 1, strlen(Base::$sandbox_path)) . $mainfile;
-        $msg = str_replace([$tp, $mainfile], '', $msg);
-        Base::removeBr($msg);
-        if (strlen($msg) > Base::$code_out_limit) {
-            $msg = Base::utfsubstr($msg, 0, Base::$code_out_limit, true) . "\n" . '【仅显示前' . Base::$code_out_limit . '个字符】';
-        }
+        $msg = Base::removeMsgSandboxPath($filepath, $msg);
         switch ($status) {
             case Base::$judge_code_compiler_error:
                 Webcode::updateCodeStatus($code_id, Base::$code_run_compiler_wrong, $time_used, $memory_used);

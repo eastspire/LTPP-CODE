@@ -3865,6 +3865,31 @@ class Base
     }
 
     /**
+     * 获取输入测试用例
+     */
+    static public function getTestinFileData($file_path)
+    {
+        $testin = Base::getFileText($file_path);
+        if (strlen($testin) > Base::$code_out_limit) {
+            $testin = Base::utfsubstr($testin, 0, Base::$code_out_limit, true) . "\n" . '【仅显示前' . Base::$code_out_limit . '个字符】';
+        }
+    }
+
+    /**
+     * 去除沙箱路径信息
+     */
+    static public function removeMsgSandboxPath($mainfile = '', $msg = '')
+    {
+        $tp = Base::utfsubstr(Base::$sandbox_path, 1, strlen(Base::$sandbox_path)) . $mainfile;
+        $msg = str_replace([$tp, $mainfile], '', $msg);
+        Base::removeBr($msg);
+        if (strlen($msg) > Base::$code_out_limit) {
+            $resout = Base::utfsubstr($msg, 0, Base::$code_out_limit, true) . "\n" . '【仅显示前' . Base::$code_out_limit . '个字符】';
+        }
+        return $resout;
+    }
+
+    /**
      * 文本安全转换
      */
     static public function textToSafeText($text = '')

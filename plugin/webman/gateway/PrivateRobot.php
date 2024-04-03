@@ -282,6 +282,7 @@ class PrivateRobot extends ChatBase
                     $status = $run_resource_consumption['status'] ?? 0;
                     $time_used = $run_resource_consumption['time_used'] ?? 0;
                     $memory_used = $run_resource_consumption['memory_used'] ?? 0;
+                    $msg = $run_resource_consumption['msg'] ?? '';
 
                     $maxtime = max($maxtime, $time_used);
                     $maxmemory = max($maxmemory, $memory_used);
@@ -316,7 +317,6 @@ class PrivateRobot extends ChatBase
                                 ]);
                                 break;
                             case Base::$judge_code_error:
-                                // 去除路径信息
                                 Base::insertToDb('codehistory', [
                                     'userid' => $user_id,
                                     'status' => Base::$code_run_running_wrong,
@@ -363,11 +363,10 @@ class PrivateRobot extends ChatBase
                         continue;
                     }
                     //读取输出
-                    $resout = Base::getFileText($outpath);
                     $testout = Base::textToSafeText($one_oj_test_data_db->test_out);
                     //处理空格和换行错误
                     $testout = str_replace([' ', "\n", "\r", "\r\n"], '', $testout);
-                    $resout = str_replace([' ', "\n", "\r", "\r\n"], '', $resout);
+                    $resout = str_replace([' ', "\n", "\r", "\r\n"], '', $msg);
 
                     //答案错误
                     if ($testout == $resout) {
