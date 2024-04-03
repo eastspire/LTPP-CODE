@@ -3558,7 +3558,6 @@ class Base
                 ];
             }
             $userlanguage = Base::$language_map[$userlanguage];
-            //编译
             switch ($userlanguage) {
                 case Language::rust:
                     Base::writeToFile($runcodefilepath . '.rs', $code);
