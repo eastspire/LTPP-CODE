@@ -3778,14 +3778,12 @@ class Base
             }
         } catch (Exception $e) {
             Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
-            return [
-                json_encode([
-                    'status' => Base::$judge_server_error,
-                    'time_used' => 0,
-                    'memory_used' => 0,
-                    'msg' => $e->getMessage()
-                ])
-            ];
+            return json_encode([
+                'status' => Base::$judge_server_error,
+                'time_used' => 0,
+                'memory_used' => 0,
+                'msg' => $e->getMessage()
+            ]);
         }
         return $out;
     }
