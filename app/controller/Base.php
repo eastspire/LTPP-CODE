@@ -3854,6 +3854,7 @@ class Base
 
     /**
      * 获取文本
+     * @param string $file_path 文件路径
      */
     static public function getFileText($file_path)
     {
@@ -3866,6 +3867,7 @@ class Base
 
     /**
      * 获取输入测试用例
+     * @param string $file_path 文件路径
      */
     static public function getTestinFileData($file_path)
     {
@@ -3877,6 +3879,8 @@ class Base
 
     /**
      * 去除沙箱路径信息
+     * @param string $mainfile 可执行文件路径
+     * @param string $msg 文本
      */
     static public function removeMsgSandboxPath($mainfile = '', $msg = '')
     {
@@ -3891,6 +3895,7 @@ class Base
 
     /**
      * 文本安全转换
+     * @param string $text 文本内容
      */
     static public function textToSafeText($text = '')
     {
