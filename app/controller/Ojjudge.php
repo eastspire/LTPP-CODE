@@ -476,7 +476,7 @@ class Ojjudge
                     case Base::$judge_code_compiler_error:
                         Base::deleteAllFile($filepath);
                         // 去除路径信息
-                        $resout = Base::removeMsgSandboxPath($filepath, $msg);
+                        $resout = Base::removeMsgSandboxPath($mainfile, $msg);
                         Ojjudge::updateCodeStatus($code_id, Base::$code_run_compiler_wrong, $time_used, $memory_used);
                         if ($contest_id != 0) {
                             if ($begintime <= $time || $time <= $endtime) {
@@ -508,7 +508,7 @@ class Ojjudge
                     case Base::$judge_code_error:
                         Base::deleteAllFile($filepath);
                         // 去除路径信息
-                        $resout = Base::removeMsgSandboxPath($filepath, $msg);
+                        $resout = Base::removeMsgSandboxPath($mainfile, $msg);
                         Ojjudge::updateCodeStatus($code_id, Base::$code_run_running_wrong, $time_used, $memory_used);
                         if ($contest_id != 0) {
                             if ($begintime <= $time || $time <= $endtime) {
@@ -540,7 +540,7 @@ class Ojjudge
                     case Base::$judge_server_error:
                         Base::deleteAllFile($filepath);
                         // 去除路径信息
-                        $resout = Base::removeMsgSandboxPath($filepath, $msg);
+                        $resout = Base::removeMsgSandboxPath($mainfile, $msg);
                         return [
                             'code' => -1,
                             'result' => $msg,

@@ -148,7 +148,7 @@ class Webcode
         $msg = $run_resource_consumption['msg'] ?? '';
         Base::deleteAllFile($filepath);
         // 去除路径信息
-        $msg = Base::removeMsgSandboxPath($filepath, $msg);
+        $msg = Base::removeMsgSandboxPath($mainfile, $msg);
         switch ($status) {
             case Base::$judge_code_compiler_error:
                 Webcode::updateCodeStatus($code_id, Base::$code_run_compiler_wrong, $time_used, $memory_used);

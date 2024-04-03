@@ -3880,17 +3880,17 @@ class Base
     /**
      * 去除沙箱路径信息
      * @param string $mainfile 可执行文件路径
-     * @param string $msg 文本
+     * @param string $str 文本
      */
-    static public function removeMsgSandboxPath($mainfile = '', $msg = '')
+    static public function removeMsgSandboxPath($mainfile = '', $str = '')
     {
         $tp = Base::utfsubstr(Base::$sandbox_path, 1, strlen(Base::$sandbox_path)) . $mainfile;
-        $msg = str_replace([$tp, $mainfile], '', $msg);
-        Base::removeBr($msg);
-        if (strlen($msg) > Base::$code_out_limit) {
-            $resout = Base::utfsubstr($msg, 0, Base::$code_out_limit, true) . "\n" . '【仅显示前' . Base::$code_out_limit . '个字符】';
+        $str = str_replace([$tp, $mainfile], '', $str);
+        Base::removeBr($str);
+        if (strlen($str) > Base::$code_out_limit) {
+            $str = Base::utfsubstr($str, 0, Base::$code_out_limit, true) . "\n" . '【仅显示前' . Base::$code_out_limit . '个字符】';
         }
-        return $resout;
+        return $str;
     }
 
     /**
