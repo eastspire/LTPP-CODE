@@ -3707,6 +3707,7 @@ class Base
                     $compiler_cmd = '/root/.cargo/bin/rustc@-O@-o@' . $runcodefilepath . '@' . $runcodefilepath . '.rs';
                     $run_cmd = $runcodefilepath;
                     Base::runExec(Base::$judgepath . ' ' . $compiler_cmd . ' ' . $run_cmd  . ' ' . $compiler_timeout_time . ' ' . $limittime . ' ' . $limitmemory . ' ' . $inpath . ' ' . $outpath . ' ' . $errpath, $out);
+                    break;
                 case Language::c:
                     $compiler_cmd = '/usr/bin/g++@-o@' . $runcodefilepath . '@' . $runcodefilepath . '.c@-std=c++2a';
                     $run_cmd =  $runcodefilepath;
