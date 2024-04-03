@@ -127,18 +127,18 @@ class Webcode
         $outpath = $dir_res['outpath'];
         $errpath = $dir_res['errpath'];
         // 写入文件
-        $compiler_res_json = Base::writeCodeToFile($userlanguage, $code, $filepath, $runcodefilepath);
-        if (!isset($compiler_res_json['code']) || $compiler_res_json['code'] != 1) {
-            return json($compiler_res_json);
+        $write_code_res_json = Base::writeCodeToFile($userlanguage, $code, $filepath, $runcodefilepath);
+        if (!isset($write_code_res_json['code']) || $write_code_res_json['code'] != 1) {
+            return json($write_code_res_json);
         }
         $out = '';
         // 运行
         $out = Base::run($userlanguage, $filepath, $inpath, $outpath, $errpath, $runcodefilepath, $limittime, $limitmemory);
 
+        Base::deleteAllFile($filepath);
         $run_resource_consumption = Base::getCodeTimeMemory($out);
 
         if (!$run_resource_consumption || !isset($run_resource_consumption['status'])) {
-            Base::deleteAllFile($filepath);
             Webcode::updateCodeStatus($code_id, Base::$code_run_running_wrong, 0, 0);
             return ['code' => -1, 'result' => Base::$judge_error_msg . '！', 'usememory' => 0, 'usetime' => 0];
         }
@@ -146,8 +146,6 @@ class Webcode
         $time_used = $run_resource_consumption['time_used'] ?? 0;
         $memory_used = $run_resource_consumption['memory_used'] ?? 0;
         $msg = $run_resource_consumption['msg'] ?? '';
-
-        Base::deleteAllFile($filepath);
 
         // 去除路径信息
         $msg = Base::removeMsgSandboxPath($mainfile, $msg);

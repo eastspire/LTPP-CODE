@@ -430,13 +430,13 @@ class Ojjudge
         //代码所在路径+名称main
         $runcodefilepath = $filepath . 'main';
         $out = '';
-        //编译
-        $compiler_res_json = Base::writeCodeToFile($userlanguage, $code, $filepath, $runcodefilepath);
+        // 代码写入文件
+        $write_code_res_json = Base::writeCodeToFile($userlanguage, $code, $filepath, $runcodefilepath);
 
-        if (!isset($compiler_res_json['code']) || $compiler_res_json['code'] != 1) {
+        if (!isset($write_code_res_json['code']) || $write_code_res_json['code'] != 1) {
             Base::deleteAllFile($filepath);
             Ojjudge::updateCodeStatus($code_id, Base::$judge_server_error, 0, 0);
-            return json($compiler_res_json);
+            return json($write_code_res_json);
         }
 
         $maxtime = '';

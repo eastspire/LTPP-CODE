@@ -249,11 +249,11 @@ class PrivateRobot extends ChatBase
                 Base::updateOjDataRedis($problem_id);
                 //代码所在路径+前缀名称main
                 $runcodefilepath = $filepath . 'main';
-                //编译
                 $out = '';
                 $now = date('Y-m-d H:i:s', time());
-                $compiler_res_json = Base::writeCodeToFile($userlanguage, $code, $filepath, $runcodefilepath);
-                if (!isset($compiler_res_json['code']) || $compiler_res_json['code'] != 1) {
+                // 代码写入文件
+                $write_code_res_json = Base::writeCodeToFile($userlanguage, $code, $filepath, $runcodefilepath);
+                if (!isset($write_code_res_json['code']) || $write_code_res_json['code'] != 1) {
                     Base::deleteAllFile($filepath);
                     continue;
                 }

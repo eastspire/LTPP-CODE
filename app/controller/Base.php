@@ -520,7 +520,7 @@ class Base
     static $judge_server_error = 0;
 
     /**
-     * 判题机用户代码运行完成状态码
+     * 判题机用户代码正常运行完成状态码
      */
     static $judge_code_finish = 1;
 
@@ -3740,7 +3740,7 @@ class Base
                 case Language::typescript:
                     $limittime <<= 1;
                     $limitmemory <<= 1;
-                    $compiler_cmd = '/usr/local/nodejs/bin/tsc@-t@es2022@--outFile@' . $runcodefilepath . '.js' . $runcodefilepath . '.ts';
+                    $compiler_cmd = '/usr/local/nodejs/bin/tsc@-t@es2022@--outFile@' . $runcodefilepath . '.js@' . $runcodefilepath . '.ts';
                     $run_cmd =  '/usr/bin/node@' . $runcodefilepath . '.js';
                     Base::runExec(Base::$judgepath . ' ' . $compiler_cmd . ' ' . $run_cmd . ' ' . $compiler_timeout_time . ' ' . $limittime . ' ' . $limitmemory . ' ' . $inpath . ' ' . $outpath . ' ' . $errpath, $out);
                     break;
@@ -3768,7 +3768,7 @@ class Base
                 case Language::csharp:
                     $limittime <<= 1;
                     $limitmemory <<= 1;
-                    $compiler_cmd = '/usr/bin/mcs@-out:' . $runcodefilepath . ' ' . $runcodefilepath . '.cs';
+                    $compiler_cmd = '/usr/bin/mcs@-out:' . $runcodefilepath . '@' . $runcodefilepath . '.cs';
                     $run_cmd = '/usr/bin/mono@' . $runcodefilepath;
                     Base::runExec(Base::$judgepath . ' ' . $compiler_cmd . ' ' . $run_cmd . ' ' . $compiler_timeout_time . ' ' . $limittime . ' ' . $limitmemory . ' ' . $inpath . ' ' . $outpath . ' ' . $errpath, $out);
                 default:
@@ -3883,13 +3883,18 @@ class Base
      */
     static public function removeMsgSandboxPath($mainfile = '', $str = '')
     {
-        $tp = Base::utfsubstr(Base::$sandbox_path, 1, strlen(Base::$sandbox_path)) . $mainfile;
-        $str = str_replace([$tp, $mainfile], '', $str);
-        Base::removeBr($str);
-        if (strlen($str) > Base::$code_out_limit) {
-            $str = Base::utfsubstr($str, 0, Base::$code_out_limit, true) . "\n" . '【仅显示前' . Base::$code_out_limit . '个字符】';
+        try {
+            $tp = Base::utfsubstr(Base::$sandbox_path, 1, strlen(Base::$sandbox_path)) . $mainfile;
+            $str = str_replace([$tp, $mainfile], '', $str);
+            Base::removeBr($str);
+            if (strlen($str) > Base::$code_out_limit) {
+                $str = Base::utfsubstr($str, 0, Base::$code_out_limit, true) . "\n" . '【仅显示前' . Base::$code_out_limit . '个字符】';
+            }
+            return $str;
+        } catch (Exception $e) {
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
         }
-        return $str;
+        return '';
     }
 
     /**
@@ -3916,7 +3921,7 @@ class Base
      * @param string $str
      * @return array $res
      */
-    static public function getCodeTimeMemory($str)
+    static public function getCodeTimeMemory(&$str)
     {
         $status = 0;
         $time_used = 0;
@@ -3924,6 +3929,9 @@ class Base
         $msg = '';
         try {
             $res = json_decode($str, true);
+            if (!$res) {
+                throw new Exception('');
+            }
             if (!isset($res['status']) || !$res['status']) {
                 $res['status'] = 0;
             }
@@ -3942,13 +3950,14 @@ class Base
             $msg = $res['msg'];
         } catch (Exception $e) {
             Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
-            // 触发错误的情况是判题机输出 Segmentation fault (core dumped) 导致解析json失败 而判题机触发该错误是不断分配内存不回收触发安全机制导致程序崩溃
+            // 触发错误的情况是判题机输出 Segmentation fault (core dumped) 导致解析json失败
+            // 而判题机触发该错误是不断分配内存不回收触发安全机制导致程序崩溃
             // 由于具体分配内存大小不确定，所以按照 RE 处理
             return [
-                'status' => 4,
+                'status' => Base::$judge_code_re,
                 'time_used' => $time_used,
                 'memory_used' => $memory_used,
-                'msg' => $msg
+                'msg' => Base::$code_run_re
             ];
         }
         return [
