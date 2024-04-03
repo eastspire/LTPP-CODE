@@ -595,6 +595,10 @@ char *jsonEncodeValue(const char *str)
     {
         switch (str[i])
         {
+        case '"':
+            *p++ = '\\';
+            *p++ = '"';
+            break;
         case '\\':
             *p++ = '\\';
             *p++ = '\\';
