@@ -97,7 +97,7 @@ class Cloudfile
         $user_uid = $request->post('user_id');
         $user_id = Base::getIdByUid($user_uid);
         if (!$my_aid || $user_id == '') {
-            return json(['code' => -1, 'msg' => 'Base::$param_error_msg！']);
+            return json(['code' => -1, 'msg' => Base::$param_error_msg]);
         }
         $path_list = Db::table('cloud_file_path')
             ->where('userid', $my_aid)
@@ -246,7 +246,7 @@ class Cloudfile
         $path = $request->post('path');
         $path = Base::Base64Decode($path);
         if (!$path) {
-            return json(['code' => -1, 'msg' => 'Base::$param_error_msg']);
+            return json(['code' => -1, 'msg' => Base::$param_error_msg]);
         }
         $file_data = Base::getStaticFileData($path);
         $file_extion = Base::getDbFileExtion($path);

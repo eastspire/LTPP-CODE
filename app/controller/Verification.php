@@ -19,7 +19,7 @@ class Verification extends Email
         $name = $request->post('name');
         $to = $request->post('to');
         if (!$name || !$to) {
-            return json(['code' => -1, 'msg' => 'Base::$param_error_msg']);
+            return json(['code' => -1, 'msg' => Base::$param_error_msg]);
         }
 
         $canregister = Base::getSettingKeyData('canregister');
@@ -82,7 +82,7 @@ class Verification extends Email
         $name = $request->post('name');
         $to = $request->post('to');
         if (!$name || !$to) {
-            return json(['code' => -1, 'msg' => 'Base::$param_error_msg']);
+            return json(['code' => -1, 'msg' => Base::$param_error_msg]);
         }
 
         $judge = Db::table('user')

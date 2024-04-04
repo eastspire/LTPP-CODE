@@ -29,7 +29,7 @@ class Chatfile
         $user_uid = $request->post('user_id');
         $user_id = Base::getIdByUid($user_uid);
         if (!$my_aid || $user_id == '') {
-            return json(['code' => -1, 'msg' => 'Base::$param_error_msg！']);
+            return json(['code' => -1, 'msg' => Base::$param_error_msg]);
         }
         $file = $request->file('file');
         $text = Base::uploadChatFileToDb($my_aid, $user_id, $file);
@@ -49,7 +49,7 @@ class Chatfile
         $user_uid = $request->post('user_id');
         $user_id = Base::getIdByUid($user_uid);
         if (!$my_aid || $user_id == '') {
-            return json(['code' => -1, 'msg' => 'Base::$param_error_msg！']);
+            return json(['code' => -1, 'msg' => Base::$param_error_msg]);
         }
         $chat_path_list = Base::loadChatFileList($my_aid, $user_id);
         $res = [];
@@ -82,7 +82,7 @@ class Chatfile
         $path = $request->post('path');
         $path = Base::Base64Decode($path);
         if (!$path) {
-            return json(['code' => -1, 'msg' => 'Base::$param_error_msg']);
+            return json(['code' => -1, 'msg' => Base::$param_error_msg]);
         }
         $file_data = Base::getStaticFileData($path);
         $file_extion = Base::getDbFileExtion($path);

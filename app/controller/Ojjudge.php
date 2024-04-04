@@ -228,7 +228,7 @@ class Ojjudge
             return json([
                 'code' => -1,
                 'code_id' => '',
-                'msg' => 'Base::$param_error_msg'
+                'msg' => Base::$param_error_msg
             ]);
         }
         //代码检测
@@ -287,7 +287,7 @@ class Ojjudge
         if (!$my_aid || !$code_id || !$code || !$userlanguage || !$problem_id) {
             return [
                 'code' => -1,
-                'result' => 'Base::$param_error_msg',
+                'result' => Base::$param_error_msg,
                 'usememory' => 0,
                 'usetime' => 0
             ];

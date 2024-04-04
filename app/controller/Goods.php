@@ -321,7 +321,7 @@ class Goods
         }
         $data = $request->post('goods') ?? '';
         if (!$data || $data == '') {
-            return json(['code' => -1, 'msg' => 'Base::$param_error_msg！']);
+            return json(['code' => -1, 'msg' => Base::$param_error_msg]);
         }
 
         if (!isset($data['money'])) {
@@ -365,7 +365,7 @@ class Goods
         }
         $goods_uid = $request->post('id') ?? '';
         if (!$goods_uid || $goods_uid == '') {
-            return json(['code' => -1, 'msg' => 'Base::$param_error_msg！']);
+            return json(['code' => -1, 'msg' => Base::$param_error_msg]);
         }
         $goods_id = Base::getIdByUid($goods_uid);
         $md5month = md5(date("Y-m", time()));

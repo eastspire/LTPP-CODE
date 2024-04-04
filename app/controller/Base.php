@@ -3409,7 +3409,7 @@ class Base
         if (!isset(Base::$language_map[$userlanguage])) {
             return [
                 'code' => -1,
-                'msg' => 'Base::$param_error_msg',
+                'msg' => Base::$param_error_msg,
                 'code_id' => 0
             ];
         }
@@ -3440,7 +3440,7 @@ class Base
             default:
                 return json([
                     'code' => -1,
-                    'msg' => 'Base::$param_error_msg',
+                    'msg' => Base::$param_error_msg,
                     'code_id' => 0,
                 ]);
         }
@@ -3703,7 +3703,7 @@ class Base
                         'status' => Base::$judge_server_error,
                         'time_used' => 0,
                         'memory_used' => 0,
-                        'msg' => 'Base::$param_error_msg'
+                        'msg' => Base::$param_error_msg
                     ])
                 ];
             }
