@@ -41,9 +41,9 @@ typedef unsigned long long int ull;
 #define __max(a, b) (((a) > (b)) ? (a) : (b))
 
 /**
- * @brief 结果状态未更新
+ * @brief 进程成功退出状态码
  */
-#define LTPP_CODE_NO_INIT -2
+#define PROCESS_EXIT_SUCCESS 0
 
 /**
  * @brief 代码运行错误
@@ -54,11 +54,6 @@ typedef unsigned long long int ull;
  * @brief 服务器错误
  */
 #define LTPP_SERVER_ERROR 0
-
-/**
- * @brief 子进程成功退出
- */
-#define LTPP_CHILD_SUCCESS 0
 
 /**
  * @brief 运行正常
@@ -113,7 +108,7 @@ typedef unsigned long long int ull;
 /**
  * @brief 重定向流失败
  */
-#define LTPP_CHILD_RedirectFailure 11
+#define LTPP_REDIRECT_FAILURE 11
 
 /**
  * @brief 数组长度
@@ -247,6 +242,7 @@ void stdoutToResDataMsg();
 void exitDeleteAllProcess();
 void lowerFilePermissions();
 void *timeoutExit(void *argc);
+char *joinStrings(char *strings[]);
 char *readFile(const char *filename);
 char *jsonEncodeValue(const char *str);
 void monitor(pid_t pid, bool is_compiler);
@@ -282,7 +278,7 @@ bool judgeSameString(const char *str1, const char *str2)
  */
 void updateErrorResault(int status, const char *custom_msg, const char *error_msg)
 {
-    if (res_data->status != LTPP_CODE_NO_INIT && res_data->status != LTPP_FINISH)
+    if (res_data->status != LTPP_FINISH)
     {
         return;
     }
@@ -494,9 +490,9 @@ void runCode(char *run_cmd[], pid_t pid, bool is_compiler)
             exit(is_compiler ? LTPP_COMPILER_ERROR : LTPP_CHILD_ERROR);
         }
         closeDup(newstdin, newstdout, newstderr);
-        exit(LTPP_CHILD_SUCCESS);
+        exit(PROCESS_EXIT_SUCCESS);
     }
-    exit(LTPP_CHILD_RedirectFailure);
+    exit(LTPP_REDIRECT_FAILURE);
 }
 
 /**
@@ -650,7 +646,7 @@ char *jsonEncodeValue(const char *str)
 void exitDeleteAllProcess()
 {
     int res = system("pkill -TERM -P $PPID");
-    exit(LTPP_FINISH);
+    exit(PROCESS_EXIT_SUCCESS);
 }
 
 /**
@@ -675,7 +671,7 @@ void monitor(pid_t pid, bool is_compiler)
     if (WIFEXITED(status))
     {
         int child_exit_status = WEXITSTATUS(status);
-        if (child_exit_status != LTPP_CHILD_SUCCESS)
+        if (child_exit_status != PROCESS_EXIT_SUCCESS)
         {
             switch (status)
             {
@@ -717,7 +713,7 @@ void monitor(pid_t pid, bool is_compiler)
                 updateErrorResault(status, "切换用户失败", "");
                 break;
             }
-            case LTPP_CHILD_RedirectFailure:
+            case LTPP_REDIRECT_FAILURE:
             {
                 status = LTPP_SERVER_ERROR;
                 updateErrorResault(status, "重定向流失败", "");
@@ -823,12 +819,63 @@ void stdoutToResDataMsg()
 }
 
 /**
+ * @brief 指针数组转字符串
+ * @param strings 指针数组
+ * @return char* 字符串
+ */
+char *joinStrings(char *strings[])
+{
+    int num_strings = 0;
+    while (strings[num_strings] != NULL)
+    {
+        num_strings++;
+    }
+
+    // 计算拼接后的字符串总长度
+    int total_length = 0;
+    for (int i = 0; i < num_strings; i++)
+    {
+        total_length += strlen(strings[i]);
+    }
+    // 分配内存用于存储拼接后的字符串
+    // +1 是为了存储字符串结束符 '\0'
+    char *result = (char *)malloc(total_length + 1);
+    if (result == NULL)
+    {
+        fprintf(stderr, "Memory allocation failed\n");
+        exit(1);
+    }
+
+    int index = 0;
+    for (int i = 0; i < num_strings; i++)
+    {
+        strcpy(result + index, strings[i]);
+        index += strlen(strings[i]);
+    }
+
+    result[index] = str_end_symbol;
+
+    return result;
+}
+
+/**
  * @brief 运行
  * @param cmd 运行命令
  * @param is_compiler 是否是编译模式
  */
 void run(char *cmd[], bool is_compiler)
 {
+    const char *cmd_str = joinStrings(cmd);
+    if (judgeSameString(cmd_str, empty_str))
+    {
+        if (!is_compiler)
+        {
+            // 运行模式下需要输出结果
+            cout();
+        }
+        // 无运行命令情况下直接返回
+        return;
+    }
     errno = 0;
     global_time_max_limit = *time_limit / 1000 + 2;
     pid_t pid = vfork();
@@ -904,7 +951,7 @@ void cout()
 void initResData()
 {
     res_data->msg = empty_str;
-    res_data->status = LTPP_CODE_NO_INIT;
+    res_data->status = LTPP_FINISH;
     res_data->time_used = 0;
     res_data->memory_used = 0;
 }
