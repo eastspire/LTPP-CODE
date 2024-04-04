@@ -46,69 +46,154 @@ typedef unsigned long long int ull;
 #define PROCESS_EXIT_SUCCESS 0
 
 /**
- * @brief 代码运行错误
+ * @brief LTPP 代码运行错误返回给LTPP的状态码
  */
 #define LTPP_CODE_ERROR -1
 
 /**
- * @brief 服务器错误
+ * @brief LTPP 服务器错误返回给LTPP的状态码
  */
-#define LTPP_SERVER_ERROR 0
+#define LTPP_CODE_SERVER_ERROR 0
 
 /**
- * @brief 运行正常
+ * @brief LTPP 运行正常返回给LTPP的状态码
  */
-#define LTPP_FINISH 1
+#define LTPP_CODE_FINISH 1
 
 /**
- * @brief 编译错误
+ * @brief LTPP 编译错误返回给LTPP的状态码
  */
-#define LTPP_COMPILER_ERROR 2
+#define LTPP_CODE_COMPILER_ERROR 2
 
 /**
- * @brief 运行超时
+ * @brief LTPP 运行超时返回给LTPP的状态码
  */
-#define LTPP_TLE 3
+#define LTPP_CODE_TLE 3
 
 /**
- * @brief 运行超内存
+ * @brief LTPP 运行超内存返回给LTPP的状态码
  */
-#define LTPP_MLE 4
+#define LTPP_CODE_MLE 4
 
 /**
- * @brief RE错误
+ * @brief LTPP RE错误返回给LTPP的状态码
  */
-#define LTPP_RE 5
+#define LTPP_CODE_RE 5
 
 /**
- * @brief 用户代码运行出错
+ * @brief 用户代码运行出错的状态码
  */
-#define LTPP_CHILD_ERROR 6
+#define JUDGE_CODE_CHILD_ERROR 6
 
 /**
- * @brief 创建命名空间失败
+ * @brief 创建命名空间失败的状态码
  */
-#define LTPP_CHILD_FailedToCreateNamespace 7
+#define JUDGE_CODE_CHILD_FAILED_TO_CREATE_NAMESPACE 7
 
 /**
- * @brief 挂载命名空间失败
+ * @brief 挂载命名空间失败的状态码
  */
-#define LTPP_CHILD_FailedToMountNamespace 8
+#define JUDGE_CODE_CHILD_FAILED_TO_MOUNT_NAMESPACE 8
 
 /**
- * @brief 切换用户失败
+ * @brief 切换用户失败的状态码
  */
-#define LTPP_CHILD_FailedToSwitchUsers 9
+#define JUDGE_CODE_CHILD_FAILED_TO_SWITCH_USERS 9
 
 /**
- * @brief 创建隔离环境失败
+ * @brief 创建隔离环境失败的状态码
  */
-#define LTPP_CHILD_FailedToCreateQuarantineEnvironment 10
+#define JUDGE_CODE_CHILD_FAILED_TO_CREATE_QUARANTINE_ENVIRONMENT 10
 
 /**
- * @brief 重定向流失败
+ * @brief 重定向流失败的状态码
  */
-#define LTPP_REDIRECT_FAILURE 11
+#define JUDGE_CODE_REDIRECT_FAILURE 11
+
+/**
+ * @brief 判题机创建子线程监控程序错误的提示信息
+ */
+#define JUDGE_MACHINE_CREATE_MONITOR_THREAD_ERROR "判题机创建子线程监控程序错误"
+
+/**
+ * @brief 判题机序列化信息错误的提示信息
+ */
+#define JUDGE_MACHINE_SERIALIZATION_EXCEPTION "判题机序列化信息错误"
+
+/**
+ * @brief 判题机等待子进程错误的提示信息
+ */
+#define JUDGE_MACHINE_WAIT_FOR_CHILD_PROCESS_ERROR "判题机等待子进程错误"
+
+/**
+ * @brief 判题机创建命名空间错误的提示信息
+ */
+#define NAMESPACE_CREATION_FAILED "判题机创建命名空间错误"
+
+/**
+ * @brief 判题机创建隔离环境错误的提示信息
+ */
+#define JUDGE_MACHINE_CREATE_NAMESPACE_ERROR "判题机创建隔离环境错误"
+
+/**
+ * @brief 判题机挂载命名空间错误的提示信息
+ */
+#define JUDGE_MACHINE_MOUNT_NAMESPACE_ERROR "判题机挂载命名空间错误"
+
+/**
+ * @brief 判题机切换用户错误的提示信息
+ */
+#define JUDGE_MACHINE_SWITCH_USER_ERROR "判题机切换用户错误"
+
+/**
+ * @brief 判题机重定向流错误的提示信息
+ */
+#define JUDGE_MACHINE_STREAM_REDIRECTION_ERROR "判题机重定向流错误"
+
+/**
+ * @brief 判判题机创建子进程错误的提示信息
+ */
+#define JUDGE_MACHINE_CREATE_CHILD_PROCESS_ERROR "判题机创建子进程错误"
+
+/**
+ * @brief 用户代码运行错误的提示信息
+ */
+#define USER_CODE_EXECUTION_ERROR "用户代码运行错误"
+
+/**
+ * @brief 用户代码编译错误的提示信息
+ */
+#define USER_CODE_COMPILATION_ERROR "用户代码编译错误"
+
+/**
+ * @brief TLE的提示信息
+ */
+#define TLE "运行超时"
+
+/**
+ * @brief MLE的提示信息
+ */
+#define MLE "内存超限"
+
+/**
+ * @brief RE的提示信息
+ */
+#define RE "运行错误"
+
+/**
+ * @brief 判题机错误的提示信息
+ */
+#define JUDGE_MACHINE_ERROR "判题机错误"
+
+/**
+ * @brief 根目录
+ */
+#define ROOT_DIRECTORY "/"
+
+/**
+ * @brief 沙箱目录
+ */
+#define SANDBOX_DIRECTORY "/home/LTPPSANDBOX"
 
 /**
  * @brief 数组长度
@@ -144,16 +229,6 @@ char empty_str_arr[] = "\0";
  * @brief 空字符串
  */
 const char *empty_str = empty_str_arr;
-
-/**
- * @brief 根目录
- */
-const char *root_path = "/";
-
-/**
- * @brief 沙箱目录
- */
-const char *sandbox_path = "/home/LTPPSANDBOX";
 
 /**
  * @brief 标准输入
@@ -194,11 +269,6 @@ const ull *time_limit = NULL;
  * @brief 内存限制
  */
 const ull *memory_limit = NULL;
-
-/**
- * @brief 服务器异常提示信息
- */
-const char *server_error_msg = "服务器异常";
 
 /**
  * @brief 结果结构体
@@ -278,7 +348,7 @@ bool judgeSameString(const char *str1, const char *str2)
  */
 void updateErrorResault(int status, const char *custom_msg, const char *error_msg)
 {
-    if (res_data->status != LTPP_FINISH)
+    if (res_data->status != LTPP_CODE_FINISH)
     {
         return;
     }
@@ -373,14 +443,13 @@ char *concatenateStrings(const char *str1, const char *str2)
 }
 
 /**
- * @brief 获取内存使用
+ * @brief 获取内存使用（单位:KB）
  */
 void childMemoryUsed()
 {
     struct rusage usage;
     if (getrusage(RUSAGE_SELF, &usage) == 0)
     {
-        // 单位:KB
         res_data->memory_used = usage.ru_maxrss;
     }
 }
@@ -401,7 +470,8 @@ void *timeoutExit(void *argc)
     }
     childMemoryUsed();
     res_data->time_used = global_time_max_limit * 1000;
-    updateErrorResault(LTPP_TLE, "用户代码运行超时", "");
+    const char *out_msg = readFile(stdout_path);
+    updateErrorResault(LTPP_CODE_TLE, TLE, out_msg);
     stdoutToResDataMsg();
     cout();
     exitProcess();
@@ -429,8 +499,8 @@ void childTimeLimit()
     pthread_t tid;
     if (pthread_create(&tid, NULL, timeoutExit, NULL) != 0)
     {
-        updateErrorResault(LTPP_SERVER_ERROR, "子线程监控程序创建失败", strerror(errno));
-        exit(LTPP_SERVER_ERROR);
+        updateErrorResault(LTPP_CODE_SERVER_ERROR, JUDGE_MACHINE_CREATE_MONITOR_THREAD_ERROR, strerror(errno));
+        exit(LTPP_CODE_SERVER_ERROR);
     }
 }
 
@@ -452,7 +522,7 @@ void runCode(char *run_cmd[], pid_t pid, bool is_compiler)
     {
         while (run_cmd[cnt] != NULL)
         {
-            if (strstr(run_cmd[cnt], sandbox_path) != NULL)
+            if (strstr(run_cmd[cnt], SANDBOX_DIRECTORY) != NULL)
             {
                 path_loc = cnt;
             }
@@ -460,7 +530,7 @@ void runCode(char *run_cmd[], pid_t pid, bool is_compiler)
         }
         --cnt;
         // 替换为沙箱内的绝对路径
-        run_cmd[path_loc] = strstr(run_cmd[path_loc], sandbox_path) + strlen(sandbox_path);
+        run_cmd[path_loc] = strstr(run_cmd[path_loc], SANDBOX_DIRECTORY) + strlen(SANDBOX_DIRECTORY);
     }
     newstdin = open(stdin_path, O_RDWR | O_CREAT, 0644);
     newstdout = open(stdout_path, O_RDWR | O_CREAT, 0644);
@@ -487,12 +557,12 @@ void runCode(char *run_cmd[], pid_t pid, bool is_compiler)
         if (execvp(run_cmd[0], run_cmd) == -1)
         {
             closeDup(newstdin, newstdout, newstderr);
-            exit(is_compiler ? LTPP_COMPILER_ERROR : LTPP_CHILD_ERROR);
+            exit(is_compiler ? LTPP_CODE_COMPILER_ERROR : JUDGE_CODE_CHILD_ERROR);
         }
         closeDup(newstdin, newstdout, newstderr);
         exit(PROCESS_EXIT_SUCCESS);
     }
-    exit(LTPP_REDIRECT_FAILURE);
+    exit(JUDGE_CODE_REDIRECT_FAILURE);
 }
 
 /**
@@ -507,13 +577,13 @@ void creatNamespace(int newstdin, int newstdout, int newstderr)
     if (unshare(CLONE_NEWNS) == -1)
     {
         closeDup(newstdin, newstdout, newstderr);
-        exit(LTPP_CHILD_FailedToCreateNamespace);
+        exit(JUDGE_CODE_CHILD_FAILED_TO_CREATE_NAMESPACE);
     }
     // 挂载命名空间（设置只读，对于之前打开的流无影响）
-    if (mount(sandbox_path, "/", NULL, MS_BIND | MS_RDONLY, NULL) == -1)
+    if (mount(SANDBOX_DIRECTORY, "/", NULL, MS_BIND | MS_RDONLY, NULL) == -1)
     {
         closeDup(newstdin, newstdout, newstderr);
-        exit(LTPP_CHILD_FailedToMountNamespace);
+        exit(JUDGE_CODE_CHILD_FAILED_TO_MOUNT_NAMESPACE);
     }
 }
 
@@ -537,7 +607,7 @@ void removePrivileges(int newstdin, int newstdout, int newstderr)
     {
         // 切换用户失败
         closeDup(newstdin, newstdout, newstderr);
-        exit(LTPP_CHILD_FailedToSwitchUsers);
+        exit(JUDGE_CODE_CHILD_FAILED_TO_SWITCH_USERS);
     }
     cap_t caps = cap_get_proc();
     cap_clear(caps);
@@ -554,11 +624,11 @@ void joinDeepChroot(int newstdin, int newstdout, int newstderr)
 {
     for (int i = 0; i < deep_chroot; ++i)
     {
-        if (chroot(sandbox_path) != 0 && chdir(root_path) != 0)
+        if (chroot(SANDBOX_DIRECTORY) != 0 && chdir(ROOT_DIRECTORY) != 0)
         {
             // 创建隔离环境失败
             closeDup(newstdin, newstdout, newstderr);
-            exit(LTPP_CHILD_FailedToCreateQuarantineEnvironment);
+            exit(JUDGE_CODE_CHILD_FAILED_TO_CREATE_QUARANTINE_ENVIRONMENT);
         }
     }
 }
@@ -595,7 +665,7 @@ char *jsonEncodeValue(const char *str)
     char *encoded_str = (char *)malloc((len * 2 + 1) * sizeof(char));
     if (encoded_str == NULL)
     {
-        updateErrorResault(LTPP_SERVER_ERROR, "判题机序列化信息异常", strerror(errno));
+        updateErrorResault(LTPP_CODE_SERVER_ERROR, JUDGE_MACHINE_SERIALIZATION_EXCEPTION, strerror(errno));
         return empty_str_arr;
     }
     char *p = encoded_str;
@@ -660,13 +730,13 @@ void monitor(pid_t pid, bool is_compiler)
     struct rusage ru;
     if (wait4(pid, &status, 0, &ru) == -1)
     {
-        updateErrorResault(LTPP_SERVER_ERROR, "等待子进程出错", strerror(errno));
+        updateErrorResault(LTPP_CODE_SERVER_ERROR, JUDGE_MACHINE_WAIT_FOR_CHILD_PROCESS_ERROR, strerror(errno));
         return;
     }
     res_data->time_used = ru.ru_utime.tv_sec * 1000 + ru.ru_utime.tv_usec / 1000 + ru.ru_stime.tv_sec * 1000 + ru.ru_stime.tv_usec / 1000;
     res_data->memory_used = ru.ru_maxrss;
     const ull memory_used = ru.ru_maxrss << 10;
-    res_data->status = LTPP_FINISH;
+    res_data->status = LTPP_CODE_FINISH;
     if (WIFEXITED(status))
     {
         int child_exit_status = WEXITSTATUS(status);
@@ -674,70 +744,75 @@ void monitor(pid_t pid, bool is_compiler)
         {
             switch (status)
             {
-            case LTPP_CHILD_ERROR:
+            case JUDGE_CODE_CHILD_FAILED_TO_CREATE_NAMESPACE:
             {
-                status = LTPP_SERVER_ERROR;
+                status = LTPP_CODE_SERVER_ERROR;
                 const char *err_msg = readFile(stderr_path);
-                updateErrorResault(status, "用户代码运行出错", err_msg);
+                updateErrorResault(status, NAMESPACE_CREATION_FAILED, err_msg);
                 break;
             }
-            case LTPP_COMPILER_ERROR:
+            case JUDGE_CODE_CHILD_FAILED_TO_CREATE_QUARANTINE_ENVIRONMENT:
             {
-                status = LTPP_SERVER_ERROR;
+                status = LTPP_CODE_SERVER_ERROR;
                 const char *err_msg = readFile(stderr_path);
-                updateErrorResault(status, "用户代码编译出错", err_msg);
+                updateErrorResault(status, JUDGE_MACHINE_CREATE_NAMESPACE_ERROR, err_msg);
                 break;
             }
-            case LTPP_CHILD_FailedToCreateNamespace:
+            case JUDGE_CODE_CHILD_FAILED_TO_MOUNT_NAMESPACE:
             {
-                status = LTPP_SERVER_ERROR;
-                updateErrorResault(status, "创建命名空间失败", "");
+                status = LTPP_CODE_SERVER_ERROR;
+                const char *err_msg = readFile(stderr_path);
+                updateErrorResault(status, JUDGE_MACHINE_MOUNT_NAMESPACE_ERROR, err_msg);
                 break;
             }
-            case LTPP_CHILD_FailedToCreateQuarantineEnvironment:
+            case JUDGE_CODE_CHILD_FAILED_TO_SWITCH_USERS:
             {
-                status = LTPP_SERVER_ERROR;
-                updateErrorResault(status, "创建隔离环境失败", "");
+                status = LTPP_CODE_SERVER_ERROR;
+                const char *err_msg = readFile(stderr_path);
+                updateErrorResault(status, JUDGE_MACHINE_SWITCH_USER_ERROR, err_msg);
                 break;
             }
-            case LTPP_CHILD_FailedToMountNamespace:
+            case JUDGE_CODE_REDIRECT_FAILURE:
             {
-                status = LTPP_SERVER_ERROR;
-                updateErrorResault(status, "挂载命名空间失败", "");
+                status = LTPP_CODE_SERVER_ERROR;
+                const char *err_msg = readFile(stderr_path);
+                updateErrorResault(status, JUDGE_MACHINE_STREAM_REDIRECTION_ERROR, err_msg);
                 break;
             }
-            case LTPP_CHILD_FailedToSwitchUsers:
+            case LTPP_CODE_MLE:
             {
-                status = LTPP_SERVER_ERROR;
-                updateErrorResault(status, "切换用户失败", "");
+                status = LTPP_CODE_MLE;
+                const char *out_msg = readFile(stdout_path);
+                updateErrorResault(status, MLE, out_msg);
                 break;
             }
-            case LTPP_REDIRECT_FAILURE:
+            case LTPP_CODE_RE:
             {
-                status = LTPP_SERVER_ERROR;
-                updateErrorResault(status, "重定向流失败", "");
+                status = LTPP_CODE_RE;
+                const char *out_msg = readFile(stdout_path);
+                updateErrorResault(status, RE, out_msg);
                 break;
             }
-            case LTPP_TLE:
+            case LTPP_CODE_TLE:
             {
-                status = LTPP_TLE;
-                res_data->time_used = global_time_max_limit * 1000;
-                updateErrorResault(status, "用户代码运行超时", "");
+                status = LTPP_CODE_TLE;
+                const char *out_msg = readFile(stdout_path);
+                updateErrorResault(status, TLE, out_msg);
                 break;
             }
             default:
             {
                 if (is_compiler)
                 {
-                    status = LTPP_COMPILER_ERROR;
+                    status = LTPP_CODE_COMPILER_ERROR;
                     const char *err_msg = readFile(stderr_path);
-                    updateErrorResault(status, "用户代码编译错误", err_msg);
+                    updateErrorResault(status, USER_CODE_COMPILATION_ERROR, err_msg);
                 }
                 else
                 {
                     status = LTPP_CODE_ERROR;
                     const char *err_msg = readFile(stderr_path);
-                    updateErrorResault(status, "用户代码运行错误", err_msg);
+                    updateErrorResault(status, USER_CODE_EXECUTION_ERROR, err_msg);
                 }
                 break;
             }
@@ -753,29 +828,34 @@ void monitor(pid_t pid, bool is_compiler)
         {
             if (res_data->time_used > *time_limit)
             {
-                res_data->status = LTPP_TLE;
+                const char *out_msg = readFile(stdout_path);
+                updateErrorResault(LTPP_CODE_TLE, TLE, out_msg);
             }
             else if (memory_used > *memory_limit)
             {
-                res_data->status = LTPP_MLE;
+                const char *out_msg = readFile(stdout_path);
+                updateErrorResault(LTPP_CODE_MLE, MLE, out_msg);
             }
             else
             {
-                res_data->status = LTPP_RE;
+                const char *out_msg = readFile(stdout_path);
+                updateErrorResault(LTPP_CODE_MLE, RE, out_msg);
             }
             break;
         }
         case SIGALRM:
         case SIGXCPU:
         {
-            res_data->status = LTPP_TLE;
+            const char *out_msg = readFile(stdout_path);
+            updateErrorResault(LTPP_CODE_TLE, TLE, out_msg);
             break;
         }
         default:
         {
             // 子进程被其他信号终止则为超时
             // 因为只有一个线程单独处理超时
-            res_data->status = LTPP_TLE;
+            const char *out_msg = readFile(stdout_path);
+            updateErrorResault(LTPP_CODE_TLE, TLE, out_msg);
             break;
         }
         }
@@ -784,25 +864,27 @@ void monitor(pid_t pid, bool is_compiler)
     {
         if (res_data->time_used > *time_limit)
         {
-            res_data->status = LTPP_TLE;
+            const char *out_msg = readFile(stdout_path);
+            updateErrorResault(LTPP_CODE_TLE, TLE, out_msg);
         }
         else if (memory_used > *memory_limit)
         {
-            res_data->status = LTPP_MLE;
+            const char *out_msg = readFile(stdout_path);
+            updateErrorResault(LTPP_CODE_MLE, MLE, out_msg);
         }
         else if (!isFileEmpty(stderr_path))
         {
             if (is_compiler)
             {
-                status = LTPP_COMPILER_ERROR;
+                status = LTPP_CODE_COMPILER_ERROR;
                 const char *err_msg = readFile(stderr_path);
-                updateErrorResault(status, "用户代码编译错误", err_msg);
+                updateErrorResault(status, USER_CODE_COMPILATION_ERROR, err_msg);
             }
             else
             {
                 status = LTPP_CODE_ERROR;
                 const char *err_msg = readFile(stderr_path);
-                updateErrorResault(status, "用户代码运行错误", err_msg);
+                updateErrorResault(status, USER_CODE_EXECUTION_ERROR, err_msg);
             }
         }
     }
@@ -868,6 +950,8 @@ char *joinStrings(char *strings[])
  */
 void run(char *cmd[], bool is_compiler)
 {
+    errno = 0;
+    global_time_max_limit = *time_limit / 1000 + 2;
     const char *cmd_str = joinStrings(cmd);
     if (cmd_str == NULL || judgeSameString(cmd_str, empty_str))
     {
@@ -880,12 +964,10 @@ void run(char *cmd[], bool is_compiler)
         // 无运行命令情况下直接返回
         return;
     }
-    errno = 0;
-    global_time_max_limit = *time_limit / 1000 + 2;
     pid_t pid = vfork();
     if (pid < 0)
     {
-        updateErrorResault(LTPP_SERVER_ERROR, "判题机创建运行子进程出错", strerror(errno));
+        updateErrorResault(LTPP_CODE_SERVER_ERROR, JUDGE_MACHINE_CREATE_CHILD_PROCESS_ERROR, strerror(errno));
         stdoutToResDataMsg();
         cout();
         exitProcess();
@@ -943,7 +1025,7 @@ void cout()
     char *json = (char *)malloc((length + 1) * sizeof(char));
     if (json == NULL)
     {
-        updateErrorResault(LTPP_SERVER_ERROR, server_error_msg, strerror(errno));
+        updateErrorResault(LTPP_CODE_SERVER_ERROR, JUDGE_MACHINE_ERROR, strerror(errno));
     }
     res_data->msg = jsonEncodeValue(res_data->msg);
     sprintf(json, "{\"status\":\"%d\",\"time_used\":\"%llu\",\"memory_used\":\"%llu\",\"msg\":\"%s\"}", res_data->status, res_data->time_used, res_data->memory_used, res_data->msg);
@@ -956,7 +1038,7 @@ void cout()
 void initResData()
 {
     res_data->msg = empty_str;
-    res_data->status = LTPP_FINISH;
+    res_data->status = LTPP_CODE_FINISH;
     res_data->time_used = 0;
     res_data->memory_used = 0;
 }
