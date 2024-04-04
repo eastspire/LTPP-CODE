@@ -861,14 +861,17 @@ void stdoutToResDataMsg()
     case LTPP_CODE_TLE:
     case LTPP_CODE_MLE:
     case LTPP_CODE_RE:
+    {
         char *out_msg = readFile(stdout_path);
         if (!judgeSameString(out_msg, empty_str))
         {
             const char *tmp_out_msg = concatenateStrings(br, out_msg);
             res_data->msg = concatenateStrings(res_data->msg, tmp_out_msg);
         }
-        return;
+        break;
+    }
     default:
+    {
         char *err_msg = readFile(stderr_path);
         if (!judgeSameString(err_msg, empty_str))
         {
@@ -876,6 +879,7 @@ void stdoutToResDataMsg()
             res_data->msg = concatenateStrings(res_data->msg, tmp_err_msg);
         }
         return;
+    }
     }
 }
 
