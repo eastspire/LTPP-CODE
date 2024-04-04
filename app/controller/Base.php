@@ -108,12 +108,7 @@ class Base
     static $code_up_fail_msg = '代码提交失败！请重新提交！';
 
     /**
-     * 异常超时提示
-     */
-    static $timout_error_msg = '系统检测到异常代码导致运行超时！请修改代码后重新运行！';
-
-    /**
-     * 不支持语言提示
+     * 不支持的语言提示
      */
     static $no_support_language_msg = '该语言暂不支持！请重新选择语言后提交！';
 
