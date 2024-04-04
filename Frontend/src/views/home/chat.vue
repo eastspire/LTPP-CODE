@@ -1825,9 +1825,9 @@ export default {
 }
 
 /deep/.creat_group_input .el-input__inner {
-  border-width: 1px !important;
-  border-color: aliceblue !important;
-  border: dashed;
+  border-width: 0px !important;
+  border-color: transparent !important;
+  border: 0px transparent !important;
 }
 
 .user {
