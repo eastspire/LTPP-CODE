@@ -320,12 +320,12 @@ void run(char *run_cmd[], bool is_compiler);
 void split(char **arr, char *str, const char *del);
 bool judgeSameString(const char *str1, const char *str2);
 void runCode(char *run_cmd[], pid_t pid, bool is_compiler);
+void updateErrorResault(int status, const char *custom_msg);
 void closeDup(int &newstdin, int &newstdout, int &newstderr);
 char *concatenateStrings(const char *str1, const char *str2);
 void creatNamespace(int newstdin, int newstdout, int newstderr);
 void joinDeepChroot(int newstdin, int newstdout, int newstderr);
 void removePrivileges(int newstdin, int newstdout, int newstderr);
-void updateErrorResault(int status, const char *custom_msg, const char *error_msg);
 
 /**
  * @brief 判断字符串是否相同
@@ -344,24 +344,15 @@ bool judgeSameString(const char *str1, const char *str2)
  * @brief 更新错误结果（状态仅允许改变一次）
  * @param status 状态码
  * @param custom_msg 简约消息
- * @param error_msg 错误消息
  */
-void updateErrorResault(int status, const char *custom_msg, const char *error_msg)
+void updateErrorResault(int status, const char *custom_msg)
 {
     if (res_data->status != LTPP_CODE_FINISH)
     {
         return;
     }
     res_data->status = status;
-    if (judgeSameString(error_msg, empty_str))
-    {
-        res_data->msg = custom_msg;
-    }
-    else
-    {
-        const char *tmp_error_msg = concatenateStrings(br, error_msg);
-        res_data->msg = concatenateStrings(custom_msg, tmp_error_msg);
-    }
+    res_data->msg = custom_msg;
 }
 
 /**
@@ -470,8 +461,7 @@ void *timeoutExit(void *argc)
     }
     childMemoryUsed();
     res_data->time_used = global_time_max_limit * 1000;
-    const char *out_msg = readFile(stdout_path);
-    updateErrorResault(LTPP_CODE_TLE, TLE, out_msg);
+    updateErrorResault(LTPP_CODE_TLE, TLE);
     cout();
     exitProcess();
     return NULL;
@@ -498,7 +488,7 @@ void childTimeLimit()
     pthread_t tid;
     if (pthread_create(&tid, NULL, timeoutExit, NULL) != 0)
     {
-        updateErrorResault(LTPP_CODE_SERVER_ERROR, JUDGE_MACHINE_CREATE_MONITOR_THREAD_ERROR, strerror(errno));
+        updateErrorResault(LTPP_CODE_SERVER_ERROR, JUDGE_MACHINE_CREATE_MONITOR_THREAD_ERROR);
         exit(LTPP_CODE_SERVER_ERROR);
     }
 }
@@ -664,7 +654,7 @@ char *jsonEncodeValue(const char *str)
     char *encoded_str = (char *)malloc((len * 2 + 1) * sizeof(char));
     if (encoded_str == NULL)
     {
-        updateErrorResault(LTPP_CODE_SERVER_ERROR, JUDGE_MACHINE_SERIALIZATION_EXCEPTION, strerror(errno));
+        updateErrorResault(LTPP_CODE_SERVER_ERROR, JUDGE_MACHINE_SERIALIZATION_EXCEPTION);
         return empty_str_arr;
     }
     char *p = encoded_str;
@@ -729,7 +719,7 @@ void monitor(pid_t pid, bool is_compiler)
     struct rusage ru;
     if (wait4(pid, &status, 0, &ru) == -1)
     {
-        updateErrorResault(LTPP_CODE_SERVER_ERROR, JUDGE_MACHINE_WAIT_FOR_CHILD_PROCESS_ERROR, strerror(errno));
+        updateErrorResault(LTPP_CODE_SERVER_ERROR, JUDGE_MACHINE_WAIT_FOR_CHILD_PROCESS_ERROR);
         return;
     }
     res_data->time_used = ru.ru_utime.tv_sec * 1000 + ru.ru_utime.tv_usec / 1000 + ru.ru_stime.tv_sec * 1000 + ru.ru_stime.tv_usec / 1000;
@@ -745,73 +735,53 @@ void monitor(pid_t pid, bool is_compiler)
             {
             case JUDGE_CODE_CHILD_FAILED_TO_CREATE_NAMESPACE:
             {
-                status = LTPP_CODE_SERVER_ERROR;
-                const char *err_msg = readFile(stderr_path);
-                updateErrorResault(status, NAMESPACE_CREATION_FAILED, err_msg);
+                updateErrorResault(LTPP_CODE_SERVER_ERROR, NAMESPACE_CREATION_FAILED);
                 break;
             }
             case JUDGE_CODE_CHILD_FAILED_TO_CREATE_QUARANTINE_ENVIRONMENT:
             {
-                status = LTPP_CODE_SERVER_ERROR;
-                const char *err_msg = readFile(stderr_path);
-                updateErrorResault(status, JUDGE_MACHINE_CREATE_NAMESPACE_ERROR, err_msg);
+                updateErrorResault(LTPP_CODE_SERVER_ERROR, JUDGE_MACHINE_CREATE_NAMESPACE_ERROR);
                 break;
             }
             case JUDGE_CODE_CHILD_FAILED_TO_MOUNT_NAMESPACE:
             {
-                status = LTPP_CODE_SERVER_ERROR;
-                const char *err_msg = readFile(stderr_path);
-                updateErrorResault(status, JUDGE_MACHINE_MOUNT_NAMESPACE_ERROR, err_msg);
+                updateErrorResault(LTPP_CODE_SERVER_ERROR, JUDGE_MACHINE_MOUNT_NAMESPACE_ERROR);
                 break;
             }
             case JUDGE_CODE_CHILD_FAILED_TO_SWITCH_USERS:
             {
-                status = LTPP_CODE_SERVER_ERROR;
-                const char *err_msg = readFile(stderr_path);
-                updateErrorResault(status, JUDGE_MACHINE_SWITCH_USER_ERROR, err_msg);
+                updateErrorResault(LTPP_CODE_SERVER_ERROR, JUDGE_MACHINE_SWITCH_USER_ERROR);
                 break;
             }
             case JUDGE_CODE_REDIRECT_FAILURE:
             {
-                status = LTPP_CODE_SERVER_ERROR;
-                const char *err_msg = readFile(stderr_path);
-                updateErrorResault(status, JUDGE_MACHINE_STREAM_REDIRECTION_ERROR, err_msg);
+                updateErrorResault(LTPP_CODE_SERVER_ERROR, JUDGE_MACHINE_STREAM_REDIRECTION_ERROR);
                 break;
             }
             case LTPP_CODE_MLE:
             {
-                status = LTPP_CODE_MLE;
-                const char *out_msg = readFile(stdout_path);
-                updateErrorResault(status, MLE, out_msg);
+                updateErrorResault(LTPP_CODE_MLE, MLE);
                 break;
             }
             case LTPP_CODE_RE:
             {
-                status = LTPP_CODE_RE;
-                const char *out_msg = readFile(stdout_path);
-                updateErrorResault(status, RE, out_msg);
+                updateErrorResault(LTPP_CODE_RE, RE);
                 break;
             }
             case LTPP_CODE_TLE:
             {
-                status = LTPP_CODE_TLE;
-                const char *out_msg = readFile(stdout_path);
-                updateErrorResault(status, TLE, out_msg);
+                updateErrorResault(LTPP_CODE_TLE, TLE);
                 break;
             }
             default:
             {
                 if (is_compiler)
                 {
-                    status = LTPP_CODE_COMPILER_ERROR;
-                    const char *err_msg = readFile(stderr_path);
-                    updateErrorResault(status, USER_CODE_COMPILATION_ERROR, err_msg);
+                    updateErrorResault(LTPP_CODE_COMPILER_ERROR, USER_CODE_COMPILATION_ERROR);
                 }
                 else
                 {
-                    status = LTPP_CODE_ERROR;
-                    const char *err_msg = readFile(stderr_path);
-                    updateErrorResault(status, USER_CODE_EXECUTION_ERROR, err_msg);
+                    updateErrorResault(LTPP_CODE_ERROR, USER_CODE_EXECUTION_ERROR);
                 }
                 break;
             }
@@ -827,34 +797,29 @@ void monitor(pid_t pid, bool is_compiler)
         {
             if (res_data->time_used > *time_limit)
             {
-                const char *out_msg = readFile(stdout_path);
-                updateErrorResault(LTPP_CODE_TLE, TLE, out_msg);
+                updateErrorResault(LTPP_CODE_TLE, TLE);
             }
             else if (memory_used > *memory_limit)
             {
-                const char *out_msg = readFile(stdout_path);
-                updateErrorResault(LTPP_CODE_MLE, MLE, out_msg);
+                updateErrorResault(LTPP_CODE_MLE, MLE);
             }
             else
             {
-                const char *out_msg = readFile(stdout_path);
-                updateErrorResault(LTPP_CODE_MLE, RE, out_msg);
+                updateErrorResault(LTPP_CODE_MLE, RE);
             }
             break;
         }
         case SIGALRM:
         case SIGXCPU:
         {
-            const char *out_msg = readFile(stdout_path);
-            updateErrorResault(LTPP_CODE_TLE, TLE, out_msg);
+            updateErrorResault(LTPP_CODE_TLE, TLE);
             break;
         }
         default:
         {
             // 子进程被其他信号终止则为超时
             // 因为只有一个线程单独处理超时
-            const char *out_msg = readFile(stdout_path);
-            updateErrorResault(LTPP_CODE_TLE, TLE, out_msg);
+            updateErrorResault(LTPP_CODE_TLE, TLE);
             break;
         }
         }
@@ -863,27 +828,23 @@ void monitor(pid_t pid, bool is_compiler)
     {
         if (res_data->time_used > *time_limit)
         {
-            const char *out_msg = readFile(stdout_path);
-            updateErrorResault(LTPP_CODE_TLE, TLE, out_msg);
+            updateErrorResault(LTPP_CODE_TLE, TLE);
         }
         else if (memory_used > *memory_limit)
         {
-            const char *out_msg = readFile(stdout_path);
-            updateErrorResault(LTPP_CODE_MLE, MLE, out_msg);
+            updateErrorResault(LTPP_CODE_MLE, MLE);
         }
         else if (!isFileEmpty(stderr_path))
         {
             if (is_compiler)
             {
                 status = LTPP_CODE_COMPILER_ERROR;
-                const char *err_msg = readFile(stderr_path);
-                updateErrorResault(status, USER_CODE_COMPILATION_ERROR, err_msg);
+                updateErrorResault(status, USER_CODE_COMPILATION_ERROR);
             }
             else
             {
                 status = LTPP_CODE_ERROR;
-                const char *err_msg = readFile(stderr_path);
-                updateErrorResault(status, USER_CODE_EXECUTION_ERROR, err_msg);
+                updateErrorResault(status, USER_CODE_EXECUTION_ERROR);
             }
         }
     }
@@ -894,11 +855,27 @@ void monitor(pid_t pid, bool is_compiler)
  */
 void stdoutToResDataMsg()
 {
-    char *out_msg = readFile(stdout_path);
-    if (!judgeSameString(out_msg, empty_str))
+    switch (res_data->status)
     {
-        const char *tmp_out_msg = concatenateStrings(br, out_msg);
-        res_data->msg = concatenateStrings(res_data->msg, tmp_out_msg);
+    case LTPP_CODE_FINISH:
+    case LTPP_CODE_TLE:
+    case LTPP_CODE_MLE:
+    case LTPP_CODE_RE:
+        char *out_msg = readFile(stdout_path);
+        if (!judgeSameString(out_msg, empty_str))
+        {
+            const char *tmp_out_msg = concatenateStrings(br, out_msg);
+            res_data->msg = concatenateStrings(res_data->msg, tmp_out_msg);
+        }
+        return;
+    default:
+        char *err_msg = readFile(stderr_path);
+        if (!judgeSameString(err_msg, empty_str))
+        {
+            const char *tmp_err_msg = concatenateStrings(br, err_msg);
+            res_data->msg = concatenateStrings(res_data->msg, tmp_err_msg);
+        }
+        return;
     }
 }
 
@@ -922,12 +899,11 @@ char *joinStrings(char *strings[])
         total_length += strlen(strings[i]);
     }
     // 分配内存用于存储拼接后的字符串
-    // +1 是为了存储字符串结束符 '\0'
+    // +1 是为了存储字符串结束符
     char *result = (char *)malloc(total_length + 1);
     if (result == NULL)
     {
-        fprintf(stderr, "Memory allocation failed\n");
-        exit(1);
+        return result;
     }
 
     int index = 0;
@@ -966,7 +942,7 @@ void run(char *cmd[], bool is_compiler)
     pid_t pid = vfork();
     if (pid < 0)
     {
-        updateErrorResault(LTPP_CODE_SERVER_ERROR, JUDGE_MACHINE_CREATE_CHILD_PROCESS_ERROR, strerror(errno));
+        updateErrorResault(LTPP_CODE_SERVER_ERROR, JUDGE_MACHINE_CREATE_CHILD_PROCESS_ERROR);
         cout();
         exitProcess();
     }
@@ -1023,7 +999,7 @@ void cout()
     char *json = (char *)malloc((length + 1) * sizeof(char));
     if (json == NULL)
     {
-        updateErrorResault(LTPP_CODE_SERVER_ERROR, JUDGE_MACHINE_ERROR, strerror(errno));
+        updateErrorResault(LTPP_CODE_SERVER_ERROR, JUDGE_MACHINE_ERROR);
     }
     res_data->msg = jsonEncodeValue(res_data->msg);
     sprintf(json, "{\"status\":\"%d\",\"time_used\":\"%llu\",\"memory_used\":\"%llu\",\"msg\":\"%s\"}", res_data->status, res_data->time_used, res_data->memory_used, res_data->msg);
