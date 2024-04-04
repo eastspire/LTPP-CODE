@@ -3700,14 +3700,12 @@ class Base
             }
             $userlanguage = strtolower($userlanguage);
             if (!isset(Base::$language_map[$userlanguage])) {
-                return [
-                    json_encode([
-                        'status' => Base::$judge_server_error,
-                        'time_used' => 0,
-                        'memory_used' => 0,
-                        'msg' => Base::$param_error_msg
-                    ])
-                ];
+                return json_encode([
+                    'status' => Base::$judge_server_error,
+                    'time_used' => 0,
+                    'memory_used' => 0,
+                    'msg' => Base::$param_error_msg
+                ]);
             }
             $userlanguage = Base::$language_map[$userlanguage];
             $compiler_timeout_time = intval(Base::getSettingKeyData('compiler_time_limit'));
