@@ -247,8 +247,8 @@ void stdoutToResDataMsg();
 void exitDeleteAllProcess();
 void lowerFilePermissions();
 void *timeoutExit(void *argc);
-char *jsonEncodeValue(const char *str);
 char *readFile(const char *filename);
+char *jsonEncodeValue(const char *str);
 void monitor(pid_t pid, bool is_compiler);
 void run(char *run_cmd[], bool is_compiler);
 void split(char **arr, char *str, const char *del);
@@ -684,51 +684,51 @@ void monitor(pid_t pid, bool is_compiler)
                 status = LTPP_SERVER_ERROR;
                 const char *err_msg = readFile(stderr_path);
                 updateErrorResault(status, "用户代码运行出错", err_msg);
-                return;
+                break;
             }
             case LTPP_COMPILER_ERROR:
             {
                 status = LTPP_SERVER_ERROR;
                 const char *err_msg = readFile(stderr_path);
                 updateErrorResault(status, "用户代码编译出错", err_msg);
-                return;
+                break;
             }
             case LTPP_CHILD_FailedToCreateNamespace:
             {
                 status = LTPP_SERVER_ERROR;
                 updateErrorResault(status, "创建命名空间失败", "");
-                return;
+                break;
             }
             case LTPP_CHILD_FailedToCreateQuarantineEnvironment:
             {
                 status = LTPP_SERVER_ERROR;
                 updateErrorResault(status, "创建隔离环境失败", "");
-                return;
+                break;
             }
             case LTPP_CHILD_FailedToMountNamespace:
             {
                 status = LTPP_SERVER_ERROR;
                 updateErrorResault(status, "挂载命名空间失败", "");
-                return;
+                break;
             }
             case LTPP_CHILD_FailedToSwitchUsers:
             {
                 status = LTPP_SERVER_ERROR;
                 updateErrorResault(status, "切换用户失败", "");
-                return;
+                break;
             }
             case LTPP_CHILD_RedirectFailure:
             {
                 status = LTPP_SERVER_ERROR;
                 updateErrorResault(status, "重定向流失败", "");
-                return;
+                break;
             }
             case LTPP_TLE:
             {
                 status = LTPP_TLE;
                 res_data->time_used = global_time_max_limit * 1000;
                 updateErrorResault(status, "用户代码运行超时", "");
-                return;
+                break;
             }
             default:
             {
@@ -744,9 +744,10 @@ void monitor(pid_t pid, bool is_compiler)
                     const char *err_msg = readFile(stderr_path);
                     updateErrorResault(status, "用户代码运行错误", err_msg);
                 }
-                return;
+                break;
             }
             }
+            return;
         }
     }
     if (WIFSIGNALED(status))
