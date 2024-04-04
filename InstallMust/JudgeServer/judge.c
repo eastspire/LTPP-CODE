@@ -472,7 +472,6 @@ void *timeoutExit(void *argc)
     res_data->time_used = global_time_max_limit * 1000;
     const char *out_msg = readFile(stdout_path);
     updateErrorResault(LTPP_CODE_TLE, TLE, out_msg);
-    stdoutToResDataMsg();
     cout();
     exitProcess();
     return NULL;
@@ -968,7 +967,6 @@ void run(char *cmd[], bool is_compiler)
     if (pid < 0)
     {
         updateErrorResault(LTPP_CODE_SERVER_ERROR, JUDGE_MACHINE_CREATE_CHILD_PROCESS_ERROR, strerror(errno));
-        stdoutToResDataMsg();
         cout();
         exitProcess();
     }
@@ -985,7 +983,6 @@ void run(char *cmd[], bool is_compiler)
         monitor(pid, is_compiler);
         if (!is_compiler)
         {
-            stdoutToResDataMsg();
             cout();
             exitProcess();
         }
@@ -1020,6 +1017,7 @@ void cout()
     {
         return;
     }
+    stdoutToResDataMsg();
     has_printf_res = true;
     ull length = snprintf(NULL, 0, "{\"status\":\"%d\",\"time_used\":\"%llu\",\"memory_used\":\"%llu\",\"msg\":\"%s\"}", res_data->status, res_data->time_used, res_data->memory_used, res_data->msg);
     char *json = (char *)malloc((length + 1) * sizeof(char));
