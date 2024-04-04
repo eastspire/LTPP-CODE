@@ -868,7 +868,7 @@ void stdoutToResDataMsg()
             const char *tmp_out_msg = concatenateStrings(br, out_msg);
             res_data->msg = concatenateStrings(res_data->msg, tmp_out_msg);
         }
-        break;
+        return;
     }
     default:
     {
