@@ -179,9 +179,9 @@ class Codehistory
         if (!$code_id || !$my_aid) {
             return json([
                 'code' => 1,
-                'msg' => '参数错误！',
+                'msg' => 'Base::$param_error_msg！',
                 'data' => [
-                    'code' => '参数错误！',
+                    'code' => 'Base::$param_error_msg！',
                     'language' => 'C++'
                 ]
             ]);

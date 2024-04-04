@@ -82,7 +82,7 @@ class Ssh
     {
         try {
             if (!$my_aid || !is_numeric($my_aid)) {
-                return '参数错误！';
+                return 'Base::$param_error_msg！';
             }
             $my_data = Base::getUserData($my_aid);
             if (!$my_data || !isset($my_data->email)) {

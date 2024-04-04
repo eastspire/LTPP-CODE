@@ -113,6 +113,16 @@ class Base
     static $timout_error_msg = '系统检测到异常代码导致运行超时！请修改代码后重新运行！';
 
     /**
+     * 不支持语言提示
+     */
+    static $no_support_language_msg = '该语言暂不支持！请重新选择语言后提交！';
+
+    /**
+     * 参数错误
+     */
+    static $param_error_msg = '参数错误';
+
+    /**
      * 代码提交等待关键词
      */
     static $code_up_waiting = '等待中';
@@ -3399,7 +3409,7 @@ class Base
         if (!isset(Base::$language_map[$userlanguage])) {
             return [
                 'code' => -1,
-                'msg' => '参数错误',
+                'msg' => 'Base::$param_error_msg',
                 'code_id' => 0
             ];
         }
@@ -3430,7 +3440,7 @@ class Base
             default:
                 return json([
                     'code' => -1,
-                    'msg' => '参数错误',
+                    'msg' => 'Base::$param_error_msg',
                     'code_id' => 0,
                 ]);
         }
@@ -3458,11 +3468,11 @@ class Base
             Base::deleteAllFile(Base::$judge_install_path);
             Base::judgeCreatPath(Base::$judge_install_path);
             Base::runExec('cp -f /home/LTPP/InstallMust/JudgeServer/judge ' . Base::$judge_install_path, $out);
-            Base::chmodFile('/JudgeServer', 0555);
             if ($out) {
                 Base::sendErrorNotice(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT), '判题机安装出错：' . $out);
                 return false;
             }
+            Base::chmodFile('/JudgeServer', 0555);
         } catch (Exception $e) {
             Base::sendErrorNotice($e->getTraceAsString(), '判题机安装出错：' . $e->getMessage());
             return false;
@@ -3552,7 +3562,7 @@ class Base
             if (!isset(Base::$language_map[$userlanguage])) {
                 return [
                     'code' => -1,
-                    'result' => '参数错误',
+                    'result' => Base::$no_support_language_msg,
                     'usememory' => 0,
                     'usetime' => 0
                 ];
@@ -3596,7 +3606,7 @@ class Base
                 default:
                     return [
                         'code' => -1,
-                        'result' => '请选择语言后提交！',
+                        'result' => Base::$no_support_language_msg,
                         'usememory' => 0,
                         'usetime' => 0
                     ];
@@ -3693,7 +3703,7 @@ class Base
                         'status' => Base::$judge_server_error,
                         'time_used' => 0,
                         'memory_used' => 0,
-                        'msg' => '参数错误'
+                        'msg' => 'Base::$param_error_msg'
                     ])
                 ];
             }

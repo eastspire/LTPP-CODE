@@ -48,7 +48,7 @@ class Chat
         $user_uid = $request->post('user_id');
         $user_id = Base::getIdByUid($user_uid);
         if (!$type || !$user_uid || !$user_id) {
-            return json(['code' => -1, 'msg' => '参数错误']);
+            return json(['code' => -1, 'msg' => 'Base::$param_error_msg']);
         }
         $limit = Chat::$chat_list_limit;
         $data = [];
@@ -57,7 +57,7 @@ class Chat
             // 私聊
             $is_exies = Base::getUserData($user_id);
             if (empty($is_exies)) {
-                return json(['code' => -1, 'msg' => '参数错误']);
+                return json(['code' => -1, 'msg' => 'Base::$param_error_msg']);
             }
             if ($msg_id > 0) {
                 $data = Db::table('privatechat')
@@ -131,7 +131,7 @@ class Chat
             }
             $this->getAllChatHeadimage($type, $data);
         } else {
-            return json(['code' => -1, 'msg' => '参数错误']);
+            return json(['code' => -1, 'msg' => 'Base::$param_error_msg']);
         }
         Base::dataToSafe($data, true);
         return json(['code' => 1, 'msg' => '加载成功', 'data' => $data]);
@@ -201,7 +201,7 @@ class Chat
         $user_uid = $request->post('user_id');
         $user_id = Base::getIdByUid($user_uid);
         if (!$type || !$user_uid || !$user_id) {
-            return json(['code' => -1, 'msg' => '参数错误']);
+            return json(['code' => -1, 'msg' => 'Base::$param_error_msg']);
         }
         $limit = Chat::$chat_list_limit;
         $data = [];
@@ -210,7 +210,7 @@ class Chat
             // 私聊
             $db = Base::getUserData($user_id);
             if (empty($db)) {
-                return json(['code' => -1, 'msg' => '参数错误']);
+                return json(['code' => -1, 'msg' => 'Base::$param_error_msg']);
             }
             if ($msg_id > 0) {
                 // 获取新消息的数目
@@ -353,7 +353,7 @@ class Chat
                     ->get();
             }
         } else {
-            return json(['code' => -1, 'msg' => '参数错误']);
+            return json(['code' => -1, 'msg' => 'Base::$param_error_msg']);
         }
         $this->getAllChatHeadimage($type, $data);
         Base::dataToSafe($data, true);

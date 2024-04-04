@@ -19,7 +19,7 @@ class Login
         $name = $request->post('name');
         $password = $request->post('password');
         if (!$name || !$password) {
-            return json(['code' => -1, 'msg' => '参数错误']);
+            return json(['code' => -1, 'msg' => 'Base::$param_error_msg']);
         }
 
         $user_db = Db::table('user')

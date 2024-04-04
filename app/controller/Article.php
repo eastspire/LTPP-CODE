@@ -969,7 +969,7 @@ class Article extends Image
         }
         $key = $request->post('key');
         if (!isset($key) || empty($key)) {
-            return json(['code' => -1, 'msg' => '参数错误']);
+            return json(['code' => -1, 'msg' => 'Base::$param_error_msg']);
         }
         $info = [];
 

@@ -115,7 +115,7 @@ class Webcode
     {
         Webcode::updateCodeStatus($code_id, Base::$code_up_running, 0, 0);
         if (!$my_aid || !$code_id || !Base::getCodeData($code_id)) {
-            return ['code' => -1, 'result' => '参数错误', 'usememory' => 0, 'usetime' => 0];
+            return ['code' => -1, 'result' => 'Base::$param_error_msg', 'usememory' => 0, 'usetime' => 0];
         }
         $limittime = (int) Base::getSettingKeyData('idemaxtime');
         $limitmemory = ((int) Base::getSettingKeyData('idemaxmemory') ?? 0) << 20;

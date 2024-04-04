@@ -61,7 +61,7 @@ class Notice
         $delete_uid = $request->post('delete_id');
         $delete_id = Base::getIdByUid($delete_uid);
         if (!$delete_id) {
-            return json(['code' => -1, 'msg' => '参数错误']);
+            return json(['code' => -1, 'msg' => 'Base::$param_error_msg']);
         }
 
         Db::table('notice')
@@ -70,7 +70,6 @@ class Notice
             ->update(['isdel' => 1]);
 
         return json(['code' => 1, 'msg' => '公告删除成功']);
-
     }
 
     /**
