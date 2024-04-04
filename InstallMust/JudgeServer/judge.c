@@ -1,10 +1,12 @@
 /**
  * @file judge.c
  * @author SQS (root@ltpp.vip)
- * @details g++ -O2 -O3 judge.c -o judge -lcap -std=c++2a
+ * @details C语言判题机
  * @version 1.0
- * @date 2024-03-21
+ * @date 2023-01-05
  * @copyright Copyright (c) 2024
+ * g++ -O2 -O3 judge.c -o judge -lcap -std=c++2a
+ * g++ -O2 -O3 /home/LTPP/InstallMust/JudgeServer/judge.c -o /home/LTPP/InstallMust/JudgeServer/judge -lcap -std=c++2a
  */
 #include <stdio.h>
 #include <cerrno>
