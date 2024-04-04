@@ -118,6 +118,11 @@ class Base
     static $param_error_msg = '参数错误';
 
     /**
+     * 空代码提示
+     */
+    static $empty_code_msg = '请编写代码后再次提交哦！';
+
+    /**
      * 代码提交等待关键词
      */
     static $code_up_waiting = '等待中';
@@ -3393,7 +3398,7 @@ class Base
         if (!$code) {
             return [
                 'code' => -1,
-                'msg' => '请编写代码后再次提交哦！',
+                'msg' => Base::$empty_code_msg,
                 'code_id' => 0
             ];
         }
