@@ -207,7 +207,9 @@
             </div>
             <div v-show="isac">
               <div style="text-align: center; color: #21e016; min-height: 1rem">
-                <pre style="font-size: 1.6rem">{{ ac ? ac : "\n" }}</pre>
+                <pre style="font-size: 1.6rem !important">{{
+                  ac ? ac : "\n"
+                }}</pre>
               </div>
             </div>
           </div>
