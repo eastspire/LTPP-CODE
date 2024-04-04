@@ -239,7 +239,7 @@ void childTimeLimit();
 void childMemoryUsed();
 void setProcessLimit();
 void stdoutToResDataMsg();
-void exitDeleteAllProcess();
+void exitProcess();
 void lowerFilePermissions();
 void *timeoutExit(void *argc);
 char *joinStrings(char *strings[]);
@@ -250,8 +250,8 @@ void run(char *run_cmd[], bool is_compiler);
 void split(char **arr, char *str, const char *del);
 bool judgeSameString(const char *str1, const char *str2);
 void runCode(char *run_cmd[], pid_t pid, bool is_compiler);
-char *concatenateStrings(const char *str1, const char *str2);
 void closeDup(int &newstdin, int &newstdout, int &newstderr);
+char *concatenateStrings(const char *str1, const char *str2);
 void creatNamespace(int newstdin, int newstdout, int newstderr);
 void joinDeepChroot(int newstdin, int newstdout, int newstderr);
 void removePrivileges(int newstdin, int newstdout, int newstderr);
@@ -404,7 +404,7 @@ void *timeoutExit(void *argc)
     updateErrorResault(LTPP_TLE, "用户代码运行超时", "");
     stdoutToResDataMsg();
     cout();
-    exitDeleteAllProcess();
+    exitProcess();
     return NULL;
 }
 
@@ -641,11 +641,10 @@ char *jsonEncodeValue(const char *str)
 }
 
 /**
- * @brief 终止自身及其所有子进程
+ * @brief 退出
  */
-void exitDeleteAllProcess()
+void exitProcess()
 {
-    int res = system("pkill -TERM -P $PPID");
     exit(PROCESS_EXIT_SUCCESS);
 }
 
@@ -815,7 +814,11 @@ void monitor(pid_t pid, bool is_compiler)
 void stdoutToResDataMsg()
 {
     char *out_msg = readFile(stdout_path);
-    res_data->msg = concatenateStrings(res_data->msg, out_msg);
+    if (!judgeSameString(out_msg, empty_str))
+    {
+        const char *tmp_out_msg = concatenateStrings(br, out_msg);
+        res_data->msg = concatenateStrings(res_data->msg, tmp_out_msg);
+    }
 }
 
 /**
@@ -885,6 +888,7 @@ void run(char *cmd[], bool is_compiler)
         updateErrorResault(LTPP_SERVER_ERROR, "判题机创建运行子进程出错", strerror(errno));
         stdoutToResDataMsg();
         cout();
+        exitProcess();
     }
     else if (pid == 0)
     {
@@ -901,7 +905,7 @@ void run(char *cmd[], bool is_compiler)
         {
             stdoutToResDataMsg();
             cout();
-            exitDeleteAllProcess();
+            exitProcess();
         }
     }
 }
