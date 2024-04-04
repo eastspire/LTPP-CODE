@@ -866,7 +866,7 @@ char *joinStrings(char *strings[])
 void run(char *cmd[], bool is_compiler)
 {
     const char *cmd_str = joinStrings(cmd);
-    if (judgeSameString(cmd_str, empty_str))
+    if (cmd_str == NULL || judgeSameString(cmd_str, empty_str))
     {
         if (!is_compiler)
         {
@@ -921,7 +921,7 @@ void split(char **arr, char *str, const char *del)
         arr[i++] = s;
         s = strtok(NULL, del);
     }
-    arr[i] = NULL;
+    arr[i] = s == NULL ? empty_str_arr : s;
 }
 
 /**
