@@ -3,7 +3,7 @@
         'name' => 'ltpp/ltpp',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => 'd6eb1deba85d2b9ed1ffa9869062f2005987a850',
+        'reference' => '71bc4ebfc09ff3eaf09e7f4b8ca98e4e4d234e4b',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -166,7 +166,7 @@
         'ltpp/ltpp' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'd6eb1deba85d2b9ed1ffa9869062f2005987a850',
+            'reference' => '71bc4ebfc09ff3eaf09e7f4b8ca98e4e4d234e4b',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -274,8 +274,8 @@
         'psr/log-implementation' => array(
             'dev_requirement' => false,
             'provided' => array(
-                0 => '1.0|2.0|3.0',
-                1 => '1.0.0 || 2.0.0 || 3.0.0',
+                0 => '1.0.0 || 2.0.0 || 3.0.0',
+                1 => '1.0|2.0|3.0',
             ),
         ),
         'psr/simple-cache' => array(
