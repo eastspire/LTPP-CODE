@@ -134,9 +134,14 @@ const int ltpp_uid = 1000;
 const char *br = "\n";
 
 /**
+ * @brief 字符串结束符
+ */
+char str_end_symbol = '\0';
+
+/**
  * @brief 空字符数组
  */
-char empty_str_arr[] = "";
+char empty_str_arr[] = "\0";
 
 /**
  * @brief 空字符串
@@ -327,7 +332,7 @@ char *readFile(const char *filename)
         file = fopen(filename, "w+");
         if (file == NULL)
         {
-            return NULL;
+            return empty_str_arr;
         }
     }
     fseek(file, 0, SEEK_END);
@@ -337,10 +342,15 @@ char *readFile(const char *filename)
     if (buffer == NULL)
     {
         fclose(file);
-        return NULL;
+        return empty_str_arr;
     }
-    fread(buffer, 1, size, file);
-    buffer[size] = '\0';
+    size_t bytes_read = fread(buffer, 1, size, file);
+    if (bytes_read != size)
+    {
+        fclose(file);
+        return empty_str_arr;
+    }
+    buffer[size] = str_end_symbol;
     fclose(file);
     return buffer;
 }
@@ -628,7 +638,7 @@ char *jsonEncodeValue(const char *str)
             break;
         }
     }
-    *p = '\0';
+    *p = str_end_symbol;
     return encoded_str;
 }
 
