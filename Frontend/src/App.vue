@@ -194,6 +194,10 @@ export default {
 --ltpp-shadow-color: rgba(var(--ltpp-main-bk-color), 0.08);
 // 弹出框背景悬浮颜色
 --ltpp-hover-bk-color: rgba(var(--ltpp-light-color), 0.36);
+// 对话框背景色
+--ltpp-dialog-bk-color: 117, 63, 178;
+// 对话框背景色透明度
+--ltpp-dialog-bk-opacity: 0.86;
 */
 :root {
   --ltpp-h1-color: #fa278e;
@@ -219,6 +223,8 @@ export default {
   --ltpp-list-box-bk-opacity: 0.28;
   --ltpp-shadow-color: rgba(var(--ltpp-main-bk-color), 0.08);
   --ltpp-hover-bk-color: rgba(var(--ltpp-light-color), 0.36);
+  --ltpp-dialog-bk-color: 117, 63, 178;
+  --ltpp-dialog-bk-opacity: 0.86;
 }
 
 * {
@@ -308,7 +314,7 @@ blockquote {
     var(--ltpp-blockquote-color),
     var(--ltpp-blockquote-opacity)
   ) !important;
-  border-left: 6px solid rgb(var(--ltpp-blockquote-color)) !important;
+  border-left: 0.58rem solid rgb(var(--ltpp-blockquote-color)) !important;
   padding: 0.66rem !important;
   margin: 0.36rem 0rem !important;
   color: #ffffff !important;
@@ -360,17 +366,12 @@ pre {
   overflow-x: auto !important;
   font-size: 1.06rem !important;
   line-height: 1.56 !important;
-  white-space: pre-wrap !important;
-  white-space: -moz-pre-wrap !important;
-  white-space: -webkit-pre-wrap !important;
-  white-space: -o-pre-wrap !important;
-  word-wrap: break-word !important;
   border-radius: 0rem !important;
   background-color: rgba(
     var(--ltpp-code-bk-color),
     var(--ltpp-code-bk-color-opacity)
   ) !important;
-  border-left: 6px solid rgb(var(--ltpp-main-bk-color)) !important;
+  border-left: 0.58rem solid rgb(var(--ltpp-main-bk-color)) !important;
   padding: 0.66rem !important;
   margin: 0.36rem 0rem !important;
 }
@@ -970,18 +971,27 @@ a:active {
 }
 
 .el-dialog__body {
-  background-color: rgba(var(--ltpp-main-bk-color), 1) !important;
+  background-color: rgba(
+    var(--ltpp-dialog-bk-color),
+    var(--ltpp-dialog-bk-opacity)
+  ) !important;
   border: 0 !important;
 }
 
 .el-dialog__header {
-  background-color: rgba(var(--ltpp-main-bk-color), 1) !important;
+  background-color: rgba(
+    var(--ltpp-dialog-bk-color),
+    var(--ltpp-dialog-bk-opacity)
+  ) !important;
   height: 0rem !important;
   border: 0 !important;
 }
 
 .el-dialog__footer {
-  background-color: rgba(var(--ltpp-main-bk-color), 1) !important;
+  background-color: rgba(
+    var(--ltpp-dialog-bk-color),
+    var(--ltpp-dialog-bk-opacity)
+  ) !important;
 }
 
 .el-scrollbar__view,
@@ -1320,7 +1330,6 @@ a:active {
   color: #c678dd !important;
 }
 
-pre,
 .v-show-content tr,
 .scroll-style tr,
 .scroll-style-border-radius tr,
@@ -1333,7 +1342,6 @@ pre,
   ) !important;
   padding: 0.66rem !important;
   margin: 0.36rem 0rem !important;
-  /* pre保持格式的同时实现自动换行 */
   white-space: pre-wrap !important;
   word-wrap: break-word !important;
 }
@@ -1605,7 +1613,7 @@ pre,
 ::-webkit-scrollbar {
   z-index: 1000000;
   width: 0rem !important;
-  height: 0.36rem !important;
+  height: 0.58rem !important;
   border-radius: 0rem;
   background-color: transparent;
 }

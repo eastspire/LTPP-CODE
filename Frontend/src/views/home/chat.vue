@@ -1960,7 +1960,7 @@ export default {
 
 ::-webkit-scrollbar {
   z-index: 1000000;
-  width: 0.36rem !important;
+  width: 0.58rem !important;
   height: 0rem !important;
   border-radius: 0rem;
   background-color: rgba(var(--ltpp-main-bk-color), 0);
