@@ -3692,6 +3692,8 @@ class Base
     static public function run($userlanguage, $filepath, $inpath, $outpath, $errpath, $runcodefilepath, $limittime, $limitmemory)
     {
         $out = '';
+        $compiler_cmd = '\'\'';
+        $run_cmd = '\'\'';
         try {
             if (!$userlanguage) {
                 $userlanguage = '';
@@ -3709,8 +3711,6 @@ class Base
             }
             $userlanguage = Base::$language_map[$userlanguage];
             $compiler_timeout_time = intval(Base::getSettingKeyData('compiler_time_limit'));
-            $compiler_cmd = '\'\'';
-            $run_cmd = '';
             // 运行
             switch ($userlanguage) {
                 case Language::rust:
