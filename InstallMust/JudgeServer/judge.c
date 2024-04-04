@@ -41,6 +41,21 @@ typedef unsigned long long int ull;
 #define __max(a, b) (((a) > (b)) ? (a) : (b))
 
 /**
+ * @brief 休眠微秒数
+ */
+#define SLEEP_MICROSECONDS 1000
+
+/**
+ * @brief 超时后最小额外等待秒数
+ */
+#define MIN_EXTRA_WAIT_SECONDS 1
+
+/**
+ * @brief 超时后最大额外等待秒数
+ */
+#define MAX_EXTRA_WAIT_SECONDS 2
+
+/**
  * @brief 进程成功退出状态码
  */
 #define PROCESS_EXIT_SUCCESS 0
@@ -196,6 +211,21 @@ typedef unsigned long long int ull;
 #define SANDBOX_DIRECTORY "/home/LTPPSANDBOX"
 
 /**
+ * @brief 结果JSON未保存
+ */
+#define RESULT_JSON_NOT_SAVED 0
+
+/**
+ * @brief 结果JSON已保存未输出
+ */
+#define RESULT_JSON_SAVED_NOT_OUTPUTTED 1
+
+/**
+ * @brief 结果JSON已保存已输出
+ */
+#define RESULT_JSON_SAVED_AND_OUTPUTTED 2
+
+/**
  * @brief 数组长度
  */
 const int N = 1e5;
@@ -271,6 +301,16 @@ const ull *time_limit = NULL;
 const ull *memory_limit = NULL;
 
 /**
+ * @brief 编译命令
+ */
+char *compiler_cmd[N] = {NULL};
+
+/**
+ * @brief 运行命令
+ */
+char *run_cmd[N] = {NULL};
+
+/**
  * @brief 结果结构体
  * time_limit精确到MS
  * memory_limit精确到字节
@@ -294,32 +334,41 @@ struct rlimit rl;
 struct result *res_data = (struct result *)malloc(sizeof(struct result));
 
 /**
- * @brief 全局子进程最大运行时间
+ * @brief 全局子进程最大运行时间（毫秒）
  */
 ull global_time_max_limit = 0;
 
 /**
- * @brief 是否以及输出过结果
+ * @brief 结果JSON状态
+ * 0 未保存
+ * 1 保存未完成输出
+ * 2 保存已完成输出
  */
-bool has_printf_res = false;
+int printf_res = RESULT_JSON_NOT_SAVED;
+
+/**
+ * @brief 是否是编译模式
+ */
+bool is_compiler = true;
 
 void cout();
 void initResData();
+void exitProcess();
 void childTimeLimit();
 void childMemoryUsed();
 void setProcessLimit();
+void monitor(pid_t pid);
+void unsetMemoryLimit();
+void run(char *run_cmd[]);
 void stdoutToResDataMsg();
-void exitProcess();
 void lowerFilePermissions();
 void *timeoutExit(void *argc);
 char *joinStrings(char *strings[]);
 char *readFile(const char *filename);
+void runCode(char *cmd[], pid_t pid);
 char *jsonEncodeValue(const char *str);
-void monitor(pid_t pid, bool is_compiler);
-void run(char *run_cmd[], bool is_compiler);
 void split(char **arr, char *str, const char *del);
 bool judgeSameString(const char *str1, const char *str2);
-void runCode(char *run_cmd[], pid_t pid, bool is_compiler);
 void updateErrorResault(int status, const char *custom_msg);
 void closeDup(int &newstdin, int &newstdout, int &newstderr);
 char *concatenateStrings(const char *str1, const char *str2);
@@ -403,7 +452,7 @@ char *readFile(const char *filename)
         fclose(file);
         return empty_str_arr;
     }
-    size_t bytes_read = fread(buffer, 1, size, file);
+    ull bytes_read = fread(buffer, 1, size, file);
     if (bytes_read != size)
     {
         fclose(file);
@@ -422,8 +471,8 @@ char *readFile(const char *filename)
  */
 char *concatenateStrings(const char *str1, const char *str2)
 {
-    size_t len1 = strlen(str1);
-    size_t len2 = strlen(str2);
+    ull len1 = strlen(str1);
+    ull len2 = strlen(str2);
     char *result = (char *)malloc(len1 + len2 + 1);
     if (result)
     {
@@ -454,16 +503,20 @@ void *timeoutExit(void *argc)
 {
     errno = 0;
     ull time_cnt = global_time_max_limit;
-    while (time_cnt > 0)
+    do
     {
         --time_cnt;
-        sleep(1);
-    }
+        usleep(SLEEP_MICROSECONDS);
+    } while (time_cnt > 0);
     childMemoryUsed();
-    res_data->time_used = global_time_max_limit * 1000;
+    res_data->time_used = global_time_max_limit;
     updateErrorResault(LTPP_CODE_TLE, TLE);
     cout();
-    exitProcess();
+    while (true)
+    {
+        exitProcess();
+        usleep(SLEEP_MICROSECONDS);
+    }
     return NULL;
 }
 
@@ -472,8 +525,9 @@ void *timeoutExit(void *argc)
  */
 void setProcessLimit()
 {
-    rl.rlim_cur = *time_limit / 1000 + 1;
-    rl.rlim_max = rl.rlim_cur + 1;
+    ull original_limit_time = *time_limit / 1000;
+    rl.rlim_cur = original_limit_time + MIN_EXTRA_WAIT_SECONDS;
+    rl.rlim_max = original_limit_time + MAX_EXTRA_WAIT_SECONDS;
     setrlimit(RLIMIT_CPU, &rl);
     rl.rlim_cur = RLIM_INFINITY;
     rl.rlim_max = rl.rlim_cur;
@@ -495,11 +549,10 @@ void childTimeLimit()
 
 /**
  * @brief 运行代码
- * @param run_cmd 运行命令
+ * @param cmd 运行命令
  * @param pid 进程PID
- * @param is_compiler 是否是编译模式
  */
-void runCode(char *run_cmd[], pid_t pid, bool is_compiler)
+void runCode(char *cmd[], pid_t pid)
 {
     errno = 0;
     int cnt = 0;
@@ -509,9 +562,9 @@ void runCode(char *run_cmd[], pid_t pid, bool is_compiler)
     int newstderr = -1;
     if (!is_compiler)
     {
-        while (run_cmd[cnt] != NULL)
+        while (cmd[cnt] != NULL)
         {
-            if (strstr(run_cmd[cnt], SANDBOX_DIRECTORY) != NULL)
+            if (strstr(cmd[cnt], SANDBOX_DIRECTORY) != NULL)
             {
                 path_loc = cnt;
             }
@@ -519,7 +572,7 @@ void runCode(char *run_cmd[], pid_t pid, bool is_compiler)
         }
         --cnt;
         // 替换为沙箱内的绝对路径
-        run_cmd[path_loc] = strstr(run_cmd[path_loc], SANDBOX_DIRECTORY) + strlen(SANDBOX_DIRECTORY);
+        cmd[path_loc] = strstr(cmd[path_loc], SANDBOX_DIRECTORY) + strlen(SANDBOX_DIRECTORY);
     }
     newstdin = open(stdin_path, O_RDWR | O_CREAT, 0644);
     newstdout = open(stdout_path, O_RDWR | O_CREAT, 0644);
@@ -543,7 +596,7 @@ void runCode(char *run_cmd[], pid_t pid, bool is_compiler)
             lowerFilePermissions();
         }
         // 运行用户代码
-        if (execvp(run_cmd[0], run_cmd) == -1)
+        if (execvp(cmd[0], cmd) == -1)
         {
             closeDup(newstdin, newstdout, newstderr);
             exit(is_compiler ? LTPP_CODE_COMPILER_ERROR : JUDGE_CODE_CHILD_ERROR);
@@ -651,7 +704,7 @@ char *jsonEncodeValue(const char *str)
     // 预留足够大的空间存储编码后的字符串
     // 乘2因为特殊字符串转义后长度为之前2倍
     // 加1因为最后需要一个终止字符
-    char *encoded_str = (char *)malloc((len * 2 + 1) * sizeof(char));
+    char *encoded_str = (char *)malloc((ull)(len * 2 + 1) * sizeof(char));
     if (encoded_str == NULL)
     {
         updateErrorResault(LTPP_CODE_SERVER_ERROR, JUDGE_MACHINE_SERIALIZATION_EXCEPTION);
@@ -704,15 +757,17 @@ char *jsonEncodeValue(const char *str)
  */
 void exitProcess()
 {
-    exit(PROCESS_EXIT_SUCCESS);
+    if (printf_res == RESULT_JSON_SAVED_AND_OUTPUTTED)
+    {
+        exit(PROCESS_EXIT_SUCCESS);
+    }
 }
 
 /**
  * @brief 监控
  * @param pid 进程PID
- * @param is_compiler 是否是编译模式
  */
-void monitor(pid_t pid, bool is_compiler)
+void monitor(pid_t pid)
 {
     errno = 0;
     int status;
@@ -925,12 +980,11 @@ char *joinStrings(char *strings[])
 /**
  * @brief 运行
  * @param cmd 运行命令
- * @param is_compiler 是否是编译模式
  */
-void run(char *cmd[], bool is_compiler)
+void run(char *cmd[])
 {
     errno = 0;
-    global_time_max_limit = *time_limit / 1000 + 2;
+    global_time_max_limit = *time_limit + MAX_EXTRA_WAIT_SECONDS * 1000;
     const char *cmd_str = joinStrings(cmd);
     if (cmd_str == NULL || judgeSameString(cmd_str, empty_str))
     {
@@ -952,7 +1006,7 @@ void run(char *cmd[], bool is_compiler)
     }
     else if (pid == 0)
     {
-        runCode(cmd, pid, is_compiler);
+        runCode(cmd, pid);
     }
     else
     {
@@ -960,7 +1014,7 @@ void run(char *cmd[], bool is_compiler)
         // 由于主进程设置了子进程的时间，所以不能放在子进程监控
         // 否则会被超时杀死，达不到监控目的
         childTimeLimit();
-        monitor(pid, is_compiler);
+        monitor(pid);
         if (!is_compiler)
         {
             cout();
@@ -989,25 +1043,31 @@ void split(char **arr, char *str, const char *del)
 }
 
 /**
+ * @brief 取消内存限制
+ */
+void unsetMemoryLimit()
+{
+    struct rlimit rlim;
+    // 设置内存限制为无限制
+    rlim.rlim_cur = RLIM_INFINITY;
+    int res = setrlimit(RLIMIT_DATA, &rlim);
+}
+
+/**
  * @brief 输出结果
  */
 void cout()
 {
-    if (has_printf_res)
+    if (printf_res != RESULT_JSON_NOT_SAVED)
     {
         return;
     }
+    printf_res = RESULT_JSON_SAVED_NOT_OUTPUTTED;
+    unsetMemoryLimit();
     stdoutToResDataMsg();
-    has_printf_res = true;
-    ull length = snprintf(NULL, 0, "{\"status\":\"%d\",\"time_used\":\"%llu\",\"memory_used\":\"%llu\",\"msg\":\"%s\"}", res_data->status, res_data->time_used, res_data->memory_used, res_data->msg);
-    char *json = (char *)malloc((length + 1) * sizeof(char));
-    if (json == NULL)
-    {
-        updateErrorResault(LTPP_CODE_SERVER_ERROR, JUDGE_MACHINE_ERROR);
-    }
     res_data->msg = jsonEncodeValue(res_data->msg);
-    sprintf(json, "{\"status\":\"%d\",\"time_used\":\"%llu\",\"memory_used\":\"%llu\",\"msg\":\"%s\"}", res_data->status, res_data->time_used, res_data->memory_used, res_data->msg);
-    printf("%s", json);
+    printf("{\"status\":\"%d\",\"time_used\":\"%llu\",\"memory_used\":\"%llu\",\"msg\":\"%s\"}", res_data->status, res_data->time_used, res_data->memory_used, res_data->msg);
+    printf_res = RESULT_JSON_SAVED_AND_OUTPUTTED;
 }
 
 /**
@@ -1019,6 +1079,48 @@ void initResData()
     res_data->status = LTPP_CODE_FINISH;
     res_data->time_used = 0;
     res_data->memory_used = 0;
+}
+
+/**
+ * @brief 更新全局配置
+ * @param argv 参数数组
+ */
+void updateGlobalConfigData(char *argv[])
+{
+    stdin_path = argv[6];
+    stdout_path = argv[7];
+    stderr_path = argv[8];
+    ull tmp_compiler_time_limit = atoll(argv[3]);
+    ull tmp_run_time_limit = atoll(argv[4]);
+    ull tmp_run_memory_limit = atoll(argv[5]);
+    compiler_time_limit = &tmp_compiler_time_limit;
+    run_time_limit = &tmp_run_time_limit;
+    run_memory_limit = &tmp_run_memory_limit;
+    memory_limit = run_memory_limit;
+}
+
+/**
+ * @brief 编译
+ */
+void startCompiler()
+{
+    // 更新时间限制为编译时间限制
+    time_limit = compiler_time_limit;
+    // 编译程序
+    is_compiler = true;
+    run(compiler_cmd);
+}
+
+/**
+ * @brief 运行
+ */
+void startRun()
+{
+    // 更新时间限制为运行时间限制
+    time_limit = run_time_limit;
+    // 运行程序
+    is_compiler = false;
+    run(run_cmd);
 }
 
 /**
@@ -1037,30 +1139,17 @@ void initResData()
  */
 int main(int argc, char *argv[])
 {
+    // 初始化结果结构体
     initResData();
-    char *compiler_cmd[N] = {NULL};
-    char *run_cmd[N] = {NULL};
     // 解析编译命令行
     split(compiler_cmd, argv[1], "@");
     // 解析运行命令行
     split(run_cmd, argv[2], "@");
-    stdin_path = argv[6];
-    stdout_path = argv[7];
-    stderr_path = argv[8];
-    ull tmp_compiler_time_limit = atoll(argv[3]);
-    ull tmp_run_time_limit = atoll(argv[4]);
-    ull tmp_run_memory_limit = atoll(argv[5]);
-    compiler_time_limit = &tmp_compiler_time_limit;
-    run_time_limit = &tmp_run_time_limit;
-    run_memory_limit = &tmp_run_memory_limit;
-    memory_limit = run_memory_limit;
-    // 更新时间限制为编译时间限制
-    time_limit = compiler_time_limit;
-    // 编译程序
-    run(compiler_cmd, true);
-    // 更新时间限制为运行时间限制
-    time_limit = run_time_limit;
-    // 运行程序
-    run(run_cmd, false);
+    // 更新全局配置
+    updateGlobalConfigData(argv);
+    // 编译
+    startCompiler();
+    // 运行
+    startRun();
     return 0;
 }
