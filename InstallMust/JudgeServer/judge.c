@@ -868,6 +868,7 @@ void run(char *cmd[], bool is_compiler)
     const char *cmd_str = joinStrings(cmd);
     if (cmd_str == NULL || judgeSameString(cmd_str, empty_str))
     {
+        // 命令为NULL或者空串则执行以下程序
         if (!is_compiler)
         {
             // 运行模式下需要输出结果
@@ -921,7 +922,7 @@ void split(char **arr, char *str, const char *del)
         arr[i++] = s;
         s = strtok(NULL, del);
     }
-    arr[i] = s == NULL ? empty_str_arr : s;
+    arr[i] = NULL;
 }
 
 /**
