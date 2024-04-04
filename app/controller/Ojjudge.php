@@ -459,7 +459,12 @@ class Ojjudge
             if (!$run_resource_consumption || !isset($run_resource_consumption['status'])) {
                 Base::deleteAllFile($filepath);
                 Ojjudge::updateCodeStatus($code_id, Base::$code_run_running_wrong, 0, 0);
-                return ['code' => -1, 'result' => Base::$judge_error_msg . '！', 'usetime' => 0, 'usememory' => 0];
+                return [
+                    'code' => -1,
+                    'result' => Base::$judge_error_msg . '！',
+                    'usetime' => 0,
+                    'usememory' => 0
+                ];
             }
 
             $status = $run_resource_consumption['status'] ?? 0;
@@ -563,13 +568,12 @@ class Ojjudge
                         break;
                 }
             }
-            //读取输出
+            // 读取标准答案输出
             $testout = Base::textToSafeText($one_oj_test_data_db->test_out);
-            //处理空格和换行错误
+            // 处理空格和换行错误
             $testout = str_replace([' ', "\n", "\r", "\r\n"], '', $testout);
             $resout = str_replace([' ', "\n", "\r", "\r\n"], '', $msg);
-
-            //答案错误
+            // 答案错误
             if ($testout != $resout) {
                 //不是竞赛或者是SQS赛制，允许查看错误样例
                 if ($contest_id == 0 || $type == "SQS") {

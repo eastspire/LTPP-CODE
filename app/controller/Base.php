@@ -3884,6 +3884,7 @@ class Base
         if (strlen($testin) > Base::$code_out_limit) {
             $testin = Base::utfsubstr($testin, 0, Base::$code_out_limit, true) . "\n" . '【仅显示前' . Base::$code_out_limit . '个字符】';
         }
+        return $testin;
     }
 
     /**
@@ -3911,7 +3912,7 @@ class Base
      * 文本安全转换
      * @param string $text 文本内容
      */
-    static public function textToSafeText($text = '')
+    static public function textToSafeText(&$text = '')
     {
         try {
             $encoding = mb_detect_encoding($text);
@@ -3922,8 +3923,8 @@ class Base
             return $text;
         } catch (Exception $e) {
             Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
-            return '';
         }
+        return '';
     }
 
     /**
@@ -3942,16 +3943,16 @@ class Base
             if (!$res) {
                 throw new Exception('');
             }
-            if (!isset($res['status']) || !$res['status']) {
+            if (!isset($res['status']) || $res['status'] == null) {
                 $res['status'] = 0;
             }
-            if (!isset($res['time_used']) || !$res['time_used']) {
+            if (!isset($res['time_used']) || $res['time_used'] == null) {
                 $res['time_used'] = 0;
             }
-            if (!isset($res['memory_used']) || !$res['memory_used']) {
+            if (!isset($res['memory_used']) || $res['memory_used'] == null) {
                 $res['memory_used'] = 0;
             }
-            if (!isset($res['msg']) || !$res['msg']) {
+            if (!isset($res['msg']) || $res['msg'] == null) {
                 $res['msg'] = '';
             }
             $status = intval($res['status']);

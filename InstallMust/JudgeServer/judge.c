@@ -285,7 +285,7 @@ void updateErrorResault(int status, const char *custom_msg, const char *error_ms
     res_data->status = status;
     if (judgeSameString(error_msg, empty_str))
     {
-        res_data->msg = concatenateStrings(custom_msg, error_msg);
+        res_data->msg = custom_msg;
     }
     else
     {
@@ -595,7 +595,7 @@ char *jsonEncodeValue(const char *str)
     char *encoded_str = (char *)malloc((len * 2 + 1) * sizeof(char));
     if (encoded_str == NULL)
     {
-        updateErrorResault(LTPP_SERVER_ERROR, "判题机信息序列化异常", strerror(errno));
+        updateErrorResault(LTPP_SERVER_ERROR, "判题机序列化信息异常", strerror(errno));
         return empty_str_arr;
     }
     char *p = encoded_str;
