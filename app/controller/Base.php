@@ -3709,12 +3709,12 @@ class Base
             }
             $userlanguage = Base::$language_map[$userlanguage];
             $compiler_timeout_time = intval(Base::getSettingKeyData('compiler_time_limit'));
-            $compiler_cmd = '""';
+            $compiler_cmd = true;
             $run_cmd = '';
             // 运行
             switch ($userlanguage) {
                 case Language::rust:
-                    $compiler_cmd = '/root/.cargo/bin/rustc@-O@-o@' . $runcodefilepath . '@' . $runcodefilepath . '.rs';
+                    $compiler_cmd = '/root/.cargo/bin/rustc@-C@opt-level=3@-o@' . $runcodefilepath . '@' . $runcodefilepath . '.rs';
                     $run_cmd = $runcodefilepath;
                     Base::runExec(Base::$judgepath . ' ' . $compiler_cmd . ' ' . $run_cmd  . ' ' . $compiler_timeout_time . ' ' . $limittime . ' ' . $limitmemory . ' ' . $inpath . ' ' . $outpath . ' ' . $errpath, $out);
                     break;
@@ -3745,7 +3745,7 @@ class Base
                 case Language::javascript:
                     $limittime <<= 1;
                     $limitmemory <<= 1;
-                    $compiler_cmd = '""';
+                    $compiler_cmd = true;
                     $run_cmd = '/usr/bin/node@' . $runcodefilepath . '.js';
                     Base::runExec(Base::$judgepath . ' ' . $compiler_cmd . ' ' . $run_cmd . ' ' . $compiler_timeout_time . ' ' . $limittime . ' ' . $limitmemory . ' ' . $inpath . ' ' . $outpath . ' ' . $errpath, $out);
                     break;
@@ -3759,21 +3759,21 @@ class Base
                 case Language::php:
                     $limittime <<= 1;
                     $limitmemory <<= 1;
-                    $compiler_cmd = '""';
+                    $compiler_cmd = true;
                     $run_cmd = '/usr/bin/php@' . $runcodefilepath . '.php';
                     Base::runExec(Base::$judgepath . ' ' . $compiler_cmd . ' ' . $run_cmd . ' ' . $compiler_timeout_time . ' ' . $limittime . ' ' . $limitmemory . ' ' . $inpath . ' ' . $outpath . ' ' . $errpath, $out);
                     break;
                 case Language::python:
                     $limittime <<= 1;
                     $limitmemory <<= 1;
-                    $compiler_cmd = '""';
+                    $compiler_cmd = true;
                     $run_cmd = '/usr/bin/python3@' . $runcodefilepath . '.py';
                     Base::runExec(Base::$judgepath . ' ' . $compiler_cmd . ' ' . $run_cmd . ' ' . $compiler_timeout_time . ' ' . $limittime . ' ' . $limitmemory . ' ' . $inpath . ' ' . $outpath . ' ' . $errpath, $out);
                     break;
                 case Language::ruby:
                     $limittime <<= 1;
                     $limitmemory <<= 1;
-                    $compiler_cmd = '""';
+                    $compiler_cmd = true;
                     $run_cmd = '/usr/bin/ruby@' . $runcodefilepath . '.rb';
                     Base::runExec(Base::$judgepath . ' ' . $compiler_cmd . ' ' . $run_cmd . ' ' . $compiler_timeout_time . ' ' . $limittime . ' ' . $limitmemory . ' ' . $inpath . ' ' . $outpath . ' ' . $errpath, $out);
                     break;
