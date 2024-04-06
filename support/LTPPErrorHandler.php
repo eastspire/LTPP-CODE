@@ -39,7 +39,7 @@ class LTPPErrorHandler extends ExceptionHandler
             $json = [
                 'code' => -1,
                 'err_code' => $err_code,
-                'msg' => $this->debug ? '系统未捕获的异常：' . $exception->getMessage() . "\n" . (string)$exception : Base::$server_error_msg,
+                'msg' => Base::$server_error_msg,
                 'data' => [],
             ];
             return new Response(

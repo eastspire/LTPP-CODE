@@ -14,13 +14,18 @@
  */
 
 use Webman\Route;
-use app\controller\Base;
 use support\Request;
+use app\controller\Base;
+
+
 
 Route::any(Base::$LTPP_public_static_path . '/' . '[{path:.+}]', function (Request $request) {
     $path = '';
     $file_extion = '';
     try {
+        if (!Base::judgeAuthCheckTestSafe($request, true)) {
+            return Base::notFoundPage($path, $file_extion);
+        }
         $path = $request->path();
         // 匹配到访问静态资源
         $file_extion = Base::getDbFileExtion($path);
