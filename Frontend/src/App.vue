@@ -1635,7 +1635,7 @@ a:active {
 /*  滚动条轨道. */
 ::-webkit-scrollbar-track {
   border-radius: 0rem;
-  background-color: transparent;
+  background-color: var(--ltpp-main-color);
 }
 
 /* 滚动条没有滑块的轨道部分 */
