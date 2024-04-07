@@ -761,6 +761,31 @@
               margin: 1rem 0rem 1rem 0rem;
             "
           >
+            防盗链禁止访问文件类型（使用换行/空格进行分隔）
+          </p>
+          <el-input
+            type="textarea"
+            autosize
+            style="font-size: 1.06rem"
+            placeholder="防盗链禁止访问文件类型（使用换行/空格进行分隔）"
+            v-model.lazy="resdata.file_can_not_visit_extion"
+            @blur="updatesetting()"
+          >
+            <el-button
+              slot="append"
+              icon="el-icon-upload"
+              @click="updatesetting()"
+              >更新</el-button
+            >
+          </el-input>
+          <p
+            style="
+              font-size: 1.06rem;
+              text-align: left;
+              font-weight: bold;
+              margin: 1rem 0rem 1rem 0rem;
+            "
+          >
             用户代码最长编译时间（单位：MS）
           </p>
           <el-input

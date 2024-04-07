@@ -376,6 +376,15 @@ class Setting extends Image
                 Base::updateRobotUsersEmail($old_email);
             }
 
+            if ($data['file_can_not_visit_extion'] != $redis5->get('file_can_not_visit_extion')) {
+                Db::table('setting')
+                    ->where('id', $db->id)
+                    ->where('isdel', 0)
+                    ->update(['file_can_not_visit_extion' => $data['file_can_not_visit_extion']]);
+                $redis5->del(Base::$chatgpt_keys_key);
+                $redis5->set(Base::$chatgpt_keys_key, $data['file_can_not_visit_extion']);
+            }
+
             if ($data['compiler_time_limit'] != $redis5->get('compiler_time_limit')) {
                 if (!is_numeric($data['compiler_time_limit'])) {
                     return json(['code' => -1, 'msg' => '类型错误！请填写数字！']);

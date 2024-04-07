@@ -12,6 +12,6 @@ class AuthCheckTest implements MiddlewareInterface
 
     public function process(Request $request, callable $handler): Response
     {
-        return Base::judgeAuthCheckTestSafe($request, false, $handler);
+        return Base::judgeAuthCheckTestSafe($request, $handler);
     }
 }

@@ -23,9 +23,6 @@ Route::any(Base::$LTPP_public_static_path . '/' . '[{path:.+}]', function (Reque
     $path = '';
     $file_extion = '';
     try {
-        if (!Base::judgeAuthCheckTestSafe($request, true)) {
-            return Base::notFoundPage($path, $file_extion);
-        }
         $path = $request->path();
         // 匹配到访问静态资源
         $file_extion = Base::getDbFileExtion($path);
@@ -34,12 +31,12 @@ Route::any(Base::$LTPP_public_static_path . '/' . '[{path:.+}]', function (Reque
         foreach (Base::$map_language_file as $key => $val) {
             $iscode = $key == $file_extion ? true : false;
             if ($iscode) {
+                $language = $val;
                 if ($key == 'html') {
                     $iscode = false;
                     $language = '';
                     break;
                 }
-                $language = $val;
                 break;
             }
         }

@@ -1166,13 +1166,6 @@ class Base
     ];
 
     /**
-     * 防盗链设计
-     */
-    static $file_can_visit_func = [
-        '/Article/oneArticle?path=',
-    ];
-
-    /**
      * 禁止访问的方法
      */
     static $danger_func = [
@@ -1216,18 +1209,15 @@ class Base
     /**
      * 鉴权
      * @param Request $request
-     * @param bool $is_api_host
      * @param callable $handler
      */
-    static public function judgeAuthCheckTestSafe(Request &$request, $is_api_host = false, callable $handler = null)
+    static public function judgeAuthCheckTestSafe(Request &$request,  callable $handler = null)
     {
         if (!$handler) {
             $handler = function () {
             };
         }
-        if (!$is_api_host) {
-            $is_api_host = false;
-        }
+
         try {
             $my_uid = '';
             $is_logout = false;
@@ -1251,6 +1241,8 @@ class Base
             // 判断是否是文件资源
             $path = $request->path();
             if (!empty($path) && stripos($path, Base::$LTPP_public_static_path) === 0) {
+                // 匹配到访问静态资源
+                $file_extion = Base::getDbFileExtion($path);
                 $referer = '';
                 if (isset($header['referer']) && $header['referer']) {
                     $referer = $header['referer'];
@@ -1260,27 +1252,34 @@ class Base
                 }
                 $linuxurl = Base::getSettingKeyData('GLOBlinuxurl');
                 $front_url = Base::getSettingKeyData('GLOBfronturl');
-                // 文件资源仅支持来自前端和安全的展示文件的方法
                 if (strpos($referer, $front_url) === 0) {
-                    return $is_api_host ? true : $handler($request);
+                    // 来自LTPP前端，直接通过
+                    return $handler($request);
                 }
-                foreach (Base::$file_can_visit_func as &$tem_file_can_visit_func) {
-                    if (strpos($referer, $linuxurl . $tem_file_can_visit_func) === 0) {
-                        return $is_api_host ? true : $handler($request);
+                if ($referer && strpos($referer, $linuxurl) === false) {
+                    // 来自非LTPP前端和LTPP后端，直接拒绝
+                    return Base::notFoundPage();
+                }
+                // 来自LTPP后端
+                $file_can_not_visit_extion = Base::getFileCanNotVisitExtionList();
+                foreach ($file_can_not_visit_extion as &$tem_file_can_not_visit_extion) {
+                    // 不可访问类型，直接拒绝
+                    if ($file_extion === $tem_file_can_not_visit_extion) {
+                        return Base::notFoundPage();
                     }
                 }
-                return $is_api_host ? false : json(['code' => 500, 'msg' => '非法访问！', 'data' => []]);
+                return $handler($request);
             }
             //判断是否需要鉴权
             if (isset(Base::$safe_func[$func])) {
-                return $is_api_host ? true : $handler($request);
+                return $handler($request);
             }
             // 禁止访问的内容
             if (isset(Base::$danger_func[$func])) {
-                return $is_api_host ? false :  Base::notFoundPage();
+                return Base::notFoundPage();
             }
             if (isset(Base::$danger_path[$request->controller])) {
-                return $is_api_host ? false : Base::notFoundPage();
+                return Base::notFoundPage();
             }
 
             $now_time = time();
@@ -1294,10 +1293,10 @@ class Base
                 !isset($header['key']) || empty($header['key']) ||
                 !isset($header['requestid']) || empty($header['requestid'])
             ) {
-                return $is_api_host ? false : json(['code' => 500, 'msg' => '非法访问！', 'data' => []]);
+                return json(['code' => 500, 'msg' => '非法访问！', 'data' => []]);
             }
             if ($is_logout) {
-                return $is_api_host ? false : json(['code' => 500, 'msg' => '您已下线！请重新登录！', 'data' => []]);
+                return json(['code' => 500, 'msg' => '您已下线！请重新登录！', 'data' => []]);
             }
             //判断请求是否过期
             // 获取请求时间
@@ -1305,7 +1304,7 @@ class Base
             // 毫秒换成秒
             $request_id = (int)($request_id / 1000);
             if ($request_id > $now_time + Base::$request_timout || $request_id + Base::$request_timout < $now_time) {
-                return $is_api_host ? false : json(['code' => -1, 'msg' => '系统检测到请求异常！', 'data' => []]);
+                return json(['code' => -1, 'msg' => '系统检测到请求异常！', 'data' => []]);
             }
             $my_aid = Base::getIdByUid($my_uid);
             $redis0 = Redis::connection('db0');
@@ -1314,17 +1313,17 @@ class Base
             $onekey = $header['key'];
             // 判断单点登录
             if ($onekey != $redis14->get($my_aid . 'login')) {
-                return $is_api_host ? false : \json(['code' => 500, 'msg' => '您已下线！请重新登录！', 'data' => []]);
+                return \json(['code' => 500, 'msg' => '您已下线！请重新登录！', 'data' => []]);
             }
             // 是root用户直接放行，不限速
             $root_id = Base::getRootId();
 
             if ($my_aid == $root_id) {
-                return $is_api_host ? true : $handler($request);
+                return $handler($request);
             }
 
             if ($redis0->get('BlackID' . $my_aid)) {
-                return $is_api_host ? false : \json(['code' => 500, 'msg' => '您已被拉黑！请联系管理员解除黑名单！', 'data' => []]);
+                return \json(['code' => 500, 'msg' => '您已被拉黑！请联系管理员解除黑名单！', 'data' => []]);
             } else {
                 $black_aid_db = Db::table('blackip')
                     ->where('user_id', $my_aid)
@@ -1332,7 +1331,7 @@ class Base
                     ->exists();
                 if ($black_aid_db) {
                     $redis0->set('BlackID' . $my_aid, 1);
-                    return $is_api_host ? false : \json(['code' => 500, 'msg' => '您已被拉黑！请联系管理员解除黑名单！', 'data' => []]);
+                    return \json(['code' => 500, 'msg' => '您已被拉黑！请联系管理员解除黑名单！', 'data' => []]);
                 }
             }
 
@@ -1344,7 +1343,7 @@ class Base
             $redisip = 'ip' . $loc . 'id' . $my_aid;
             $user_db = Base::getUserData($my_aid);
             if (!$user_db) {
-                return $is_api_host ? false : \json(['code' => 500, 'msg' => '账号不存在！请重新登录！', 'data' => []]);
+                return \json(['code' => 500, 'msg' => '账号不存在！请重新登录！', 'data' => []]);
             }
             if ($redis1->get($redisip)) {
                 $requestnum = $redis1->get($redisip);
@@ -1367,7 +1366,7 @@ class Base
                             'ip' => $loc
                         ]);
                     }
-                    return $is_api_host ? false : \json(['code' => 500, 'msg' => '您已被拉黑！请联系管理员解除黑名单！', 'data' => []]);
+                    return \json(['code' => 500, 'msg' => '您已被拉黑！请联系管理员解除黑名单！', 'data' => []]);
                 } else {
                     //频率过快，屏蔽
                     if ($requestnum >= $GLOBiplimit) {
@@ -1381,7 +1380,7 @@ class Base
                             }
                             Robot::sendChatToOneUserMsg($root_id, $msg);
                         }
-                        return $is_api_host ? false : \json(['code' => 400, 'msg' => '系统检测到访问异常！已拒绝该请求！', 'data' => []]);
+                        return \json(['code' => 400, 'msg' => '系统检测到访问异常！已拒绝该请求！', 'data' => []]);
                     }
                     //自增
                     $redis1->incr($redisip);
@@ -1393,11 +1392,11 @@ class Base
             // 若果想终止执行Action就直接返回Response对象，不想终止则无需return
             // return response('终止执行Action');
             // 请求继续穿越
-            return $is_api_host ? true : $handler($request);
+            return $handler($request);
         } catch (Exception $e) {
             Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
         }
-        return $is_api_host ? false : Base::notFoundPage();
+        return Base::notFoundPage();
     }
 
     /**
@@ -4284,6 +4283,22 @@ class Base
             return $list;
         } catch (Exception $e) {
             Base::sendErrorNotice($e->getTraceAsString(), '获取GPT KEY LIST出错：' . $e->getMessage());
+        }
+        return [];
+    }
+
+    /**
+     * 获取防盗链禁止访问文件类型数组
+     * @return array list
+     */
+    static public function getFileCanNotVisitExtionList()
+    {
+        try {
+            $list_str = Base::getSettingKeyData('file_can_not_visit_extion') ?? '';
+            $list = preg_split("/[\s]+/", $list_str);
+            return $list;
+        } catch (Exception $e) {
+            Base::sendErrorNotice($e->getTraceAsString(), '获取防盗链禁止访问文件类型数组出错：' . $e->getMessage());
         }
         return [];
     }
