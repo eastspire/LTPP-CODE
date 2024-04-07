@@ -1207,6 +1207,14 @@ class Base
     ];
 
     /**
+     * 允许的referer
+     */
+    static $safe_referer_url = [
+        'http://localhost',
+        'http://127.0.0.1'
+    ];
+
+    /**
      * 鉴权
      * @param Request $request
      * @param callable $handler
@@ -1255,6 +1263,12 @@ class Base
                 if (strpos($referer, $front_url) === 0) {
                     // 来自LTPP前端，直接通过
                     return $handler($request);
+                }
+                foreach (Base::$safe_referer_url as &$tem_safe_referer_url) {
+                    if (strpos($referer, $tem_safe_referer_url) === 0) {
+                        // 来自本地访问，直接通过
+                        return $handler($request);
+                    }
                 }
                 if ($referer && strpos($referer, $linuxurl) === false) {
                     // 来自非LTPP前端和LTPP后端，直接拒绝
