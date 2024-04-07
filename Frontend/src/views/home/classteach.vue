@@ -272,8 +272,8 @@ export default {
       });
       this.finish = 1;
       if (res?.code == 1) {
-        this.classurl = res.classurl;
-        window.sessionStorage.setItem("classurl", res.classurl);
+        this.classurl = res?.data;
+        window.sessionStorage.setItem("classurl", res?.data);
       } else {
         this.$msg({
           type: "error",

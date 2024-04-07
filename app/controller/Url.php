@@ -67,5 +67,4 @@ class Url
         $linuxurl = Base::getSettingKeyData('classurl');
         return json(['code' => 1, 'data' => $linuxurl]);
     }
-}
-;
+};

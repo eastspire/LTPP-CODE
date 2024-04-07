@@ -338,23 +338,6 @@
               margin: 1rem 0rem 1rem 0rem;
             "
           >
-            启动音乐后端程序
-          </p>
-          <el-button
-            type="text"
-            class="pulse-enter-active"
-            style="font-size: 1.06rem; color: deeppink"
-            @click="runmusic()"
-            >启动音乐后端程序</el-button
-          >
-          <p
-            style="
-              font-size: 1.06rem;
-              text-align: left;
-              font-weight: bold;
-              margin: 1rem 0rem 1rem 0rem;
-            "
-          >
             前端服务器地址-协议+IP地址/域名:端口
           </p>
 
@@ -1562,37 +1545,6 @@ export default {
       };
 
       return styleRes;
-    },
-    async runmusic() {
-      const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Setting/runMusic",
-        portType: {
-          process: "8797",
-        },
-      }).catch((t) => {
-        this.$msg({
-          type: "error",
-          message: t,
-          duration: 1600,
-          offset: 80,
-        });
-      });
-      if (res?.code == 1) {
-        this.$msg({
-          type: "success",
-          message: res?.msg,
-          duration: 1600,
-          offset: 80,
-        });
-      } else {
-        this.$msg({
-          type: "error",
-          message: res?.msg,
-          duration: 1600,
-          offset: 80,
-        });
-      }
     },
     async installJudgeSever() {
       const { data: res } = await this.$ajax({

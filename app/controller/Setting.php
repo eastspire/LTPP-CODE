@@ -343,24 +343,6 @@ class Setting extends Image
     }
 
     /**
-     * 后端音乐程序
-     * @param Request $request 请求
-     * @return string $res json
-     */
-    public function runMusic(Request $request)
-    {
-        $my_uid = JwtToken::getCurrentId();
-        $my_aid = Base::getIdByUid($my_uid);
-        $isroot = Base::judgeIsRoot($my_aid);
-        if (!$isroot) {
-            return json(['code' => -1, 'msg' => '无权限']);
-        }
-        Base::runExec('pkill -f node');
-        Base::runExec('PORT=' . Base::$music_port . ' node /home/LTPP/Music/app.js > /home/LTPP/Music/music.log 2>&1 &');
-        return json(['code' => 1, 'msg' => '重启成功！']);
-    }
-
-    /**
      * 更新设置
      * @param Request $request 请求
      * @return string $res json
@@ -775,8 +757,6 @@ class Setting extends Image
                     ->update(['musicbkurl' => $data['musicbkurl']]);
                 $redis5->del('musicbkurl');
                 $redis5->set('musicbkurl', $data['musicbkurl']);
-                // 后端音乐地址更改，后端音乐服务重启
-                $this->runMusic($request);
             }
             if ($data['classurl'] != $redis5->get('classurl')) {
                 Db::table('setting')
