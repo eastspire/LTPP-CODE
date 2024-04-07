@@ -1207,11 +1207,18 @@ class Base
     ];
 
     /**
-     * 允许的referer
+     * 防盗链设计，允许的referer
      */
     static $safe_referer_url = [
         'http://localhost',
         'http://127.0.0.1'
+    ];
+
+    /**
+     * 防盗链设计，允许LTPP后端访问资源的URL
+     */
+    static $file_can_visit_func = [
+        '/Article/oneArticle?path=',
     ];
 
     /**
@@ -1274,7 +1281,13 @@ class Base
                     // 来自非LTPP前端和LTPP后端，直接拒绝
                     return Base::notFoundPage();
                 }
-                // 来自LTPP后端
+                foreach (Base::$file_can_visit_func as &$tem_file_can_visit_func) {
+                    // 允许来自LTPP后端的URL访问白名单
+                    if (strpos($referer, $linuxurl . $tem_file_can_visit_func) === 0) {
+                        return $handler($request);
+                    }
+                }
+                // 来自LTPP后端非白名单URL访问
                 $file_can_not_visit_extion = Base::getFileCanNotVisitExtionList();
                 foreach ($file_can_not_visit_extion as &$tem_file_can_not_visit_extion) {
                     // 不可访问类型，直接拒绝
