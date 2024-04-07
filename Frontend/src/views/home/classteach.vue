@@ -9,13 +9,12 @@
     <div>
       <div>
         <div v-show="finish">
-          <div>
+          <div
+            v-if="classurl != undefined && classurl != null && classurl != ''"
+          >
             <div class="ltpp-list-box" style="border-width: 0rem">
               <div class="search shadow">
                 <div
-                  v-if="
-                    classurl != undefined && classurl != null && classurl != ''
-                  "
                   id="dplayer"
                   :style="`height:${
                     $store.state.no_scroll_height * 0.82
