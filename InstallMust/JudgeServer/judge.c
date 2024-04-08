@@ -395,13 +395,13 @@ void exitProcess(int exit_code, bool is_child);
 void removeSubstring(char *str, const char *sub);
 void split(char **arr, char *str, const char *del);
 bool judgeSameString(const char *str1, const char *str2);
-void updateResault(int status, ull time_used, ull memory_used, const char *msg);
 void closeDup(int &newstdin, int &newstdout, int &newstderr);
 char *concatenateStrings(const char *str1, const char *str2);
-void childUpdateResData(int status, ull time_used, ull memory_used, const char *msg);
 void creatNamespace(int newstdin, int newstdout, int newstderr);
 void joinDeepChroot(int newstdin, int newstdout, int newstderr);
 void removePrivileges(int newstdin, int newstdout, int newstderr);
+void updateResault(int status, ull time_used, ull memory_used, const char *msg);
+void childUpdateResData(int status, ull time_used, ull memory_used, const char *msg);
 
 /**
  * @brief 判断字符串是否相同
@@ -698,6 +698,7 @@ void runCode(char *cmd[])
     }
     else
     {
+        // 在运行用户代码进程的父进程进行监控，监控的数据会更加准确
         monitor(pid);
         // 兜底关闭子进程重定向
         closeDup(newstdin, newstdout, newstderr);
@@ -1080,6 +1081,7 @@ void run(char *cmd[])
     }
     else if (pid == 0)
     {
+        // 中间层时间监控，用于兜底
         // 监控时间，防止CPU时间计算异常
         childTimeLimit();
         while (!monitor_child_thread_creat_finish)
@@ -1087,10 +1089,12 @@ void run(char *cmd[])
             // 等待监控子线程创建完成
             usleep(SLEEP_MICROSECONDS);
         }
+        // 运行命令
         runCode(cmd);
     }
     else
     {
+        // 等待子进程结束，防止出现孤儿进程和僵尸进程
         const int res = waitpid(pid, NULL, 0);
     }
 }
