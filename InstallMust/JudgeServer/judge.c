@@ -860,6 +860,11 @@ void exitProcess(int exit_code, bool is_child)
 {
     if (is_child)
     {
+        // 获取当前进程的父进程ID
+        pid_t current_pid = getpid();
+        // 强制杀死所有子进程
+        kill(-current_pid, SIGKILL);
+        // 兜底退出
         exit(exit_code);
     }
     // false防止循环调用

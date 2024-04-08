@@ -32,7 +32,7 @@ return [
     app\controller\Base::$redis_queue_robot_contest_name => [
         'handler' => Webman\RedisQueue\Process\Consumer::class,
         // 可以设置多进程同时消费
-        'count' => cpu_count() > 6 ? 12 : cpu_count() * 2,
+        'count' => cpu_count() > 6 ? 6 : cpu_count(),
         'constructor' => [
             // 消费者类目录
             'consumer_dir' => app_path() . '/queue/redis'
@@ -41,7 +41,7 @@ return [
     app\controller\Base::$redis_queue_contest_rank_name => [
         'handler' => Webman\RedisQueue\Process\Consumer::class,
         // 可以设置多进程同时消费
-        'count' => cpu_count() > 6 ? 12 : cpu_count() * 2,
+        'count' => cpu_count() > 6 ? 6 : cpu_count(),
         'constructor' => [
             // 消费者类目录
             'consumer_dir' => app_path() . '/queue/redis'
