@@ -14,7 +14,7 @@ return [
     app\controller\Base::$redis_queue_send_mail_name => [
         'handler' => Webman\RedisQueue\Process\Consumer::class,
         // 可以设置多进程同时消费
-        'count' => cpu_count() > 4 ? 4 : cpu_count(),
+        'count' => cpu_count() > 2 ? 2 : cpu_count(),
         'constructor' => [
             // 消费者类目录
             'consumer_dir' => app_path() . '/queue/redis'
@@ -87,7 +87,7 @@ return [
     app\controller\Base::$redis_queue_update_oj_name => [
         'handler' => Webman\RedisQueue\Process\Consumer::class,
         // 可以设置多进程同时消费
-        'count' => cpu_count() > 4 ? 4 : cpu_count(),
+        'count' => cpu_count() > 2 ? 2 : cpu_count(),
         'constructor' => [
             // 消费者类目录
             'consumer_dir' => app_path() . '/queue/redis'
@@ -96,7 +96,7 @@ return [
     app\controller\Base::$redis_queue_monitor => [
         'handler' => Webman\RedisQueue\Process\Consumer::class,
         // 可以设置多进程同时消费
-        'count' => cpu_count() > 4 ? 4 : cpu_count(),
+        'count' => cpu_count() > 2 ? 2 : cpu_count(),
         'constructor' => [
             // 消费者类目录
             'consumer_dir' => app_path() . '/queue/redis'
