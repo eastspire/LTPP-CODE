@@ -401,7 +401,6 @@ void creatNamespace(int newstdin, int newstdout, int newstderr);
 void joinDeepChroot(int newstdin, int newstdout, int newstderr);
 void removePrivileges(int newstdin, int newstdout, int newstderr);
 void updateResault(int status, ull time_used, ull memory_used, const char *msg);
-void childUpdateResData(int status, ull time_used, ull memory_used, const char *msg);
 
 /**
  * @brief 判断字符串是否相同
@@ -544,24 +543,9 @@ void *childTimeoutExit(void *argc)
         usleep(SLEEP_MICROSECONDS);
     } while (time_cnt > 0);
     childMemoryUsed();
-    childUpdateResData(LTPP_CODE_TLE, global_time_max_limit, res_data->memory_used, TLE);
+    updateResault(LTPP_CODE_TLE, global_time_max_limit, res_data->memory_used, TLE);
     exitProcess(PROCESS_EXIT_SUCCESS, true);
     return NULL;
-}
-
-/**
- * @brief 子进程更新结果
- * @param status 状态码
- * @param time_used 时间消耗
- * @param memory_used 内存消耗
- * @param msg 消息
- */
-void childUpdateResData(int status, ull time_used, ull memory_used, const char *msg)
-{
-    res_data->status = status;
-    res_data->time_used = time_used;
-    res_data->memory_used = memory_used;
-    res_data->msg = msg;
 }
 
 /**
