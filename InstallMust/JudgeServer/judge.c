@@ -395,7 +395,7 @@ void exitProcess(int exit_code, bool is_child);
 void removeSubstring(char *str, const char *sub);
 void split(char **arr, char *str, const char *del);
 bool judgeSameString(const char *str1, const char *str2);
-void updateErrorResault(int status, ull time_used, ull memory_used, const char *msg);
+void updateResault(int status, ull time_used, ull memory_used, const char *msg);
 void closeDup(int &newstdin, int &newstdout, int &newstderr);
 char *concatenateStrings(const char *str1, const char *str2);
 void childUpdateResData(int status, ull time_used, ull memory_used, const char *msg);
@@ -423,7 +423,7 @@ bool judgeSameString(const char *str1, const char *str2)
  * @param memory_used 内存消耗
  * @param msg 消息
  */
-void updateErrorResault(int status, ull time_used, ull memory_used, const char *msg)
+void updateResault(int status, ull time_used, ull memory_used, const char *msg)
 {
     if (is_update_res_status)
     {
@@ -586,7 +586,7 @@ void childTimeLimit()
     pthread_t tid;
     if (pthread_create(&tid, NULL, childTimeoutExit, NULL) != 0)
     {
-        updateErrorResault(LTPP_CODE_SERVER_ERROR, res_data->time_used, res_data->memory_used, JUDGE_MACHINE_CREATE_MONITOR_THREAD_ERROR);
+        updateResault(LTPP_CODE_SERVER_ERROR, res_data->time_used, res_data->memory_used, JUDGE_MACHINE_CREATE_MONITOR_THREAD_ERROR);
         exitProcess(EXIT_SUCCESS, true);
     }
 }
@@ -637,11 +637,10 @@ void runCode(char *cmd[])
         ++cnt;
     }
     --cnt;
-    if (judgeSameString(sandbox_code_path, empty_str))
-    {
-        // 更新沙箱代码文件所在文件路径
-        sandbox_code_path = strstr(cmd[path_loc], SANDBOX_DIRECTORY) + strlen(SANDBOX_DIRECTORY);
-    }
+    // 更新沙箱内代码文件所在文件路径
+    // 编译模式为沙箱内代码路径
+    // 运行模式为沙箱内可支持文件路径
+    sandbox_code_path = strstr(cmd[path_loc], SANDBOX_DIRECTORY) + strlen(SANDBOX_DIRECTORY);
     if (judgeSameString(sandbox_code_directory_path, empty_str))
     {
         // 更新沙箱代码文件所在文件夹路径
@@ -667,35 +666,40 @@ void runCode(char *cmd[])
     }
     else if (pid == 0)
     {
+        // 子进程重定向标准输入输出
         newstdin = open(stdin_path, O_RDWR | O_CREAT, 0644);
         newstdout = open(stdout_path, O_RDWR | O_CREAT, 0644);
         newstderr = open(stderr_path, O_RDWR | O_CREAT, 0644);
         setProcessLimit();
-        if (newstdout != -1 && newstdin != -1 && newstderr != -1)
+        if (newstdout == -1 || newstdin == -1 || newstderr == -1)
         {
-            dup2(newstdin, fileno(stdin));
-            dup2(newstdout, fileno(stdout));
-            dup2(newstderr, fileno(stderr));
-            if (!is_compiler)
-            {
-                // 运行模式下需要限制权限
-                // 创建命名空间
-                creatNamespace(newstdin, newstdout, newstderr);
-                // 创建沙箱
-                joinDeepChroot(newstdin, newstdout, newstderr);
-                // 移除特权Capability
-                removePrivileges(newstdin, newstdout, newstderr);
-                // 降低文件权限
-                lowerFilePermissions();
-            }
+            closeDup(newstdin, newstdout, newstderr);
+            exitProcess(EXIT_SUCCESS, true);
         }
-        // 运行用户代码
+        dup2(newstdin, fileno(stdin));
+        dup2(newstdout, fileno(stdout));
+        dup2(newstderr, fileno(stderr));
+        if (!is_compiler)
+        {
+            // 运行模式下需要限制权限
+            // 创建命名空间
+            creatNamespace(newstdin, newstdout, newstderr);
+            // 创建沙箱
+            joinDeepChroot(newstdin, newstdout, newstderr);
+            // 移除特权Capability
+            removePrivileges(newstdin, newstdout, newstderr);
+            // 降低文件权限
+            lowerFilePermissions();
+        }
         const int res = execvp(cmd[0], cmd);
+        // 兜底，execvp成功会替换子进程，理论上正常情况不会执行下面的代码
+        closeDup(newstdin, newstdout, newstderr);
         exitProcess(EXIT_SUCCESS, true);
     }
     else
     {
-        const int res = waitpid(pid, NULL, 0);
+        monitor(pid);
+        // 兜底关闭子进程重定向
         closeDup(newstdin, newstdout, newstderr);
         exitProcess(EXIT_SUCCESS, true);
     }
@@ -713,14 +717,14 @@ void creatNamespace(int newstdin, int newstdout, int newstderr)
     if (unshare(CLONE_NEWNS) == -1)
     {
         closeDup(newstdin, newstdout, newstderr);
-        updateErrorResault(LTPP_CODE_SERVER_ERROR, res_data->time_used, res_data->memory_used, NAMESPACE_CREATION_FAILED);
+        updateResault(LTPP_CODE_SERVER_ERROR, res_data->time_used, res_data->memory_used, NAMESPACE_CREATION_FAILED);
         exitProcess(EXIT_SUCCESS, true);
     }
     // 挂载命名空间（设置只读，对于之前打开的流无影响）
     if (mount(SANDBOX_DIRECTORY, "/", NULL, MS_BIND | MS_RDONLY, NULL) == -1)
     {
         closeDup(newstdin, newstdout, newstderr);
-        updateErrorResault(LTPP_CODE_SERVER_ERROR, res_data->time_used, res_data->memory_used, JUDGE_MACHINE_MOUNT_NAMESPACE_ERROR);
+        updateResault(LTPP_CODE_SERVER_ERROR, res_data->time_used, res_data->memory_used, JUDGE_MACHINE_MOUNT_NAMESPACE_ERROR);
         exitProcess(EXIT_SUCCESS, true);
     }
 }
@@ -745,7 +749,7 @@ void removePrivileges(int newstdin, int newstdout, int newstderr)
     {
         // 切换用户失败
         closeDup(newstdin, newstdout, newstderr);
-        updateErrorResault(LTPP_CODE_SERVER_ERROR, res_data->time_used, res_data->memory_used, JUDGE_MACHINE_SWITCH_USER_ERROR);
+        updateResault(LTPP_CODE_SERVER_ERROR, res_data->time_used, res_data->memory_used, JUDGE_MACHINE_SWITCH_USER_ERROR);
         exitProcess(EXIT_SUCCESS, true);
         return;
     }
@@ -768,7 +772,7 @@ void joinDeepChroot(int newstdin, int newstdout, int newstderr)
         {
             // 创建隔离环境失败
             closeDup(newstdin, newstdout, newstderr);
-            updateErrorResault(LTPP_CODE_SERVER_ERROR, res_data->time_used, res_data->memory_used, JUDGE_MACHINE_CREATE_NAMESPACE_ERROR);
+            updateResault(LTPP_CODE_SERVER_ERROR, res_data->time_used, res_data->memory_used, JUDGE_MACHINE_CREATE_NAMESPACE_ERROR);
             exitProcess(EXIT_SUCCESS, true);
         }
     }
@@ -806,7 +810,7 @@ char *jsonEncodeValue(const char *str)
     char *encoded_str = (char *)malloc((ull)(len * 2 + 1) * sizeof(char));
     if (encoded_str == NULL)
     {
-        updateErrorResault(LTPP_CODE_SERVER_ERROR, res_data->time_used, res_data->memory_used, JUDGE_MACHINE_SERIALIZATION_EXCEPTION);
+        updateResault(LTPP_CODE_SERVER_ERROR, res_data->time_used, res_data->memory_used, JUDGE_MACHINE_SERIALIZATION_EXCEPTION);
         return empty_str_arr;
     }
     char *p = encoded_str;
@@ -890,7 +894,7 @@ void monitor(pid_t pid)
     struct rusage ru;
     if (wait4(pid, &status, 0, &ru) == -1)
     {
-        updateErrorResault(LTPP_CODE_SERVER_ERROR, res_data->time_used, res_data->memory_used, JUDGE_MACHINE_WAIT_FOR_CHILD_PROCESS_ERROR);
+        updateResault(LTPP_CODE_SERVER_ERROR, res_data->time_used, res_data->memory_used, JUDGE_MACHINE_WAIT_FOR_CHILD_PROCESS_ERROR);
         return;
     }
     const ull time_used = ru.ru_utime.tv_sec * 1000 + ru.ru_utime.tv_usec / 1000 + ru.ru_stime.tv_sec * 1000 + ru.ru_stime.tv_usec / 1000;
@@ -909,22 +913,22 @@ void monitor(pid_t pid)
         {
             if (time_used > *time_limit)
             {
-                updateErrorResault(LTPP_CODE_TLE, time_used, memory_used, TLE);
+                updateResault(LTPP_CODE_TLE, time_used, memory_used, TLE);
             }
             else if (bytes_memory_used > *memory_limit)
             {
-                updateErrorResault(LTPP_CODE_MLE, time_used, memory_used, MLE);
+                updateResault(LTPP_CODE_MLE, time_used, memory_used, MLE);
             }
             else
             {
-                updateErrorResault(LTPP_CODE_MLE, time_used, memory_used, RE);
+                updateResault(LTPP_CODE_MLE, time_used, memory_used, RE);
             }
             break;
         }
         case SIGALRM:
         case SIGXCPU:
         {
-            updateErrorResault(LTPP_CODE_TLE, time_used, memory_used, TLE);
+            updateResault(LTPP_CODE_TLE, time_used, memory_used, TLE);
             break;
         }
         }
@@ -933,27 +937,28 @@ void monitor(pid_t pid)
     {
         if (time_used > *time_limit)
         {
-            updateErrorResault(LTPP_CODE_TLE, time_used, memory_used, TLE);
+            updateResault(LTPP_CODE_TLE, time_used, memory_used, TLE);
         }
         else if (memory_used > *memory_limit)
         {
-            updateErrorResault(LTPP_CODE_MLE, time_used, memory_used, MLE);
+            updateResault(LTPP_CODE_MLE, time_used, memory_used, MLE);
         }
         else if (!isFileEmpty(stderr_path))
         {
             if (is_compiler)
             {
-                updateErrorResault(LTPP_CODE_COMPILER_ERROR, time_used, memory_used, USER_CODE_COMPILATION_ERROR);
+                updateResault(LTPP_CODE_COMPILER_ERROR, time_used, memory_used, USER_CODE_COMPILATION_ERROR);
             }
             else
             {
-                updateErrorResault(LTPP_CODE_ERROR, time_used, memory_used, USER_CODE_EXECUTION_ERROR);
+                updateResault(LTPP_CODE_ERROR, time_used, memory_used, USER_CODE_EXECUTION_ERROR);
             }
         }
     }
     if (!is_compiler)
     {
-        updateErrorResault(LTPP_CODE_FINISH, time_used, memory_used, empty_str);
+        // 运行模式才更新正常结束状态
+        updateResault(LTPP_CODE_FINISH, time_used, memory_used, empty_str);
     }
 }
 
@@ -969,8 +974,8 @@ void stdoutToResDataMsg()
     case LTPP_CODE_MLE:
     case LTPP_CODE_RE:
     {
-        // 读取标准输出
-        char *out_msg = readFile(stdout_path);
+        // 读取标准输出，防止悬垂指针所以使用static
+        static char *out_msg = readFile(stdout_path);
         if (!judgeSameString(out_msg, empty_str))
         {
             if (judgeSameString(res_data->msg, empty_str))
@@ -987,8 +992,8 @@ void stdoutToResDataMsg()
     }
     default:
     {
-        // 读取错误输出
-        char *err_msg = readFile(stderr_path);
+        // 读取错误输出，防止悬垂指针所以使用static
+        static char *err_msg = readFile(stderr_path);
         if (!judgeSameString(err_msg, empty_str))
         {
             if (judgeSameString(res_data->msg, empty_str))
@@ -1070,7 +1075,7 @@ void run(char *cmd[])
     const pid_t pid = vfork();
     if (pid < 0)
     {
-        updateErrorResault(LTPP_CODE_SERVER_ERROR, res_data->time_used, res_data->memory_used, JUDGE_MACHINE_CREATE_CHILD_PROCESS_ERROR);
+        updateResault(LTPP_CODE_SERVER_ERROR, res_data->time_used, res_data->memory_used, JUDGE_MACHINE_CREATE_CHILD_PROCESS_ERROR);
         return;
     }
     else if (pid == 0)
@@ -1086,11 +1091,7 @@ void run(char *cmd[])
     }
     else
     {
-        monitor(pid);
-        if (!is_compiler)
-        {
-            cout(true);
-        }
+        const int res = waitpid(pid, NULL, 0);
     }
 }
 
@@ -1126,7 +1127,7 @@ void unsetMemoryLimit()
 
 /**
  * @brief 输出结果
- * @param bool need_exit 是否使用退出进程
+ * @param bool need_exit 是否退出进程
  */
 void cout(bool need_exit)
 {
