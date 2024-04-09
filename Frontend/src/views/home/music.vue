@@ -71,7 +71,8 @@ export default {
       this.isloginmusic = false;
       this.loginmusicimage();
     }
-
+    clearInterval(this.timer);
+    this.timer = null;
     this.timer = setInterval(() => {
       this.judgehasscan();
     }, 1000);
@@ -199,6 +200,8 @@ export default {
       ap.lrc.show();
     },
     usescanlogin() {
+      clearInterval(this.timer);
+      this.timer = null;
       this.timer = setInterval(() => {
         this.judgehasscan();
       }, 2000);

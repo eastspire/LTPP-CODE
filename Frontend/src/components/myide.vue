@@ -224,6 +224,8 @@ import urlencode from "../../updateCompoents/urlencode";
 import { monaco } from "../plugins/monacoEditor";
 let contentWidth = 0;
 let contentHeight = 0;
+let last_max_width = 0;
+let timer = null;
 
 export default {
   name: "Myide",
@@ -247,11 +249,6 @@ export default {
       default: function () {
         return {};
       },
-    },
-  },
-  watch: {
-    testin(new_value) {
-      this.local_testin = new_value;
     },
   },
   created() {
@@ -326,13 +323,20 @@ export default {
     if (this.editor) {
       try {
         if (this.problem_data?.id) {
-          this.editor && this.initcode();
+          this.initcode();
         }
         this.onExit();
         this.editor.onDidChangeModelContent(this.save);
         this.editor.onDidContentSizeChange(this.updateHeight);
         this.updateHeight();
         this.loadCodeTips(this.my_language);
+        timer = setInterval(() => {
+          if (last_max_width == this.$store.state.max_width) {
+            // 宽度无改变，返回
+            return;
+          }
+          this.updateHeight();
+        }, 100);
       } catch (err) {}
     }
   },
@@ -344,6 +348,8 @@ export default {
       this.editor && this.editor.dispose();
     } catch (err) {}
     try {
+      clearInterval(timer);
+      timer = null;
       clearInterval(this.up_timer);
       this.up_timer = null;
     } catch (err) {}
@@ -352,6 +358,13 @@ export default {
     usertheme: {
       handler(new_value, old_value) {
         this.changeCodeCSS(new_value);
+      },
+      immediate: true,
+      deep: true,
+    },
+    testin: {
+      handler(new_value, old_value) {
+        this.local_testin = new_value;
       },
       immediate: true,
       deep: true,
@@ -400,7 +413,7 @@ export default {
           this.editor.layout();
           return;
         }
-        contentWidth = this.$store.state.max_width;
+        contentWidth = last_max_width = this.$store.state.max_width;
         if (this.problem_data?.id) {
           // 题目界面需要减去边距
           const rootFontSize = parseFloat(
@@ -552,9 +565,6 @@ export default {
         return;
       }
       let problem_name = this.problem_data?.problemName ?? "";
-      if (!this.editor) {
-        return;
-      }
       if (this.timer_id) {
         clearTimeout(this.timer_id);
         this.timer_id = null;

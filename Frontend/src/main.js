@@ -458,8 +458,8 @@ Vue.prototype.waitDomLoad = function (id, delay) {
     let timer = null;
     return new Promise((re) => {
         try {
-            let timer = setInterval(() => {
-                let dom = document.getElementById(id);
+            timer = setInterval(() => {
+                const dom = document.getElementById(id);
                 if (dom) {
                     re();
                     clearInterval(timer);
@@ -476,10 +476,16 @@ Vue.prototype.waitDomLoad = function (id, delay) {
 };
 
 Vue.prototype.initDevice = function () {
-    store.commit("updateObj", { now_width: window.screen.width });
-    store.commit("updateObj", {
-        max_width: Math.min(1266, (window.screen.width / 100) * 80),
-    });
+    const now_width = window.screen.width;
+    if (store.state.now_width != now_width) {
+        store.commit("updateObj", { now_width: now_width });
+    }
+    const max_width = ((Math.min(1920, window.screen.width) - store.state.default_home_to_left_right * 2) / 100) * 86.3;
+    if (store.state.max_width != max_width) {
+        store.commit("updateObj", {
+            max_width: max_width,
+        });
+    }
 };
 
 Vue.prototype.logoutRemove = function (is_force = false) {

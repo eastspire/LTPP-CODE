@@ -694,7 +694,9 @@ export default {
     };
   },
   async mounted() {
-    this.initDevice();
+    setInterval(() => {
+      this.initDevice();
+    }, 1000);
     this.$EventBus.$on("closeWs", () => this.closeWs());
     this.$EventBus.$on("chatSendMsg", (e) => {
       this.postmessage(e);

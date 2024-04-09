@@ -36,6 +36,8 @@
 import { monaco } from "../plugins/monacoEditor";
 let contentWidth = 0;
 let contentHeight = 0;
+let last_max_width = 0;
+let timer = null;
 
 export default {
   name: "ShowCode",
@@ -89,13 +91,24 @@ export default {
       });
       this.editor.onDidContentSizeChange(this.updateHeight);
       this.updateHeight();
+      timer = setInterval(() => {
+        if (last_max_width == this.$store.state.max_width) {
+          // 宽度无改变，返回
+          return;
+        }
+        this.updateHeight();
+      }, 100);
     } catch (err) {}
     if (this.editor) {
       this.onExit();
     }
   },
   destroyed() {
-    this.editor && this.editor.dispose();
+    try {
+      clearInterval(timer);
+      timer = null;
+      this.editor && this.editor.dispose();
+    } catch (err) {}
   },
   data() {
     return {
@@ -120,7 +133,7 @@ export default {
           this.editor.layout();
           return;
         }
-        contentWidth = this.$store.state.max_width;
+        contentWidth = last_max_width = this.$store.state.max_width;
         // 题目界面需要减去边距
         const rootFontSize = parseFloat(
           getComputedStyle(document?.documentElement)?.fontSize
