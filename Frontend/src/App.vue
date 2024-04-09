@@ -1610,6 +1610,11 @@ a:active {
   border: none !important;
 }
 
+.markdown-body table td,
+.markdown-body table th {
+  border: 2px solid rgb(var(--ltpp-main-bk-color)) !important;
+}
+
 ::-webkit-scrollbar {
   z-index: 1000000;
   width: 0rem !important;
