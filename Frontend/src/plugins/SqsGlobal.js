@@ -457,7 +457,10 @@ const white_list = {
     '!doctype html': attribute,
     '!doctype': attribute,
     source: attribute,
-    pre: attribute
+    pre: attribute,
+    linearGradient: attribute,
+    stop: attribute,
+    br: attribute,
 };
 
 // xss配置
