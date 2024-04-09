@@ -317,7 +317,7 @@ export default {
             wordWrap: "off", // 溢出换行
             wrappingStrategy: "advanced",
             minimap: {
-              enabled: false, // 关闭，开启后频繁写会报错
+              enabled: false, // 关闭预览栏
             },
             overviewRulerLanes: 0,
           });

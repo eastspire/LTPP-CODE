@@ -98,7 +98,7 @@ export default {
             wordWrap: "off", // 溢出换行
             wrappingStrategy: "advanced",
             minimap: {
-              enabled: true,
+              enabled: false, // 关闭预览栏
             },
             overviewRulerLanes: 0,
           });
