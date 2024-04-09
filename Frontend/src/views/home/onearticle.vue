@@ -63,7 +63,8 @@
               :tabSize="prop.tabSize"
               :fontSize="prop.fontSize"
               :externalLink="externalLink"
-              :xssOptions="whiteList"
+              :xssOptions="xss_options"
+              :stripIgnoreTagBody="stripIgnoreTagBody"
               style="color: #ebeef5; min-height: 0rem; height: auto"
             >
             </mavon-editor>
@@ -152,7 +153,8 @@
                 :toolbarsBackground="prop.toolbarsBackground"
                 :previewBackground="prop.previewBackground"
                 :editorBackground="prop.editorBackground"
-                :xssOptions="whiteList"
+                :xssOptions="xss_options"
+                :stripIgnoreTagBody="stripIgnoreTagBody"
                 style="min-height: 16rem !important; height: auto !important"
               >
                 <!-- 引用视频链接的自定义按钮 -->
@@ -394,7 +396,8 @@
                         :previewBackground="prop.previewBackground"
                         :externalLink="externalLink"
                         :editorBackground="prop.editorBackground"
-                        :xssOptions="whiteList"
+                        :xssOptions="xss_options"
+                        :stripIgnoreTagBody="stripIgnoreTagBody"
                         style="
                           min-height: 0rem !important;
                           height: auto !important;
@@ -550,7 +553,8 @@
                             :previewBackground="prop.previewBackground"
                             :editorBackground="prop.editorBackground"
                             :externalLink="externalLink"
-                            :xssOptions="whiteList"
+                            :xssOptions="xss_options"
+                            :stripIgnoreTagBody="stripIgnoreTagBody"
                             style="
                               min-height: 0rem !important;
                               height: auto !important;
@@ -627,7 +631,8 @@
                   :toolbarsBackground="prop.toolbarsBackground"
                   :previewBackground="prop.previewBackground"
                   :editorBackground="prop.editorBackground"
-                  :xssOptions="whiteList"
+                  :xssOptions="xss_options"
+                  :stripIgnoreTagBody="stripIgnoreTagBody"
                   style="min-height: 16rem; height: auto; border-width: 0rem"
                 >
                   <!-- 引用视频链接的自定义按钮 -->
@@ -831,7 +836,8 @@ export default {
       isfabulous: false,
       isseetip: true,
       fronturl: window?.location?.href,
-      whiteList: false,
+      xss_options: this.$SqsGlobal.xss_options,
+      stripIgnoreTagBody: this.$SqsGlobal.strip_ignore_tag_body,
       dialogFormVisible1: false, // 用于控制表单对话框的开启和关闭
       dialogFormVisible2: false, // 用于控制表单对话框的开启和关闭
       dialogVisible: false, // 用于控制错误提示对话框的开启和关闭

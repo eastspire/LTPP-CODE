@@ -158,7 +158,8 @@
               :tabSize="prop.tabSize"
               :fontSize="prop.fontSize"
               :externalLink="externalLink"
-              :xssOptions="whiteList"
+              :xssOptions="xss_options"
+              :stripIgnoreTagBody="stripIgnoreTagBody"
               style="min-height: 16rem; height: auto; border-width: 0rem"
             >
               <!-- 引用视频链接的自定义按钮 -->
@@ -261,7 +262,8 @@
               :tabSize="prop.tabSize"
               :fontSize="prop.fontSize"
               :externalLink="externalLink"
-              :xssOptions="whiteList"
+              :xssOptions="xss_options"
+              :stripIgnoreTagBody="stripIgnoreTagBody"
               style="min-height: 16rem; height: auto; border-width: 0rem"
             >
               <!-- 引用视频链接的自定义按钮 -->
@@ -440,7 +442,8 @@ export default {
       key: "",
       id: 0,
       content: "",
-      whiteList: false,
+      xss_options: this.$SqsGlobal.xss_options,
+      stripIgnoreTagBody: this.$SqsGlobal.strip_ignore_tag_body,
       externalLink: {
         markdown_css: false,
         // 默认public文件夹下

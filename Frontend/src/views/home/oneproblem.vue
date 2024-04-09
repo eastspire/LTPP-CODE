@@ -58,7 +58,8 @@
           :toolbarsBackground="prop.toolbarsBackground"
           :previewBackground="prop.previewBackground"
           :editorBackground="prop.editorBackground"
-          :xssOptions="whiteList"
+          :xssOptions="xss_options"
+          :stripIgnoreTagBody="stripIgnoreTagBody"
           style="
             color: var(--ltpp-box-text-color);
             min-height: 0rem;
@@ -255,7 +256,8 @@ export default {
     return {
       testin: "",
       show_ide: true,
-      whiteList: false,
+      xss_options: this.$SqsGlobal.xss_options,
+      stripIgnoreTagBody: this.$SqsGlobal.strip_ignore_tag_body,
       externalLink: {
         markdown_css: false,
         // 默认public文件夹下

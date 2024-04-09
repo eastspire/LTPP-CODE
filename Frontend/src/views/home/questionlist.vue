@@ -97,7 +97,8 @@
                 :tabSize="prop.tabSize"
                 :fontSize="prop.fontSize"
                 :externalLink="externalLink"
-                :xssOptions="whiteList"
+                :xssOptions="xss_options"
+                :stripIgnoreTagBody="stripIgnoreTagBody"
                 style="
                   color: #ebeef5;
                   min-height: 4rem;
@@ -148,7 +149,8 @@ export default {
       lock: false,
       isinit: false,
       key: "",
-      whiteList: false,
+      xss_options: this.$SqsGlobal.xss_options,
+      stripIgnoreTagBody: this.$SqsGlobal.strip_ignore_tag_body,
       data_list: [],
       toolbars: {
         bold: true, // 粗体

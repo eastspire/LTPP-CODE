@@ -64,7 +64,8 @@
                 :tabSize="prop.tabSize"
                 :fontSize="prop.fontSize"
                 :externalLink="externalLink"
-                :xssOptions="whiteList"
+                :xssOptions="xss_options"
+                :stripIgnoreTagBody="stripIgnoreTagBody"
                 style="
                   color: #ebeef5;
                   min-height: 0rem;
@@ -132,7 +133,8 @@ export default {
   },
   data() {
     return {
-      whiteList: false,
+      xss_options: this.$SqsGlobal.xss_options,
+      stripIgnoreTagBody: this.$SqsGlobal.strip_ignore_tag_body,
       externalLink: {
         markdown_css: false,
         // 默认public文件夹下

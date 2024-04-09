@@ -31,7 +31,8 @@
             :tabSize="prop.tabSize"
             :fontSize="prop.fontSize"
             :externalLink="externalLink"
-            :xssOptions="whiteList"
+            :xssOptions="xss_options"
+            :stripIgnoreTagBody="stripIgnoreTagBody"
             :style="`
                 border-radius: 0rem;
                 min-height:${$store.state.no_scroll_height - 188}vh;
@@ -178,7 +179,8 @@ export default {
     return {
       issendfinish: true,
       question_name: "",
-      whiteList: false,
+      xss_options: this.$SqsGlobal.xss_options,
+      stripIgnoreTagBody: this.$SqsGlobal.strip_ignore_tag_body,
       dialogFormVisible: false, // 用于控制表单对话框的开启和关闭
       dialogVisible: false, // 用于控制错误提示对话框的开启和关闭
       formLabelWidth: "5rem", // 设定表单对话框内表单是宽度

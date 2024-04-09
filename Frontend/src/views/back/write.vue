@@ -108,7 +108,8 @@
               :tabSize="prop.tabSize"
               :fontSize="prop.fontSize"
               :externalLink="externalLink"
-              :xssOptions="whiteList"
+              :xssOptions="xss_options"
+              :stripIgnoreTagBody="stripIgnoreTagBody"
               style="min-height: 16rem; height: auto; border-width: 0rem"
             >
               <!-- 引用视频链接的自定义按钮 -->
@@ -296,7 +297,8 @@ export default {
       issendfinish: true,
       problemText: "",
       reg: /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\*\+,;=.]+$/,
-      whiteList: false,
+      xss_options: this.$SqsGlobal.xss_options,
+      stripIgnoreTagBody: this.$SqsGlobal.strip_ignore_tag_body,
       dialogFormVisible: false, // 用于控制表单对话框的开启和关闭
       dialogVisible: false, // 用于控制错误提示对话框的开启和关闭
       formLabelWidth: "5rem", // 设定表单对话框内表单是宽度

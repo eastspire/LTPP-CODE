@@ -163,7 +163,8 @@
                     :toolbarsBackground="prop.toolbarsBackground"
                     :previewBackground="prop.previewBackground"
                     :editorBackground="prop.editorBackground"
-                    :xssOptions="whiteList"
+                    :xssOptions="xss_options"
+                    :stripIgnoreTagBody="stripIgnoreTagBody"
                     :style="`
                       width: fit-content !important;
                       min-width:0rem !important;
@@ -224,7 +225,8 @@
               :tabSize="prop.tabSize"
               :fontSize="prop.fontSize"
               :externalLink="externalLink"
-              :xssOptions="whiteList"
+              :xssOptions="xss_options"
+              :stripIgnoreTagBody="stripIgnoreTagBody"
               style="
                 min-height: 12.6rem;
                 max-height: 12.6rem;
@@ -673,7 +675,8 @@ export default {
       id: "",
       user_list: [],
       chat_msg_list: [],
-      whiteList: false,
+      xss_options: this.$SqsGlobal.xss_options,
+      stripIgnoreTagBody: this.$SqsGlobal.strip_ignore_tag_body,
       externalLink: {
         markdown_css: false,
         // 默认public文件夹下

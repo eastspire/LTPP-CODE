@@ -205,11 +205,7 @@
                 <!-- 文本文件 -->
                 <div
                   v-if="IsShowTxt"
-                  style="`
-                    border-radius: 0rem;
-                    height: auto;
-                    border-width: 0rem;
-                  `"
+                  style="border-radius: 0rem; height: auto; border-width: 0rem"
                 >
                   <div>
                     <div v-if="is_code_file">
@@ -243,7 +239,8 @@
                           :tabSize="prop.tabSize"
                           :fontSize="prop.fontSize"
                           :externalLink="externalLink"
-                          :xssOptions="whiteList"
+                          :xssOptions="xss_options"
+                          :stripIgnoreTagBody="stripIgnoreTagBody"
                         >
                           <!-- 引用视频链接的自定义按钮 -->
                           <template v-slot:left-toolbar-after>
@@ -616,7 +613,8 @@ export default {
         link: "",
         region: "",
       },
-      whiteList: true,
+      xss_options: this.$SqsGlobal.xss_options,
+      stripIgnoreTagBody: this.$SqsGlobal.strip_ignore_tag_body,
       externalLink: {
         markdown_css: false,
         // 默认public文件夹下
