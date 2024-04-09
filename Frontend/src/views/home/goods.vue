@@ -286,11 +286,7 @@
           type="primary"
           @click="see_dialog = false"
           width="auto"
-          style="
-            font-size: 1.06rem;
-            margin-right:: 2rem;
-            font-weight: bold;
-          "
+          style="font-size: 1.06rem; margin-right: 2rem; font-weight: bold"
           class="el-icon-s-unfold"
           >返回</el-button
         >
