@@ -340,9 +340,9 @@ const attribute = [
     "src", "srcdoc", "srclang", "srcset", "start", "step", "style", "tabindex", "target", "title", "translate",
     "type", "usemap", "value", "width", "wrap",
     // SVG 标签属性
-    "accent-height", "accumulate", "additive", "alignment-baseline", "allowReorder", "alphabetic", "amplitude",
+    "accent-height", "accumulate", "additive", "data-view-component", "aria-hidden", "alignment-baseline", "allowReorder", "alphabetic", "amplitude",
     "arabic-form", "ascent", "attributeName", "attributeType", "azimuth", "baseFrequency", "baseline-shift",
-    "bbox", "begin", "bias", "by", "calcMode", "cap-height", "class", "clip", "clip-path", "clip-rule", "color",
+    "bbox", "begin", "bias", "by", "calcMode", "cap-height", "clip", "clip-path", "clip-rule", "color",
     "color-interpolation", "color-interpolation-filters", "color-profile", "color-rendering", "contentScriptType",
     "contentStyleType", "crossorigin", "cursor", "cx", "cy", "d", "decelerate", "descent", "diffuseConstant",
     "direction", "display", "divisor", "dominant-baseline", "dur", "dx", "dy", "edgeMode", "elevation", "enable-background",
@@ -456,7 +456,8 @@ const white_list = {
     title: attribute,
     '!doctype html': attribute,
     '!doctype': attribute,
-    source: attribute
+    source: attribute,
+    pre: attribute
 };
 
 // xss配置
