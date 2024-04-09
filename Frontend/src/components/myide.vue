@@ -422,11 +422,8 @@ export default {
           contentWidth -= rootFontSize * 3.207;
         }
         if (this.iscloudfile) {
-          // 题目界面需要减去边距
-          const rootFontSize = parseFloat(
-            getComputedStyle(document?.documentElement)?.fontSize
-          );
-          contentWidth -= rootFontSize * 2.476;
+          // 云盘界面需要减去边距
+          contentWidth -= 40;
         }
         contentHeight = Math.max(
           window.innerHeight * 0.78,
