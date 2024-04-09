@@ -76,7 +76,7 @@
         </div>
 
         <!-- IDE -->
-        <div style="height: 66vh; overflow: hidden">
+        <div style="overflow: auto">
           <div
             :ref="my_ide_id"
             :id="my_ide_id"
@@ -222,6 +222,8 @@
 <script>
 import urlencode from "../../updateCompoents/urlencode";
 import { monaco } from "../plugins/monacoEditor";
+let contentWidth = 0;
+let contentHeight = 0;
 
 export default {
   name: "Myide",
@@ -293,7 +295,6 @@ export default {
             accessibilityHelpUrl: "",
             fontSize: 18,
             tabSize: 4,
-            scrollBeyondLastLine: true,
             smoothScrolling: true,
             links: true,
             cursorSmoothCaretAnimation: true,
@@ -310,8 +311,20 @@ export default {
               vertical: "hidden", // 垂直滚动条根据内容溢出自动显示
               horizontalSliderSize: 8,
               horizontal: "auto", // 水平滚动条根据内容溢出自动显示
+              alwaysConsumeMouseWheel: false, // 滚动
             },
+            scrollBeyondLastLine: false, // 最后一行多出一个屏幕高度
+            wordWrap: "off", // 溢出换行
+            wrappingStrategy: "advanced",
+            minimap: {
+              enabled: false, // 关闭，开启后频繁写会报错
+            },
+            overviewRulerLanes: 0,
           });
+          try {
+            this.editor.onDidContentSizeChange(this.updateHeight);
+          } catch (err) {}
+          this.updateHeight();
           this.loadCodeTips(this.my_language);
         } catch (err) {}
         if (this.editor) {
@@ -391,6 +404,45 @@ export default {
     };
   },
   methods: {
+    updateHeight() {
+      if (!this.editor) {
+        return;
+      }
+      try {
+        if (
+          document.fullscreenElement ||
+          document.mozFullScreenElement ||
+          document.webkitFullscreenElement ||
+          document.msFullscreenElement
+        ) {
+          // 全屏更新高度宽度会有BUG，直接重新布局
+          this.editor.layout();
+          return;
+        }
+        contentWidth = this.$store.state.max_width;
+        if (this.problem_data?.id) {
+          // 题目界面需要减去边距
+          const rootFontSize = parseFloat(
+            getComputedStyle(document?.documentElement)?.fontSize
+          );
+          contentWidth -= rootFontSize * 3.207;
+        }
+        if (this.iscloudfile) {
+          // 题目界面需要减去边距
+          const rootFontSize = parseFloat(
+            getComputedStyle(document?.documentElement)?.fontSize
+          );
+          contentWidth -= rootFontSize * 2.476;
+        }
+        contentHeight = Math.max(
+          window.innerHeight * 0.78,
+          this.editor.getContentHeight()
+        );
+        this.$refs[this.my_ide_id].style.width = `${contentWidth}px`;
+        this.$refs[this.my_ide_id].style.height = `${contentHeight}px`;
+        this.editor.layout({ width: contentWidth, height: contentHeight });
+      } catch (err) {}
+    },
     keydownTestCode(e) {
       if (e.keyCode == 116) {
         e.preventDefault();
@@ -478,7 +530,7 @@ export default {
       let fn = () => {
         setTimeout(() => {
           this.$nextTick(() => {
-            this.editor && this.editor.layout();
+            this.updateHeight();
           });
         }, 0);
       };
@@ -509,6 +561,9 @@ export default {
       });
     },
     save(is_now = false) {
+      if (!this.editor) {
+        return;
+      }
       if (this.iscloudfile) {
         try {
           this.$emit("upCodeFile", this.editor.getValue());

@@ -216,7 +216,12 @@
                         @upCodeFile="updateIdeCode"
                         :iscloudfile="true"
                       ></myide>
-                      <ShowCode v-else :code="code" language="php"></ShowCode>
+                      <ShowCode
+                        v-else
+                        :code="code"
+                        :iscloudfile="true"
+                        language="php"
+                      ></ShowCode>
                     </div>
                     <div v-else>
                       <div class="markdown-body">
