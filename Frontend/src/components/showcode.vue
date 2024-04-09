@@ -50,14 +50,6 @@ export default {
     code: {
       default: "加载中",
     },
-    iscloudfile: {
-      default: false,
-    },
-    problem_data: {
-      default: function () {
-        return {};
-      },
-    },
   },
   created() {
     this.changeCodeCSS(this.usertheme);
@@ -139,20 +131,12 @@ export default {
           return;
         }
         contentWidth = this.$store.state.max_width;
-        if (this.problem_data?.id) {
-          // 题目界面需要减去边距
-          const rootFontSize = parseFloat(
-            getComputedStyle(document?.documentElement)?.fontSize
-          );
-          contentWidth -= rootFontSize * 3.207;
-        }
-        if (this.iscloudfile) {
-          // 题目界面需要减去边距
-          const rootFontSize = parseFloat(
-            getComputedStyle(document?.documentElement)?.fontSize
-          );
-          contentWidth -= rootFontSize * 2.476;
-        }
+        // 题目界面需要减去边距
+        const rootFontSize = parseFloat(
+          getComputedStyle(document?.documentElement)?.fontSize
+        );
+        contentWidth -= rootFontSize * 2.476;
+
         contentHeight = Math.max(
           window.innerHeight * 0.78,
           this.editor.getContentHeight()
