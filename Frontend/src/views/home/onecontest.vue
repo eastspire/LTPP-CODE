@@ -22,8 +22,8 @@
             <div
               style="
                 border-radius: 1.6rem;
-                font-size: 2rem;
-                color: red;
+                font-size: 1.66rem;
+                color: var(--ltpp-title-color);
                 font-weight: bold;
                 text-align: center;
                 overflow: hidden;

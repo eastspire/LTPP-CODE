@@ -183,13 +183,13 @@ export default {
 // 弹出框悬浮文字颜色
 --ltpp-hover-text-color: rgba(245, 247, 250, 0.66);
 // 组件内容盒子背景透明度
---ltpp-center-box-bk-opacity: 0.28;
+--ltpp-center-box-bk-opacity: 0.36;
 // 代码背景透明度
 --ltpp-code-bk-color-opacity: 1;
 // 组件内容盒子颜色
 --ltpp-box-text-color: #ffffffe6;
 // 表格背景透明度
---ltpp-list-box-bk-opacity: 0.28;
+--ltpp-list-box-bk-opacity: 0.36;
 // 阴影色
 --ltpp-shadow-color: rgba(var(--ltpp-main-bk-color), 0.08);
 // 弹出框背景悬浮颜色
@@ -198,6 +198,8 @@ export default {
 --ltpp-dialog-bk-color: 117, 63, 178;
 // 对话框背景色透明度
 --ltpp-dialog-bk-opacity: 0.86;
+// 标题文字颜色
+--ltpp-title-color: #ffdd00;
 */
 :root {
   --ltpp-h1-color: #fa278e;
@@ -217,14 +219,15 @@ export default {
   --ltpp-scroll-color: 117, 63, 178;
   --ltpp-shadow-border-width: 1px;
   --ltpp-hover-text-color: rgba(245, 247, 250, 0.66);
-  --ltpp-center-box-bk-opacity: 0.28;
+  --ltpp-center-box-bk-opacity: 0.36;
   --ltpp-code-bk-color-opacity: 1;
   --ltpp-box-text-color: #ffffffe6;
-  --ltpp-list-box-bk-opacity: 0.28;
+  --ltpp-list-box-bk-opacity: 0.36;
   --ltpp-shadow-color: rgba(var(--ltpp-main-bk-color), 0.08);
   --ltpp-hover-bk-color: rgba(var(--ltpp-light-color), 0.36);
   --ltpp-dialog-bk-color: 117, 63, 178;
   --ltpp-dialog-bk-opacity: 0.86;
+  --ltpp-title-color: #ffdd00;
 }
 
 * {

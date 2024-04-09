@@ -12,7 +12,7 @@
           style="
             font-size: 1.66rem;
             font-weight: bold;
-            color: deeppink;
+            color: var(--ltpp-title-color);
             overflow: hidden;
           "
         >
@@ -25,18 +25,30 @@
             type="text"
             @click="tooneprocode()"
             class="el-icon-s-claim pulse-enter-active"
-            style="font-size: 1.06rem; margin: 0rem 2rem; color: deepskyblue"
-            >测评记录</el-button
+            style="
+              font-size: 1.06rem;
+              font-weight: bold;
+              margin: 0rem 2rem;
+              color: var(--ltpp-title-color);
+            "
           >
+            测 评 记 录
+          </el-button>
         </div>
         <div style="float: right">
           <el-button
             type="text"
             @click="tooneproblemsolve()"
             class="el-icon-s-opportunity pulse-enter-active"
-            style="font-size: 1.06rem; margin: 0rem 2rem; color: deepskyblue"
-            >去看题解-></el-button
+            style="
+              font-size: 1.06rem;
+              font-weight: bold;
+              margin: 0rem 2rem;
+              color: var(--ltpp-title-color);
+            "
           >
+            去 看 题 解 ->
+          </el-button>
         </div>
       </div>
       <div style="clear: both"></div>
@@ -185,7 +197,7 @@
             >{{ (tableData.ACpoint * 100).toFixed(0) }}%
           </el-tag>
         </div>
-        <div v-if="show_ide">
+        <div v-if="show_ide && tableData.id">
           <Myide
             :contest_id="contestid"
             :problem_data="tableData"

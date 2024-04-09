@@ -405,7 +405,8 @@ export default {
         return;
       });
       if (res?.code == 1) {
-        this.code = res?.data.code;
+        this.code = res?.data?.code;
+        this.codelanguage = this.changecodelanguage(res?.data?.language);
       } else {
         this.code = res?.msg;
       }

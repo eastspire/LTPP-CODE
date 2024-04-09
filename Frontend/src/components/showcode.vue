@@ -9,11 +9,7 @@
  * Copyright (c) 2023 by SQS, All Rights Reserved. 
 -->
 <template>
-  <div
-    v-if="loadfinish"
-    @contextmenu.prevent=""
-    style="margin-left: auto; margin-right: auto"
-  >
+  <div @contextmenu.prevent="" style="margin-left: auto; margin-right: auto">
     <div
       @dblclick="full()"
       style="
@@ -52,63 +48,57 @@ export default {
     },
   },
   created() {
-    this.changeCodeCSS(this.usertheme);
-    this.loadfinish = false;
     this.my_ide_id = this.randomString();
+    this.changeCodeCSS(this.usertheme);
   },
-  mounted() {
+  async mounted() {
+    await this.waitDomLoad(this.my_ide_id, 100);
     // 创建 Monaco Editor
-    this.loadfinish = true;
-    setTimeout(() => {
-      this.$nextTick(() => {
-        try {
-          this.editor = monaco.editor.create(this.$refs[this.my_ide_id], {
-            value: this.code,
-            language: this.language,
-            theme: this.usertheme,
-            fontSize: 18,
-            tabSize: 4,
-            accessibilityHelpUrl: "",
-            smoothScrolling: true,
-            links: true,
-            folding: true,
-            mouseWheelZoom: true,
-            cursorSmoothCaretAnimation: true,
-            contextmenu: false,
-            cursorBlinking: "smooth",
-            cursorWidth: 2,
-            automaticLayout: false,
-            readOnly: true,
-            scrollbar: {
-              verticalScrollbarSize: 0,
-              vertical: "hidden", // 垂直滚动条根据内容溢出自动显示
-              horizontalSliderSize: 8,
-              horizontal: "auto", // 水平滚动条根据内容溢出自动显示
-              alwaysConsumeMouseWheel: false, // 滚动
-            },
-            scrollBeyondLastLine: false, // 最后一行多出一个屏幕高度
-            wordWrap: "off", // 溢出换行
-            wrappingStrategy: "advanced",
-            minimap: {
-              enabled: false, // 关闭预览栏
-            },
-            overviewRulerLanes: 0,
-          });
-          this.editor.onDidContentSizeChange(this.updateHeight);
-          this.updateHeight();
-        } catch (err) {}
-        if (this.editor) {
-          this.onExit();
-        }
+    try {
+      this.editor = monaco.editor.create(this.$refs[this.my_ide_id], {
+        value: this.code,
+        language: this.language,
+        theme: this.usertheme,
+        fontSize: 18,
+        tabSize: 4,
+        accessibilityHelpUrl: "",
+        smoothScrolling: true,
+        links: true,
+        folding: true,
+        mouseWheelZoom: true,
+        cursorSmoothCaretAnimation: true,
+        contextmenu: false,
+        cursorBlinking: "smooth",
+        cursorWidth: 2,
+        automaticLayout: false,
+        readOnly: true,
+        scrollbar: {
+          verticalScrollbarSize: 0,
+          vertical: "hidden", // 垂直滚动条根据内容溢出自动显示
+          horizontalSliderSize: 8,
+          horizontal: "auto", // 水平滚动条根据内容溢出自动显示
+          alwaysConsumeMouseWheel: false, // 滚动
+        },
+        scrollBeyondLastLine: false, // 最后一行多出一个屏幕高度
+        wordWrap: "off", // 溢出换行
+        wrappingStrategy: "advanced",
+        minimap: {
+          enabled: false, // 关闭预览栏
+        },
+        overviewRulerLanes: 0,
       });
-    }, 0);
+      this.editor.onDidContentSizeChange(this.updateHeight);
+      this.updateHeight();
+    } catch (err) {}
+    if (this.editor) {
+      this.onExit();
+    }
   },
   destroyed() {
     this.editor && this.editor.dispose();
   },
   data() {
     return {
-      loadfinish: false,
       my_ide_id: "",
       editor: null,
       usertheme: window.localStorage.getItem("theme") ?? "vs-dark",
@@ -136,7 +126,6 @@ export default {
           getComputedStyle(document?.documentElement)?.fontSize
         );
         contentWidth -= rootFontSize * 2.476;
-
         contentHeight = Math.max(
           window.innerHeight * 0.78,
           this.editor.getContentHeight()

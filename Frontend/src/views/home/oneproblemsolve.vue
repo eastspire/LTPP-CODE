@@ -286,8 +286,13 @@ export default {
             duration: 1600,
             offset: 80,
           });
+          this.isinit = true;
         });
-        if (res?.data.length <= 0) {
+        if (res?.data?.length <= 0) {
+          if (!this.isinit) {
+            this.userarticle = [];
+          }
+          this.userarticle.push(...res?.data);
           return;
         }
         this.userarticle.splice(this.limit, this.limit);
@@ -295,6 +300,7 @@ export default {
           this.userarticle.unshift(res?.data[i]);
         }
         window.scrollTo(0, document.body.clientHeight / 2);
+        this.isinit = true;
         return;
       }
       //滚动条到底部的条件
@@ -371,10 +377,11 @@ export default {
           duration: 1600,
           offset: 80,
         });
-      } else {
-        if (!this.isinit) {
-          this.userarticle = [];
-        }
+      }
+      if (!this.isinit) {
+        this.userarticle = [];
+      }
+      if (res?.data.length) {
         this.userarticle.push(...res?.data);
       }
       this.isinit = true;

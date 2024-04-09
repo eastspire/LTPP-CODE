@@ -158,7 +158,7 @@ Vue.prototype.randomString = function (length = 32) {
     }
     let s_timestamp = new Date().getTime();
     return f_timestamp + random_number + s_timestamp;
-}
+};
 
 // 全屏
 Vue.prototype.fullscreen = function (id, fn = () => { }) {
@@ -192,7 +192,7 @@ Vue.prototype.fullscreen = function (id, fn = () => { }) {
             document.msExitFullscreen();
         }
     }
-}
+};
 
 // 复制
 Vue.prototype.copy = async function (text) {
@@ -254,7 +254,7 @@ Vue.prototype.copy = async function (text) {
             offset: 80,
         });
     }
-}
+};
 
 Vue.prototype.getFronturl = async function () {
     let cache = window.sessionStorage.getItem('FrontUrl');
@@ -280,7 +280,7 @@ Vue.prototype.getFronturl = async function () {
         return res?.data;
     }
     return '';
-}
+};
 
 Vue.prototype.getBackurl = async function () {
     let cache = window.sessionStorage.getItem("linuxurl");
@@ -306,7 +306,7 @@ Vue.prototype.getBackurl = async function () {
         return res?.data;
     }
     return '';
-}
+};
 
 // 返回顶部
 Vue.prototype.totop = function () {
@@ -449,10 +449,30 @@ Vue.prototype.loadCloudCharset = async function (is_init = false) {
 };
 
 Vue.prototype.sleep = function (delay) {
-    let start = (new Date()).getTime();
-    while ((new Date()).getTime() - start < delay) {
-        continue;
-    }
+    return new Promise((re) => {
+        setTimeout(re, delay);
+    });
+};
+
+Vue.prototype.waitDomLoad = function (id, delay) {
+    let timer = null;
+    return new Promise((re) => {
+        try {
+            let timer = setInterval(() => {
+                let dom = document.getElementById(id);
+                if (dom) {
+                    re();
+                    clearInterval(timer);
+                    timer = null;
+                    return;
+                }
+            }, delay);
+        } catch (err) {
+            re();
+            clearInterval(timer);
+            timer = null;
+        }
+    });
 };
 
 Vue.prototype.initDevice = function () {
@@ -460,7 +480,7 @@ Vue.prototype.initDevice = function () {
     store.commit("updateObj", {
         max_width: Math.min(1266, (window.screen.width / 100) * 80),
     });
-}
+};
 
 Vue.prototype.logoutRemove = function (is_force = false) {
     try {
@@ -502,7 +522,7 @@ Vue.prototype.judgeSystemIsWin = function () {
         return true;
     }
     return false;
-}
+};
 
 Vue.prototype.judgeSystemIsMac = function () {
     const user_agent = window.navigator.userAgent.toLowerCase();
@@ -510,13 +530,13 @@ Vue.prototype.judgeSystemIsMac = function () {
         return true;
     }
     return false;
-}
+};
 
 Vue.prototype.judgeSystemIsPhone = function () {
     const user_agent = window.navigator.userAgent.toLowerCase();
     const is_mobile = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(user_agent);
     return is_mobile;
-}
+};
 
 Vue.prototype.downloadNoUrlContent = async function (type = 'text/html', data, download_name = '') {
     this.$msg({
@@ -578,7 +598,7 @@ Vue.prototype.downloadNoUrlContent = async function (type = 'text/html', data, d
         offset: 80,
     });
     return res;
-}
+};
 
 Vue.prototype.downloadFile = function (url, filename) {
     this.$msg({
@@ -612,7 +632,7 @@ Vue.prototype.downloadFile = function (url, filename) {
         };
         xhr.send();
     });
-}
+};
 
 Vue.prototype.downloadUrlContent = async function (url, data, download_name) {
     this.$msg({
@@ -673,7 +693,7 @@ Vue.prototype.downloadUrlContent = async function (url, data, download_name) {
         offset: 80,
     });
     return res;
-}
+};
 
 new Vue({
     router,

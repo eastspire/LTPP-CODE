@@ -19,7 +19,7 @@
             <div
               @dblclick="copyText(name, '标题', writer)"
               style="
-                color: var(--ltpp-box-text-color);
+                color: var(--ltpp-title-color);
                 border-width: 0rem;
                 min-height: 3rem;
                 text-align: left;
@@ -40,9 +40,14 @@
               type="text"
               @click="topropage()"
               class="el-icon-s-opportunity pulse-enter-active"
-              style="font-size: 1.06rem; margin: 0rem 2rem; color: deeppink"
-              >去挑战这题-></el-button
+              style="
+                font-size: 1.06rem;
+                margin: 0rem 2rem;
+                color: var(--ltpp-title-color);
+              "
             >
+              去 挑 战 此 题 ->
+            </el-button>
           </div>
           <div
             class="markdown-body"

@@ -267,7 +267,7 @@ export default {
     this.usetime = 0;
     this.usememory = 0;
   },
-  mounted() {
+  async mounted() {
     this.listenKeydown();
     this.local_testin = this.testin;
     if (!this.iscloudfile) {
@@ -284,76 +284,57 @@ export default {
       this.my_language = this.language;
       this.my_code = this.code;
     }
-    setTimeout(() => {
-      this.$nextTick(() => {
-        try {
-          // 创建 Monaco Editor
-          this.editor = monaco.editor.create(this.$refs[this.my_ide_id], {
-            value: this.my_code,
-            language: this.my_language,
-            theme: this.usertheme,
-            accessibilityHelpUrl: "",
-            fontSize: 18,
-            tabSize: 4,
-            smoothScrolling: true,
-            links: true,
-            cursorSmoothCaretAnimation: true,
-            readOnly: false,
-            folding: true,
-            contextmenu: false,
-            suggestOnTriggerCharacters: true,
-            cursorBlinking: "smooth",
-            cursorWidth: 2,
-            automaticLayout: false,
-            mouseWheelZoom: true, // 缩放字体
-            scrollbar: {
-              verticalScrollbarSize: 0,
-              vertical: "hidden", // 垂直滚动条根据内容溢出自动显示
-              horizontalSliderSize: 8,
-              horizontal: "auto", // 水平滚动条根据内容溢出自动显示
-              alwaysConsumeMouseWheel: false, // 滚动
-            },
-            scrollBeyondLastLine: false, // 最后一行多出一个屏幕高度
-            wordWrap: "off", // 溢出换行
-            wrappingStrategy: "advanced",
-            minimap: {
-              enabled: false, // 关闭预览栏
-            },
-            overviewRulerLanes: 0,
-          });
-          try {
-            this.editor.onDidContentSizeChange(this.updateHeight);
-          } catch (err) {}
-          this.updateHeight();
-          this.loadCodeTips(this.my_language);
-        } catch (err) {}
-        if (this.editor) {
-          let layout_timer = setInterval(() => {
-            try {
-              this.editor.layout();
-            } catch (err) {}
-          }, 100);
-          setTimeout(() => {
-            try {
-              clearInterval(layout_timer);
-              layout_timer = null;
-              this.editor.layout();
-            } catch (err) {}
-          }, 1000);
-          try {
-            let timer = setInterval(() => {
-              if (this.problem_data?.id) {
-                this.editor && this.initcode();
-                clearInterval(timer);
-                timer = null;
-              }
-            }, 360);
-          } catch (err) {}
-          this.onExit();
-          this.editor.onDidChangeModelContent(this.save);
-        }
+
+    try {
+      await this.waitDomLoad(this.my_ide_id, 100);
+      // 创建 Monaco Editor
+      this.editor = monaco.editor.create(this.$refs[this.my_ide_id], {
+        value: this.my_code,
+        language: this.my_language,
+        theme: this.usertheme,
+        accessibilityHelpUrl: "",
+        fontSize: 18,
+        tabSize: 4,
+        smoothScrolling: true,
+        links: true,
+        cursorSmoothCaretAnimation: true,
+        readOnly: false,
+        folding: true,
+        contextmenu: false,
+        suggestOnTriggerCharacters: true,
+        cursorBlinking: "smooth",
+        cursorWidth: 2,
+        automaticLayout: false,
+        mouseWheelZoom: true, // 缩放字体
+        scrollbar: {
+          verticalScrollbarSize: 0,
+          vertical: "hidden", // 垂直滚动条根据内容溢出自动显示
+          horizontalSliderSize: 8,
+          horizontal: "auto", // 水平滚动条根据内容溢出自动显示
+          alwaysConsumeMouseWheel: false, // 滚动
+        },
+        scrollBeyondLastLine: false, // 最后一行多出一个屏幕高度
+        wordWrap: "off", // 溢出换行
+        wrappingStrategy: "advanced",
+        minimap: {
+          enabled: false, // 关闭预览栏
+        },
+        overviewRulerLanes: 0,
       });
-    }, 0);
+    } catch (err) {}
+
+    if (this.editor) {
+      try {
+        if (this.problem_data?.id) {
+          this.editor && this.initcode();
+        }
+        this.onExit();
+        this.editor.onDidChangeModelContent(this.save);
+        this.editor.onDidContentSizeChange(this.updateHeight);
+        this.updateHeight();
+        this.loadCodeTips(this.my_language);
+      } catch (err) {}
+    }
   },
   destroyed() {
     try {

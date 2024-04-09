@@ -303,7 +303,7 @@
         <div v-if="tableData.id">
           <el-divider></el-divider>
           <div style="height: 2rem"></div>
-          <div v-if="show_ide">
+          <div v-if="show_ide && tableData.id">
             <Myide
               :contest_id="contestid"
               :problem_data="tableData"
