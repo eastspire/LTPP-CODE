@@ -329,7 +329,7 @@ const max_video_retry_times = 16;
 // H5属性
 const attribute = [
     // HTML 标签属性
-    "accept", "data-original-format", "", "accept-charset", "accesskey", "action", "align", "alt", "async", "autocomplete", "autofocus",
+    "accept", "data-size", "data-original-format", "", "accept-charset", "accesskey", "action", "align", "alt", "async", "autocomplete", "autofocus",
     "autoplay", "bgcolor", "border", "charset", "checked", "cite", "class", "color", "cols", "colspan",
     "content", "contenteditable", "controls", "coords", "data", "datetime", "default", "defer", "dir", "dirname",
     "disabled", "download", "draggable", "dropzone", "enctype", "for", "form", "formaction", "headers", "height",
