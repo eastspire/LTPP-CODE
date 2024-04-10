@@ -506,13 +506,6 @@ export default {
 </script>
 <style scoped>
 @import "../../../public/md/markdown/github-markdown.min.css";
-.animate {
-  -webkit-transition: all 1s ease; /* Safari and Chrome */
-  -moz-transition: all 1s ease; /* Firefox */
-  -o-transition: all 1s ease; /* Opera */
-  -ms-transition: all 1s ease; /* IE 9 */
-  transition: all 1s ease;
-}
 img:hover {
   transform-origin: center center;
   transform: scale(1.1, 1.1);

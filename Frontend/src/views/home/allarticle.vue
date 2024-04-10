@@ -529,13 +529,6 @@ export default {
   background-color: #d3dce6;
 }
 
-.animate {
-  -webkit-transition: all 1s ease; /* Safari and Chrome */
-  -moz-transition: all 1s ease; /* Firefox */
-  -o-transition: all 1s ease; /* Opera */
-  -ms-transition: all 1s ease; /* IE 9 */
-  transition: all 1s ease;
-}
 /**
 鼠标放上，图片变大
 */

@@ -779,32 +779,32 @@ a:active {
 }
 
 .pulse-enter-active:hover {
-  transform: scale(1.06);
+  transform: scale(1.022);
   cursor: pointer;
-  -webkit-transition: all 1s ease !important;
+  -webkit-transition: all 0.666s ease !important;
   /* Safari and Chrome */
-  -moz-transition: all 1s ease !important;
+  -moz-transition: all 0.666s ease !important;
   /* Firefox */
-  -o-transition: all 1s ease !important;
+  -o-transition: all 0.666s ease !important;
   /* Opera */
-  -ms-transition: all 1s ease !important;
+  -ms-transition: all 0.666s ease !important;
   /* IE 9 */
-  transition: all 1s ease !important;
+  transition: all 0.666s ease !important;
 }
 
 /**
 动画
 */
 .animate {
-  -webkit-transition: all 1s ease !important;
+  -webkit-transition: all 0.666s ease !important;
   /* Safari and Chrome */
-  -moz-transition: all 1s ease !important;
+  -moz-transition: all 0.666s ease !important;
   /* Firefox */
-  -o-transition: all 1s ease !important;
+  -o-transition: all 0.666s ease !important;
   /* Opera */
-  -ms-transition: all 1s ease !important;
+  -ms-transition: all 0.666s ease !important;
   /* IE 9 */
-  transition: all 1s ease !important;
+  transition: all 0.666s ease !important;
 }
 
 .sure,
