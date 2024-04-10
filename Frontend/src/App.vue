@@ -1618,6 +1618,10 @@ a:active {
   border: 2px solid rgb(var(--ltpp-main-bk-color)) !important;
 }
 
+table {
+  margin: 0.36rem 0rem !important;
+}
+
 ::-webkit-scrollbar {
   z-index: 1000000;
   width: 0rem !important;
