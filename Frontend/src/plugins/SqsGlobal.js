@@ -461,6 +461,10 @@ const white_list = {
     linearGradient: attribute,
     stop: attribute,
     br: attribute,
+    figure: attribute,
+    head: attribute,
+    ifream: attribute,
+    webview: attribute
 };
 
 // xss配置
