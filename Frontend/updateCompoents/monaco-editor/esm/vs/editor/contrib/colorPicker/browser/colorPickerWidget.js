@@ -2,7 +2,7 @@
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-import { PixelRatio } from '../../../../base/browser/browser.js';
+import { PixelRatio } from '../../../../base/browser/pixelRatio.js';
 import * as dom from '../../../../base/browser/dom.js';
 import { GlobalPointerMoveMonitor } from '../../../../base/browser/globalPointerMoveMonitor.js';
 import { Widget } from '../../../../base/browser/ui/widget.js';
@@ -83,9 +83,9 @@ class CloseButton extends Disposable {
         dom.append(this._button, innerDiv);
         const closeButton = dom.append(innerDiv, $('.button' + ThemeIcon.asCSSSelector(registerIcon('color-picker-close', Codicon.close, localize('closeIcon', 'Icon to close the color picker')))));
         closeButton.classList.add('close-icon');
-        this._button.onclick = () => {
+        this._register(dom.addDisposableListener(this._button, dom.EventType.CLICK, () => {
             this._onClicked.fire();
-        };
+        }));
     }
 }
 export class ColorPickerBody extends Disposable {
@@ -180,7 +180,7 @@ class SaturationBox extends Disposable {
             this.onDidChangePosition(e.offsetX, e.offsetY);
         }
         this.monitor.startMonitoring(e.target, e.pointerId, e.buttons, event => this.onDidChangePosition(event.pageX - origin.left, event.pageY - origin.top), () => null);
-        const pointerUpListener = dom.addDisposableListener(document, dom.EventType.POINTER_UP, () => {
+        const pointerUpListener = dom.addDisposableListener(e.target.ownerDocument, dom.EventType.POINTER_UP, () => {
             this._onColorFlushed.fire();
             pointerUpListener.dispose();
             if (this.monitor) {
@@ -227,11 +227,13 @@ class SaturationBox extends Disposable {
         this.selection.style.left = `${s * this.width}px`;
         this.selection.style.top = `${this.height - v * this.height}px`;
     }
-    onDidChangeColor() {
+    onDidChangeColor(color) {
         if (this.monitor && this.monitor.isMonitoring()) {
             return;
         }
         this.paint();
+        const hsva = color.hsva;
+        this.paintSelection(hsva.s, hsva.v);
     }
 }
 class Strip extends Disposable {
@@ -253,11 +255,16 @@ class Strip extends Disposable {
         this.slider = dom.append(this.domNode, $('.slider'));
         this.slider.style.top = `0px`;
         this._register(dom.addDisposableListener(this.domNode, dom.EventType.POINTER_DOWN, e => this.onPointerDown(e)));
+        this._register(model.onDidChangeColor(this.onDidChangeColor, this));
         this.layout();
     }
     layout() {
         this.height = this.domNode.offsetHeight - this.slider.offsetHeight;
         const value = this.getValue(this.model.color);
+        this.updateSliderPosition(value);
+    }
+    onDidChangeColor(color) {
+        const value = this.getValue(color);
         this.updateSliderPosition(value);
     }
     onPointerDown(e) {
@@ -271,7 +278,7 @@ class Strip extends Disposable {
             this.onDidChangeTop(e.offsetY);
         }
         monitor.startMonitoring(e.target, e.pointerId, e.buttons, event => this.onDidChangeTop(event.pageY - origin.top), () => null);
-        const pointerUpListener = dom.addDisposableListener(document, dom.EventType.POINTER_UP, () => {
+        const pointerUpListener = dom.addDisposableListener(e.target.ownerDocument, dom.EventType.POINTER_UP, () => {
             this._onColorFlushed.fire();
             pointerUpListener.dispose();
             monitor.stopMonitoring(true);
@@ -291,10 +298,10 @@ class OpacityStrip extends Strip {
     constructor(container, model, showingStandaloneColorPicker = false) {
         super(container, model, showingStandaloneColorPicker);
         this.domNode.classList.add('opacity-strip');
-        this._register(model.onDidChangeColor(this.onDidChangeColor, this));
         this.onDidChangeColor(this.model.color);
     }
     onDidChangeColor(color) {
+        super.onDidChangeColor(color);
         const { r, g, b } = color.rgba;
         const opaque = new Color(new RGBA(r, g, b, 1));
         const transparent = new Color(new RGBA(r, g, b, 0));
@@ -321,9 +328,9 @@ export class InsertButton extends Disposable {
         this._button = dom.append(container, document.createElement('button'));
         this._button.classList.add('insert-button');
         this._button.textContent = 'Insert';
-        this._button.onclick = e => {
+        this._register(dom.addDisposableListener(this._button, dom.EventType.CLICK, () => {
             this._onClicked.fire();
-        };
+        }));
     }
     get button() {
         return this._button;
@@ -334,7 +341,7 @@ export class ColorPickerWidget extends Widget {
         super();
         this.model = model;
         this.pixelRatio = pixelRatio;
-        this._register(PixelRatio.onDidChange(() => this.layout()));
+        this._register(PixelRatio.getInstance(dom.getWindow(container)).onDidChange(() => this.layout()));
         const element = $('.colorpicker-widget');
         container.appendChild(element);
         this.header = this._register(new ColorPickerHeader(element, this.model, themeService, standaloneColorPicker));

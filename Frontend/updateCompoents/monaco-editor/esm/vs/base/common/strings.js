@@ -30,6 +30,24 @@ export function format(value, ...args) {
     });
 }
 /**
+ * Encodes the given value so that it can be used as literal value in html attributes.
+ *
+ * In other words, computes `$val`, such that `attr` in `<div attr="$val" />` has the runtime value `value`.
+ * This prevents XSS injection.
+ */
+export function htmlAttributeEncodeValue(value) {
+    return value.replace(/[<>"'&]/g, ch => {
+        switch (ch) {
+            case '<': return '&lt;';
+            case '>': return '&gt;';
+            case '"': return '&quot;';
+            case '\'': return '&apos;';
+            case '&': return '&amp;';
+        }
+        return ch;
+    });
+}
+/**
  * Converts HTML characters inside the string to use entities instead. Makes the string safe from
  * being used e.g. in HTMLElement.innerHTML.
  */
@@ -150,14 +168,17 @@ export function regExpLeadsToEndlessLoop(regexp) {
     const match = regexp.exec('');
     return !!(match && regexp.lastIndex === 0);
 }
-export function regExpFlags(regexp) {
-    return (regexp.global ? 'g' : '')
-        + (regexp.ignoreCase ? 'i' : '')
-        + (regexp.multiline ? 'm' : '')
-        + (regexp /* standalone editor compilation */.unicode ? 'u' : '');
-}
 export function splitLines(str) {
     return str.split(/\r\n|\r|\n/);
+}
+export function splitLinesIncludeSeparators(str) {
+    var _b;
+    const linesWithSeparators = [];
+    const splitLinesAndSeparators = str.split(/(\r\n|\r|\n)/);
+    for (let i = 0; i < Math.ceil(splitLinesAndSeparators.length / 2); i++) {
+        linesWithSeparators.push(splitLinesAndSeparators[2 * i] + ((_b = splitLinesAndSeparators[2 * i + 1]) !== null && _b !== void 0 ? _b : ''));
+    }
+    return linesWithSeparators;
 }
 /**
  * Returns first index of the string that is not whitespace.
@@ -731,10 +752,10 @@ function isEmojiModifier(codePoint) {
 export const noBreakWhitespace = '\xa0';
 export class AmbiguousCharacters {
     static getInstance(locales) {
-        return AmbiguousCharacters.cache.get(Array.from(locales));
+        return _a.cache.get(Array.from(locales));
     }
     static getLocales() {
-        return AmbiguousCharacters._locales.value;
+        return _a._locales.value;
     }
     constructor(confusableDictionary) {
         this.confusableDictionary = confusableDictionary;
@@ -798,9 +819,9 @@ AmbiguousCharacters.cache = new LRUCachedFunction((locales) => {
     }
     const commonMap = arrayToMap(data['_common']);
     const map = mergeMaps(commonMap, languageSpecificMap);
-    return new AmbiguousCharacters(map);
+    return new _a(map);
 });
-AmbiguousCharacters._locales = new Lazy(() => Object.keys(AmbiguousCharacters.ambiguousCharacterData.value).filter((k) => !k.startsWith('_')));
+AmbiguousCharacters._locales = new Lazy(() => Object.keys(_a.ambiguousCharacterData.value).filter((k) => !k.startsWith('_')));
 export class InvisibleCharacters {
     static getRawData() {
         // Generated using https://github.com/hediet/vscode-unicode-data

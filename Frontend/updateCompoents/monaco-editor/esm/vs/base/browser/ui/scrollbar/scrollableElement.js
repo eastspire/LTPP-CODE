@@ -2,7 +2,7 @@
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-import { getZoomFactor } from '../../browser.js';
+import { getZoomFactor, isChrome } from '../../browser.js';
 import * as dom from '../../dom.js';
 import { createFastDomNode } from '../../fastDomNode.js';
 import { StandardWheelEvent } from '../../mouseEvent.js';
@@ -56,11 +56,12 @@ export class MouseWheelClassifier {
         return (score <= 0.5);
     }
     acceptStandardWheelEvent(e) {
-        const osZoomFactor = window.devicePixelRatio / getZoomFactor();
-        if (platform.isWindows || platform.isLinux) {
-            // On Windows and Linux, the incoming delta events are multiplied with the OS zoom factor.
+        if (isChrome) {
+            const targetWindow = dom.getWindow(e.browserEvent);
+            const pageZoomFactor = getZoomFactor(targetWindow);
+            // On Chrome, the incoming delta events are multiplied with the OS zoom factor.
             // The OS zoom factor can be reverse engineered by using the device pixel ratio and the configured zoom factor into account.
-            this.accept(Date.now(), e.deltaX / osZoomFactor, e.deltaY / osZoomFactor);
+            this.accept(Date.now(), e.deltaX * pageZoomFactor, e.deltaY * pageZoomFactor);
         }
         else {
             this.accept(Date.now(), e.deltaX, e.deltaY);
@@ -290,7 +291,14 @@ export class AbstractScrollableElement extends Widget {
             let deltaY = e.deltaY * this._options.mouseWheelScrollSensitivity;
             let deltaX = e.deltaX * this._options.mouseWheelScrollSensitivity;
             if (this._options.scrollPredominantAxis) {
-                if (Math.abs(deltaY) >= Math.abs(deltaX)) {
+                if (this._options.scrollYToX && deltaX + deltaY === 0) {
+                    // when configured to map Y to X and we both see
+                    // no dominant axis and X and Y are competing with
+                    // identical values into opposite directions, we
+                    // ignore the delta as we cannot make a decision then
+                    deltaX = deltaY = 0;
+                }
+                else if (Math.abs(deltaY) >= Math.abs(deltaX)) {
                     deltaX = 0;
                 }
                 else {
@@ -436,7 +444,7 @@ export class ScrollableElement extends AbstractScrollableElement {
         const scrollable = new Scrollable({
             forceIntegerValues: true,
             smoothScrollDuration: 0,
-            scheduleAtNextAnimationFrame: (callback) => dom.scheduleAtNextAnimationFrame(callback)
+            scheduleAtNextAnimationFrame: (callback) => dom.scheduleAtNextAnimationFrame(dom.getWindow(element), callback)
         });
         super(element, options, scrollable);
         this._register(scrollable);
@@ -466,21 +474,21 @@ export class DomScrollableElement extends AbstractScrollableElement {
         options = options || {};
         options.mouseWheelSmoothScroll = false;
         const scrollable = new Scrollable({
-            forceIntegerValues: false,
+            forceIntegerValues: false, // See https://github.com/microsoft/vscode/issues/139877
             smoothScrollDuration: 0,
-            scheduleAtNextAnimationFrame: (callback) => dom.scheduleAtNextAnimationFrame(callback)
+            scheduleAtNextAnimationFrame: (callback) => dom.scheduleAtNextAnimationFrame(dom.getWindow(element), callback)
         });
         super(element, options, scrollable);
         this._register(scrollable);
         this._element = element;
-        this.onScroll((e) => {
+        this._register(this.onScroll((e) => {
             if (e.scrollTopChanged) {
                 this._element.scrollTop = e.scrollTop;
             }
             if (e.scrollLeftChanged) {
                 this._element.scrollLeft = e.scrollLeft;
             }
-        });
+        }));
         this.scanDomNode();
     }
     setScrollPosition(update) {

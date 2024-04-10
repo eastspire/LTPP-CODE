@@ -4,8 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import './browser/coreCommands.js';
 import './browser/widget/codeEditorWidget.js';
-import './browser/widget/diffEditorWidget.js';
-import './browser/widget/diffNavigator.js';
+import './browser/widget/diffEditor/diffEditor.contribution.js';
 import './contrib/anchorSelect/browser/anchorSelect.js';
 import './contrib/bracketMatching/browser/bracketMatching.js';
 import './contrib/caretOperations/browser/caretOperations.js';
@@ -41,6 +40,7 @@ import './contrib/linkedEditing/browser/linkedEditing.js';
 import './contrib/links/browser/links.js';
 import './contrib/longLinesHelper/browser/longLinesHelper.js';
 import './contrib/multicursor/browser/multicursor.js';
+import './contrib/inlineEdit/browser/inlineEdit.contribution.js';
 import './contrib/parameterHints/browser/parameterHints.js';
 import './contrib/rename/browser/rename.js';
 import './contrib/semanticTokens/browser/documentSemanticTokens.js';
@@ -58,6 +58,7 @@ import './contrib/wordHighlighter/browser/wordHighlighter.js';
 import './contrib/wordOperations/browser/wordOperations.js';
 import './contrib/wordPartOperations/browser/wordPartOperations.js';
 import './contrib/readOnlyMessage/browser/contribution.js';
+import './contrib/diffEditorBreadcrumbs/browser/contribution.js';
 // Load up these strings even in VSCode, even if they are not used
 // in order to get them translated
 import './common/standaloneStrings.js';

@@ -15,7 +15,6 @@ import * as aria from '../../../base/browser/ui/aria/aria.js';
 import { Disposable, toDisposable, DisposableStore } from '../../../base/common/lifecycle.js';
 import { ICodeEditorService } from '../../browser/services/codeEditorService.js';
 import { CodeEditorWidget } from '../../browser/widget/codeEditorWidget.js';
-import { DiffEditorWidget } from '../../browser/widget/diffEditorWidget.js';
 import { InternalEditorAction } from '../../common/editorAction.js';
 import { StandaloneKeybindingService, updateConfigurationService } from './standaloneServices.js';
 import { IStandaloneThemeService } from '../common/standaloneTheme.js';
@@ -38,8 +37,11 @@ import { StandaloneCodeEditorService } from './standaloneCodeEditorService.js';
 import { PLAINTEXT_LANGUAGE_ID } from '../../common/languages/modesRegistry.js';
 import { ILanguageConfigurationService } from '../../common/languages/languageConfigurationRegistry.js';
 import { ILanguageFeaturesService } from '../../common/services/languageFeatures.js';
-import { DiffEditorWidget2 } from '../../browser/widget/diffEditorWidget2/diffEditorWidget2.js';
-import { IAudioCueService } from '../../../platform/audioCues/browser/audioCueService.js';
+import { DiffEditorWidget } from '../../browser/widget/diffEditor/diffEditorWidget.js';
+import { IAccessibilitySignalService } from '../../../platform/accessibilitySignal/browser/accessibilitySignalService.js';
+import { mainWindow } from '../../../base/browser/window.js';
+import { setHoverDelegateFactory } from '../../../base/browser/ui/hover/hoverDelegate.js';
+import { WorkbenchHoverDelegate } from '../../../platform/hover/browser/hover.js';
 let LAST_GENERATED_COMMAND_ID = 0;
 let ariaDomNodeCreated = false;
 /**
@@ -54,14 +56,14 @@ function createAriaDomNode(parent) {
         }
         ariaDomNodeCreated = true;
     }
-    aria.setARIAContainer(parent || document.body);
+    aria.setARIAContainer(parent || mainWindow.document.body);
 }
 /**
  * A code editor to be used both by the standalone editor and the standalone diff editor.
  */
 let StandaloneCodeEditor = class StandaloneCodeEditor extends CodeEditorWidget {
     constructor(domElement, _options, instantiationService, codeEditorService, commandService, contextKeyService, keybindingService, themeService, notificationService, accessibilityService, languageConfigurationService, languageFeaturesService) {
-        const options = Object.assign({}, _options);
+        const options = { ..._options };
         options.ariaLabel = options.ariaLabel || StandaloneCodeEditorNLS.editorViewAccessibleLabel;
         options.ariaLabel = options.ariaLabel + ';' + (StandaloneCodeEditorNLS.accessibilityHelpMessage);
         super(domElement, options, {}, instantiationService, codeEditorService, commandService, contextKeyService, themeService, notificationService, accessibilityService, languageConfigurationService, languageFeaturesService);
@@ -72,6 +74,7 @@ let StandaloneCodeEditor = class StandaloneCodeEditor extends CodeEditorWidget {
             this._standaloneKeybindingService = null;
         }
         createAriaDomNode(options.ariaContainerElement);
+        setHoverDelegateFactory((placement, enableInstantHover) => instantiationService.createInstance(WorkbenchHoverDelegate, placement, enableInstantHover, {}));
     }
     addCommand(keybinding, handler, context) {
         if (!this._standaloneKeybindingService) {
@@ -130,7 +133,7 @@ let StandaloneCodeEditor = class StandaloneCodeEditor extends CodeEditorWidget {
             }
         }
         // Finally, register an internal editor action
-        const internalAction = new InternalEditorAction(uniqueId, label, label, precondition, (...args) => Promise.resolve(_descriptor.run(this, ...args)), this._contextKeyService);
+        const internalAction = new InternalEditorAction(uniqueId, label, label, undefined, precondition, (...args) => Promise.resolve(_descriptor.run(this, ...args)), this._contextKeyService);
         // Store it under the original id, such that trigger with the original id will work
         this._actions.set(id, internalAction);
         toDispose.add(toDisposable(() => {
@@ -169,7 +172,7 @@ StandaloneCodeEditor = __decorate([
 export { StandaloneCodeEditor };
 let StandaloneEditor = class StandaloneEditor extends StandaloneCodeEditor {
     constructor(domElement, _options, instantiationService, codeEditorService, commandService, contextKeyService, keybindingService, themeService, notificationService, configurationService, accessibilityService, modelService, languageService, languageConfigurationService, languageFeaturesService) {
-        const options = Object.assign({}, _options);
+        const options = { ..._options };
         updateConfigurationService(configurationService, options, false);
         const themeDomRegistration = themeService.registerEditorContainer(domElement);
         if (typeof options.theme === 'string') {
@@ -240,9 +243,9 @@ StandaloneEditor = __decorate([
     __param(14, ILanguageFeaturesService)
 ], StandaloneEditor);
 export { StandaloneEditor };
-let StandaloneDiffEditor = class StandaloneDiffEditor extends DiffEditorWidget {
-    constructor(domElement, _options, instantiationService, contextKeyService, codeEditorService, themeService, notificationService, configurationService, contextMenuService, editorProgressService, clipboardService) {
-        const options = Object.assign({}, _options);
+let StandaloneDiffEditor2 = class StandaloneDiffEditor2 extends DiffEditorWidget {
+    constructor(domElement, _options, instantiationService, contextKeyService, codeEditorService, themeService, notificationService, configurationService, contextMenuService, editorProgressService, clipboardService, accessibilitySignalService) {
+        const options = { ..._options };
         updateConfigurationService(configurationService, options, true);
         const themeDomRegistration = themeService.registerEditorContainer(domElement);
         if (typeof options.theme === 'string') {
@@ -251,67 +254,7 @@ let StandaloneDiffEditor = class StandaloneDiffEditor extends DiffEditorWidget {
         if (typeof options.autoDetectHighContrast !== 'undefined') {
             themeService.setAutoDetectHighContrast(Boolean(options.autoDetectHighContrast));
         }
-        super(domElement, options, {}, clipboardService, contextKeyService, instantiationService, codeEditorService, themeService, notificationService, contextMenuService, editorProgressService);
-        this._configurationService = configurationService;
-        this._standaloneThemeService = themeService;
-        this._register(themeDomRegistration);
-    }
-    dispose() {
-        super.dispose();
-    }
-    updateOptions(newOptions) {
-        updateConfigurationService(this._configurationService, newOptions, true);
-        if (typeof newOptions.theme === 'string') {
-            this._standaloneThemeService.setTheme(newOptions.theme);
-        }
-        if (typeof newOptions.autoDetectHighContrast !== 'undefined') {
-            this._standaloneThemeService.setAutoDetectHighContrast(Boolean(newOptions.autoDetectHighContrast));
-        }
-        super.updateOptions(newOptions);
-    }
-    _createInnerEditor(instantiationService, container, options) {
-        return instantiationService.createInstance(StandaloneCodeEditor, container, options);
-    }
-    getOriginalEditor() {
-        return super.getOriginalEditor();
-    }
-    getModifiedEditor() {
-        return super.getModifiedEditor();
-    }
-    addCommand(keybinding, handler, context) {
-        return this.getModifiedEditor().addCommand(keybinding, handler, context);
-    }
-    createContextKey(key, defaultValue) {
-        return this.getModifiedEditor().createContextKey(key, defaultValue);
-    }
-    addAction(descriptor) {
-        return this.getModifiedEditor().addAction(descriptor);
-    }
-};
-StandaloneDiffEditor = __decorate([
-    __param(2, IInstantiationService),
-    __param(3, IContextKeyService),
-    __param(4, ICodeEditorService),
-    __param(5, IStandaloneThemeService),
-    __param(6, INotificationService),
-    __param(7, IConfigurationService),
-    __param(8, IContextMenuService),
-    __param(9, IEditorProgressService),
-    __param(10, IClipboardService)
-], StandaloneDiffEditor);
-export { StandaloneDiffEditor };
-let StandaloneDiffEditor2 = class StandaloneDiffEditor2 extends DiffEditorWidget2 {
-    constructor(domElement, _options, instantiationService, contextKeyService, codeEditorService, themeService, notificationService, configurationService, contextMenuService, editorProgressService, clipboardService, audioCueService) {
-        const options = Object.assign({}, _options);
-        updateConfigurationService(configurationService, options, true);
-        const themeDomRegistration = themeService.registerEditorContainer(domElement);
-        if (typeof options.theme === 'string') {
-            themeService.setTheme(options.theme);
-        }
-        if (typeof options.autoDetectHighContrast !== 'undefined') {
-            themeService.setAutoDetectHighContrast(Boolean(options.autoDetectHighContrast));
-        }
-        super(domElement, options, {}, contextKeyService, instantiationService, codeEditorService, audioCueService);
+        super(domElement, options, {}, contextKeyService, instantiationService, codeEditorService, accessibilitySignalService, editorProgressService);
         this._configurationService = configurationService;
         this._standaloneThemeService = themeService;
         this._register(themeDomRegistration);
@@ -358,7 +301,7 @@ StandaloneDiffEditor2 = __decorate([
     __param(8, IContextMenuService),
     __param(9, IEditorProgressService),
     __param(10, IClipboardService),
-    __param(11, IAudioCueService)
+    __param(11, IAccessibilitySignalService)
 ], StandaloneDiffEditor2);
 export { StandaloneDiffEditor2 };
 /**

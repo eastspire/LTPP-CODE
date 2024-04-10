@@ -11,8 +11,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
+var ContentHoverController_1, ContentHoverWidget_1;
 import * as dom from '../../../../base/browser/dom.js';
-import { HoverAction, HoverWidget } from '../../../../base/browser/ui/hover/hoverWidget.js';
+import { HoverAction, HoverWidget, getHoverAccessibleViewHint } from '../../../../base/browser/ui/hover/hoverWidget.js';
 import { coalesce } from '../../../../base/common/arrays.js';
 import { Disposable, DisposableStore, toDisposable } from '../../../../base/common/lifecycle.js';
 import { Position } from '../../../common/core/position.js';
@@ -27,18 +28,17 @@ import { AsyncIterableObject } from '../../../../base/common/async.js';
 import { EditorContextKeys } from '../../../common/editorContextKeys.js';
 import { IContextKeyService } from '../../../../platform/contextkey/common/contextkey.js';
 import { ResizableContentWidget } from './resizableContentWidget.js';
+import { IConfigurationService } from '../../../../platform/configuration/common/configuration.js';
+import { IAccessibilityService } from '../../../../platform/accessibility/common/accessibility.js';
 const $ = dom.$;
-let ContentHoverController = class ContentHoverController extends Disposable {
+let ContentHoverController = ContentHoverController_1 = class ContentHoverController extends Disposable {
     constructor(_editor, _instantiationService, _keybindingService) {
         super();
         this._editor = _editor;
         this._instantiationService = _instantiationService;
         this._keybindingService = _keybindingService;
         this._currentResult = null;
-        const minimumHeight = this._editor.getOption(65 /* EditorOption.lineHeight */) + 8;
-        const minimumWidth = 4 / 3 * minimumHeight;
-        const minimumSize = new dom.Dimension(minimumWidth, minimumHeight);
-        this._widget = this._register(this._instantiationService.createInstance(ContentHoverWidget, this._editor, minimumSize));
+        this._widget = this._register(this._instantiationService.createInstance(ContentHoverWidget, this._editor));
         // Instantiate participants and sort them by `hoverOrdinal` which is relevant for rendering order.
         this._participants = [];
         for (const participant of HoverParticipantRegistry.getAll()) {
@@ -66,45 +66,6 @@ let ContentHoverController = class ContentHoverController extends Disposable {
             }
         }));
     }
-    get widget() {
-        return this._widget;
-    }
-    /**
-     * Returns true if the hover shows now or will show.
-     */
-    maybeShowAt(mouseEvent) {
-        if (this._widget.isResizing) {
-            return true;
-        }
-        const anchorCandidates = [];
-        for (const participant of this._participants) {
-            if (participant.suggestHoverAnchor) {
-                const anchor = participant.suggestHoverAnchor(mouseEvent);
-                if (anchor) {
-                    anchorCandidates.push(anchor);
-                }
-            }
-        }
-        const target = mouseEvent.target;
-        if (target.type === 6 /* MouseTargetType.CONTENT_TEXT */) {
-            anchorCandidates.push(new HoverRangeAnchor(0, target.range, mouseEvent.event.posx, mouseEvent.event.posy));
-        }
-        if (target.type === 7 /* MouseTargetType.CONTENT_EMPTY */) {
-            const epsilon = this._editor.getOption(49 /* EditorOption.fontInfo */).typicalHalfwidthCharacterWidth / 2;
-            if (!target.detail.isAfterLines && typeof target.detail.horizontalDistanceToText === 'number' && target.detail.horizontalDistanceToText < epsilon) {
-                // Let hover kick in even when the mouse is technically in the empty area after a line, given the distance is small enough
-                anchorCandidates.push(new HoverRangeAnchor(0, target.range, mouseEvent.event.posx, mouseEvent.event.posy));
-            }
-        }
-        if (anchorCandidates.length === 0) {
-            return this._startShowingOrUpdateHover(null, 0 /* HoverStartMode.Delayed */, 0 /* HoverStartSource.Mouse */, false, mouseEvent);
-        }
-        anchorCandidates.sort((a, b) => b.priority - a.priority);
-        return this._startShowingOrUpdateHover(anchorCandidates[0], 0 /* HoverStartMode.Delayed */, 0 /* HoverStartSource.Mouse */, false, mouseEvent);
-    }
-    startShowingAtRange(range, mode, source, focus) {
-        this._startShowingOrUpdateHover(new HoverRangeAnchor(0, range, undefined, undefined), mode, source, focus, null);
-    }
     /**
      * Returns true if the hover shows now or will show.
      */
@@ -118,8 +79,10 @@ let ContentHoverController = class ContentHoverController extends Disposable {
             return false;
         }
         // The hover is currently visible
-        const hoverIsSticky = this._editor.getOption(59 /* EditorOption.hover */).sticky;
-        const isGettingCloser = (hoverIsSticky && mouseEvent && this._widget.isMouseGettingCloser(mouseEvent.event.posx, mouseEvent.event.posy));
+        const isHoverSticky = this._editor.getOption(60 /* EditorOption.hover */).sticky;
+        const isGettingCloser = (isHoverSticky
+            && mouseEvent
+            && this._widget.isMouseGettingCloser(mouseEvent.event.posx, mouseEvent.event.posy));
         if (isGettingCloser) {
             // The mouse is getting closer to the hover, so we will keep the hover untouched
             // But we will kick off a hover update at the new anchor, insisting on keeping the hover visible.
@@ -176,29 +139,6 @@ let ContentHoverController = class ContentHoverController extends Disposable {
             this._widget.hide();
         }
     }
-    hide() {
-        this._computer.anchor = null;
-        this._hoverOperation.cancel();
-        this._setCurrentResult(null);
-    }
-    get isColorPickerVisible() {
-        return this._widget.isColorPickerVisible;
-    }
-    get isVisibleFromKeyboard() {
-        return this._widget.isVisibleFromKeyboard;
-    }
-    get isVisible() {
-        return this._widget.isVisible;
-    }
-    get isFocused() {
-        return this._widget.isFocused;
-    }
-    get isResizing() {
-        return this._widget.isResizing;
-    }
-    containsNode(node) {
-        return (node ? this._widget.getDomNode().contains(node) : false);
-    }
     _addLoadingMessage(result) {
         if (this._computer.anchor) {
             for (const participant of this._participants) {
@@ -227,7 +167,7 @@ let ContentHoverController = class ContentHoverController extends Disposable {
         this._setCurrentResult(hoverResult);
     }
     _renderMessages(anchor, messages) {
-        const { showAtPosition, showAtSecondaryPosition, highlightRange } = ContentHoverController.computeHoverRanges(this._editor, anchor.range, messages);
+        const { showAtPosition, showAtSecondaryPosition, highlightRange } = ContentHoverController_1.computeHoverRanges(this._editor, anchor.range, messages);
         const disposables = new DisposableStore();
         const statusBar = disposables.add(new EditorHoverStatusBar(this._keybindingService));
         const fragment = document.createDocumentFragment();
@@ -255,13 +195,13 @@ let ContentHoverController = class ContentHoverController extends Disposable {
                 const highlightDecoration = this._editor.createDecorationsCollection();
                 highlightDecoration.set([{
                         range: highlightRange,
-                        options: ContentHoverController._DECORATION_OPTIONS
+                        options: ContentHoverController_1._DECORATION_OPTIONS
                     }]);
                 disposables.add(toDisposable(() => {
                     highlightDecoration.clear();
                 }));
             }
-            this._widget.showAt(fragment, new ContentHoverVisibleData(colorPicker, showAtPosition, showAtSecondaryPosition, this._editor.getOption(59 /* EditorOption.hover */).above, this._computer.shouldFocus, this._computer.source, isBeforeContent, anchor.initialMousePosX, anchor.initialMousePosY, disposables));
+            this._widget.showAt(fragment, new ContentHoverVisibleData(anchor.initialMousePosX, anchor.initialMousePosY, colorPicker, showAtPosition, showAtSecondaryPosition, this._editor.getOption(60 /* EditorOption.hover */).above, this._computer.shouldFocus, this._computer.source, isBeforeContent, disposables));
         }
         else {
             disposables.dispose();
@@ -292,11 +232,54 @@ let ContentHoverController = class ContentHoverController extends Disposable {
                 forceShowAtRange = msg.range;
             }
         }
+        const showAtPosition = forceShowAtRange ? forceShowAtRange.getStartPosition() : new Position(anchorLineNumber, anchorRange.startColumn);
+        const showAtSecondaryPosition = forceShowAtRange ? forceShowAtRange.getStartPosition() : new Position(anchorLineNumber, renderStartColumn);
         return {
-            showAtPosition: forceShowAtRange ? forceShowAtRange.getStartPosition() : new Position(anchorLineNumber, anchorRange.startColumn),
-            showAtSecondaryPosition: forceShowAtRange ? forceShowAtRange.getStartPosition() : new Position(anchorLineNumber, renderStartColumn),
+            showAtPosition,
+            showAtSecondaryPosition,
             highlightRange
         };
+    }
+    /**
+     * Returns true if the hover shows now or will show.
+     */
+    showsOrWillShow(mouseEvent) {
+        if (this._widget.isResizing) {
+            return true;
+        }
+        const anchorCandidates = [];
+        for (const participant of this._participants) {
+            if (participant.suggestHoverAnchor) {
+                const anchor = participant.suggestHoverAnchor(mouseEvent);
+                if (anchor) {
+                    anchorCandidates.push(anchor);
+                }
+            }
+        }
+        const target = mouseEvent.target;
+        if (target.type === 6 /* MouseTargetType.CONTENT_TEXT */) {
+            anchorCandidates.push(new HoverRangeAnchor(0, target.range, mouseEvent.event.posx, mouseEvent.event.posy));
+        }
+        if (target.type === 7 /* MouseTargetType.CONTENT_EMPTY */) {
+            const epsilon = this._editor.getOption(50 /* EditorOption.fontInfo */).typicalHalfwidthCharacterWidth / 2;
+            if (!target.detail.isAfterLines
+                && typeof target.detail.horizontalDistanceToText === 'number'
+                && target.detail.horizontalDistanceToText < epsilon) {
+                // Let hover kick in even when the mouse is technically in the empty area after a line, given the distance is small enough
+                anchorCandidates.push(new HoverRangeAnchor(0, target.range, mouseEvent.event.posx, mouseEvent.event.posy));
+            }
+        }
+        if (anchorCandidates.length === 0) {
+            return this._startShowingOrUpdateHover(null, 0 /* HoverStartMode.Delayed */, 0 /* HoverStartSource.Mouse */, false, mouseEvent);
+        }
+        anchorCandidates.sort((a, b) => b.priority - a.priority);
+        return this._startShowingOrUpdateHover(anchorCandidates[0], 0 /* HoverStartMode.Delayed */, 0 /* HoverStartSource.Mouse */, false, mouseEvent);
+    }
+    startShowingAtRange(range, mode, source, focus) {
+        this._startShowingOrUpdateHover(new HoverRangeAnchor(0, range, undefined, undefined), mode, source, focus, null);
+    }
+    containsNode(node) {
+        return (node ? this._widget.getDomNode().contains(node) : false);
     }
     focus() {
         this._widget.focus();
@@ -325,12 +308,35 @@ let ContentHoverController = class ContentHoverController extends Disposable {
     goToBottom() {
         this._widget.goToBottom();
     }
+    hide() {
+        this._computer.anchor = null;
+        this._hoverOperation.cancel();
+        this._setCurrentResult(null);
+    }
+    get isColorPickerVisible() {
+        return this._widget.isColorPickerVisible;
+    }
+    get isVisibleFromKeyboard() {
+        return this._widget.isVisibleFromKeyboard;
+    }
+    get isVisible() {
+        return this._widget.isVisible;
+    }
+    get isFocused() {
+        return this._widget.isFocused;
+    }
+    get isResizing() {
+        return this._widget.isResizing;
+    }
+    get widget() {
+        return this._widget;
+    }
 };
 ContentHoverController._DECORATION_OPTIONS = ModelDecorationOptions.register({
     description: 'content-hover-highlight',
     className: 'hoverHighlight'
 });
-ContentHoverController = __decorate([
+ContentHoverController = ContentHoverController_1 = __decorate([
     __param(1, IInstantiationService),
     __param(2, IKeybindingService)
 ], ContentHoverController);
@@ -359,7 +365,9 @@ class FilteredHoverResult extends HoverResult {
     }
 }
 class ContentHoverVisibleData {
-    constructor(colorPicker, showAtPosition, showAtSecondaryPosition, preferAbove, stoleFocus, source, isBeforeContent, initialMousePosX, initialMousePosY, disposables) {
+    constructor(initialMousePosX, initialMousePosY, colorPicker, showAtPosition, showAtSecondaryPosition, preferAbove, stoleFocus, source, isBeforeContent, disposables) {
+        this.initialMousePosX = initialMousePosX;
+        this.initialMousePosY = initialMousePosY;
         this.colorPicker = colorPicker;
         this.showAtPosition = showAtPosition;
         this.showAtSecondaryPosition = showAtSecondaryPosition;
@@ -367,8 +375,6 @@ class ContentHoverVisibleData {
         this.stoleFocus = stoleFocus;
         this.source = source;
         this.isBeforeContent = isBeforeContent;
-        this.initialMousePosX = initialMousePosX;
-        this.initialMousePosY = initialMousePosY;
         this.disposables = disposables;
         this.closestMouseDistance = undefined;
     }
@@ -376,7 +382,7 @@ class ContentHoverVisibleData {
 const HORIZONTAL_SCROLLING_BY = 30;
 const SCROLLBAR_WIDTH = 10;
 const CONTAINER_HEIGHT_PADDING = 6;
-let ContentHoverWidget = class ContentHoverWidget extends ResizableContentWidget {
+let ContentHoverWidget = ContentHoverWidget_1 = class ContentHoverWidget extends ResizableContentWidget {
     get isColorPickerVisible() {
         var _a;
         return Boolean((_a = this._visibleData) === null || _a === void 0 ? void 0 : _a.colorPicker);
@@ -393,16 +399,27 @@ let ContentHoverWidget = class ContentHoverWidget extends ResizableContentWidget
         var _a;
         return (_a = this._hoverFocusedKey.get()) !== null && _a !== void 0 ? _a : false;
     }
-    constructor(editor, minimumSize, contextKeyService) {
+    constructor(editor, contextKeyService, _configurationService, _accessibilityService, _keybindingService) {
+        const minimumHeight = editor.getOption(67 /* EditorOption.lineHeight */) + 8;
+        const minimumWidth = 150;
+        const minimumSize = new dom.Dimension(minimumWidth, minimumHeight);
         super(editor, minimumSize);
+        this._configurationService = _configurationService;
+        this._accessibilityService = _accessibilityService;
+        this._keybindingService = _keybindingService;
         this._hover = this._register(new HoverWidget());
+        this._minimumSize = minimumSize;
         this._hoverVisibleKey = EditorContextKeys.hoverVisible.bindTo(contextKeyService);
         this._hoverFocusedKey = EditorContextKeys.hoverFocused.bindTo(contextKeyService);
         dom.append(this._resizableNode.domNode, this._hover.containerDomNode);
         this._resizableNode.domNode.style.zIndex = '50';
-        this._register(this._editor.onDidLayoutChange(() => this._layout()));
+        this._register(this._editor.onDidLayoutChange(() => {
+            if (this.isVisible) {
+                this._updateMaxDimensions();
+            }
+        }));
         this._register(this._editor.onDidChangeConfiguration((e) => {
-            if (e.hasChanged(49 /* EditorOption.fontInfo */)) {
+            if (e.hasChanged(50 /* EditorOption.fontInfo */)) {
                 this._updateFont();
             }
         }));
@@ -414,7 +431,6 @@ let ContentHoverWidget = class ContentHoverWidget extends ResizableContentWidget
             this._hoverFocusedKey.set(false);
         }));
         this._setHoverData(undefined);
-        this._layout();
         this._editor.addContentWidget(this);
     }
     dispose() {
@@ -424,7 +440,7 @@ let ContentHoverWidget = class ContentHoverWidget extends ResizableContentWidget
         this._editor.removeContentWidget(this);
     }
     getId() {
-        return ContentHoverWidget.ID;
+        return ContentHoverWidget_1.ID;
     }
     static _applyDimensions(container, width, height) {
         const transformedWidth = typeof width === 'number' ? `${width}px` : width;
@@ -434,11 +450,11 @@ let ContentHoverWidget = class ContentHoverWidget extends ResizableContentWidget
     }
     _setContentsDomNodeDimensions(width, height) {
         const contentsDomNode = this._hover.contentsDomNode;
-        return ContentHoverWidget._applyDimensions(contentsDomNode, width, height);
+        return ContentHoverWidget_1._applyDimensions(contentsDomNode, width, height);
     }
     _setContainerDomNodeDimensions(width, height) {
         const containerDomNode = this._hover.containerDomNode;
-        return ContentHoverWidget._applyDimensions(containerDomNode, width, height);
+        return ContentHoverWidget_1._applyDimensions(containerDomNode, width, height);
     }
     _setHoverWidgetDimensions(width, height) {
         this._setContentsDomNodeDimensions(width, height);
@@ -452,9 +468,9 @@ let ContentHoverWidget = class ContentHoverWidget extends ResizableContentWidget
         container.style.maxHeight = transformedHeight;
     }
     _setHoverWidgetMaxDimensions(width, height) {
-        ContentHoverWidget._applyMaxDimensions(this._hover.contentsDomNode, width, height);
-        ContentHoverWidget._applyMaxDimensions(this._hover.containerDomNode, width, height);
-        this._hover.containerDomNode.style.setProperty('--hover-maxWidth', typeof width === 'number' ? `${width}px` : width);
+        ContentHoverWidget_1._applyMaxDimensions(this._hover.contentsDomNode, width, height);
+        ContentHoverWidget_1._applyMaxDimensions(this._hover.containerDomNode, width, height);
+        this._hover.containerDomNode.style.setProperty('--vscode-hover-maxWidth', typeof width === 'number' ? `${width}px` : width);
         this._layoutContentWidget();
     }
     _hasHorizontalScrollbar() {
@@ -480,7 +496,7 @@ let ContentHoverWidget = class ContentHoverWidget extends ResizableContentWidget
             this._setContentsDomNodeDimensions(width, height - SCROLLBAR_WIDTH);
         }
     }
-    _setResizableNodeMaxDimensions() {
+    _updateResizableNodeMaxDimensions() {
         var _a, _b;
         const maxRenderingWidth = (_a = this._findMaximumRenderingWidth()) !== null && _a !== void 0 ? _a : Infinity;
         const maxRenderingHeight = (_b = this._findMaximumRenderingHeight()) !== null && _b !== void 0 ? _b : Infinity;
@@ -489,10 +505,10 @@ let ContentHoverWidget = class ContentHoverWidget extends ResizableContentWidget
     }
     _resize(size) {
         var _a, _b;
-        ContentHoverWidget._lastDimensions = new dom.Dimension(size.width, size.height);
+        ContentHoverWidget_1._lastDimensions = new dom.Dimension(size.width, size.height);
         this._setAdjustedHoverWidgetDimensions(size);
         this._resizableNode.layout(size.height, size.width);
-        this._setResizableNodeMaxDimensions();
+        this._updateResizableNodeMaxDimensions();
         this._hover.scrollbar.scanDomNode();
         this._editor.layoutContentWidget(this);
         (_b = (_a = this._visibleData) === null || _a === void 0 ? void 0 : _a.colorPicker) === null || _b === void 0 ? void 0 : _b.layout();
@@ -503,7 +519,9 @@ let ContentHoverWidget = class ContentHoverWidget extends ResizableContentWidget
         if (!position) {
             return;
         }
-        return this._positionPreference === 1 /* ContentWidgetPositionPreference.ABOVE */ ? this._availableVerticalSpaceAbove(position) : this._availableVerticalSpaceBelow(position);
+        return this._positionPreference === 1 /* ContentWidgetPositionPreference.ABOVE */ ?
+            this._availableVerticalSpaceAbove(position)
+            : this._availableVerticalSpaceBelow(position);
     }
     _findMaximumRenderingHeight() {
         const availableSpace = this._findAvailableSpaceVertically();
@@ -520,19 +538,41 @@ let ContentHoverWidget = class ContentHoverWidget extends ResizableContentWidget
         }
         return Math.min(availableSpace, maximumHeight);
     }
+    _isHoverTextOverflowing() {
+        // To find out if the text is overflowing, we will disable wrapping, check the widths, and then re-enable wrapping
+        this._hover.containerDomNode.style.setProperty('--vscode-hover-whiteSpace', 'nowrap');
+        this._hover.containerDomNode.style.setProperty('--vscode-hover-sourceWhiteSpace', 'nowrap');
+        const overflowing = Array.from(this._hover.contentsDomNode.children).some((hoverElement) => {
+            return hoverElement.scrollWidth > hoverElement.clientWidth;
+        });
+        this._hover.containerDomNode.style.removeProperty('--vscode-hover-whiteSpace');
+        this._hover.containerDomNode.style.removeProperty('--vscode-hover-sourceWhiteSpace');
+        return overflowing;
+    }
     _findMaximumRenderingWidth() {
         if (!this._editor || !this._editor.hasModel()) {
             return;
         }
-        const bodyBoxWidth = dom.getClientArea(document.body).width;
-        const horizontalPadding = 14;
-        return bodyBoxWidth - horizontalPadding;
+        const overflowing = this._isHoverTextOverflowing();
+        const initialWidth = (typeof this._contentWidth === 'undefined'
+            ? 0
+            : this._contentWidth - 2 // - 2 for the borders
+        );
+        if (overflowing || this._hover.containerDomNode.clientWidth < initialWidth) {
+            const bodyBoxWidth = dom.getClientArea(this._hover.containerDomNode.ownerDocument.body).width;
+            const horizontalPadding = 14;
+            return bodyBoxWidth - horizontalPadding;
+        }
+        else {
+            return this._hover.containerDomNode.clientWidth + 2;
+        }
     }
     isMouseGettingCloser(posx, posy) {
         if (!this._visibleData) {
             return false;
         }
-        if (typeof this._visibleData.initialMousePosX === 'undefined' || typeof this._visibleData.initialMousePosY === 'undefined') {
+        if (typeof this._visibleData.initialMousePosX === 'undefined'
+            || typeof this._visibleData.initialMousePosY === 'undefined') {
             this._visibleData.initialMousePosX = posx;
             this._visibleData.initialMousePosY = posy;
             return false;
@@ -556,14 +596,11 @@ let ContentHoverWidget = class ContentHoverWidget extends ResizableContentWidget
         this._hoverVisibleKey.set(!!hoverData);
         this._hover.containerDomNode.classList.toggle('hidden', !hoverData);
     }
-    _layout() {
-        const { fontSize, lineHeight } = this._editor.getOption(49 /* EditorOption.fontInfo */);
+    _updateFont() {
+        const { fontSize, lineHeight } = this._editor.getOption(50 /* EditorOption.fontInfo */);
         const contentsDomNode = this._hover.contentsDomNode;
         contentsDomNode.style.fontSize = `${fontSize}px`;
         contentsDomNode.style.lineHeight = `${lineHeight / fontSize}`;
-        this._updateMaxDimensions();
-    }
-    _updateFont() {
         const codeClasses = Array.prototype.slice.call(this._hover.contentsDomNode.getElementsByClassName('code'));
         codeClasses.forEach(node => this._editor.applyFontInfo(node));
     }
@@ -578,8 +615,8 @@ let ContentHoverWidget = class ContentHoverWidget extends ResizableContentWidget
         this._hover.onContentsChanged();
     }
     _updateMaxDimensions() {
-        const height = Math.max(this._editor.getLayoutInfo().height / 4, 250, ContentHoverWidget._lastDimensions.height);
-        const width = Math.max(this._editor.getLayoutInfo().width * 0.66, 500, ContentHoverWidget._lastDimensions.width);
+        const height = Math.max(this._editor.getLayoutInfo().height / 4, 250, ContentHoverWidget_1._lastDimensions.height);
+        const width = Math.max(this._editor.getLayoutInfo().width * 0.66, 500, ContentHoverWidget_1._lastDimensions.width);
         this._setHoverWidgetMaxDimensions(width, height);
     }
     _render(node, hoverData) {
@@ -605,7 +642,7 @@ let ContentHoverWidget = class ContentHoverWidget extends ResizableContentWidget
         };
     }
     showAt(node, hoverData) {
-        var _a, _b;
+        var _a, _b, _c, _d;
         if (!this._editor || !this._editor.hasModel()) {
             return;
         }
@@ -620,6 +657,12 @@ let ContentHoverWidget = class ContentHoverWidget extends ResizableContentWidget
             this._hover.containerDomNode.focus();
         }
         (_b = hoverData.colorPicker) === null || _b === void 0 ? void 0 : _b.layout();
+        // The aria label overrides the label, so if we add to it, add the contents of the hover
+        const hoverFocused = this._hover.containerDomNode.ownerDocument.activeElement === this._hover.containerDomNode;
+        const accessibleViewHint = hoverFocused && getHoverAccessibleViewHint(this._configurationService.getValue('accessibility.verbosity.hover') === true && this._accessibilityService.isScreenReaderOptimized(), (_d = (_c = this._keybindingService.lookupKeybinding('editor.action.accessibleView')) === null || _c === void 0 ? void 0 : _c.getAriaLabel()) !== null && _d !== void 0 ? _d : '');
+        if (accessibleViewHint) {
+            this._hover.contentsDomNode.ariaLabel = this._hover.contentsDomNode.textContent + ', ' + accessibleViewHint;
+        }
     }
     hide() {
         if (!this._visibleData) {
@@ -650,7 +693,16 @@ let ContentHoverWidget = class ContentHoverWidget extends ResizableContentWidget
         this._setContentsDomNodeDimensions(dom.getTotalWidth(contentsDomNode), Math.min(maxRenderingHeight, height - SCROLLBAR_WIDTH));
     }
     setMinimumDimensions(dimensions) {
-        this._resizableNode.minSize = dimensions;
+        // We combine the new minimum dimensions with the previous ones
+        this._minimumSize = new dom.Dimension(Math.max(this._minimumSize.width, dimensions.width), Math.max(this._minimumSize.height, dimensions.height));
+        this._updateMinimumWidth();
+    }
+    _updateMinimumWidth() {
+        const width = (typeof this._contentWidth === 'undefined'
+            ? this._minimumSize.width
+            : Math.min(this._contentWidth, this._minimumSize.width));
+        // We want to avoid that the hover is artificially large, so we use the content width as minimum width
+        this._resizableNode.minSize = new dom.Dimension(width, this._minimumSize.height);
     }
     onContentsChanged() {
         var _a;
@@ -662,6 +714,8 @@ let ContentHoverWidget = class ContentHoverWidget extends ResizableContentWidget
         this._setHoverWidgetDimensions(width, height);
         height = dom.getTotalHeight(containerDomNode);
         width = dom.getTotalWidth(containerDomNode);
+        this._contentWidth = width;
+        this._updateMinimumWidth();
         this._resizableNode.layout(height, width);
         if (this._hasHorizontalScrollbar()) {
             this._adjustContentsBottomPadding();
@@ -678,12 +732,12 @@ let ContentHoverWidget = class ContentHoverWidget extends ResizableContentWidget
     }
     scrollUp() {
         const scrollTop = this._hover.scrollbar.getScrollPosition().scrollTop;
-        const fontInfo = this._editor.getOption(49 /* EditorOption.fontInfo */);
+        const fontInfo = this._editor.getOption(50 /* EditorOption.fontInfo */);
         this._hover.scrollbar.setScrollPosition({ scrollTop: scrollTop - fontInfo.lineHeight });
     }
     scrollDown() {
         const scrollTop = this._hover.scrollbar.getScrollPosition().scrollTop;
-        const fontInfo = this._editor.getOption(49 /* EditorOption.fontInfo */);
+        const fontInfo = this._editor.getOption(50 /* EditorOption.fontInfo */);
         this._hover.scrollbar.setScrollPosition({ scrollTop: scrollTop + fontInfo.lineHeight });
     }
     scrollLeft() {
@@ -713,8 +767,11 @@ let ContentHoverWidget = class ContentHoverWidget extends ResizableContentWidget
 };
 ContentHoverWidget.ID = 'editor.contrib.resizableContentHoverWidget';
 ContentHoverWidget._lastDimensions = new dom.Dimension(0, 0);
-ContentHoverWidget = __decorate([
-    __param(2, IContextKeyService)
+ContentHoverWidget = ContentHoverWidget_1 = __decorate([
+    __param(1, IContextKeyService),
+    __param(2, IConfigurationService),
+    __param(3, IAccessibilityService),
+    __param(4, IKeybindingService)
 ], ContentHoverWidget);
 export { ContentHoverWidget };
 let EditorHoverStatusBar = class EditorHoverStatusBar extends Disposable {

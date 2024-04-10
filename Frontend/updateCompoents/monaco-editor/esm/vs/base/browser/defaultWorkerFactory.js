@@ -3,7 +3,9 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 import { createTrustedTypesPolicy } from './trustedTypes.js';
+import { onUnexpectedError } from '../common/errors.js';
 import { logOnceWebWorkerWarning } from '../common/worker/simpleWorker.js';
+import { Disposable, toDisposable } from '../common/lifecycle.js';
 const ttPolicy = createTrustedTypesPolicy('defaultWorkerFactory', { createScriptURL: value => value });
 function getWorker(label) {
     const monacoEnvironment = globalThis.MonacoEnvironment;
@@ -64,9 +66,11 @@ function isPromiseLike(obj) {
  * A worker that uses HTML5 web workers so that is has
  * its own global scope and its own thread.
  */
-class WebWorker {
+class WebWorker extends Disposable {
     constructor(moduleId, id, label, onMessageCallback, onErrorCallback) {
+        super();
         this.id = id;
+        this.label = label;
         const workerOrPromise = getWorker(label);
         if (isPromiseLike(workerOrPromise)) {
             this.worker = workerOrPromise;
@@ -84,18 +88,31 @@ class WebWorker {
                 w.addEventListener('error', onErrorCallback);
             }
         });
+        this._register(toDisposable(() => {
+            var _a;
+            (_a = this.worker) === null || _a === void 0 ? void 0 : _a.then(w => {
+                w.onmessage = null;
+                w.onmessageerror = null;
+                w.removeEventListener('error', onErrorCallback);
+                w.terminate();
+            });
+            this.worker = null;
+        }));
     }
     getId() {
         return this.id;
     }
     postMessage(message, transfer) {
         var _a;
-        (_a = this.worker) === null || _a === void 0 ? void 0 : _a.then(w => w.postMessage(message, transfer));
-    }
-    dispose() {
-        var _a;
-        (_a = this.worker) === null || _a === void 0 ? void 0 : _a.then(w => w.terminate());
-        this.worker = null;
+        (_a = this.worker) === null || _a === void 0 ? void 0 : _a.then(w => {
+            try {
+                w.postMessage(message, transfer);
+            }
+            catch (err) {
+                onUnexpectedError(err);
+                onUnexpectedError(new Error(`FAILED to post message to '${this.label}'-worker`, { cause: err }));
+            }
+        });
     }
 }
 export class DefaultWorkerFactory {

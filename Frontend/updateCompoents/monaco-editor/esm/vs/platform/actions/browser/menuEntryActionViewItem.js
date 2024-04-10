@@ -11,15 +11,6 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 import { $, addDisposableListener, append, asCSSUrl, EventType, ModifierKeyEmitter, prepend } from '../../../base/browser/dom.js';
 import { StandardKeyboardEvent } from '../../../base/browser/keyboardEvent.js';
 import { ActionViewItem, BaseActionViewItem, SelectActionViewItem } from '../../../base/browser/ui/actionbar/actionViewItems.js';
@@ -101,7 +92,7 @@ function fillInActions(groups, target, useAlternativeActions, isPrimaryAction = 
         // inlining submenus with length 0 or 1 is easy,
         // larger submenus need to be checked with the overall limit
         const submenuActions = action.actions;
-        if (submenuActions.length <= 1 && shouldInlineSubmenu(action, group, target.length)) {
+        if (shouldInlineSubmenu(action, group, target.length)) {
             target.splice(index, 1, ...submenuActions);
         }
     }
@@ -125,17 +116,15 @@ let MenuEntryActionViewItem = class MenuEntryActionViewItem extends ActionViewIt
     get _commandAction() {
         return this._wantsAltCommand && this._menuItemAction.alt || this._menuItemAction;
     }
-    onClick(event) {
-        return __awaiter(this, void 0, void 0, function* () {
-            event.preventDefault();
-            event.stopPropagation();
-            try {
-                yield this.actionRunner.run(this._commandAction, this._context);
-            }
-            catch (err) {
-                this._notificationService.error(err);
-            }
-        });
+    async onClick(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        try {
+            await this.actionRunner.run(this._commandAction, this._context);
+        }
+        catch (err) {
+            this._notificationService.error(err);
+        }
     }
     render(container) {
         super.render(container);
@@ -251,7 +240,12 @@ export { MenuEntryActionViewItem };
 let SubmenuEntryActionViewItem = class SubmenuEntryActionViewItem extends DropdownMenuActionViewItem {
     constructor(action, options, _keybindingService, _contextMenuService, _themeService) {
         var _a, _b, _c;
-        const dropdownOptions = Object.assign(Object.assign({}, options), { menuAsChild: (_a = options === null || options === void 0 ? void 0 : options.menuAsChild) !== null && _a !== void 0 ? _a : false, classNames: (_b = options === null || options === void 0 ? void 0 : options.classNames) !== null && _b !== void 0 ? _b : (ThemeIcon.isThemeIcon(action.item.icon) ? ThemeIcon.asClassName(action.item.icon) : undefined), keybindingProvider: (_c = options === null || options === void 0 ? void 0 : options.keybindingProvider) !== null && _c !== void 0 ? _c : (action => _keybindingService.lookupKeybinding(action.id)) });
+        const dropdownOptions = {
+            ...options,
+            menuAsChild: (_a = options === null || options === void 0 ? void 0 : options.menuAsChild) !== null && _a !== void 0 ? _a : false,
+            classNames: (_b = options === null || options === void 0 ? void 0 : options.classNames) !== null && _b !== void 0 ? _b : (ThemeIcon.isThemeIcon(action.item.icon) ? ThemeIcon.asClassName(action.item.icon) : undefined),
+            keybindingProvider: (_c = options === null || options === void 0 ? void 0 : options.keybindingProvider) !== null && _c !== void 0 ? _c : (action => _keybindingService.lookupKeybinding(action.id))
+        };
         super(action, { getActions: () => action.actions }, _contextMenuService, dropdownOptions);
         this._keybindingService = _keybindingService;
         this._contextMenuService = _contextMenuService;
@@ -309,13 +303,19 @@ let DropdownWithDefaultActionViewItem = class DropdownWithDefaultActionViewItem 
             defaultAction = submenuAction.actions[0];
         }
         this._defaultAction = this._instaService.createInstance(MenuEntryActionViewItem, defaultAction, { keybinding: this._getDefaultActionKeybindingLabel(defaultAction) });
-        const dropdownOptions = Object.assign(Object.assign({ keybindingProvider: action => this._keybindingService.lookupKeybinding(action.id) }, options), { menuAsChild: (_a = options === null || options === void 0 ? void 0 : options.menuAsChild) !== null && _a !== void 0 ? _a : true, classNames: (_b = options === null || options === void 0 ? void 0 : options.classNames) !== null && _b !== void 0 ? _b : ['codicon', 'codicon-chevron-down'], actionRunner: (_c = options === null || options === void 0 ? void 0 : options.actionRunner) !== null && _c !== void 0 ? _c : new ActionRunner() });
+        const dropdownOptions = {
+            keybindingProvider: action => this._keybindingService.lookupKeybinding(action.id),
+            ...options,
+            menuAsChild: (_a = options === null || options === void 0 ? void 0 : options.menuAsChild) !== null && _a !== void 0 ? _a : true,
+            classNames: (_b = options === null || options === void 0 ? void 0 : options.classNames) !== null && _b !== void 0 ? _b : ['codicon', 'codicon-chevron-down'],
+            actionRunner: (_c = options === null || options === void 0 ? void 0 : options.actionRunner) !== null && _c !== void 0 ? _c : new ActionRunner(),
+        };
         this._dropdown = new DropdownMenuActionViewItem(submenuAction, submenuAction.actions, this._contextMenuService, dropdownOptions);
-        this._dropdown.actionRunner.onDidRun((e) => {
+        this._register(this._dropdown.actionRunner.onDidRun((e) => {
             if (e.action instanceof MenuItemAction) {
                 this.update(e.action);
             }
-        });
+        }));
     }
     update(lastAction) {
         var _a;
@@ -325,10 +325,8 @@ let DropdownWithDefaultActionViewItem = class DropdownWithDefaultActionViewItem 
         this._defaultAction.dispose();
         this._defaultAction = this._instaService.createInstance(MenuEntryActionViewItem, lastAction, { keybinding: this._getDefaultActionKeybindingLabel(lastAction) });
         this._defaultAction.actionRunner = new class extends ActionRunner {
-            runAction(action, context) {
-                return __awaiter(this, void 0, void 0, function* () {
-                    yield action.run(undefined);
-                });
+            async runAction(action, context) {
+                await action.run(undefined);
             }
         }();
         if (this._container) {
@@ -451,7 +449,7 @@ export function createActionViewItem(instaService, action, options) {
         }
         else {
             if (action.item.rememberDefaultAction) {
-                return instaService.createInstance(DropdownWithDefaultActionViewItem, action, Object.assign(Object.assign({}, options), { persistLastActionId: true }));
+                return instaService.createInstance(DropdownWithDefaultActionViewItem, action, { ...options, persistLastActionId: true });
             }
             else {
                 return instaService.createInstance(SubmenuEntryActionViewItem, action, options);
