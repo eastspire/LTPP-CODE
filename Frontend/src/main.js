@@ -28,7 +28,7 @@ import VueWorker from 'vue-worker';
 Vue.config.errorHandler = () => { }
 
 try {
-    const is_dev = window.location.href.indexOf('http://localhost') !== -1;
+    const is_dev = window?.location?.href?.indexOf('http://localhost') !== -1;
     window.addEventListener('error', function (error) {
         error.preventDefault();
         is_dev && console.log(error);
