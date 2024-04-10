@@ -16,7 +16,6 @@ use Workerman\Crontab\Crontab;
 use app\controller\Base;
 use support\Db;
 use Exception;
-use Webman\RedisQueue\Redis as RedisQueue;
 
 // 进程停止导致一些程序状态一直等待中或者运行中
 // 此进程负责重新运行这些代码，更新代码状态
