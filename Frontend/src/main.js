@@ -29,13 +29,14 @@ Vue.config.errorHandler = () => { }
 
 try {
     const is_dev = window?.location?.href?.indexOf('http://localhost') !== -1;
-    window.addEventListener('error', function (error) {
-        error.preventDefault();
-        is_dev && console.log(error);
+    window.addEventListener('error', function (event) {
+        event.preventDefault();
+        is_dev && console.log(event);
+        console.log(event);
     });
-    window.addEventListener('unhandledrejection', function (error) {
-        error.preventDefault();
-        is_dev && console.log(error);
+    window.addEventListener('unhandledrejection', function (event) {
+        event.preventDefault();
+        is_dev && console.log(event);
     });
 } catch (err) { }
 
