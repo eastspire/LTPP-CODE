@@ -26,6 +26,19 @@ import "../updateCompoents/video.js/dist/video-js.css"
 import VueWorker from 'vue-worker';
 
 Vue.config.errorHandler = () => { }
+
+try {
+    const is_dev = window.location.href.indexOf('http://localhost') !== -1;
+    window.addEventListener('error', function (error) {
+        error.preventDefault();
+        is_dev && console.log(error);
+    });
+    window.addEventListener('unhandledrejection', function (error) {
+        error.preventDefault();
+        is_dev && console.log(error);
+    });
+} catch (err) { }
+
 // use
 const EventBus = new Vue();
 Vue.use(mavonEditor);
