@@ -20,10 +20,10 @@
             style="font-size: 1.06rem"
           ></el-input>
 
-          <div v-show="image && reg.test(image)" style="height: 1rem"></div>
+          <div v-if="image && reg.test(image)" style="height: 1rem"></div>
 
           <p
-            v-show="image && reg.test(image)"
+            v-if="image && reg.test(image)"
             style="
               font-size: 1.06rem;
               text-align: left;
@@ -37,7 +37,7 @@
             <div style="overflow: hidden">
               <img
                 class="animate"
-                v-show="image && reg.test(image)"
+                v-if="image && reg.test(image)"
                 :src="image"
                 style="
                   display: block;
@@ -57,7 +57,7 @@
               margin: 1rem 1rem 0.5rem 0rem;
             "
           >
-            图片链接
+            封面图片链接
           </p>
           <el-input
             v-model.lazy="image"
@@ -333,7 +333,6 @@ export default {
         ol: true, // 有序列表
         link: true, // 链接
         imagelink: true, // 图片链接
-
         code: true, // code
         htmlcode: false, // 展示html源码
         subfield: true, // 是否需要分栏

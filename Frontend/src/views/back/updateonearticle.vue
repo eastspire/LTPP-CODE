@@ -47,7 +47,7 @@
             margin: 1rem 1rem 0.5rem 0rem;
           "
         >
-          图片链接
+          封面图片链接
         </p>
         <div style="margin: 1rem 1rem 0.5rem 1rem">
           <el-input
