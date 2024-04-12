@@ -53,7 +53,7 @@
           <el-input
             v-model.lazy="article_data.image"
             style="font-size: 1.06rem"
-            placeholder="请输入图片链接"
+            placeholder="请输入封面图片链接"
           ></el-input>
         </div>
 

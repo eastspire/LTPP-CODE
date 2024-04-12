@@ -61,7 +61,7 @@
           </p>
           <el-input
             v-model.lazy="image"
-            placeholder="请输入首页图片链接（该项为空自动添加图片）"
+            placeholder="请输入封面图片链接（该项为空自动添加图片）"
             style="font-size: 1.06rem"
           ></el-input>
           <div style="height: 1.26rem"></div>
