@@ -675,7 +675,6 @@ export default {
       list: [],
       filename: "",
       filepath: "",
-      onetheme: "monokai",
       head: {},
       Isnew: false,
       newname: "",

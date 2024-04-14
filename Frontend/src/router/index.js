@@ -1,3 +1,4 @@
+// 需要一次性加载
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Home from '../views/Home.vue';
@@ -61,6 +62,14 @@ import questionlistmanage from '../views/root/questionlistmanage.vue';
 import sendquestion from '../views/home/sendquestion.vue';
 import myquestion from '../views/back/myquestion.vue';
 import goods from '../views/home/goods.vue';
+import questionsheet from '../views/home/questionsheet.vue';
+import onequestionsheet from '../views/home/onequestionsheet.vue';
+import myjoinquestionsheet from '../views/back/myjoinquestionsheet.vue';
+import myquestionsheetmanage from '../views/back/myquestionsheetmanage.vue';
+import allquestionsheetmanage from '../views/root/allquestionsheetmanage.vue';
+import linuxmanage from '../views/root/linuxmanage.vue';
+import addquestionsheet from '../views/back/addquestionsheet.vue';
+import updatequestionsheet from '../views/back/updatequestionsheet.vue';
 
 Vue.use(VueRouter);
 
@@ -97,6 +106,75 @@ const routes = [{
             }
         },
         {
+            path: '/myjoinquestionsheet',
+            name: 'myjoinquestionsheet',
+            component: () =>
+                import('../views/back/myjoinquestionsheet.vue'),
+            meta: {
+                title: '我加入的题单',
+                keepAlive: true,
+                index: 2,
+
+            }
+        },
+        {
+            path: '/addquestionsheet',
+            name: 'addquestionsheet',
+            component: () =>
+                import('../views/back/addquestionsheet.vue'),
+            meta: {
+                title: '创建题单',
+                keepAlive: true,
+                index: 2,
+
+            }
+        },
+        {
+            path: '/updatequestionsheet',
+            name: 'updatequestionsheet',
+            component: () =>
+                import('../views/back/updatequestionsheet.vue'),
+            meta: {
+                title: '更新题单',
+                keepAlive: true,
+                index: 2,
+
+            }
+        },
+        {
+            path: '/myquestionsheetmanage',
+            name: 'myquestionsheetmanage',
+            component: () =>
+                import('../views/back/myquestionsheetmanage.vue'),
+            meta: {
+                title: '我的题单管理',
+                keepAlive: true,
+                index: 2,
+            }
+        },
+        {
+            path: '/allquestionsheetmanage',
+            name: 'allquestionsheetmanage',
+            component: () =>
+                import('../views/root/allquestionsheetmanage.vue'),
+            meta: {
+                title: '全站题单管理',
+                keepAlive: true,
+                index: 2,
+            }
+        },
+        {
+            path: '/linuxmanage',
+            name: 'linuxmanage',
+            component: () =>
+                import('../views/root/linuxmanage.vue'),
+            meta: {
+                title: '服务器管理',
+                keepAlive: true,
+                index: 2,
+            }
+        },
+        {
             path: '/mygoods',
             name: 'mygoods',
             component: () =>
@@ -130,6 +208,28 @@ const routes = [{
                 keepAlive: true,
                 index: 2,
 
+            }
+        },
+        {
+            path: '/questionsheet',
+            name: 'questionsheet',
+            component: () =>
+                import('../views/home/questionsheet.vue'),
+            meta: {
+                title: '题单系统',
+                keepAlive: true,
+                index: 2,
+            }
+        },
+        {
+            path: '/onequestionsheet',
+            name: 'onequestionsheet',
+            component: () =>
+                import('../views/home/onequestionsheet.vue'),
+            meta: {
+                title: '题单详情',
+                keepAlive: true,
+                index: 2,
             }
         },
         {

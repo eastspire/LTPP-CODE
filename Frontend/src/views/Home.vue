@@ -144,6 +144,13 @@
                   >
                 </template>
               </el-menu-item>
+              <el-menu-item index="/questionsheet">
+                <template slot="title">
+                  <i class="el-icon-s-management" style="font-size: 1.06rem"
+                    >题单系统</i
+                  >
+                </template>
+              </el-menu-item>
             </el-submenu>
             <el-submenu index="3" class="no-select">
               <template slot="title">
@@ -250,7 +257,7 @@
             >
             </el-avatar>
             <div style="height: 6px"></div>
-            <el-submenu index="8" class="no-select">
+            <el-submenu index="5" class="no-select">
               <template slot="title">
                 <i class="el-icon-s-custom"></i>
               </template>
@@ -287,12 +294,32 @@
               <i class="el-icon-message-solid"></i>
               <span slot="title" class="my-span">消息通知</span></el-menu-item
             >
-
-            <el-menu-item index="/myjoincontest">
-              <i class="el-icon-s-flag"></i>
-              <span slot="title" class="my-span">我的竞赛</span>
-            </el-menu-item>
-
+            <el-submenu index="6" class="no-select">
+              <template slot="title">
+                <i class="el-icon-s-flag" style="font-size: 1.06rem"></i>
+              </template>
+              <el-menu-item index="/myjoincontest">
+                <template slot="title">
+                  <i class="el-icon-s-flag" style="font-size: 1.06rem"
+                    >我的竞赛</i
+                  >
+                </template>
+              </el-menu-item>
+              <el-menu-item index="/myjoinquestionsheet">
+                <template slot="title">
+                  <i class="el-icon-s-order" style="font-size: 1.06rem"
+                    >我的题单</i
+                  >
+                </template>
+              </el-menu-item>
+              <el-menu-item index="/myquestionsheetmanage">
+                <template slot="title">
+                  <i class="el-icon-s-management" style="font-size: 1.06rem"
+                    >题单管理</i
+                  >
+                </template>
+              </el-menu-item>
+            </el-submenu>
             <el-menu-item index="/fabulousvideo">
               <i class="el-icon-video-camera-solid"></i>
               <span slot="title" class="my-span">点赞视频</span>
@@ -326,7 +353,7 @@
               <span slot="title" class="my-span">个人信息</span>
             </el-menu-item>
 
-            <el-submenu index="11" class="no-select">
+            <el-submenu index="7" class="no-select">
               <template slot="title">
                 <i class="el-icon-s-tools"></i>
               </template>
@@ -353,7 +380,7 @@
                 </template>
               </el-menu-item>
               <el-submenu
-                index="5"
+                index="8"
                 v-if="$store.state.root && $store.state.my_name === 'root'"
               >
                 <template slot="title">
@@ -389,6 +416,15 @@
                   </template>
                 </el-menu-item>
                 <el-menu-item
+                  index="/linuxmanage"
+                  v-if="$store.state.root && $store.state.my_name === 'root'"
+                  ><template slot="title">
+                    <i class="el-icon-s-platform" style="font-size: 1.06rem"
+                      >服务器管理</i
+                    >
+                  </template>
+                </el-menu-item>
+                <el-menu-item
                   index="/monitor"
                   v-if="$store.state.root && $store.state.my_name === 'root'"
                   ><template slot="title">
@@ -401,7 +437,7 @@
                 </el-menu-item>
               </el-submenu>
               <el-submenu
-                index="6"
+                index="9"
                 class="no-select"
                 v-if="$store.state.root || $store.state.admin"
               >
@@ -442,7 +478,16 @@
                     >
                   </template>
                 </el-menu-item>
-
+                <el-menu-item
+                  index="/allquestionsheetmanage"
+                  v-if="$store.state.root"
+                >
+                  <template slot="title">
+                    <i class="el-icon-s-management" style="font-size: 1.06rem"
+                      >全站题单管理</i
+                    >
+                  </template>
+                </el-menu-item>
                 <el-menu-item
                   index="/userarticle"
                   v-if="$store.state.root && $store.state.my_name === 'root'"

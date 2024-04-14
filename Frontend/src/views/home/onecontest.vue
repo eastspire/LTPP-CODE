@@ -955,7 +955,6 @@ export default {
       isseetip: true,
       canclick: true,
       isseecode: false,
-      usertheme: "monokai",
       codelanguage: "cpp",
       code: "",
       xss_options: this.$SqsGlobal.xss_options,

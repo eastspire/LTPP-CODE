@@ -244,6 +244,29 @@ const oj_contest_list_data = {
     password: true
 };
 
+// 题单列表数据模板
+const questionsheet_list_data = {
+    id: "",
+    name: loading_tips,
+    time: loading_tips,
+    people_num: loading_tips,
+    creator_name: loading_tips,
+    password: true,
+    creator_id: ''
+};
+
+// 服务器列表数据模板
+const linux_list_data = {
+    id: "",
+    userid: "",
+    name: loading_tips,
+    end_port: loading_tips,
+    begin_port: loading_tips,
+    password: loading_tips,
+    buy_time: loading_tips,
+    user_name: loading_tips
+};
+
 const video_list_data = {
     fabulous: 0,
     id: "",
@@ -522,5 +545,7 @@ export default {
     video_list_data,
     question_list_data,
     monitor_list_data,
-    notice_list_data
+    notice_list_data,
+    questionsheet_list_data,
+    linux_list_data
 };

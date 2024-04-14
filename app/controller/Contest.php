@@ -704,6 +704,10 @@ class Contest
         $data = $request->post('data');
         $time = $request->post('time');
         $defaultnum = $request->post('defaultnum');
+        $problemdata = $request->post('problemdata');
+        if (!$problemdata) {
+            return json(['code' => -1, 'msg' => '赛题不能为空']);
+        }
         $isroot = Base::judgeIsRoot($my_aid);
         if (!$isroot) {
             $defaultnum = 0;
@@ -725,6 +729,19 @@ class Contest
         if ($end - $begin < 600) {
             return json(['code' => -1, 'msg' => '竞赛时长必须大于等于10分钟']);
         }
+        $postpronum = 0;
+        foreach ($problemdata as &$tem) {
+            $tem = Base::getIdByUid($tem);
+            $prodb = Base::getOjData($tem);
+            // 题目不存在则跳过
+            if (!$prodb) {
+                continue;
+            }
+            ++$postpronum;
+        }
+        if ($postpronum <= 0) {
+            return json(['code' => -1, 'msg' => '赛题不能为空']);
+        }
         $begin = date('Y-m-d H:i:s', (int) $begin);
         $end = date('Y-m-d H:i:s', (int) $end);
         $data['begin'] = $begin;
@@ -741,18 +758,10 @@ class Contest
         // 缓存竞赛
         Base::updateContestDataRedis($res_id);
 
-        $problemdata = $request->post('problemdata');
-        foreach ($problemdata as &$tem) {
-            $tem = Base::getIdByUid($tem);
-        }
-        $postpronum = 0;
         $insert_pro = [];
         $has_pro = new stdClass;
         foreach ($problemdata as &$tem) {
-            $prodb = Db::table('oj')
-                ->where('id', $tem)
-                ->where('isdel', 0)
-                ->exists();
+            $prodb = Base::getOjData($tem);
             // 题目不存在则跳过
             if (!$prodb || (isset($has_pro->$tem) && $has_pro->$tem == 1)) {
                 continue;
@@ -769,12 +778,9 @@ class Contest
                     'problemid' => $tem,
                     'contestid' => $res_id
                 ];
-                ++$postpronum;
             }
         }
-        if ($postpronum <= 0) {
-            return json(['code' => -1, 'msg' => '赛题不能为空']);
-        }
+
         Db::table('contestproblem')
             ->insert($insert_pro);
         // 默认参加竞赛人员
@@ -890,6 +896,10 @@ class Contest
         $my_aid = Base::getIdByUid($my_uid);
         $data = $request->post('data');
         $time = $request->post('time');
+        $problemdata = $request->post('problemdata');
+        if (!$problemdata) {
+            return json(['code' => -1, 'msg' => '赛题不能为空']);
+        }
         $contest_uid = $data['id'];
         $contest_id = Base::getIdByUid($contest_uid);
         $data['id'] = $contest_id;
@@ -904,6 +914,19 @@ class Contest
         $end = $time[1] / 1000;
         if ($end - $begin < 600) {
             return json(['code' => -1, 'msg' => '竞赛时长必须大于等于10分钟']);
+        }
+        $postpronum = 0;
+        foreach ($problemdata as &$tem) {
+            $tem = Base::getIdByUid($tem);
+            $prodb = Base::getOjData($tem);
+            // 题目不存在则跳过
+            if (!$prodb) {
+                continue;
+            }
+            ++$postpronum;
+        }
+        if ($postpronum <= 0) {
+            return json(['code' => -1, 'msg' => '赛题不能为空']);
         }
         $begin = date('Y-m-d H:i:s', $begin);
         $end = date('Y-m-d H:i:s', $end);
@@ -938,27 +961,17 @@ class Contest
                     'password' => $data['password'],
                 ]
             );
-        $problemdata = $request->post('problemdata');
-        if (!$problemdata) {
-            return json(['code' => -1, 'msg' => '竞赛题目不能为空！']);
-        }
-        foreach ($problemdata as &$tem) {
-            $tem = Base::getIdByUid($tem);
-        }
+
         //先清空之前该竞赛题目，再插入新竞赛题目
         Db::table('contestproblem')
             ->where('contestid', $contest_id)
             ->where('isdel', 0)
             ->update(['isdel' => 1]);
-
+        $has_pro = new stdClass;
         foreach ($problemdata as &$tem) {
-            $prodb = Db::table('oj')
-                ->where('id', $tem)
-                ->where('isdel', 0)
-                ->exists();
-
+            $prodb = Base::getOjData($tem);
             // 题目不存在则跳过
-            if (!$prodb) {
+            if (!$prodb || (isset($has_pro->$tem) && $has_pro->$tem == 1)) {
                 continue;
             }
             $db = Db::table('contestproblem')
@@ -968,10 +981,15 @@ class Contest
                 ->exists();
             //不存在就插入，一题在一场竞赛仅允许出现一次
             if (!$db) {
-                Db::table('contestproblem')
-                    ->insert(['problemid' => $tem, 'contestid' => $contest_id]);
+                $has_pro->$tem = 1;
+                $insert_pro[] = [
+                    'problemid' => $tem,
+                    'contestid' => $contest_id
+                ];
             }
         }
+        Db::table('contestproblem')
+            ->insert($insert_pro);
         //竞赛删除清空该竞赛全部用户缓存
         $redis4 = Redis::connection('db4');
         $joinuser = Db::table('joincontest')

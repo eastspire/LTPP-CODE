@@ -19,6 +19,27 @@ window.onload = () => {
 let err_times = 0;
 let max_err_times = 1;
 
+try {
+  // 解决ResizeObserver报错
+  const debounce = (callback, delay) => {
+    let tid;
+    return function (...args) {
+      const ctx = self;
+      tid && clearTimeout(tid);
+      tid = setTimeout(() => {
+        callback.apply(ctx, args);
+      }, delay);
+    };
+  };
+  const _ = window.ResizeObserver;
+  window.ResizeObserver = class ResizeObserver extends _ {
+    constructor(callback) {
+      callback = debounce(callback, 20);
+      super(callback);
+    }
+  };
+} catch (err) {}
+
 export default {
   name: "app",
   data() {

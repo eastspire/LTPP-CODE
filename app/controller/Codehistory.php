@@ -394,7 +394,7 @@ class Codehistory
             if ($temdb) {
                 $tem->user = $temdb->name;
             } else {
-                $tem->user = '无名氏';
+                $tem->user = '未知用户';
             }
         }
         Base::dataToSafe($db);

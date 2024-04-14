@@ -262,7 +262,6 @@ export default {
       isseetip: true,
       issearch: false,
       problemid: 0,
-      usertheme: "monokai",
       tableData: [],
       key: "",
       code: "",

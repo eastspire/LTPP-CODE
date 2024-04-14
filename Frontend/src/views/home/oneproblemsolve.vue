@@ -2,7 +2,7 @@
   <div v-show="isseetip" class="no-select">
     <div @contextmenu.prevent="" style="margin-left: auto; margin-right: auto">
       <div
-        class="shadow ltpp-list-box"
+        class="shadow"
         style="
           color: azure;
           border-width: 0rem;
@@ -13,7 +13,7 @@
       >
         <div>
           <p
-            class="shadow ltpp-list-box"
+            class="shadow"
             style="
               font-size: 1.66rem;
               text-align: center;
@@ -38,7 +38,7 @@
                 element-loading-background="background-color:rgba(var(--ltpp-main-bk-color),var(--ltpp-list-box-bk-opacity))"
                 @click="toOneArticle(temtable.id)"
                 style="cursor: pointer"
-                class="shadow ltpp-list-box"
+                class="shadow"
               >
                 <div style="height: 22rem; width: 100%">
                   <div style="padding: 0rem; position: relative">

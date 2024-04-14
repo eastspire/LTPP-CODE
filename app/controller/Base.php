@@ -385,6 +385,11 @@ class Base
     static $redis_queue_buy_ssh_name = 'buy_ssh';
 
     /**
+     * 请求消息队列名称
+     */
+    static $redis_queue_request_name = 'request';
+
+    /**
      * 在线测试代码消息队列名称
      */
     static $redis_queue_webcode_run_name = 'webcode_run';
@@ -590,7 +595,8 @@ class Base
         'group_id' => true,
         'fanuserid' => true,
         'questionid' => true,
-        'mainanswerid' => true
+        'mainanswerid' => true,
+        'creator_id' => true,
     ];
 
     /**
@@ -3327,6 +3333,70 @@ class Base
     }
 
     /**
+     * 获取缓存中题单信息
+     * @param int $question_sheet_id
+     */
+    static public function getQuestionSheetData($question_sheet_id)
+    {
+        try {
+            if (!is_numeric($question_sheet_id)) {
+                return [];
+            }
+            $redis22 = Redis::connection('db22');
+            $key = 'QuestionSheetData' . $question_sheet_id;
+            $db = $redis22->get($key);
+            if ($db) {
+                return json_decode($db, false);
+            }
+            $db = Db::table('question_sheet')
+                ->where('id', $question_sheet_id)
+                ->where('isdel', 0)
+                ->first();
+            if (!$db) {
+                return [];
+            }
+            $redis22->setEx($key, Base::$redis_timeout, json_encode($db));
+            return $db;
+        } catch (Exception $e) {
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
+            return [];
+        }
+    }
+
+    /**
+     * 获取缓存中题单题目列表信息
+     * @param int $question_sheet_id
+     */
+    static public function getQuestionSheetProblemListData($question_sheet_id)
+    {
+        try {
+            if (!is_numeric($question_sheet_id)) {
+                return [];
+            }
+            $redis34 = Redis::connection('db34');
+            $key = 'QuestionSheetProblemListData' . $question_sheet_id;
+            $db = $redis34->get($key);
+            if ($db) {
+                return json_decode($db, false);
+            }
+            $db = Db::table('question_sheet_data')
+                ->where('question_sheet_id', $question_sheet_id)
+                ->where('isdel', 0)
+                ->select('question_id')
+                ->distinct()
+                ->get();
+            if (!$db) {
+                return [];
+            }
+            $redis34->setEx($key, Base::$redis_timeout, json_encode($db));
+            return $db;
+        } catch (Exception $e) {
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
+            return [];
+        }
+    }
+
+    /**
      * 获取缓存中文章信息
      * @param int $article_id
      */
@@ -3444,12 +3514,12 @@ class Base
         }
         $redis33 = Redis::connection('db33');
         $key = 'CodeData' . $code_id;
-        $redis33->del($key);
         $db = Db::table('codehistory')
             ->where('id', $code_id)
             ->where('isdel', 0)
             ->first();
         if (!$db) {
+            $redis33->del($key);
             return;
         }
         $redis33->setEx($key, Base::$redis_timeout, json_encode($db));
@@ -3490,12 +3560,12 @@ class Base
         }
         $redis8 = Redis::connection('db8');
         $key = 'UserData' . $user_id;
-        $redis8->del($key);
         $db = Db::table('user')
             ->where('id', $user_id)
             ->where('isdel', 0)
             ->first();
         if (!$db) {
+            $redis8->del($key);
             return;
         }
         $redis8->setEx($key, Base::$redis_timeout, json_encode($db));
@@ -3512,12 +3582,12 @@ class Base
         }
         $redis20 = Redis::connection('db20');
         $key = 'Group' . $group_id;
-        $redis20->del($key);
         $db = Db::table('group')
             ->where('id', $group_id)
             ->where('isdel', 0)
             ->first();
         if (!$db) {
+            $redis20->del($key);
             return;
         }
         $redis20->setEx($key, Base::$redis_timeout, json_encode($db));
@@ -3534,13 +3604,62 @@ class Base
         }
         $redis21 = Redis::connection('db21');
         $key = 'ContestData' . $contest_id;
-        $redis21->del($key);
         $db = Db::table('contest')
             ->where('id', $contest_id)
             ->where('isdel', 0)
             ->select(Contest::$contest_db_key)
             ->first();
+        if (!$db) {
+            $redis21->del($key);
+            return;
+        }
         $redis21->setEx($key, Base::$redis_timeout, json_encode($db));
+    }
+
+    /**
+     * 根据ID更新题单缓存信息
+     * @param int $question_sheet_id
+     */
+    static public function updateQuestionSheetDataRedis($question_sheet_id)
+    {
+        if (!is_numeric($question_sheet_id)) {
+            return;
+        }
+        $redis22 = Redis::connection('db22');
+        $key = 'QuestionSheetData' . $question_sheet_id;
+        $db = Db::table('question_sheet')
+            ->where('id', $question_sheet_id)
+            ->where('isdel', 0)
+            ->first();
+        if (!$db) {
+            $redis22->del($key);
+            return;
+        }
+        $redis22->setEx($key, Base::$redis_timeout, json_encode($db));
+    }
+
+    /**
+     * 根据ID更新题单题目列表缓存信息
+     * @param int $question_sheet_id
+     */
+    static public function updateQuestionSheetProblemListDataRedis($question_sheet_id)
+    {
+        if (!is_numeric($question_sheet_id)) {
+            return;
+        }
+        $redis34 = Redis::connection('db34');
+        $key = 'QuestionSheetProblemListData' . $question_sheet_id;
+        $db = Db::table('question_sheet_data')
+            ->where('question_sheet_id', $question_sheet_id)
+            ->where('isdel', 0)
+            ->select('question_id')
+            ->distinct()
+            ->get();
+        if (!$db) {
+            $redis34->del($key);
+            return;
+        }
+        $redis34->setEx($key, Base::$redis_timeout, json_encode($db));
     }
 
     /**
@@ -3554,13 +3673,13 @@ class Base
         }
         $redis25 = Redis::connection('db25');
         $key = 'ArticleData' . $article_id;
-        $redis25->del($key);
         $db = Db::table('article')
             ->where('id', $article_id)
             ->where('isdel', 0)
             ->select(Article::$article_db_key)
             ->first();
         if (!$db) {
+            $redis25->del($key);
             return;
         }
         $user_db = Base::getUserData($db->writerid);
@@ -3589,13 +3708,13 @@ class Base
         }
         $redis26 = Redis::connection('db26');
         $key = 'OjData' . $oj_id;
-        $redis26->del($key);
         $db = Db::table('oj')
             ->where('id', $oj_id)
             ->where('isdel', 0)
             ->select(Oj::$oj_db_key)
             ->first();
         if (!$db) {
+            $redis26->del($key);
             return;
         }
         $redis26->setEx($key, Base::$redis_timeout, json_encode($db));
@@ -5300,5 +5419,29 @@ class Base
             'outpath' => $outpath,
             'errpath' => $errpath,
         ];
+    }
+
+    /**
+     * 判断是否是我的题单
+     * @param int $question_sheet_id
+     * @param int $my_aid
+     */
+    static public function judgeIsMyQuestionSheet($question_sheet_id, $my_aid)
+    {
+        try {
+            $question_sheet_data = Base::getQuestionSheetData($question_sheet_id);
+            if (!$question_sheet_id || !$question_sheet_data) {
+                return false;
+            }
+            if ($question_sheet_data->creator_id == $my_aid) {
+                return true;
+            }
+            if (Base::judgeIsRoot($my_aid)) {
+                return true;
+            }
+        } catch (Exception $e) {
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
+        }
+        return false;
     }
 };

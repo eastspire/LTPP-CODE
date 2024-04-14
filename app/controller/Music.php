@@ -30,13 +30,13 @@ class Music
             return json([
                 'code' => 1,
                 'musicuid' => '',
-                'msg' => 'error！'
+                'msg' => '用户未设置网易云音乐UID'
             ]);
         }
         return json([
             'code' => 1,
             'musicuid' => $data->musicuid,
-            'msg' => 'error！'
+            'msg' => '用户网易云音乐UID加载完成'
         ]);
     }
 
@@ -54,14 +54,13 @@ class Music
             return json([
                 'code' => 1,
                 'musiclovelistid' => '',
-                'msg' => 'error！'
+                'msg' => '用户未设置网易云音乐歌单ID'
             ]);
         }
         return json([
             'code' => 1,
             'musiclovelistid' => $data->musiclovelistid,
-            'msg' => 'error！'
+            'msg' => '用户网易云音乐歌单ID加载完成'
         ]);
     }
-}
-;
+};

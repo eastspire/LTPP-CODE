@@ -89,7 +89,7 @@ class User
         if ($db) {
             return json(['code' => 1, 'name' => $db->name]);
         }
-        return json(['code' => -1, 'name' => '无名氏']);
+        return json(['code' => -1, 'name' => '未知用户']);
     }
 
     /**

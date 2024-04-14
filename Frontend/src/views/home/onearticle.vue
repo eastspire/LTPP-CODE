@@ -44,6 +44,7 @@
                 font-size: 1.06rem;
                 margin: 0rem 2rem;
                 color: var(--ltpp-title-color);
+                font-weight: bold;
               "
             >
               去 挑 战 此 题 ->

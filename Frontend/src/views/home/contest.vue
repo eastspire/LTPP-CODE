@@ -270,7 +270,7 @@ export default {
           },
         });
     },
-    //获取题目列表
+    //获取列表
     async getlist() {
       this.initData();
       const { data: res } = await this.$ajax({

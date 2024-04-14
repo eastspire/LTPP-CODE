@@ -700,6 +700,11 @@ class Oj
             ->where('problemid', $problem_id)
             ->where('isdel', 0)
             ->update(['isdel' => 1]);
+        Db::table('question_sheet_data')
+            ->where('question_id', $problem_id)
+            ->update([
+                'isdel' => 1
+            ]);
         $md5_problem_id = Base::doubleMd5($problem_id);
         Base::deleteAllFile(Base::$testdata_path . $md5_problem_id . '/');
         Base::updateOjDataRedis($problem_id);

@@ -231,7 +231,6 @@ export default {
   data() {
     return {
       isseetip: true,
-      usertheme: "monokai",
       allcodelist: [],
       code: "",
       page: 1,
