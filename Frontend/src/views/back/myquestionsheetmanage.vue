@@ -129,10 +129,7 @@
                   <el-button
                     class="pulse-enter-active"
                     v-if="$store.state.root && $store.state.my_name === 'root'"
-                    @click="
-                      iscreat = false;
-                      deleteid(scope.row.id);
-                    "
+                    @click="deleteid(scope.row.id)"
                     style="
                       font-size: 1.06rem;
                       font-weight: bold;

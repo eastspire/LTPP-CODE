@@ -50,9 +50,7 @@
                     placement="right"
                   >
                     <span
-                      :class="`my-span ${
-                        scope.row.password ? 'el-icon-lock' : 'el-icon-trophy'
-                      }`"
+                      class="my-span el-icon-lock"
                       style="
                         font-weight: bold;
                         font-size: 1.06rem;
@@ -107,40 +105,14 @@
                   </span>
                 </template>
               </el-table-column>
-              <el-table-column label="密码" width="auto" align="center">
-                <template slot-scope="scope">
-                  <span
-                    class="my-span"
-                    style="
-                      font-weight: bold;
-                      font-size: 1.06rem;
-                      color: #e6a23c;
-                    "
-                  >
-                    {{ scope.row.password }}
-                  </span>
-                </template>
-              </el-table-column>
               <el-table-column label="操作" width="400" align="center">
                 <template slot-scope="scope">
                   <el-button
                     class="pulse-enter-active"
-                    v-if="$store.state.root && $store.state.my_name === 'root'"
                     @click="
-                      iscreat = false;
-                      deleteid(scope.row.name);
+                      now_linux = scope.row;
+                      isseedialog = true;
                     "
-                    style="
-                      font-size: 1.06rem;
-                      font-weight: bold;
-                      color: deeppink;
-                    "
-                    type="text"
-                    >删除
-                  </el-button>
-                  <el-button
-                    class="pulse-enter-active"
-                    @click="reboot(scope.row.name)"
                     style="
                       margin-left: 3.6rem;
                       font-size: 1.06rem;
@@ -148,31 +120,7 @@
                       color: deeppink;
                     "
                     type="text"
-                    >重启
-                  </el-button>
-                  <el-button
-                    class="pulse-enter-active"
-                    @click="shutdown(scope.row.name)"
-                    style="
-                      margin-left: 3.6rem;
-                      font-size: 1.06rem;
-                      font-weight: bold;
-                      color: deeppink;
-                    "
-                    type="text"
-                    >关机
-                  </el-button>
-                  <el-button
-                    class="pulse-enter-active"
-                    @click="poweron(scope.row.name)"
-                    style="
-                      margin-left: 3.6rem;
-                      font-size: 1.06rem;
-                      font-weight: bold;
-                      color: deeppink;
-                    "
-                    type="text"
-                    >开机
+                    >管理
                   </el-button>
                 </template>
               </el-table-column>
@@ -180,7 +128,79 @@
           </div>
         </div>
       </div>
-
+      <el-dialog
+        :close-on-click-modal="false"
+        :append-to-body="true"
+        :width="($store.state.max_width / $store.state.now_width) * 100 + '%'"
+        title="服务器管理"
+        :visible.sync="isseedialog"
+      >
+        <div
+          style="
+            font-size: 1rem;
+            text-align: left;
+            font-weight: bold;
+            margin: 0rem 0rem 1rem 1rem;
+          "
+        >
+          <p
+            style="
+              font-size: 1.06rem;
+              text-align: left;
+              font-weight: bold;
+              margin: 0rem 0rem 0.5rem 0rem;
+            "
+          >
+            服务器密码：{{ now_linux.password }}
+          </p>
+          <div style="display: flex; justify-content: center">
+            <el-button
+              class="pulse-enter-active"
+              @click="poweron(now_linux.name)"
+              style="
+                font-size: 1.06rem;
+                font-weight: bold;
+                margin: 1rem 2rem 0rem 2rem;
+              "
+              type="success"
+              >开机
+            </el-button>
+            <el-button
+              class="pulse-enter-active"
+              @click="shutdown(now_linux.name)"
+              style="
+                font-size: 1.06rem;
+                font-weight: bold;
+                margin: 1rem 2rem 0rem 2rem;
+              "
+              type="danger"
+              >关机
+            </el-button>
+            <el-button
+              class="pulse-enter-active"
+              @click="reboot(now_linux.name)"
+              style="
+                font-size: 1.06rem;
+                font-weight: bold;
+                margin: 1rem 2rem 0rem 2rem;
+              "
+              type="danger"
+              >重启
+            </el-button>
+            <el-button
+              class="pulse-enter-active"
+              @click="deleteid(now_linux.name)"
+              style="
+                font-size: 1.06rem;
+                font-weight: bold;
+                margin: 1rem 2rem 0rem 2rem;
+              "
+              type="danger"
+              >删除
+            </el-button>
+          </div>
+        </div>
+      </el-dialog>
       <div style="height: 3.4rem"></div>
       <el-pagination
         background
@@ -200,10 +220,11 @@
 </template>
 
 <script>
-import urlencode from "../../../updateCompoents/urlencode/lib/urlencode";
 export default {
   name: "linuxmanage",
   activated() {
+    this.isseedialog = false;
+    this.now_linux = {};
     this.isseetip = true;
     if (this.total != 0) {
       this.search();
@@ -225,6 +246,8 @@ export default {
   },
   data() {
     return {
+      now_linux: {},
+      isseedialog: false,
       lastkey: "",
       isseetip: true,
       issearch: false,
