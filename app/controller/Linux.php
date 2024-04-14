@@ -91,15 +91,20 @@ class Linux
         $key = $request->post('key');
         Base::judgePageLimitIsSafe($page, $limit);
         $allnum = 0;
+        $db = [];
         if (!Base::judgeIsRoot($my_aid)) {
             return json([
                 'code' => -1,
                 'msg' => '权限不足',
-                'data' => [],
+                'data' => $db,
                 'allnum' => $allnum
             ]);
         }
-        $search_user_db = Base::getUserData($my_aid);
+        $search_user_db = Db::table('user')
+            ->where('name', $key)
+            ->where('isdel', 0)
+            ->select('id')
+            ->first();
         if ($search_user_db) {
             $db = Db::table('ssh')
                 ->orWhere(function ($query) use ($key) {

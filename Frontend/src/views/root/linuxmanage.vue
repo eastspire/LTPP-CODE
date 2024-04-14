@@ -11,7 +11,7 @@
         <div class="search shadow">
           <el-input
             style="font-size: 1rem"
-            placeholder="请输入需要搜索的服务器名称/服务器购买用户/服务器端口"
+            placeholder="请输入需要搜索的服务器名称/购买服务器的用户名/服务器端口"
             v-model.lazy="key"
             @keyup.enter.native="search()"
           >
@@ -101,7 +101,7 @@
                       color: #67c23a;
                     "
                   >
-                    {{ scope.row.begin_port }}- {{ scope.row.end_port }}
+                    {{ scope.row.begin_port }} - {{ scope.row.end_port }}
                   </span>
                 </template>
               </el-table-column>
@@ -150,9 +150,50 @@
               margin: 0rem 0rem 0.5rem 0rem;
             "
           >
-            服务器密码：{{ now_linux.password }}
+            服务器名称： {{ now_linux.name }}
+          </p>
+          <p
+            style="
+              font-size: 1.06rem;
+              text-align: left;
+              font-weight: bold;
+              margin: 0rem 0rem 0.5rem 0rem;
+            "
+          >
+            服务器端口：{{ now_linux.begin_port }} - {{ now_linux.end_port }}
+          </p>
+          <p
+            style="
+              font-size: 1.06rem;
+              text-align: left;
+              font-weight: bold;
+              margin: 0rem 0rem 0.5rem 0rem;
+            "
+          >
+            服务器购买用户：{{ now_linux.user_name }}
+          </p>
+          <p
+            style="
+              font-size: 1.06rem;
+              text-align: left;
+              font-weight: bold;
+              margin: 0rem 0rem 0.5rem 0rem;
+            "
+          >
+            服务器购买时间：{{ now_linux.buy_time }}
           </p>
           <div style="display: flex; justify-content: center">
+            <el-button
+              class="pulse-enter-active"
+              @click="copy(now_linux.password)"
+              style="
+                font-size: 1.06rem;
+                font-weight: bold;
+                margin: 1rem 2rem 0rem 2rem;
+              "
+              type="success"
+              >密码
+            </el-button>
             <el-button
               class="pulse-enter-active"
               @click="
