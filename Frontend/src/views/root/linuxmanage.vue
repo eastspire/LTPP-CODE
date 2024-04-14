@@ -156,7 +156,10 @@
           <div style="display: flex; justify-content: center">
             <el-button
               class="pulse-enter-active"
-              @click="poweron(now_linux.name)"
+              @click="
+                poweron(now_linux.name);
+                isseedialog = false;
+              "
               style="
                 font-size: 1.06rem;
                 font-weight: bold;
@@ -167,7 +170,10 @@
             </el-button>
             <el-button
               class="pulse-enter-active"
-              @click="shutdown(now_linux.name)"
+              @click="
+                shutdown(now_linux.name);
+                isseedialog = false;
+              "
               style="
                 font-size: 1.06rem;
                 font-weight: bold;
@@ -178,7 +184,10 @@
             </el-button>
             <el-button
               class="pulse-enter-active"
-              @click="reboot(now_linux.name)"
+              @click="
+                reboot(now_linux.name);
+                isseedialog = false;
+              "
               style="
                 font-size: 1.06rem;
                 font-weight: bold;
@@ -189,7 +198,10 @@
             </el-button>
             <el-button
               class="pulse-enter-active"
-              @click="deleteid(now_linux.name)"
+              @click="
+                deleteid(now_linux.name);
+                isseedialog = false;
+              "
               style="
                 font-size: 1.06rem;
                 font-weight: bold;
