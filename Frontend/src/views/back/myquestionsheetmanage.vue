@@ -233,9 +233,6 @@ export default {
      * columnIndex为某一列（从0开始数起）
      */
     cellStyle({ row, rowIndex }) {
-      let begintime = Date.parse(row.begin);
-      let endtime = Date.parse(row.end);
-      let now = Date.parse(new Date());
       let styleRes = {
         background: "rgba(var(--ltpp-light-color), 0.16) !important",
         height: "3.6rem !important",
@@ -245,22 +242,9 @@ export default {
         styleRes.background =
           "rgba(var(--ltpp-main-bk-color), 0.06) !important";
       }
-      // 状态列字体颜色
-      if (endtime <= now) {
-        /* 题单结束 */
-        styleRes.color = "chartreuse";
-        return styleRes;
-      } else if (begintime <= now && now <= endtime) {
-        /* 题单进行中 */
-        styleRes.color = "red";
-        return styleRes;
-      } else {
-        /* 题单未开始 */
-        styleRes.color = "#409EFF";
-        return styleRes;
-      }
+      styleRes.color = "#409EFF";
+      return styleRes;
     },
-
     handleCurrentChange(val) {
       this.page = val;
       if (this.issearch) {

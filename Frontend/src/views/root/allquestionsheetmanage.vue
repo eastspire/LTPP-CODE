@@ -21,23 +21,6 @@
           </el-input>
         </div>
       </div>
-      <div>
-        <div style="text-align: left">
-          <el-button
-            type="text"
-            @click="toadd()"
-            class="el-icon-plus pulse-enter-active"
-            style="
-              font-size: 1.06rem;
-              font-weight: bold;
-              color: deeppink;
-              margin-top: 1rem;
-              margin-left: 1rem;
-            "
-            >添加题单</el-button
-          >
-        </div>
-      </div>
       <div style="color: azure; height: auto; width: 100%">
         <div :style="`min-height:${$store.state.no_scroll_height * 0.82}vh;`">
           <div style="height: 0.8rem"></div>
@@ -212,11 +195,6 @@ export default {
     };
   },
   methods: {
-    toadd() {
-      this.$router.push({
-        path: "/addquestionsheet",
-      });
-    },
     initData() {
       this.questionsheetlist = [];
       let tem_list = [];
@@ -233,9 +211,6 @@ export default {
      * columnIndex为某一列（从0开始数起）
      */
     cellStyle({ row, rowIndex }) {
-      let begintime = Date.parse(row.begin);
-      let endtime = Date.parse(row.end);
-      let now = Date.parse(new Date());
       let styleRes = {
         background: "rgba(var(--ltpp-light-color), 0.16) !important",
         height: "3.6rem !important",
@@ -245,20 +220,8 @@ export default {
         styleRes.background =
           "rgba(var(--ltpp-main-bk-color), 0.06) !important";
       }
-      // 状态列字体颜色
-      if (endtime <= now) {
-        /* 题单结束 */
-        styleRes.color = "chartreuse";
-        return styleRes;
-      } else if (begintime <= now && now <= endtime) {
-        /* 题单进行中 */
-        styleRes.color = "red";
-        return styleRes;
-      } else {
-        /* 题单未开始 */
-        styleRes.color = "#409EFF";
-        return styleRes;
-      }
+      styleRes.color = "#409EFF";
+      return styleRes;
     },
 
     handleCurrentChange(val) {

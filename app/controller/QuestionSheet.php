@@ -641,7 +641,7 @@ class QuestionSheet
         $my_aid = Base::getIdByUid($my_uid);
         $question_sheet_uid = $request->post('question_sheet_id');
         $question_sheet_id = Base::getIdByUid($question_sheet_uid);
-        if (!Base::judgeIsMyQuestionSheet($question_sheet_id, $my_aid)) {
+        if (!Base::judgeIsRoot($my_aid)) {
             return json([
                 'code' => -1,
                 'msg' => '权限不足',
