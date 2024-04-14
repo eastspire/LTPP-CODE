@@ -64,7 +64,7 @@ class Linux
         foreach ($db as &$tem) {
             $user_db = Base::getUserData($tem->userid);
             if ($user_db) {
-                $tem->user_name = $my_aid;
+                $tem->user_name = $user_db->name;
             } else {
                 $tem->user_name = '未知用户';
             }
@@ -164,7 +164,7 @@ class Linux
         foreach ($db as &$tem) {
             $user_db = Base::getUserData($tem->userid);
             if ($user_db) {
-                $tem->user_name = $my_aid;
+                $tem->user_name = $user_db->name;
             } else {
                 $tem->user_name = '未知用户';
             }

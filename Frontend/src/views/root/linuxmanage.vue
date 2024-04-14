@@ -34,7 +34,7 @@
                 'font-size': '1.06rem',
               }"
             >
-              <el-table-column width="340">
+              <el-table-column width="380">
                 <template slot="header">
                   <span
                     style="text-align: left; margin-left: 1rem"
@@ -58,7 +58,7 @@
                         margin-left: 1rem;
                       "
                       @click="tojoinpage(scope.row.id)"
-                      >{{ scope.row.name.substr(0, 17) }}</span
+                      >{{ scope.row.name }}</span
                     >
                   </el-tooltip>
                 </template>
@@ -105,7 +105,7 @@
                   </span>
                 </template>
               </el-table-column>
-              <el-table-column label="操作" width="400" align="center">
+              <el-table-column label="操作" width="100" align="center">
                 <template slot-scope="scope">
                   <el-button
                     class="pulse-enter-active"
@@ -114,7 +114,6 @@
                       isseedialog = true;
                     "
                     style="
-                      margin-left: 3.6rem;
                       font-size: 1.06rem;
                       font-weight: bold;
                       color: deeppink;
