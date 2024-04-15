@@ -76,7 +76,6 @@ class Robot extends Email
                 ]);
             }
         } catch (Exception $e) {
-            return;
         }
     }
 
@@ -129,7 +128,6 @@ class Robot extends Email
                 ]);
             }
         } catch (Exception $e) {
-            return;
         }
     }
 };

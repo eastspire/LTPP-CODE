@@ -3,7 +3,7 @@
         'name' => 'ltpp/ltpp',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => 'cd5e0167925a8a45e67d97fc59e5b02ec1d96c06',
+        'reference' => '7697753e6eb6257ba6a3317206163b5ca0f395a8',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -166,7 +166,7 @@
         'ltpp/ltpp' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'cd5e0167925a8a45e67d97fc59e5b02ec1d96c06',
+            'reference' => '7697753e6eb6257ba6a3317206163b5ca0f395a8',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
