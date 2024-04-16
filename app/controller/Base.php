@@ -4797,9 +4797,9 @@ class Base
                     `file_id` bigint(20) UNSIGNED NOT NULL DEFAULT 0 COMMENT \'文件ID\',
                     `time` datetime NOT NULL DEFAULT current_timestamp() COMMENT \'上传时间\',
                     PRIMARY KEY (`path`),
-                    INDEX `isdel_index` (`isdel`),
-                    INDEX `userid_index` (`userid`),
-                    INDEX `file_id_index` (`file_id`)
+                    INDEX `' . $index . '_isdel` (`isdel`),
+                    INDEX `' . $index . '_userid` (`userid`),
+                    INDEX `' . $index . '_file_id` (`file_id`)
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;'
         ];
         foreach ($sql as &$run_sql) {
