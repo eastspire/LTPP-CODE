@@ -56,6 +56,10 @@ return [
         'handler' => process\CleanRobotDbCrontab::class,
         'count' => 1
     ],
+    'CreatFileTable' => [
+        'handler' => process\CreatFileTable::class,
+        'count' => 1
+    ],
     // 'Register' => [
     //     'handler' => \Webman\App::class,
     //     'listen' => 'http://0.0.0.0:48800',

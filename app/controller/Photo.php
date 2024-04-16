@@ -29,7 +29,7 @@ class Photo
         $redis30 = Redis::connection('db30');
         $redis30->del($list_path);
         foreach ($list_path as &$path) {
-            Db::table('file_path')
+            Db::table(Base::getFilePathTableName($path))
                 ->where('path', $path)
                 ->where('isdel', 0)
                 ->update([
@@ -99,7 +99,7 @@ class Photo
             return json(['code' => -1, 'msg' => '权限不足']);
         }
         $path = $request->post('path');
-        Db::table('file_path')
+        Db::table(Base::getFilePathTableName($path))
             ->where('path', $path)
             ->where('isdel', 0)
             ->update([

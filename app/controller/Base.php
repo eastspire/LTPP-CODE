@@ -828,7 +828,7 @@ class Base
 
     /**
      * ID Base64字符集，勿动
-     * @var array $char_set Base64字符集，勿动，需前端字符集保持一致
+     * @var array $char_set Base64字符集，勿动
      */
     static public $id_char_set = [
         [
@@ -1131,6 +1131,12 @@ class Base
      * @var string $LTPP_public_static_path LTPP static文件夹路径
      */
     static $LTPP_public_static_path = '/static';
+
+    /**
+     * 单表数据限制
+     * @var string $one_table_length_limit 单表数据限制
+     */
+    static $one_table_length_limit = 5000000;
 
     /**
      * 保存文件名长度限制
@@ -1932,6 +1938,75 @@ class Base
     }
 
     /**
+     * 获取文件路径表名
+     */
+    static public function getFilePathTableName($file_path = '')
+    {
+        if ($file_path) {
+            $escaped_search = preg_quote(Base::$LTPP_public_static_path, '/');
+            $pattern = '/(' . $escaped_search . ')\/(\w+)\/(\w+)\//';
+            if (preg_match($pattern, $file_path, $matches) && sizeof($matches) > 1) {
+                $md5 = $matches[2];
+                $id = Base::md5GetFileTableIndexId($md5);
+                if ($id) {
+                    return $id . '_file_path';
+                }
+            }
+        }
+        return Base::getFileTableIndex()[0] . '_file_path';
+    }
+
+    /**
+     * 通过md5获取file_table_index id
+     */
+    static public function md5GetFileTableIndexId($base64_md5 = '')
+    {
+        try {
+            $md5 = Base::decodeStr($base64_md5);
+            if (!$md5) {
+                return null;
+            }
+            $redis35 = Redis::connection('db35');
+            $key = 'md5' . $md5;
+            $id = $redis35->get($key);
+            if ($id && is_numeric($id)) {
+                return $id;
+            }
+            $db = Db::table('file_table_index')
+                ->where('md5', $md5)
+                ->select('id')
+                ->first();
+            if (!$db) {
+                return null;
+            }
+            $redis35->setEx($key, Base::$redis_code_run_res_timeout, $db->id);
+            return $db->id;
+        } catch (Exception $e) {
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
+        }
+        return null;
+    }
+
+    /**
+     * 获取文件数据表名
+     */
+    static public function getFileDataTableName($file_path = '')
+    {
+        if ($file_path) {
+            $escaped_search = preg_quote(Base::$LTPP_public_static_path, '/');
+            $pattern = '/(' . $escaped_search . ')\/(\w+)\/(\w+)\//';
+            if (preg_match($pattern, $file_path, $matches) && sizeof($matches) > 1) {
+                $md5 = $matches[2];
+                $id = Base::md5GetFileTableIndexId($md5);
+                if ($id) {
+                    return $id . '_file_data';
+                }
+            }
+        }
+        return Base::getFileTableIndex()[0] . '_file_data';
+    }
+
+    /**
      * 插入数据到指定数据表
      * @param string $db_name 数据表名
      * @param array $data 数据
@@ -1948,7 +2023,7 @@ class Base
                 Db::table($db_name)->insert($data);
                 return $resid;
             }
-            if ($db_name == 'file_path') {
+            if (Base::judgeStrWithEndStr('file_path', $db_name)) {
                 // 路径为空或者不包含static目录则返回
                 if (!isset($data['path']) || strripos($data['path'], Base::$LTPP_public_static_path) === false) {
                     return $resid;
@@ -2632,6 +2707,28 @@ class Base
     }
 
     /**
+     * 获取最新文件表序号
+     * @return array [id, md5(id)]
+     */
+    static public function getFileTableIndex()
+    {
+        $index = 0;
+        $md5 = '';
+        $index = max(1, Db::table('file_table_index')->count());
+        $file_path_name = $index . '_file_path';
+        $file_data_name = $index . '_file_data';
+        $file_path_has = Db::schema()
+            ->hasTable($file_path_name);
+        $file_data_has = Db::schema()
+            ->hasTable($file_data_name);
+        if (!$file_data_has || !$file_path_has) {
+            Base::creatFilePathDataTable($index);
+        }
+        $md5 = md5($index);
+        return [$index, $md5];
+    }
+
+    /**
      * 从URL下载文件到数据库
      */
     static public function saveNetworkFileToDb($my_aid, $url, $save_path, $is_post = false, $header = [], $body = [], $body_type_is_json = false)
@@ -2650,13 +2747,13 @@ class Base
             if (!$file_data) {
                 return false;
             }
-            $id = Base::insertToDb('file_data', [
+            $id = Base::insertToDb(Base::getFileDataTableName($save_path), [
                 'data' => $file_data
             ]);
             if (!$id) {
                 return false;
             }
-            Base::insertToDb('file_path', [
+            Base::insertToDb(Base::getFilePathTableName($save_path), [
                 'path' => $save_path,
                 'file_id' => $id,
                 'userid' => $my_aid,
@@ -2997,6 +3094,9 @@ class Base
                 return $id;
             }
             $loc = ord($uid[0]) - ord('0');
+            if ($loc >= sizeof(Base::$id_char_set)) {
+                return $id;
+            }
             $base_str = substr($uid, 1);
             $id = Base::Base64Decode($base_str, Base::$id_char_set[$loc]);
         } catch (Exception $e) {
@@ -3011,11 +3111,54 @@ class Base
     {
         $uid = '';
         try {
-            if ($id <= 0 || !is_numeric($id)) {
+            if (!is_numeric($id) || $id <= 0) {
                 return '';
             }
             $num = rand(0, sizeof(Base::$id_char_set) - 1);
             $base_str = Base::Base64Encode(strval($id), Base::$id_char_set[$num]);
+            $uid = $num . $base_str;
+        } catch (Exception $e) {
+        }
+        return $uid;
+    }
+
+    /**
+     * 字符串解密
+     * @param string $encode_str 待解密字符串
+     * @return string $str 解密后字符串
+     */
+    static public function decodeStr($encode_str = '')
+    {
+        $str = '';
+        try {
+            if (!is_string($encode_str)) {
+                return $str;
+            }
+            if (strlen($encode_str) == 0) {
+                return $str;
+            }
+            $loc = ord($encode_str[0]) - ord('0');
+            if ($loc >= sizeof(Base::$id_char_set)) {
+                return $str;
+            }
+            $base_str = substr($encode_str, 1);
+            $str = Base::Base64Decode($base_str, Base::$id_char_set[$loc]);
+        } catch (Exception $e) {
+        }
+        return $str;
+    }
+
+    /**
+     * 字符串加密
+     * @param string $encode_str 待加密字符串
+     * @return string $str 加密后字符串
+     */
+    static public function encodeStr($str = '')
+    {
+        $uid = '';
+        try {
+            $num = rand(0, sizeof(Base::$id_char_set) - 1);
+            $base_str = Base::Base64Encode(strval($str), Base::$id_char_set[$num]);
             $uid = $num . $base_str;
         } catch (Exception $e) {
         }
@@ -3057,9 +3200,15 @@ class Base
                 return $id;
             }
             $loc = ord($uuid[0]) - ord('0');
+            if ($loc >= sizeof(Base::$id_char_set)) {
+                return $id;
+            }
             $base_str = substr($uuid, 1);
             $uid = Base::Base64Decode($base_str, Base::$id_char_set[$loc]);
             $loc = ord($uid[0]) - ord('0');
+            if ($loc >= sizeof(Base::$id_char_set)) {
+                return $id;
+            }
             $base_str = substr($uid, 1);
             $id = Base::Base64Decode($base_str, Base::$id_char_set[$loc]);
         } catch (Exception $e) {
@@ -4549,14 +4698,14 @@ class Base
                 return '';
             }
             Base::$GLOBlinuxurl = Base::getSettingKeyData('GLOBlinuxurl');
-            $id = Base::insertToDb('file_data', [
+            $file_path = Base::creatFilePath($file_extion);
+            $id = Base::insertToDb(Base::getFileDataTableName($file_path), [
                 'data' => $data
             ]);
             if (!$id) {
                 return '';
             }
-            $file_path = Base::creatFilePath($file_extion);
-            Base::insertToDb('file_path', [
+            Base::insertToDb(Base::getFilePathTableName($file_path), [
                 'path' => $file_path,
                 'file_id' => $id,
                 'userid' => $my_aid,
@@ -4579,7 +4728,7 @@ class Base
         if ($redis30->exists($file_path)) {
             return $redis30->get($file_path);
         }
-        $db = Db::table('file_path')
+        $db = Db::table(Base::getFilePathTableName($file_path))
             ->where('path', $file_path)
             ->where('isdel', 0)
             ->select('file_id')
@@ -4587,7 +4736,7 @@ class Base
         if (!$db) {
             return false;
         }
-        $db = Db::table('file_data')
+        $db = Db::table(Base::getFileDataTableName($file_path))
             ->where('id', $db->file_id)
             ->select('data')
             ->first();
@@ -4607,7 +4756,7 @@ class Base
         if ($redis30->exists($file_path)) {
             return true;
         }
-        $db = Db::table('file_path')
+        $db = Db::table(Base::getFilePathTableName($file_path))
             ->where('path', $file_path)
             ->where('isdel', 0)
             ->select('file_id')
@@ -4615,7 +4764,7 @@ class Base
         if (!$db) {
             return false;
         }
-        $db = Db::table('file_data')
+        $db = Db::table(Base::getFileDataTableName($file_path))
             ->where('id', $db->file_id)
             ->select('data')
             ->first();
@@ -4626,18 +4775,52 @@ class Base
         return true;
     }
 
+
+    /**
+     * 创建文件数据表
+     * 创建文件路径表
+     */
+    static public function creatFilePathDataTable($index = 0)
+    {
+        $table_file_data = $index . '_file_data';
+        $table_file_path = $index . '_file_path';
+        $sql = [
+            'CREATE TABLE `' . $table_file_data . '` (
+                    `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT \'文件ID\',
+                    `data` longblob NOT NULL DEFAULT \'\' COMMENT \'文件数据\',
+                    PRIMARY KEY (`id`)
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;',
+            'CREATE TABLE `' . $table_file_path . '` (
+                    `path` varchar(535) NOT NULL COMMENT \'文件路径\',
+                    `isdel` bigint(20) NOT NULL DEFAULT 0 COMMENT \'是否删除\',
+                    `userid` bigint(20) UNSIGNED NOT NULL DEFAULT 0 COMMENT \'用户ID\',
+                    `file_id` bigint(20) UNSIGNED NOT NULL DEFAULT 0 COMMENT \'文件ID\',
+                    `time` datetime NOT NULL DEFAULT current_timestamp() COMMENT \'上传时间\',
+                    PRIMARY KEY (`path`),
+                    INDEX `isdel_index` (`isdel`),
+                    INDEX `userid_index` (`userid`),
+                    INDEX `file_id_index` (`file_id`)
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;'
+        ];
+        foreach ($sql as &$run_sql) {
+            Db::statement($run_sql);
+        }
+    }
+
     /**
      * 生成数据库文件路径
+     * @param string $file_upload_extension 文件后缀
+     * @return string res
      */
     static public function creatFilePath($file_upload_extension = '')
     {
         try {
-            $file_path = Base::$LTPP_public_static_path . '/' . md5(time());
+            $file_path = Base::$LTPP_public_static_path . '/' . Base::encodeStr(Base::getFileTableIndex()[1]);
             $file_name = '';
             do {
                 $num = rand(0, sizeof(Base::$id_char_set) - 1);
                 $short_time = str_pad(time() % 100000000, 8, '0', STR_PAD_LEFT);
-                $file_name = Base::Base64Encode($short_time, Base::$id_char_set[$num]) . '/' . md5(uniqid() . mt_rand(1, 100000) . time()) . '/' . md5(uniqid() . mt_rand(1, 100000) . time()) . ($file_upload_extension ? '.' . $file_upload_extension : '');
+                $file_name = Base::Base64Encode($short_time, Base::$id_char_set[$num]) . '/' . md5(uniqid() . mt_rand(1, 100000) . time()) . ($file_upload_extension ? '.' . $file_upload_extension : '');
             } while (Base::judgeFileExist($file_path . '/' . $file_name));
             return $file_path . '/' . $file_name;
         } catch (Exception $e) {
@@ -4843,6 +5026,16 @@ class Base
     }
 
     /**
+     * 判断字符串是否是另一个字符串的后缀
+     * @param string $suffix 搜索字串
+     * @param string $str 目标串 
+     */
+    static public function judgeStrWithEndStr($suffix = '', $str = '')
+    {
+        return substr($str, -strlen($suffix)) === $suffix;
+    }
+
+    /**
      * 上传文件保存数据库
      */
     static public function uploadFileToDb($db_name, $my_aid, $file, $file_upload_extension = '')
@@ -4854,19 +5047,19 @@ class Base
                 }
                 $data = file_get_contents($file->getRealPath());
                 $new_path = Base::creatFilePath($file_upload_extension);
-                $id = Base::insertToDb('file_data', [
+                $id = Base::insertToDb(Base::getFileDataTableName($new_path), [
                     'data' => $data
                 ]);
                 if (!$id) {
                     return '';
                 }
-                Base::insertToDb('file_path', [
+                Base::insertToDb(Base::getFilePathTableName($new_path), [
                     'path' => $new_path,
                     'file_id' => $id,
                     'userid' => $my_aid,
                     'time' => date('Y-m-d H:i:s', time())
                 ]);
-                if ($db_name != 'file_path') {
+                if (!Base::judgeStrWithEndStr('file_path', $db_name)) {
                     Base::insertToDb($db_name, [
                         'path' => $new_path,
                         'file_id' => $id,
@@ -4896,13 +5089,13 @@ class Base
                 }
                 $data = file_get_contents($file->getRealPath());
                 $new_path = Base::creatFilePath($file_upload_extension);
-                $id = Base::insertToDb('file_data', [
+                $id = Base::insertToDb(Base::getFileDataTableName($new_path), [
                     'data' => $data
                 ]);
                 if (!$id) {
                     return '';
                 }
-                Base::insertToDb('file_path', [
+                Base::insertToDb(Base::getFilePathTableName($new_path), [
                     'path' => $new_path,
                     'file_id' => $id,
                     'userid' => $my_aid,
@@ -4931,13 +5124,13 @@ class Base
                 $file_size = $file->getSize();
                 $data = file_get_contents($file->getRealPath());
                 $new_path = Base::creatFilePath($file_upload_extension);
-                $id = Base::insertToDb('file_data', [
+                $id = Base::insertToDb(Base::getFileDataTableName($new_path), [
                     'data' => $data
                 ]);
                 if (!$id) {
                     return '';
                 }
-                Base::insertToDb('file_path', [
+                Base::insertToDb(Base::getFilePathTableName($new_path), [
                     'path' => $new_path,
                     'file_id' => $id,
                     'userid' => $post_user_id,
@@ -5060,13 +5253,13 @@ class Base
                 $file_size = $file->getSize();
                 $data = file_get_contents($file->getRealPath());
                 $new_path = Base::creatFilePath($file_upload_extension);
-                $id = Base::insertToDb('file_data', [
+                $id = Base::insertToDb(Base::getFileDataTableName($new_path), [
                     'data' => $data
                 ]);
                 if (!$id) {
                     return '';
                 }
-                Base::insertToDb('file_path', [
+                Base::insertToDb(Base::getFilePathTableName($new_path), [
                     'path' => $new_path,
                     'file_id' => $id,
                     'userid' => $my_aid,
@@ -5100,7 +5293,7 @@ class Base
                 return json(['code' => -1, 'msg' => '文件不存在']);
             }
             $redis30 = Redis::connection('db30');
-            $db = Db::table('file_path')
+            $db = Db::table(Base::getFilePathTableName($file_path))
                 ->where('userid', $userid)
                 ->where('path', $file_path)
                 ->where('isdel', 0)
@@ -5138,7 +5331,7 @@ class Base
                 ->update([
                     'size' => $size
                 ]);
-            Db::table('file_data')
+            Db::table(Base::getFileDataTableName($file_path))
                 ->where('id', $db->file_id)
                 ->update([
                     'data' => $data,

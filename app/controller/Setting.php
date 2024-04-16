@@ -217,13 +217,13 @@ class Setting extends Image
                 $file = glob($testpath . '*.' . $t_img);
                 foreach ($file as &$tem) {
                     $path = Base::creatFilePath($t_img);
-                    $id = Base::insertToDb('file_data', [
+                    $id = Base::insertToDb(Base::getFileDataTableName($path), [
                         'data' => file_get_contents(realpath($tem)),
                     ]);
                     if (!$id) {
                         continue;
                     }
-                    Base::insertToDb('file_path', [
+                    Base::insertToDb(Base::getFilePathTableName($path), [
                         'path' => $path,
                         'file_id' => $id,
                         'userid' => $my_aid,

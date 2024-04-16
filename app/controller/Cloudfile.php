@@ -52,13 +52,13 @@ class Cloudfile
             }
             $file_size = mb_strlen($data, $encoding);
             $new_path = Base::creatFilePath(Base::getDbFileExtion($file_name));
-            $id = Base::insertToDb('file_data', [
+            $id = Base::insertToDb(Base::getFileDataTableName($new_path), [
                 'data' => $data
             ]);
             if (!$id) {
                 return;
             }
-            Base::insertToDb('file_path', [
+            Base::insertToDb(Base::getFilePathTableName($new_path), [
                 'path' => $new_path,
                 'file_id' => $id,
                 'userid' => $my_aid,
@@ -276,13 +276,13 @@ class Cloudfile
         }
         $data = '';
         $new_path = Base::creatFilePath(Base::getDbFileExtion($file_name));
-        $id = Base::insertToDb('file_data', [
+        $id = Base::insertToDb(Base::getFileDataTableName($new_path), [
             'data' => $data
         ]);
         if (!$id) {
             return json(['code' => -1, 'msg' => '创建失败！请稍后重试！']);
         }
-        Base::insertToDb('file_path', [
+        Base::insertToDb(Base::getFilePathTableName($new_path), [
             'path' => $new_path,
             'file_id' => $id,
             'userid' => $my_aid,
