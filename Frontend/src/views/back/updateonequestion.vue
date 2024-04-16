@@ -563,6 +563,12 @@ export default {
         this.question_data = res?.data;
         this.islove = res?.data.islove;
       } else {
+        this.$msg({
+          type: "success",
+          message: "即将返回！",
+          duration: 1600,
+          offset: 80,
+        });
         setTimeout(() => {
           this.$router.go(-1);
         }, 1000);
