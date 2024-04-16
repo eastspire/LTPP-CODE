@@ -497,7 +497,9 @@ export default {
                   duration: 1600,
                   offset: 80,
                 });
-                this.$router.go(-1);
+                setTimeout(() => {
+                  this.$router.go(-1);
+                }, 1000);
               } else {
                 this.$msg({
                   type: "error",
@@ -561,7 +563,9 @@ export default {
         this.question_data = res?.data;
         this.islove = res?.data.islove;
       } else {
-        this.$router.go(-1);
+        setTimeout(() => {
+          this.$router.go(-1);
+        }, 1000);
       }
     },
     async collectionClick() {

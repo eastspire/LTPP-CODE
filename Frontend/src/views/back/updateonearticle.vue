@@ -621,7 +621,9 @@ export default {
                   duration: 1600,
                   offset: 80,
                 });
-                this.$router.go(-1);
+                setTimeout(() => {
+                  this.$router.go(-1);
+                }, 1000);
               } else {
                 this.$msg({
                   type: "error",
@@ -686,7 +688,15 @@ export default {
         this.islove = res.love;
         this.fabulous = res.fabulous;
       } else {
-        this.$router.go(-1);
+        this.$msg({
+          type: "success",
+          message: "即将返回！",
+          duration: 1600,
+          offset: 80,
+        });
+        setTimeout(() => {
+          this.$router.go(-1);
+        }, 1000);
       }
     },
     async fabulousClick() {

@@ -842,7 +842,9 @@ export default {
           duration: 1600,
           offset: 80,
         });
-        this.$router.go(-1);
+        setTimeout(() => {
+          this.$router.go(-1);
+        }, 1000);
       });
       if (res?.code == 0 || res?.code == 1) {
         this.tableData = res?.data;
