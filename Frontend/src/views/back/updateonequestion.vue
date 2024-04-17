@@ -497,9 +497,7 @@ export default {
                   duration: 1600,
                   offset: 80,
                 });
-                setTimeout(() => {
-                  this.$router.go(-1);
-                }, 1000);
+                this.$router.go(-1);
               } else {
                 this.$msg({
                   type: "error",
@@ -569,9 +567,7 @@ export default {
           duration: 1600,
           offset: 80,
         });
-        setTimeout(() => {
-          this.$router.go(-1);
-        }, 1000);
+        this.$router.go(-1);
       }
     },
     async collectionClick() {

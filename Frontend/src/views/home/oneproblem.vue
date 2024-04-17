@@ -387,10 +387,7 @@ export default {
           duration: 1600,
           offset: 80,
         });
-        setTimeout(() => {
-          this.$router.go(-1);
-        }, 1000);
-        return;
+        this.$router.go(-1);
       }
     },
   },

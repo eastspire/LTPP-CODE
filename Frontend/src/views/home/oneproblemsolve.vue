@@ -353,9 +353,7 @@ export default {
           duration: 1600,
           offset: 80,
         });
-        setTimeout(() => {
-          this.$router.go(-1);
-        }, 1000);
+        this.$router.go(-1);
       } else if (
         res?.data &&
         res?.data.length <= 0 &&
@@ -367,9 +365,7 @@ export default {
           duration: 1600,
           offset: 80,
         });
-        setTimeout(() => {
-          this.$router.go(-1);
-        }, 1000);
+        this.$router.go(-1);
       } else if (res?.data && res?.data.length <= 0) {
         this.$msg({
           type: "success",

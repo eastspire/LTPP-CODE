@@ -150,10 +150,16 @@
 import urlencode from "../../../updateCompoents/urlencode/lib/urlencode";
 export default {
   name: "myjoinquestionsheet",
-  activated() {
+  async activated() {
     this.isseetip = true;
     if (this.total != 0) {
-      this.search();
+      if (this.issearch) {
+        this.search();
+      } else {
+        await this.getlist();
+      }
+    } else {
+      await this.getlist();
     }
   },
   async created() {
