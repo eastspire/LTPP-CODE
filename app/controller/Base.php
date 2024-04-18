@@ -1704,6 +1704,7 @@ class Base
             }
             curl_close($ch);
         } catch (Exception $e) {
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
         }
         return $res;
     }
@@ -1737,6 +1738,7 @@ class Base
             }
             curl_close($ch);
         } catch (Exception $e) {
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
         }
         return $res;
     }
