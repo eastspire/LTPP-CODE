@@ -199,6 +199,11 @@ class Base
     static $contest_rank_in_calculation = '竞赛排名计算中';
 
     /**
+     * 竞赛无排名提示词
+     */
+    static $contest_no_rank = '当前竞赛暂无排名信息';
+
+    /**
      * 竞赛未开始排名提示词
      */
     static $contest_rank_not_begin = '竞赛开始后展示排名';
