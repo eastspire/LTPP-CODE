@@ -33,7 +33,7 @@ return [
     ],
     'worker' => [
         'handler' => BusinessWorker::class,
-        'count' => (cpu_count() > 6 ? 6 : cpu_count()) * 2,
+        'count' => cpu_count() > 4 ? 8 : cpu_count() * 2,
         'constructor' => [
             'config' => [
                 'eventHandler' => plugin\webman\gateway\Events::class,

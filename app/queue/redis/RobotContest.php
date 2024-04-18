@@ -315,6 +315,8 @@ class RobotContest implements Consumer
             if ($people_length <= 0) {
                 return;
             }
+            $redis27 = Redis::connection('db27');
+            $cancel_robot_redis_key = Base::$robot_contest_cancel_redis_front . $one_contest_id;
             // 每题最少休眠微秒数
             $one_sleep_min_time = 1000 * min((int)Base::getSettingKeyData('default_contest_submit_sleep_time'), ($contest_run_time_seconds * 1000) / ($people_length * $submit_times * $problem_length));
             // 每题休眠微秒数，呈梯度上升
@@ -334,18 +336,18 @@ class RobotContest implements Consumer
             for ($i = 0; $i < $submit_times; ++$i) {
                 foreach ($problem_list as $one_problem_index => &$one_problem_id) {
                     foreach ($people_list as &$one_person_id) {
+                        $now_time = time();
+                        $now = date('Y-m-d H:i:s', $now_time);
                         $contest_db = Base::getContestData($one_contest_id);
-                        if (!$contest_db) {
+                        if (
+                            !$contest_db ||
+                            $redis27->exists($cancel_robot_redis_key) ||
+                            $now < $contest_db->begin || $now > $contest_db->end
+                        ) {
                             $this_contest_is_end = true;
                             break;
                         }
                         // 先枚举用户
-                        $now_time = time();
-                        $now = date('Y-m-d H:i:s', $now_time);
-                        if ($now < $contest_db->begin || $now > $contest_db->end) {
-                            $this_contest_is_end = true;
-                            break;
-                        }
                         if (rand(0, 100) <= 88) {
                             // 从代码历史查询记录，没有记录会自带生成一个记录
                             $rand_problem_id = $one_problem_id;

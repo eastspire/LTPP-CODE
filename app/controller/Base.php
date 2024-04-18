@@ -511,6 +511,11 @@ class Base
     static $robot_contest_redis_front = 'RobotContest';
 
     /**
+     * 强制取消RobotContest Redis前缀
+     */
+    static $robot_contest_cancel_redis_front = 'ForceCancelRobotContest';
+
+    /**
      * 代码安全信息
      */
     static $code_safe = 'safe';

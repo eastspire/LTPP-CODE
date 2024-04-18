@@ -851,6 +851,54 @@ class Contest
     }
 
     /**
+     * 设置机器人已完成竞赛     
+     */
+    public function setRobotFinishContest(Request $request)
+    {
+        $my_uid = JwtToken::getCurrentId();
+        $my_aid = Base::getIdByUid($my_uid);
+        $isroot = Base::judgeIsRoot($my_aid);
+        if (!$isroot) {
+            return json(['code' => -1, 'msg' => '权限不足']);
+        }
+        $contest_uid = $request->post('contest_id');
+        $contest_id = Base::getIdByUid($contest_uid);
+        $contest_db = Base::getContestData($contest_id);
+        if (!$contest_db) {
+            return json(['code' => -1, 'msg' => '竞赛不存在！']);
+        }
+        $now = date('Y-m-d H:i:s', time());
+        if ($now < $contest_db->begin) {
+            return json(['code' => -1, 'msg' => '竞赛未开始，请修改竞赛开始时间！']);
+        }
+        if ($now > $contest_db->end) {
+            return json(['code' => -1, 'msg' => '竞赛已结束，请修改竞赛结束时间！']);
+        }
+        $db = Db::table('robotcontestfinish')
+            ->where('contestid', $contest_id)
+            ->where('isdel', 0)
+            ->first();
+        if ($db) {
+            // 竞赛未结束，更新机器人竞赛
+            Db::table('robotcontestfinish')
+                ->where('contestid', $contest_id)
+                ->where('isdel', 0)
+                ->update(['isdel' => 0]);
+        } else {
+            Db::table('robotcontestfinish')
+                ->insert([
+                    'contestid' => $contest_id
+                ]);
+        }
+        $redis27 = Redis::connection('db27');
+        $key = Base::$robot_contest_redis_front . $contest_id;
+        $redis27->setNx($key, 1);
+        $key = Base::$robot_contest_cancel_redis_front . $contest_id;
+        $redis27->setNx($key, 1);
+        return json(['code' => 1, 'msg' => '操作成功！']);
+    }
+
+    /**
      * 取消机器人已完成竞赛     
      */
     public function resetRobotFinishContest(Request $request)
@@ -881,6 +929,8 @@ class Contest
             ->update(['isdel' => 1]);
         $redis27 = Redis::connection('db27');
         $key = Base::$robot_contest_redis_front . $contest_id;
+        $redis27->del($key);
+        $key = Base::$robot_contest_cancel_redis_front . $contest_id;
         $redis27->del($key);
         return json(['code' => 1, 'msg' => '操作成功！']);
     }
@@ -1522,6 +1572,9 @@ class Contest
         // 删除机器人完成竞赛缓存
         $redis27 = Redis::connection('db27');
         $key = Base::$robot_contest_redis_front . $contest_id;
+        $redis27->del($key);
+        // 删除机器人强制结束缓存
+        $key = Base::$robot_contest_cancel_redis_front . $contest_id;
         $redis27->del($key);
         // 删除查重缓存锁
         $redis32 = Redis::connection('db32');
