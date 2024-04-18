@@ -851,7 +851,7 @@ class Contest
     }
 
     /**
-     * 设置机器人已完成竞赛     
+     * 设置机器人终止竞赛
      */
     public function setRobotFinishContest(Request $request)
     {

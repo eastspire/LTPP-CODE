@@ -312,7 +312,17 @@
             style="margin: 1rem 2rem 0rem 1rem; font-size: 1.06rem"
             class="el-icon-s-opportunity pulse-enter-active"
             @click="resetRobotFinishContest()"
-            >机器答题</el-button
+            >开始机器答题</el-button
+          >
+          <el-button
+            v-if="$store.state.root && $store.state.my_name === 'root'"
+            width="auto"
+            round
+            type="warning"
+            style="margin: 1rem 2rem 0rem 1rem; font-size: 1.06rem"
+            class="el-icon-s-opportunity pulse-enter-active"
+            @click="setRobotFinishContest()"
+            >取消机器答题</el-button
           >
           <el-button
             width="auto"
@@ -780,6 +790,40 @@ export default {
       const { data: res } = await this.$ajax({
         method: "post",
         url: "/Contest/resetRobotFinishContest",
+        portType: {
+          process: "8796",
+        },
+        data: {
+          contest_id: this.onedata?.id,
+        },
+      }).catch((t) => {
+        this.$msg({
+          type: "error",
+          message: t,
+          duration: 1600,
+          offset: 80,
+        });
+      });
+      if (res?.code == 1) {
+        this.$msg({
+          type: "success",
+          message: res?.msg,
+          duration: 1600,
+          offset: 80,
+        });
+      } else {
+        this.$msg({
+          type: "error",
+          message: res?.msg,
+          duration: 1600,
+          offset: 80,
+        });
+      }
+    },
+    async setRobotFinishContest() {
+      const { data: res } = await this.$ajax({
+        method: "post",
+        url: "/Contest/setRobotFinishContest",
         portType: {
           process: "8796",
         },
