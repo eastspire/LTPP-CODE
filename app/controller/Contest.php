@@ -907,7 +907,7 @@ class Contest
         if (!$ismycontest) {
             return json(['code' => -1, 'msg' => '权限不足']);
         }
-        if ($time[0] == '' || $time[1] == '') {
+        if (!$time || empty($time) || sizeof($time) != 2 || $time[0] == '' || $time[1] == '') {
             return json(['code' => -1, 'msg' => '请设置竞赛开始时间和结束时间']);
         }
         $begin = $time[0] / 1000;
