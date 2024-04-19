@@ -305,19 +305,19 @@ class App
         $data = $request->post('data');
         $app_id = Base::getIdByUid($data['id']);
         $old_data = Base::getAppData($app_id);
-        if (!$old_data) {
+        if (!isset($data['name']) || !$old_data) {
             return json(['code' => -1, 'msg' => '应用不存在']);
         }
         if ($my_aid != $old_data->user_id && !Base::judgeIsRoot($my_aid)) {
             return json(['code' => -1, 'msg' => '权限不足']);
         }
-        if (!$data['name']) {
+        if (!isset($data['name']) || !$data['name']) {
             return json(['code' => -1, 'msg' => '请填写应用名称']);
         }
-        if (!$data['image']) {
+        if (!isset($data['image']) || !$data['image']) {
             return json(['code' => -1, 'msg' => '请填写应用图标URL地址']);
         }
-        if (!$data['content']) {
+        if (!isset($data['content']) || !$data['content']) {
             return json(['code' => -1, 'msg' => '请填写应用介绍']);
         }
         Db::table('app')
