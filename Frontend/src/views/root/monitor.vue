@@ -148,21 +148,11 @@
 import urlencode from "../../../updateCompoents/urlencode";
 export default {
   name: "monitor",
-  async activated() {
-    this.issearch = false; //判断是否搜索，从而进行分页查找
+  activated() {
     this.page = 1;
     this.limit = 50;
-    if (this.total != 0) {
-      if (this.issearch) {
-        await this.keysearch();
-      } else {
-        await this.getlist();
-      }
-    } else {
-      await this.getlist();
-    }
+    this.search();
   },
-
   data() {
     return {
       issearch: false,

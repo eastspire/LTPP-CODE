@@ -313,17 +313,9 @@ export default {
     this.page = 1;
     this.limit = 50;
   },
-  async activated() {
+  activated() {
     this.isseetip = true;
-    if (this.total != 0) {
-      if (this.issearch) {
-        this.search();
-      } else {
-        await this.getlist();
-      }
-    } else {
-      await this.getlist();
-    }
+    this.search();
   },
   deactivated() {
     this.isseetip = false;

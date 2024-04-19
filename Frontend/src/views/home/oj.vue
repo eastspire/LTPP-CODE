@@ -192,9 +192,7 @@ export default {
   },
   activated() {
     this.isseetip = true;
-    if (this.total != 0) {
-      this.search();
-    }
+    this.search();
   },
   deactivated() {
     this.isseetip = false;

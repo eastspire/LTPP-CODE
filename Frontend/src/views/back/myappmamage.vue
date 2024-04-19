@@ -489,20 +489,12 @@
 <script>
 export default {
   name: "myappmamage",
-  async activated() {
+  activated() {
     this.updateclick = false;
     this.addclick = false;
     this.onedata = this.$SqsGlobal.app_list_data;
     this.isseetip = true;
-    if (this.total != 0) {
-      if (this.issearch) {
-        this.search();
-      } else {
-        await this.getlist();
-      }
-    } else {
-      await this.getlist();
-    }
+    this.search();
   },
   deactivated() {
     this.isseetip = false;
@@ -820,6 +812,7 @@ export default {
           offset: 80,
         });
         this.updateclick = false;
+        this.search();
       } else {
         this.$msg({
           type: "error",

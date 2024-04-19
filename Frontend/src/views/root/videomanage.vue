@@ -371,15 +371,7 @@ export default {
     }
     this.page = 1;
     this.limit = 50;
-    if (this.total != 0) {
-      if (this.issearch) {
-        this.search();
-      } else {
-        await this.getlist();
-      }
-    } else {
-      await this.getlist();
-    }
+    this.search();
   },
   deactivated() {
     clearInterval(this.requestid_timer);

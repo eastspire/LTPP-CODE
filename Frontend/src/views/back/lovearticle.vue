@@ -163,16 +163,8 @@
 import urlencode from "../../../updateCompoents/urlencode";
 export default {
   name: "lovearticle",
-  async activated() {
-    if (this.total != 0) {
-      if (this.issearch) {
-        this.search();
-      } else {
-        await this.getlist();
-      }
-    } else {
-      await this.getlist();
-    }
+  activated() {
+    this.search();
   },
   created() {
     this.page = 1;

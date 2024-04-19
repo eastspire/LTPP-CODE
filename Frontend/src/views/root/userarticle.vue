@@ -134,20 +134,12 @@
 import urlencode from "../../../updateCompoents/urlencode";
 export default {
   name: "userarticle",
-  async activated() {
+  activated() {
     this.disabledscroll = false;
     this.istobottom = false;
     this.scrolllock = false;
     this.limit = 18;
-    if (this.total != 0) {
-      if (this.issearch) {
-        this.search();
-      } else {
-        await this.getlist();
-      }
-    } else {
-      await this.getlist();
-    }
+    this.search();
     this.scrolltimer = setInterval(() => {
       this.disabledscroll = false;
     }, 600);

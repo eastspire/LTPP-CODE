@@ -152,9 +152,7 @@ export default {
   name: "contest",
   activated() {
     this.isseetip = true;
-    if (this.total != 0) {
-      this.search();
-    }
+    this.search();
   },
   async created() {
     this.isseetip = true;

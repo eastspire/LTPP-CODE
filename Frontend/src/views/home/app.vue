@@ -30,7 +30,9 @@
             margin-right: auto;
             will-change: transform;
             display: flex;
-            justify-content: start;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
           "
         >
           <div v-for="temtable in tableData" :key="temtable.index">
@@ -54,7 +56,6 @@
                   var(--ltpp-list-box-bk-opacity)
                 ) !important;
               "
-              class="shadow"
             >
               <div style="padding: 0rem !important">
                 <div>
@@ -62,7 +63,12 @@
                     onerror="/LTPPlogo.png"
                     v-if="temtable.image && reg.test(temtable.image)"
                     class="animate"
-                    style="width: 8rem; height: 8rem; object-fit: cover"
+                    style="
+                      width: 8rem;
+                      height: 8rem;
+                      object-fit: cover;
+                      overflow: hidden;
+                    "
                     :title="temtable.name"
                     alt=""
                     :src="temtable.image"
@@ -212,9 +218,7 @@ export default {
     this.show_dialog = false;
     this.onedata = this.$SqsGlobal.app_list_data;
     this.isseetip = true;
-    if (this.total != 0) {
-      this.search();
-    }
+    this.search();
   },
   deactivated() {
     this.isseetip = false;

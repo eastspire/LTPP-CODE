@@ -175,9 +175,7 @@ export default {
   name: "dayproblem",
   activated() {
     this.isseetip = true;
-    if (this.total != 0) {
-      this.getlist();
-    }
+    this.getlist();
   },
   async created() {
     this.isseetip = true;

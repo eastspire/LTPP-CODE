@@ -140,17 +140,9 @@
 <script>
 export default {
   name: "myjoincontest",
-  async activated() {
+  activated() {
     this.isseetip = true;
-    if (this.total != 0) {
-      if (this.issearch) {
-        this.search();
-      } else {
-        await this.getlist();
-      }
-    } else {
-      await this.getlist();
-    }
+    this.search();
   },
   async created() {
     this.contestlist = [];

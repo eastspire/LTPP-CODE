@@ -278,9 +278,7 @@ export default {
     this.isseedialog = false;
     this.now_linux = {};
     this.isseetip = true;
-    if (this.total != 0) {
-      this.search();
-    }
+    this.search();
   },
   async created() {
     this.isseetip = true;

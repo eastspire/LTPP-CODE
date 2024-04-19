@@ -262,9 +262,7 @@ import urlencode from "../../../updateCompoents/urlencode";
 export default {
   name: "user",
   activated() {
-    if (this.total != 0) {
-      this.searchuser();
-    }
+    this.searchuser();
   },
   async created() {
     this.page = 1;

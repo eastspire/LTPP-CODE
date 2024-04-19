@@ -379,26 +379,16 @@ export default {
     this.showone = false;
     this.total = 0;
   },
-  async activated() {
+  activated() {
     this.isSeeComment = false;
     this.onevideo = {};
     this.page = 1;
-
     this.comment_load_all_finish = false;
     this.userComment = [];
     this.$store.commit("updateObj", { my_id: this.getMyId() });
-    if (this.total != 0) {
-      if (this.issearch) {
-        this.search();
-      } else {
-        await this.getlist();
-      }
-    } else {
-      await this.getlist();
-    }
-    await this.IsFabulous();
-    await this.IsLove();
-
+    this.search();
+    this.IsFabulous();
+    this.IsLove();
     this.comment_load_all_finish = false;
     this.video = document.getElementById("nowvideo");
     this.video && this.video.addEventListener("ended", this.videoEnd);

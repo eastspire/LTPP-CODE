@@ -543,7 +543,7 @@ export default {
 
     await this.getlinuxurl();
   },
-  async activated() {
+  activated() {
     this.head = {
       Authorization: "Bearer " + window.localStorage.getItem("authorization"),
       Key: window.localStorage.getItem("key"),
@@ -553,15 +553,7 @@ export default {
       this.head.Requestid = this.Base64Encode(new Date().getTime());
     }, 1000);
     this.isseetip = true;
-    if (this.total != 0) {
-      if (this.issearch) {
-        this.search();
-      } else {
-        await this.getlist();
-      }
-    } else {
-      await this.getlist();
-    }
+    this.search();
   },
   deactivated() {
     this.isseetip = false;
