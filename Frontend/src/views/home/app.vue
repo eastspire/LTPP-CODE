@@ -49,8 +49,8 @@
               style="
                 cursor: pointer;
                 margin: 1rem;
-                width: 8rem;
-                height: 8rem;
+                width: 6rem;
+                height: 6rem;
                 background-color: rgba(
                   var(--ltpp-main-bk-color),
                   var(--ltpp-list-box-bk-opacity)
@@ -64,8 +64,8 @@
                     v-if="temtable.image && reg.test(temtable.image)"
                     class="animate"
                     style="
-                      width: 8rem;
-                      height: 8rem;
+                      width: 6rem;
+                      height: 6rem;
                       object-fit: cover;
                       overflow: hidden;
                     "
