@@ -269,7 +269,7 @@
         >
         <el-button
           type="success"
-          @click="toOneApp(onedata.url)"
+          @click="toOneApp()"
           style="font-size: 1.06rem; margin-right: 2rem; font-weight: bold"
           width="auto"
           class="el-icon-monitor"
@@ -697,9 +697,36 @@ export default {
       this.tableData = res?.data;
     },
     //加载应用
-    toOneApp(url) {
+    toOneApp() {
       try {
-        url && url != this.$SqsGlobal.loading_tips && window.open(url);
+        this.$ajax({
+          method: "post",
+          url: "/App/addOpenTimes",
+          portType: {
+            process: "8794",
+          },
+          data: {
+            id: this.onedata.id,
+          },
+        })
+          .then((res) => {
+            if (res?.data?.code == 1) {
+              this.search();
+            }
+          })
+          .catch((err) => {
+            this.$msg({
+              type: "error",
+              message: t,
+              duration: 1600,
+              offset: 80,
+            });
+          });
+      } catch (err) {}
+      try {
+        this.onedata.url &&
+          this.onedata.url != this.$SqsGlobal.loading_tips &&
+          window.open(this.onedata.url);
       } catch (err) {}
     },
     //查找
@@ -727,7 +754,6 @@ export default {
       });
       this.tableData = res?.data;
       this.total = res.allnum;
-
       if (!this.showone) {
         this.$msg({
           type: "success",

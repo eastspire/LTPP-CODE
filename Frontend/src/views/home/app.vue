@@ -185,7 +185,7 @@
             style="font-size: 1.06rem"
             @click="
               show_dialog = false;
-              toOneApp(onedata.url);
+              toOneApp();
             "
           >
             打开应用
@@ -370,9 +370,37 @@ export default {
       this.tableData = res?.data;
       this.total = res?.allnum;
     },
-    toOneApp(url) {
+    //加载应用
+    toOneApp() {
       try {
-        url && url != this.$SqsGlobal.loading_tips && window.open(url);
+        this.$ajax({
+          method: "post",
+          url: "/App/addOpenTimes",
+          portType: {
+            process: "8794",
+          },
+          data: {
+            id: this.onedata.id,
+          },
+        })
+          .then((res) => {
+            if (res?.data?.code == 1) {
+              this.search();
+            }
+          })
+          .catch((err) => {
+            this.$msg({
+              type: "error",
+              message: t,
+              duration: 1600,
+              offset: 80,
+            });
+          });
+      } catch (err) {}
+      try {
+        this.onedata.url &&
+          this.onedata.url != this.$SqsGlobal.loading_tips &&
+          window.open(this.onedata.url);
       } catch (err) {}
     },
   },

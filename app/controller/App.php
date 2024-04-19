@@ -380,4 +380,23 @@ class App
         Base::dataToSafe($data);
         return json(['code' => 1, 'msg' => '加载成功', 'data' => $data]);
     }
+
+    /**
+     * 增加访问次数
+     */
+    public function addOpenTimes(Request $request)
+    {
+        $app_uid = $request->post('id');
+        $app_id = Base::getIdByUid($app_uid);
+        $data = Base::getAppData($app_id);
+        if (!$data) {
+            return json(['code' => -1, 'msg' => '应用不存在']);
+        }
+        Db::table('app')
+            ->where('id', $app_id)
+            ->where('isdel', 0)
+            ->increment('opentimes', 1);
+        Base::updateAppDataRedis($app_id);
+        return json(['code' => 1, 'msg' => '访问成功', 'data' => []]);
+    }
 };
