@@ -207,7 +207,6 @@
       :append-to-body="true"
       title="商品信息"
       :visible.sync="see_dialog"
-      class="Mdialog"
       :width="($store.state.max_width / $store.state.now_width) * 100 + '%'"
     >
       <el-descriptions class="margin-top" title="商品信息" :column="1" border>
@@ -289,16 +288,17 @@
           :class="`${
             goods_data.has_buy ? 'el-icon-download' : 'el-icon-s-finance'
           }`"
-          >{{ goods_data.has_buy ? "下载" : "购买" }}</el-button
+          >{{ goods_data.has_buy ? " 下载" : " 购买" }}</el-button
         >
         <el-button
           size="small"
           type="primary"
           @click="see_dialog = false"
           width="auto"
-          style="font-size: 1.06rem; margin-right: 2rem; font-weight: bold"
+          style="font-size: 1.06rem; font-weight: bold"
           class="el-icon-s-unfold"
-          >返回</el-button
+        >
+          返回</el-button
         >
       </div>
     </el-dialog>

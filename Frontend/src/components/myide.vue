@@ -567,8 +567,8 @@ export default {
         this.timer_id = null;
       }
       if (is_now) {
+        this.my_code = this.editor.getValue();
         try {
-          this.my_code = this.editor.getValue();
           window.localStorage.setItem(
             "idecode" + problem_name + this.my_language,
             this.my_code
@@ -577,8 +577,8 @@ export default {
         return;
       }
       this.timer_id = setTimeout(() => {
+        this.my_code = this.editor.getValue();
         try {
-          this.my_code = this.editor.getValue();
           window.localStorage.setItem(
             "idecode" + problem_name + this.my_language,
             this.my_code
@@ -596,8 +596,10 @@ export default {
           this.editor.getModel(),
           this.my_language
         );
-      !this.iscloudfile &&
-        window.localStorage.setItem("language", this.my_language);
+      try {
+        !this.iscloudfile &&
+          window.localStorage.setItem("language", this.my_language);
+      } catch (err) {}
       this.initcode();
       this.loadCodeTips(this.my_language);
     },
@@ -606,7 +608,9 @@ export default {
         this.editor.updateOptions({
           theme: this.usertheme,
         });
-      window.localStorage.setItem("theme", this.usertheme);
+      try {
+        window.localStorage.setItem("theme", this.usertheme);
+      } catch (err) {}
     },
     useAcCode() {
       this.my_code = this.has_ac_code;
@@ -928,9 +932,11 @@ export default {
       }
       if (!this.problem_data?.id) {
         let problem_name = this.problem_data?.problemName ?? "";
-        this.my_code = window.localStorage.getItem(
-          "idecode" + problem_name + this.my_language
-        );
+        try {
+          this.my_code = window.localStorage.getItem(
+            "idecode" + problem_name + this.my_language
+          );
+        } catch (err) {}
         if (!this.my_code) {
           return;
         }
@@ -962,10 +968,13 @@ export default {
       } else {
         this.is_has_ac_code = false;
         this.has_ac_code = "";
+        let cache_code = "";
         let problem_name = this.problem_data?.problemName ?? "";
-        let cache_code = window.localStorage.getItem(
-          "idecode" + problem_name + this.my_language
-        );
+        try {
+          cache_code = window.localStorage.getItem(
+            "idecode" + problem_name + this.my_language
+          );
+        } catch (err) {}
         if (!cache_code) {
           return;
         }

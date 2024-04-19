@@ -231,7 +231,7 @@ export default {
         return;
       }
       if (this.key) {
-        await this.search();
+        this.search();
       } else {
         await this.getList();
       }

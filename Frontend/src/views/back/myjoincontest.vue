@@ -144,7 +144,7 @@ export default {
     this.isseetip = true;
     if (this.total != 0) {
       if (this.issearch) {
-        await this.search();
+        this.search();
       } else {
         await this.getlist();
       }

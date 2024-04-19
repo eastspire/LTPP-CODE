@@ -241,7 +241,6 @@
       :append-to-body="true"
       title="新增商品"
       :visible.sync="see_add_dialog"
-      class="Mdialog"
       :width="($store.state.max_width / $store.state.now_width) * 100 + '%'"
     >
       <el-descriptions class="margin-top" title="新增商品" :column="1" border>
@@ -348,16 +347,18 @@
           "
           width="auto"
           class="el-icon-upload2"
-          >添加</el-button
+        >
+          添加</el-button
         >
         <el-button
           type="primary"
           size="small"
           @click="see_add_dialog = false"
           width="auto"
-          style="font-size: 1.06rem; margin-right: 2rem; font-weight: bold"
+          style="font-size: 1.06rem; font-weight: bold"
           class="el-icon-s-unfold"
-          >返回</el-button
+        >
+          返回</el-button
         >
       </div>
     </el-dialog>
@@ -367,7 +368,6 @@
       :append-to-body="true"
       title="更新商品"
       :visible.sync="see_update_dialog"
-      class="Mdialog"
       :width="($store.state.max_width / $store.state.now_width) * 100 + '%'"
     >
       <el-descriptions class="margin-top" title="更新商品" :column="1" border>
@@ -468,7 +468,8 @@
           style="font-size: 1.06rem; margin-right: 2rem; font-weight: bold"
           width="auto"
           class="el-icon-download"
-          >下载</el-button
+        >
+          下载</el-button
         >
         <el-button
           size="small"
@@ -483,16 +484,18 @@
           "
           width="auto"
           class="el-icon-upload2"
-          >更新</el-button
+        >
+          更新</el-button
         >
         <el-button
           size="small"
           type="primary"
           @click="see_update_dialog = false"
           width="auto"
-          style="font-size: 1.06rem; margin-right: 2rem; font-weight: bold"
+          style="font-size: 1.06rem; font-weight: bold"
           class="el-icon-s-unfold"
-          >返回</el-button
+        >
+          返回</el-button
         >
       </div>
     </el-dialog>
@@ -502,7 +505,6 @@
       :append-to-body="true"
       title="批量新增商品"
       :visible.sync="see_more_add_dialog"
-      class="Mdialog"
       width="30%"
     >
       <el-upload
@@ -553,7 +555,7 @@ export default {
     this.isseetip = true;
     if (this.total != 0) {
       if (this.issearch) {
-        await this.search();
+        this.search();
       } else {
         await this.getlist();
       }

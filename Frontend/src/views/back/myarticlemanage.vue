@@ -170,7 +170,7 @@ export default {
     this.isseetip = true;
     if (this.total != 0) {
       if (this.issearch) {
-        await this.search();
+        this.search();
       } else {
         await this.getlist();
       }
@@ -316,14 +316,6 @@ export default {
       name: "",
       issearch: false,
       showone: false,
-      writer: "",
-      article: "",
-      articleid: "",
-      fabulous: "",
-      collection: "",
-      image: "",
-      releasetime: "",
-      lastchangetime: "",
       total: 0,
       limit: 50,
       page: 1,
@@ -358,8 +350,7 @@ export default {
 .el-table .success-row {
   background: #f0f9eb;
 }
-/* .Mdialog {
-} */
+
 .dialog-footer {
   text-align: center;
 }

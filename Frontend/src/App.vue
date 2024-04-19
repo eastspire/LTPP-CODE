@@ -44,7 +44,7 @@ export default {
   name: "app",
   data() {
     return {
-      version: "2.5.4",
+      version: "2.6.0",
       get_version_lock: false,
     };
   },
@@ -61,8 +61,8 @@ export default {
       this.init();
       let key = "time";
       const max_time = 86400;
-      let last = window.localStorage.getItem(key);
-      let now = new Date().getTime();
+      const last = window.localStorage.getItem(key);
+      const now = new Date().getTime();
       if (!last || (parseInt(now) - parseInt(last)) / 1000 > max_time) {
         this.$notice({
           title: "系统资源检查",
@@ -71,13 +71,17 @@ export default {
           duration: 1600,
           offset: 80,
         });
-        window.localStorage.setItem(key, now);
+        try {
+          window.localStorage.setItem(key, now);
+        } catch (err) {}
         setTimeout(() => {
           window.location.reload(true);
         }, 360);
         return;
       }
-      window.localStorage.setItem(key, now);
+      try {
+        window.localStorage.setItem(key, now);
+      } catch (err) {}
       setInterval(() => {
         this.getVersion();
       }, 6000);
@@ -93,15 +97,37 @@ export default {
         duration: 1600,
         offset: 80,
       });
-      let is_public_network = window.localStorage.getItem("is_public_network");
-      if (is_public_network == 1) {
-        this.$store.commit("updateObj", { is_public_network: 1 });
-      } else if (is_public_network == 0) {
-        this.$store.commit("updateObj", { is_public_network: 0 });
+      let backend_network_url =
+        window.localStorage.getItem("backend_network_url") ||
+        this.$store.state.default_backend_network_url;
+      if (backend_network_url) {
+        this.$store.commit("updateObj", {
+          backend_network_url: backend_network_url,
+        });
       } else {
-        window.localStorage.setItem("is_public_network", 1);
-        this.$store.commit("updateObj", { is_public_network: 1 });
+        try {
+          window.localStorage.setItem(
+            "backend_network_url",
+            backend_network_url
+          );
+        } catch (err) {}
+        this.$store.commit("updateObj", {
+          backend_network_url: backend_network_url,
+        });
       }
+      setTimeout(() => {
+        this.$notice({
+          title: "当前环境",
+          dangerouslyUseHTMLString: false,
+          message:
+            this.$store.state.backend_network_url ==
+            this.$store.state.default_backend_network_url
+              ? "官方环境"
+              : "代理环境",
+          duration: 3600,
+          offset: 80,
+        });
+      }, 1000);
     },
     updateSeverError(server_error = false) {
       this.$store.commit("updateObj", { server_error: server_error });

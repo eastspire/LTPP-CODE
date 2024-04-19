@@ -83,6 +83,7 @@
 | 33  |代码缓存|
 | 34  |题单题目列表缓存|
 | 35  |MD5缓存|
+| 36  |应用缓存|
 
 ### 使用脚本一键安装
 > https://github.com/wmzn-ltpp/Install.git

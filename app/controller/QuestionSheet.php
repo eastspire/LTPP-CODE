@@ -168,7 +168,7 @@ class QuestionSheet
                 if ($user_db) {
                     $tem->creator_name = $user_db->name;
                 } else {
-                    $tem->creator_name = '未知用户';
+                    $tem->creator_name = Base::$unknow_user_name;
                 }
             }
             Base::dataToSafe($db);
@@ -206,7 +206,7 @@ class QuestionSheet
                 if ($user_db) {
                     $tem->creator_name = $user_db->name;
                 } else {
-                    $tem->creator_name = '未知用户';
+                    $tem->creator_name = Base::$unknow_user_name;
                 }
                 $tem->password = $tem->password ? true : false;
             }
@@ -248,7 +248,7 @@ class QuestionSheet
                 if ($user_db) {
                     $tem->creator_name = $user_db->name;
                 } else {
-                    $tem->creator_name = '未知用户';
+                    $tem->creator_name = Base::$unknow_user_name;
                 }
                 $tem->password = $tem->password ? true : false;
             }
@@ -286,7 +286,7 @@ class QuestionSheet
                 if ($user_db) {
                     $tem->creator_name = $user_db->name;
                 } else {
-                    $tem->creator_name = '未知用户';
+                    $tem->creator_name = Base::$unknow_user_name;
                 }
                 $tem->password = $tem->password ? true : false;
             }
@@ -328,7 +328,7 @@ class QuestionSheet
                 if ($user_db) {
                     $tem->creator_name = $user_db->name;
                 } else {
-                    $tem->creator_name = '未知用户';
+                    $tem->creator_name = Base::$unknow_user_name;
                 }
                 $tem->password = $tem->password ? true : false;
             }
@@ -377,7 +377,7 @@ class QuestionSheet
                 if ($user_db) {
                     $tem->creator_name = $user_db->name;
                 } else {
-                    $tem->creator_name = '未知用户';
+                    $tem->creator_name = Base::$unknow_user_name;
                 }
                 $tem->password = $tem->password ? true : false;
                 $res[] = $tem;

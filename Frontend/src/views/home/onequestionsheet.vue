@@ -182,7 +182,8 @@
                 @click="middlewareJoinQuestionSheet()"
                 width="auto"
                 class="el-icon-user-solid pulse-enter-active shadow"
-                >加入题单</el-button
+              >
+                加入题单</el-button
               >
               <el-button
                 @click="
@@ -192,7 +193,8 @@
                 width="auto"
                 round
                 class="el-icon-s-unfold pulse-enter-active shadow"
-                >【返回】</el-button
+              >
+                【返回】</el-button
               >
             </div>
           </div>
@@ -217,7 +219,8 @@
             slot="append"
             icon="el-icon-success"
             @click="joinOneQuestionSheet()"
-            >确定</el-button
+          >
+            确定</el-button
           >
         </el-input>
       </el-dialog>

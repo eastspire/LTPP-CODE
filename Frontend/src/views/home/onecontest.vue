@@ -696,7 +696,8 @@
                 @click="delrank()"
                 width="auto"
                 class="el-icon-delete-solid pulse-enter-active shadow"
-                >清理缓存</el-button
+              >
+                清理缓存</el-button
               >
               <el-button
                 v-if="$store.state.root || is_my_contest"
@@ -704,7 +705,8 @@
                 @click="lookPublicContestRank()"
                 width="auto"
                 class="el-icon-s-data pulse-enter-active shadow"
-                >外链排名</el-button
+              >
+                外链排名</el-button
               >
               <el-button
                 v-if="
@@ -716,7 +718,8 @@
                 @click="codeCheckSimilarity()"
                 width="auto"
                 class="el-icon-s-help pulse-enter-active shadow"
-                >代码查重</el-button
+              >
+                代码查重</el-button
               >
               <el-button
                 v-if="
@@ -730,7 +733,8 @@
                 @click="lookoirank()"
                 width="auto"
                 class="el-icon-s-data pulse-enter-active shadow"
-                >封榜排名</el-button
+              >
+                封榜排名</el-button
               >
               <el-button
                 v-if="
@@ -743,7 +747,8 @@
                 @click="download()"
                 width="auto"
                 class="el-icon-picture pulse-enter-active shadow"
-                >下载图片</el-button
+              >
+                下载图片</el-button
               >
               <el-button
                 v-if="
@@ -754,7 +759,8 @@
                 @click="getProblemMD()"
                 width="auto"
                 class="el-icon-s-order pulse-enter-active shadow"
-                >下载题目</el-button
+              >
+                下载题目</el-button
               >
               <el-button
                 v-if="
@@ -765,7 +771,8 @@
                 @click="getProblemSolveMD()"
                 width="auto"
                 class="el-icon-s-help pulse-enter-active shadow"
-                >下载题解</el-button
+              >
+                下载题解</el-button
               >
               <el-button
                 v-if="!isjoin && canclick"
@@ -773,7 +780,8 @@
                 @click="middlewareJoinContest()"
                 width="auto"
                 class="el-icon-user-solid pulse-enter-active shadow"
-                >报名竞赛</el-button
+              >
+                报名竞赛</el-button
               >
               <el-button
                 @click="
@@ -783,7 +791,8 @@
                 width="auto"
                 round
                 class="el-icon-s-unfold pulse-enter-active shadow"
-                >【返回】</el-button
+              >
+                【返回】</el-button
               >
             </div>
           </div>

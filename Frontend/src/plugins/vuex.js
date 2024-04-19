@@ -11,14 +11,16 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 Vue.use(Vuex);
+const default_backend_network_url = 'https://api.ltpp.vip';
 
 const state = {
-    is_public_network: true,
+    default_backend_network_url: default_backend_network_url,
+    backend_network_url: default_backend_network_url,
     backurl: window?.location?.href,
     login: false,
     root: false,
     admin: false,
-    article_reg: /<[^>]+>|#|```/g,//文章卡片预览文字替换规则
+    html_reg: /<[^>]+>|#|```/g,//HTML预览文字替换规则
     menu_width: 64,//首页菜单宽度，单位px
     default_margin_top_bottom: 1.6,//所有页面距离顶部和底部的距离，单位rem
     default_home_to_left_right: 56,//单位px
@@ -36,12 +38,13 @@ const state = {
 };
 
 const root_state = {
-    is_public_network: true,
+    default_backend_network_url: default_backend_network_url,
+    backend_network_url: default_backend_network_url,
     backurl: window?.location?.href,
     login: false,
     root: false,
     admin: false,
-    article_reg: /<[^>]+>|#|```/g,//文章卡片预览文字替换规则
+    html_reg: /<[^>]+>|#|```/g,//文章卡片预览文字替换规则
     menu_width: 64,//首页菜单宽度，单位px
     default_margin_top_bottom: 1.6,//所有页面距离顶部和底部的距离，单位rem
     default_home_to_left_right: 56,//单位px
@@ -75,7 +78,9 @@ const mutations = {
     updateObj(state, obj) {
         let key = Object.keys(obj)[0];
         let value = Object.values(obj)[0];
-        state[key] = value;
+        if (key != 'default_backend_network_url') {
+            state[key] = value;
+        }
         if (key == 'server_error' && old_msg && old_notice) {
             if (value) {
                 Vue.prototype.$msg = new_msg;
@@ -89,7 +94,10 @@ const mutations = {
     reset(state) {
         for (const key in state) {
             if (Object.hasOwnProperty.call(state, key)) {
-                state[key] = root_state[key];
+                if (key != 'default_backend_network_url' &&
+                    key != 'backend_network_url') {
+                    state[key] = root_state[key];
+                }
             }
         }
     }

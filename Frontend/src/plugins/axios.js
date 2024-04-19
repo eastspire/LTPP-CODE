@@ -22,11 +22,9 @@ const skip_key_list = [
     'timerstamp='
 ];
 const skip_key_list_len = skip_key_list?.length;
-let public_network_url = 'https://api.ltpp.vip';
-let private_network_url = 'http://hbnuoj.ltpp.vip:48787';
 
 let config = {
-    baseURL: store.state.is_public_network == 1 ? public_network_url : private_network_url, //process.env.baseURL || process.env.apiUrl || ""
+    baseURL: store.state.backend_network_url, //process.env.baseURL || process.env.apiUrl || ""
     timeout: 6666666666, // Timeout
     // withCredentials: true, // Check cross-site Access-Control
 };
@@ -38,8 +36,8 @@ let request_url = '';
 _axios.interceptors.request.use(
     async function (config) {
         try {
+            config.baseURL = store.state.backend_network_url || store.state.default_backend_network_url;
             request_url = config?.baseURL + config?.url;
-            config.baseURL = store.state.is_public_network ? public_network_url : private_network_url;
             // Do something before request is sent
             let char_set = [];
             try {
@@ -77,7 +75,9 @@ _axios.interceptors.request.use(
                         if (res?.code == 1) {
                             config.baseURL = res?.data;
                             musicbkurl = res?.data;
-                            window.sessionStorage.setItem("musicbkurl", res?.data);
+                            try {
+                                window.sessionStorage.setItem("musicbkurl", res?.data);
+                            } catch (err) { }
                         }
                         return config;
                     } else {
@@ -116,7 +116,9 @@ _axios.interceptors.response.use(
             }
         }
         if (!skip) {
-            window.localStorage.setItem(key, JSON.stringify(response?.data));
+            try {
+                window.localStorage.setItem(key, JSON.stringify(response?.data));
+            } catch (err) { }
         }
         return response;
     },

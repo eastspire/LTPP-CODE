@@ -214,7 +214,8 @@
                   font-size: 1.06rem;
                 "
                 class="el-icon-s-unfold pulse-enter-active"
-                >返回</el-button
+              >
+                返回</el-button
               >
               <el-button
                 v-show="!islove"
@@ -231,7 +232,8 @@
                 @click="collectionClick()"
                 width="auto"
                 class="el-icon-star-off pulse-enter-active"
-                >收藏
+              >
+                收藏
               </el-button>
 
               <el-button
@@ -249,7 +251,8 @@
                 @click="delcollectionClick()"
                 width="auto"
                 class="el-icon-star-on pulse-enter-active"
-                >取消收藏
+              >
+                取消收藏
               </el-button>
 
               <el-button
@@ -267,7 +270,8 @@
                 @click="fabulousClick()"
                 width="auto"
                 class="el-icon-message-solid pulse-enter-active"
-                >点赞</el-button
+              >
+                点赞</el-button
               >
               <el-button
                 style="
@@ -283,7 +287,8 @@
                 @click="btnExport()"
                 width="auto"
                 class="el-icon-s-platform pulse-enter-active"
-                >下载</el-button
+              >
+                下载</el-button
               >
               <el-button
                 v-if="is_public == 1"
@@ -300,7 +305,8 @@
                 @click="shareArticle()"
                 width="auto"
                 class="el-icon-share pulse-enter-active"
-                >分享</el-button
+              >
+                分享</el-button
               >
               <el-button
                 v-if="is_can_edit"
@@ -317,7 +323,8 @@
                 @click="toupdateonearticle()"
                 width="auto"
                 class="el-icon-s-order pulse-enter-active"
-                >编辑</el-button
+              >
+                编辑</el-button
               >
             </div>
           </div>

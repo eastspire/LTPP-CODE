@@ -21,7 +21,6 @@ import ruby_tips from './code/ruby';
 import csharp_tips from './code/csharp';
 import python_tips from './code/python';
 
-
 const cpp = `#include<bits/stdc++.h>\n#pragma GCC optimize(2)\n#pragma GCC optimize(3)\n#define PF first\n#define PS second\n#define UM unordered_map\n#define US unordered_set\n#define MS mutiset\n#define F(i, start, end, offset) for(int i = start; i < end; i += offset)\n#define F_(i, start, end, offset) for(int i = start; i >= end; i-= offset)\n#define fastcpp ios::sync_with_stdio(false), cin.tie(0), cout.tie(0)\n#define random(a, b) (rand() % (b - a) + a)\nusing namespace std;\nusing LL = long long int;\nusing PII = pair<int, int>;\nusing STR = string;\n\nint main(){\n    fastcpp;\n    \n    \n    return 0;\n}`;
 const c = `#include<stdio.h>\n#pragma GCC optimize(2)\n#pragma GCC optimize(3)\n#define F(i, start, end, offset) for(int i = start; i < end; i += offset)\n#define F_(i, start, end, offset) for(int i = start; i >= end; i-= offset)\n#define random(a, b) (rand() % (b - a) + a)\ntypedef long long int LL;\n\nint main(){\n    \n    \n    return 0;\n}`;
 const java = `public class Main{\n    //请勿更改类名，否则运行失败!\n    public static void main(String[] args){\n        \n        \n    }\n}`;
@@ -181,7 +180,7 @@ const options = [
 
 /**
  * 文章列表数据模板
- * @var object $article_list_data
+ * @var object article_list_data
  */
 const article_list_data = {
     id: "",
@@ -194,6 +193,22 @@ const article_list_data = {
     collection: loading_tips,
     releasetime: loading_tips,
     lastchangetime: loading_tips
+};
+
+/**
+ * APP列表数据模板
+ * @var object app_list_data
+ */
+const app_list_data = {
+    id: "",
+    name: loading_tips,
+    user_id: loading_tips,
+    opentimes: "",
+    url: loading_tips,
+    image: "",
+    content: loading_tips,
+    user_name: loading_tips,
+    time: loading_tips
 };
 
 const question_list_data = {
@@ -547,5 +562,6 @@ export default {
     monitor_list_data,
     notice_list_data,
     questionsheet_list_data,
-    linux_list_data
+    linux_list_data,
+    app_list_data
 };

@@ -32,19 +32,8 @@
         href="http://wpa.qq.com/msgrd?v=3&uin=1491579574&site=qq&menu=yes"
         >{{ footmeddage }}</a
       >
-      <a
-        @click="choosePublic()"
-        class="link animate"
-        v-if="!$store.state.is_public_network && !is_ssl"
-      >
-        | 切换公网版本 |</a
-      >
-      <a
-        @click="choosePrivate()"
-        class="link animate"
-        v-if="$store.state.is_public_network && !is_ssl"
-      >
-        | 切换内网版本 |</a
+      <a @click="changeBackendNetworkUrl()" class="link animate">
+        | 使用代理 |</a
       >
     </p>
   </div>
@@ -65,34 +54,70 @@ export default {
     let date = new Date();
     let year = date.getFullYear();
     this.footmeddage = "©2021 - " + year + " LTPP版权所有";
-    if (window.location.protocol === "https:") {
-      this.is_ssl = true;
-    } else {
-      this.is_ssl = false;
-    }
   },
   methods: {
-    choosePublic() {
-      window.localStorage.setItem("is_public_network", 1);
-      this.$store.commit("updateObj", { is_public_network: 1 });
-      this.$notice({
-        title: "通知",
-        dangerouslyUseHTMLString: true,
-        message: "环境已切换【公网服务器】",
-        duration: 3600,
-        offset: 80,
-      });
-    },
-    choosePrivate() {
-      window.localStorage.setItem("is_public_network", 0);
-      this.$store.commit("updateObj", { is_public_network: 0 });
-      this.$notice({
-        title: "通知",
-        dangerouslyUseHTMLString: true,
-        message: "环境已切换【内网服务器】",
-        duration: 3600,
-        offset: 80,
-      });
+    changeBackendNetworkUrl() {
+      this.$prompt("请输入代理后端地址", "提示", {
+        distinguishCancelAndClose: true,
+        confirmButtonText: "确定",
+        cancelButtonText: "重置",
+        inputPattern:
+          /^(https?:\/\/(([a-zA-Z0-9]+-?)+[a-zA-Z0-9]+\.)+(([a-zA-Z0-9]+-?)+[a-zA-Z0-9]+))(:\d+)?(\/.*)?(\?.*)?(#.*)?$/,
+        inputErrorMessage: "代理后端地址不正确",
+      })
+        .then(({ value }) => {
+          try {
+            window.localStorage.setItem("backend_network_url", value);
+          } catch (err) {}
+          this.$store.commit("updateObj", { backend_network_url: value });
+          this.$notice({
+            title: "当前环境",
+            dangerouslyUseHTMLString: false,
+            message:
+              this.$store.state.backend_network_url ==
+              this.$store.state.default_backend_network_url
+                ? "官方环境"
+                : "代理环境",
+            duration: 3600,
+            offset: 80,
+          });
+        })
+        .catch((action) => {
+          if (action !== "cancel") {
+            this.$notice({
+              title: "当前环境",
+              dangerouslyUseHTMLString: false,
+              message:
+                this.$store.state.backend_network_url ==
+                this.$store.state.default_backend_network_url
+                  ? "官方环境"
+                  : "代理环境",
+              duration: 3600,
+              offset: 80,
+            });
+            return;
+          }
+          try {
+            window.localStorage.setItem(
+              "backend_network_url",
+              this.$store.state.default_backend_network_url
+            );
+          } catch (err) {}
+          this.$store.commit("updateObj", {
+            backend_network_url: this.$store.state.default_backend_network_url,
+          });
+          this.$notice({
+            title: "当前环境",
+            dangerouslyUseHTMLString: false,
+            message:
+              this.$store.state.backend_network_url ==
+              this.$store.state.default_backend_network_url
+                ? "官方环境"
+                : "代理环境",
+            duration: 3600,
+            offset: 80,
+          });
+        });
     },
   },
 };

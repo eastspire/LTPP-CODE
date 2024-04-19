@@ -315,7 +315,7 @@ export default {
     this.isseetip = true;
     this.page = 1;
     this.blogpagesize = 50;
-    await this.search();
+    this.search();
   },
   deactivated() {
     this.isseetip = false;

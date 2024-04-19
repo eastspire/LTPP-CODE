@@ -312,7 +312,8 @@
             style="margin: 1rem 2rem 0rem 1rem; font-size: 1.06rem"
             class="el-icon-s-opportunity pulse-enter-active"
             @click="resetRobotFinishContest()"
-            >开始机器答题</el-button
+          >
+            开始机器答题</el-button
           >
           <el-button
             v-if="$store.state.root && $store.state.my_name === 'root'"
@@ -322,7 +323,8 @@
             style="margin: 1rem 2rem 0rem 1rem; font-size: 1.06rem"
             class="el-icon-s-opportunity pulse-enter-active"
             @click="setRobotFinishContest()"
-            >取消机器答题</el-button
+          >
+            停止机器答题</el-button
           >
           <el-button
             width="auto"
@@ -332,7 +334,8 @@
             class="el-icon-upload pulse-enter-active"
             @click="UpdateContest()"
             :loading="isup"
-            >更新竞赛</el-button
+          >
+            更新竞赛</el-button
           >
           <el-button
             type="primary"
@@ -341,7 +344,8 @@
             style="margin: 1rem 0.4rem 0rem 1rem; font-size: 1.06rem"
             @click="backlast()"
             class="el-icon-s-unfold pulse-enter-active"
-            >【返回】</el-button
+          >
+            【返回】</el-button
           >
         </div>
         <div style="height: 3.6rem"></div>

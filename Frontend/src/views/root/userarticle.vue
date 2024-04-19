@@ -141,7 +141,7 @@ export default {
     this.limit = 18;
     if (this.total != 0) {
       if (this.issearch) {
-        await this.search();
+        this.search();
       } else {
         await this.getlist();
       }
@@ -388,15 +388,6 @@ export default {
       disabledscroll: false,
       lastkey: "",
       issearch: false,
-      articlename: "",
-      writer: "",
-      image: "",
-      article: "",
-      articleid: "",
-      fabulous: "",
-      collection: "",
-      releasetime: "",
-      lastchangetime: "",
       key: "",
       tableData: [],
     };

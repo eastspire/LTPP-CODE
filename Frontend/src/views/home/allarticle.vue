@@ -131,7 +131,7 @@
                           {{
                             temtable.article
                               .substr(0, 160)
-                              .replace($store.state.article_reg, "")
+                              .replace($store.state.html_reg, "")
                               .substr(0, 40)
                           }}[...]
                         </p>
@@ -217,7 +217,6 @@ export default {
       this.totop();
     });
   },
-
   methods: {
     initData() {
       this.tableData = [];
@@ -438,18 +437,6 @@ export default {
         });
     },
   },
-  computed: {
-    prop() {
-      let data = {
-        subfield: false, // 单双栏模式
-        defaultOpen: "preview", //edit： 默认展示编辑区域 ， preview： 默认展示预览区域
-        editable: false,
-        toolbarsFlag: false, //工具栏
-        scrollStyle: true,
-      };
-      return data;
-    },
-  },
   data() {
     return {
       reg: /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\*\+,;=.]+$/,
@@ -458,48 +445,10 @@ export default {
       limit: 18,
       scrolltimer: null,
       disabledscroll: false,
-      ialock: false,
       lastkey: "",
       isseetip: true,
-      onetext: {},
       daymonth: new Date(),
-      top: 0,
       issearch: false,
-      isSeeComment: false, //查看评论
-      isCommentNull: true, //评论数为0
-      articlename: "",
-      writer: "",
-      article: "",
-      image: "",
-      fabulous: 0,
-      collection: 0,
-      lastchangetime: "",
-      releasetime: "",
-      dialogTableVisible: false,
-      /* context:  '',//输入的数据 */
-      toolbars: {
-        bold: true, // 粗体
-        italic: true, // 斜体
-        header: true, // 标题
-        underline: true, // 下划线
-        mark: true, // 标记
-        superscript: true, // 上角标
-        quote: true, // 引用
-        ol: true, // 有序列表
-        link: true, // 链接
-        imagelink: true, // 图片链接
-
-        code: true, // code
-        subfield: true, // 是否需要分栏
-        fullscreen: false, // 全屏编辑
-        readmodel: true, // 沉浸式阅读
-        /* 1.3.5 */
-        undo: true, // 上一步
-        trash: false, // 清空
-        save: false, // 保存（触发events中的save事件）
-        /* 1.4.2 */
-        navigation: false, // 导航目录
-      },
       key: "",
       tableData: [],
     };

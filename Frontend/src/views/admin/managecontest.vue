@@ -35,10 +35,11 @@
               margin-top: 1rem;
               margin-left: 1rem;
             "
-            >添加竞赛</el-button
+          >
+            添加竞赛</el-button
           >
         </div>
-        <div style="`min-height:${$store.state.no_scroll_height * 0.76}vh;`">
+        <div :style="`min-height:${$store.state.no_scroll_height * 0.76}vh;`">
           <el-table
             :cell-style="cellStyle"
             :header-cell-style="{
@@ -177,7 +178,7 @@ export default {
   name: "managecontest",
   async activated() {
     this.isseetip = true;
-    await this.search();
+    this.search();
   },
   deactivated() {
     this.isseetip = false;

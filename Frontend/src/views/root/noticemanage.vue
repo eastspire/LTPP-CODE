@@ -391,7 +391,7 @@ export default {
     this.page = 1;
     this.limit = 50;
     this.load_txt_finish = false;
-    await this.search();
+    this.search();
   },
   deactivated() {
     this.isseetip = false;

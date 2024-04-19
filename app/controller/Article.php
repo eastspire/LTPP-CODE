@@ -401,7 +401,7 @@ class Article extends Image
         foreach ($info as &$tem) {
             $db = Base::getUserData($tem->writerid);
             if (!$db) {
-                $tem->writer = '未知用户';
+                $tem->writer = Base::$unknow_user_name;
                 continue;
             }
             $tem->writer = $db->name;
@@ -563,7 +563,7 @@ class Article extends Image
         foreach ($data as &$tem) {
             $db = Base::getUserData($tem->writerid);
             if (!$db) {
-                $tem->writer = '未知用户';
+                $tem->writer = Base::$unknow_user_name;
                 continue;
             }
             $tem->writer = $db->name;
@@ -776,7 +776,7 @@ class Article extends Image
         foreach ($info as &$tem) {
             $db = Base::getUserData($tem->writerid);
             if (!$db) {
-                $tem->writer = '未知用户';
+                $tem->writer = Base::$unknow_user_name;
                 continue;
             }
             $tem->writer = $db->name;
@@ -1048,7 +1048,7 @@ class Article extends Image
         foreach ($info as &$tem) {
             $db = Base::getUserData($tem->writerid);
             if (!$db) {
-                $tem->writer = '未知用户';
+                $tem->writer = Base::$unknow_user_name;
                 continue;
             }
             $tem->writer = $db->name;

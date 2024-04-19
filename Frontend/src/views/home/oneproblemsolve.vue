@@ -122,7 +122,7 @@
                             {{
                               temtable.article
                                 .substr(0, 160)
-                                .replace($store.state.article_reg, "")
+                                .replace($store.state.html_reg, "")
                                 .substr(0, 40)
                             }}[...]
                           </p>

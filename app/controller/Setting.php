@@ -83,7 +83,7 @@ class Setting extends Image
         if ($userbeginnum < 0) {
             return json(['code' => -1, 'msg' => '起始数字不能小于0']);
         }
-        if ($userendnum - $userbeginnum + 1 > 1000) {
+        if ($userendnum - $userbeginnum >= 1000) {
             return json(['code' => -1, 'msg' => '最多一次性导入不能超过1000个用户']);
         }
 
@@ -1052,7 +1052,7 @@ class Setting extends Image
             if ($temdb) {
                 $tem->username = $temdb->name;
             } else {
-                $tem->username = '未知用户名';
+                $tem->username = Base::$unknow_user_name;
             }
         }
         $allnum = Db::table('blackip')

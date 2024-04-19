@@ -35,7 +35,8 @@
                 margin-top: 1rem;
                 margin-left: 1rem;
               "
-              >添加题目</el-button
+            >
+              添加题目</el-button
             >
           </div>
 
@@ -217,7 +218,7 @@ export default {
   },
   async activated() {
     this.isseetip = true;
-    await this.search();
+    this.search();
   },
   deactivated() {
     this.isseetip = false;

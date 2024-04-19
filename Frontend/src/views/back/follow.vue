@@ -246,7 +246,6 @@
       title="确定不再关注该用户吗？"
       :visible.sync="deletesure"
       width="26rem"
-      class="Mdialog"
       style="text-align: center"
     >
       <el-button
@@ -274,7 +273,6 @@
       :close-on-click-modal="false"
       :append-to-body="true"
       :visible.sync="dialogFormVisible"
-      class="Mdialog"
       :width="($store.state.max_width / $store.state.now_width) * 100 + '%'"
     >
       <el-descriptions class="margin-top" title="博主信息" :column="3" border>
@@ -328,11 +326,12 @@
             width="auto"
             style="
               width: auto;
-              margin: 0.4rem 1rem 0rem 1rem;
+              margin: 0.4rem 1rem 0rem 0rem;
               font-weight: bold;
             "
             class="el-icon-delete pulse-enter-active"
-            >取消关注</el-button
+          >
+            取消关注</el-button
           >
         </div>
         <div style="text-align: right">
@@ -349,7 +348,8 @@
               font-weight: bold;
             "
             class="el-icon-user-solid pulse-enter-active"
-            >主页</el-button
+          >
+            主页</el-button
           >
           <el-button
             type="primary"
@@ -357,11 +357,12 @@
             width="auto"
             style="
               width: auto;
-              margin: 0.4rem 1rem 0rem 1rem;
+              margin: 0.4rem 0rem 0rem 1rem;
               font-weight: bold;
             "
             class="el-icon-s-unfold pulse-enter-active"
-            >返回</el-button
+          >
+            返回</el-button
           >
         </div>
       </div>
@@ -387,7 +388,7 @@ import urlencode from "../../../updateCompoents/urlencode";
 export default {
   name: "follow",
   async activated() {
-    await this.search();
+    this.search();
   },
   async created() {
     this.showone = false;

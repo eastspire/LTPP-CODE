@@ -381,13 +381,15 @@
               postmessage();
               isSeeCreatGroup = false;
             "
-            >创建</el-button
+          >
+            创建</el-button
           >
           <el-button
             type="danger"
             @click="isSeeCreatGroup = false"
             style="margin-left: 2rem"
-            >返回</el-button
+          >
+            返回</el-button
           >
         </div>
       </div>

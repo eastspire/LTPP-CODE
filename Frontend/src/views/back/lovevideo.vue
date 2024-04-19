@@ -388,7 +388,7 @@ export default {
     this.$store.commit("updateObj", { my_id: this.getMyId() });
     if (this.total != 0) {
       if (this.issearch) {
-        await this.search();
+        this.search();
       } else {
         await this.getlist();
       }

@@ -1891,11 +1891,11 @@ class Contest
                         $user_j_db = Base::getUserDataFromDb($user_list[$j]);
                         if (!$user_i_db) {
                             $user_i_db = new stdClass();
-                            $user_i_db->name = '未知用户';
+                            $user_i_db->name = Base::$unknow_user_name;
                         }
                         if (!$user_j_db) {
                             $user_j_db = new stdClass();
-                            $user_j_db->name = '未知用户';
+                            $user_j_db->name = Base::$unknow_user_name;
                         }
                         $msg =
                             '<tr><td>题目：【<span class="title">' . $problem_name[$t] . '</span>】</td><td>用户：【<a class="user" href="' .

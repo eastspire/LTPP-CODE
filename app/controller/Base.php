@@ -435,6 +435,11 @@ class Base
     static $redis_queue_monitor = 'monitor';
 
     /**
+     * 未知用户展示名称
+     */
+    static $unknow_user_name = '未知用户';
+
+    /**
      * 竞赛代码缓存key索引所在竞赛索引
      */
     static $redis_contest_code_list_key_name = 'ContestCodeListKey';
@@ -3634,6 +3639,38 @@ class Base
     }
 
     /**
+     * 获取缓存中App信息
+     * @param int $app_id
+     */
+    static public function getAppData($app_id)
+    {
+        try {
+            if (!is_numeric($app_id)) {
+                return [];
+            }
+            $redis36 = Redis::connection('db36');
+            $key = 'AppData' . $app_id;
+            $db = $redis36->get($key);
+            if ($db) {
+                return json_decode($db, false);
+            }
+            $db = Db::table('app')
+                ->where('id', $app_id)
+                ->where('isdel', 0)
+                ->select(App::$app_db_key)
+                ->first();
+            if (!$db) {
+                return [];
+            }
+            $redis36->setEx($key, Base::$redis_timeout, json_encode($db));
+            return $db;
+        } catch (Exception $e) {
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
+            return [];
+        }
+    }
+
+    /**
      * 获取缓存中竞赛代码信息
      * @param int $contestrank_id
      */
@@ -3879,6 +3916,29 @@ class Base
             return;
         }
         $redis26->setEx($key, Base::$redis_timeout, json_encode($db));
+    }
+
+    /**
+     * 根据ID更新应用缓存信息
+     * @param int $app_id
+     */
+    static public function updateAppDataRedis($app_id)
+    {
+        if (!is_numeric($app_id)) {
+            return;
+        }
+        $redis36 = Redis::connection('db36');
+        $key = 'AppData' . $app_id;
+        $db = Db::table('app')
+            ->where('id', $app_id)
+            ->where('isdel', 0)
+            ->select(App::$app_db_key)
+            ->first();
+        if (!$db) {
+            $redis36->del($key);
+            return;
+        }
+        $redis36->setEx($key, Base::$redis_timeout, json_encode($db));
     }
 
     /**

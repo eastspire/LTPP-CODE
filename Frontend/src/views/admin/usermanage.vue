@@ -37,7 +37,8 @@
       "
       class="el-icon-plus pulse-enter-active"
       style="font-size: 1.06rem; font-weight: bold; color: chartreuse"
-      >添加用户</el-button
+    >
+      添加用户</el-button
     >
     <div style="height: 1rem"></div>
     <div :style="`min-height:${$store.state.no_scroll_height * 0.76}vh;`">
@@ -243,7 +244,6 @@
         userdata.user_aid ? '【用户ID:' + userdata.user_aid + '】' : ''
       }`"
       :visible.sync="dialogFormVisible"
-      class="Mdialog"
       :width="($store.state.max_width / $store.state.now_width) * 100 + '%'"
     >
       <el-descriptions class="margin-top" title="更新用户" :column="3" border>
@@ -455,7 +455,8 @@
               dialogFormVisible = false;
               deleteuser();
             "
-            >删除</el-button
+          >
+            删除</el-button
           >
         </div>
         <div style="text-align: right">
@@ -469,7 +470,8 @@
             width="auto"
             class="el-icon-user-solid"
             style="font-size: 1.06rem; margin-right: 2rem; font-weight: bold"
-            >主页</el-button
+          >
+            主页</el-button
           >
 
           <el-button
@@ -486,7 +488,8 @@
             width="auto"
             class="el-icon-warning-outline"
             style="font-size: 1.06rem; margin-right: 2rem; font-weight: bold"
-            >拉黑</el-button
+          >
+            拉黑</el-button
           >
 
           <el-button
@@ -503,7 +506,8 @@
             width="auto"
             class="el-icon-warning-outline"
             style="font-size: 1.06rem; margin-right: 2rem; font-weight: bold"
-            >下线</el-button
+          >
+            下线</el-button
           >
           <el-button
             v-if="$store.state.root && $store.state.my_name === 'root'"
@@ -512,7 +516,8 @@
             width="auto"
             class="el-icon-upload2"
             style="font-size: 1.06rem; margin-right: 2rem; font-weight: bold"
-            >更新</el-button
+          >
+            更新</el-button
           >
 
           <el-button
@@ -524,7 +529,8 @@
             width="auto"
             style="font-size: 1.06rem; margin-right: 0rem; font-weight: bold"
             class="el-icon-s-unfold"
-            >返回</el-button
+          >
+            返回</el-button
           >
         </div>
       </div>
@@ -535,7 +541,6 @@
       :append-to-body="true"
       title="新增用户"
       :visible.sync="addclick"
-      class="Mdialog"
       :width="($store.state.max_width / $store.state.now_width) * 100 + '%'"
     >
       <el-descriptions class="margin-top" title="新增用户" :column="3" border>
@@ -620,7 +625,8 @@
           style="font-size: 1.06rem; margin-right: 2rem; font-weight: bold"
           width="auto"
           class="el-icon-upload2"
-          >添加</el-button
+        >
+          添加</el-button
         >
         <el-button
           type="primary"
@@ -629,9 +635,10 @@
             dialogFormVisible = false;
           "
           width="auto"
-          style="font-size: 1.06rem; margin-right: 2rem; font-weight: bold"
+          style="font-size: 1.06rem; font-weight: bold"
           class="el-icon-s-unfold"
-          >返回</el-button
+        >
+          返回</el-button
         >
       </div>
     </el-dialog>
@@ -643,7 +650,7 @@ import urlencode from "../../../updateCompoents/urlencode";
 export default {
   name: "usermanage",
   async activated() {
-    await this.search();
+    this.search();
   },
   async created() {
     this.page = 1;

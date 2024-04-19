@@ -202,7 +202,8 @@
             font-size: 1.06rem;
           "
           class="el-icon-s-unfold pulse-enter-active"
-          >返回</el-button
+        >
+          返回</el-button
         >
         <el-button
           style="
@@ -215,7 +216,8 @@
           @click="updata()"
           width="auto"
           class="el-icon-upload pulse-enter-active"
-          >更新</el-button
+        >
+          更新</el-button
         >
         <el-button
           v-show="!islove"
@@ -229,7 +231,8 @@
           @click="collectionClick()"
           width="auto"
           class="el-icon-star-off pulse-enter-active"
-          >收藏
+        >
+          收藏
         </el-button>
 
         <el-button
@@ -244,7 +247,8 @@
           @click="delcollectionClick()"
           width="auto"
           class="el-icon-star-on pulse-enter-active"
-          >取消收藏
+        >
+          取消收藏
         </el-button>
 
         <el-button
@@ -259,7 +263,8 @@
           @click="fabulousClick()"
           width="auto"
           class="el-icon-message-solid pulse-enter-active"
-          >点赞</el-button
+        >
+          点赞</el-button
         >
         <el-button
           v-if="article_data.public == 1"
@@ -273,7 +278,8 @@
           @click="shareArticle()"
           width="auto"
           class="el-icon-share pulse-enter-active"
-          >分享</el-button
+        >
+          分享</el-button
         >
         <el-button
           style="
@@ -286,7 +292,8 @@
           @click="del()"
           width="auto"
           class="el-icon-s-release pulse-enter-active"
-          >删除</el-button
+        >
+          删除</el-button
         >
       </div>
 

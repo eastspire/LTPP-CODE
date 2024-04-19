@@ -5,22 +5,9 @@ import Home from '../views/Home.vue';
 import login from '../views/login.vue';
 import register from '../views/register.vue';
 import maintenance from '../views/maintenance.vue';
-import lovearticle from '../views/back/lovearticle.vue';
-import fans from '../views/back/fans.vue';
-import myarticlemanage from '../views/back/myarticlemanage.vue';
-import oneproblemsolve from '../views/home/oneproblemsolve.vue';
-import write from '../views/back/write.vue';
-import userarticle from '../views/root/userarticle.vue';
-import usermanage from '../views/admin/usermanage.vue';
-import follow from '../views/back/follow.vue';
-import mydatamanage from '../views/back/mydatamanage.vue';
-import problemmanage from '../views/admin/problemmanage.vue';
-import addcontest from '../views/admin/addcontest.vue';
-import updatacontest from '../views/admin/updatacontest.vue';
-import managecontest from '../views/admin/managecontest.vue';
-import myjoincontest from '../views/back/myjoincontest.vue';
+// home
 import cloudfile from '../views/home/cloudfile.vue';
-import setting from '../views/root/setting.vue';
+import oneproblemsolve from '../views/home/oneproblemsolve.vue';
 import problemcode from '../views/home/problemcode.vue';
 import staticfile from '../views/home/staticfile.vue';
 import allarticle from '../views/home/allarticle.vue';
@@ -41,35 +28,55 @@ import allcodehistory from "../views/home/allcodehistory.vue";
 import rank from "../views/home/rank.vue";
 import userpage from "../views/home/userpage.vue";
 import onequestion from "../views/home/onequestion.vue";
-import fabulousvideo from '../views/back/fabulousvideo.vue';
-import lovevideo from '../views/back/lovevideo.vue';
-import mygoods from '../views/back/mygoods.vue';
 import onevideo from '../views/home/onevideo.vue';
 import homelist from '../views/home/homelist.vue';
 import chat from '../views/home/chat.vue';
+import app from '../views/home/app.vue';
+import goods from '../views/home/goods.vue';
+import questionsheet from '../views/home/questionsheet.vue';
+import onequestionsheet from '../views/home/onequestionsheet.vue';
+import questionlist from '../views/home/questionlist.vue';
+import sendquestion from '../views/home/sendquestion.vue';
+// back
+import lovearticle from '../views/back/lovearticle.vue';
+import fans from '../views/back/fans.vue';
+import myarticlemanage from '../views/back/myarticlemanage.vue';
+import write from '../views/back/write.vue';
+import follow from '../views/back/follow.vue';
+import mydatamanage from '../views/back/mydatamanage.vue';
+import myjoincontest from '../views/back/myjoincontest.vue';
 import updateonearticle from "../views/back/updateonearticle.vue";
+import mynotice from '../views/back/mynotice.vue';
+import updateonequestion from '../views/back/updateonequestion.vue';
+import myquestion from '../views/back/myquestion.vue';
+import myjoinquestionsheet from '../views/back/myjoinquestionsheet.vue';
+import myquestionsheetmanage from '../views/back/myquestionsheetmanage.vue';
+import addquestionsheet from '../views/back/addquestionsheet.vue';
+import updatequestionsheet from '../views/back/updatequestionsheet.vue';
+import myappmamage from '../views/back/myappmamage.vue';
+import fabulousvideo from '../views/back/fabulousvideo.vue';
+import lovevideo from '../views/back/lovevideo.vue';
+import mygoods from '../views/back/mygoods.vue';
+// admin
 import oneproblemmanage from "../views/admin/oneproblemmanage.vue";
-import videomanage from "../views/root/videomanage.vue";
-import monitor from "../views/root/monitor.vue";
+import problemmanage from '../views/admin/problemmanage.vue';
+import addcontest from '../views/admin/addcontest.vue';
+import updatacontest from '../views/admin/updatacontest.vue';
+import managecontest from '../views/admin/managecontest.vue';
+import usermanage from '../views/admin/usermanage.vue';
+// root
+import allquestionsheetmanage from '../views/root/allquestionsheetmanage.vue';
+import linuxmanage from '../views/root/linuxmanage.vue';
+import appmanage from '../views/root/appmanage.vue';
 import noticemanage from "../views/root/noticemanage.vue";
 import goodsmanage from "../views/root/goodsmanage.vue";
 import photomanage from "../views/root/photomanage.vue";
 import shortsentencemanage from "../views/root/shortsentencemanage.vue";
-import mynotice from '../views/back/mynotice.vue';
-import updateonequestion from '../views/back/updateonequestion.vue';
-import questionlist from '../views/home/questionlist.vue';
+import videomanage from "../views/root/videomanage.vue";
+import monitor from "../views/root/monitor.vue";
+import setting from '../views/root/setting.vue';
 import questionlistmanage from '../views/root/questionlistmanage.vue';
-import sendquestion from '../views/home/sendquestion.vue';
-import myquestion from '../views/back/myquestion.vue';
-import goods from '../views/home/goods.vue';
-import questionsheet from '../views/home/questionsheet.vue';
-import onequestionsheet from '../views/home/onequestionsheet.vue';
-import myjoinquestionsheet from '../views/back/myjoinquestionsheet.vue';
-import myquestionsheetmanage from '../views/back/myquestionsheetmanage.vue';
-import allquestionsheetmanage from '../views/root/allquestionsheetmanage.vue';
-import linuxmanage from '../views/root/linuxmanage.vue';
-import addquestionsheet from '../views/back/addquestionsheet.vue';
-import updatequestionsheet from '../views/back/updatequestionsheet.vue';
+import userarticle from '../views/root/userarticle.vue';
 
 Vue.use(VueRouter);
 
@@ -93,6 +100,42 @@ const routes = [{
         index: 1,
     },
     children: [
+        {
+            path: '/appmanage',
+            name: 'appmanage',
+            component: () =>
+                import('../views/root/appmanage.vue'),
+            meta: {
+                title: '应用管理',
+                keepAlive: true,
+                index: 2,
+
+            }
+        },
+        {
+            path: '/myappmamage',
+            name: 'myappmamage',
+            component: () =>
+                import('../views/back/myappmamage.vue'),
+            meta: {
+                title: '我的应用',
+                keepAlive: true,
+                index: 2,
+
+            }
+        },
+        {
+            path: '/app',
+            name: 'app',
+            component: () =>
+                import('../views/home/app.vue'),
+            meta: {
+                title: '应用市场',
+                keepAlive: true,
+                index: 2,
+
+            }
+        },
         {
             path: '/updateonequestion',
             name: 'updateonequestion',
@@ -158,7 +201,7 @@ const routes = [{
             component: () =>
                 import('../views/root/allquestionsheetmanage.vue'),
             meta: {
-                title: '全站题单管理',
+                title: '题单管理',
                 keepAlive: true,
                 index: 2,
             }

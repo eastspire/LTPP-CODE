@@ -66,7 +66,7 @@ class Linux
             if ($user_db) {
                 $tem->user_name = $user_db->name;
             } else {
-                $tem->user_name = '未知用户';
+                $tem->user_name = Base::$unknow_user_name;
             }
         }
         Base::dataToSafe($db);
@@ -171,7 +171,7 @@ class Linux
             if ($user_db) {
                 $tem->user_name = $user_db->name;
             } else {
-                $tem->user_name = '未知用户';
+                $tem->user_name = Base::$unknow_user_name;
             }
         }
         Base::dataToSafe($db);

@@ -99,7 +99,8 @@
             icon="el-icon-edit"
             class="pulse-enter-active"
             @click="updateTestin()"
-            >填入样例</el-button
+          >
+            填入样例</el-button
           >
         </p>
         <pre style="font-size: 1.06rem">{{ tableData.problemCinTest }}</pre>

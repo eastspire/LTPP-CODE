@@ -153,7 +153,7 @@ class Codehistory
         foreach ($db as &$tem) {
             $user_db = Base::getUserData($tem->userid);
             if (!$user_db) {
-                $tem->user = '账号已注销';
+                $tem->user = Base::$unknow_user_name;
             } else {
                 $tem->user = $user_db->name;
             }
@@ -394,7 +394,7 @@ class Codehistory
             if ($temdb) {
                 $tem->user = $temdb->name;
             } else {
-                $tem->user = '未知用户';
+                $tem->user = Base::$unknow_user_name;
             }
         }
         Base::dataToSafe($db);

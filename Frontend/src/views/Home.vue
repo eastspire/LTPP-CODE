@@ -83,6 +83,13 @@
                   >
                 </template>
               </el-menu-item>
+              <el-menu-item index="/app">
+                <template slot="title">
+                  <i class="el-icon-monitor" style="font-size: 1.06rem"
+                    >应用市场</i
+                  >
+                </template>
+              </el-menu-item>
               <el-menu-item index="/goods">
                 <template slot="title">
                   <i class="el-icon-s-ticket" style="font-size: 1.06rem"
@@ -312,6 +319,13 @@
                   >
                 </template>
               </el-menu-item>
+              <el-menu-item index="/myappmamage">
+                <template slot="title">
+                  <i class="el-icon-monitor" style="font-size: 1.06rem"
+                    >我的应用</i
+                  >
+                </template>
+              </el-menu-item>
               <el-menu-item index="/myquestionsheetmanage">
                 <template slot="title">
                   <i class="el-icon-s-management" style="font-size: 1.06rem"
@@ -484,7 +498,14 @@
                 >
                   <template slot="title">
                     <i class="el-icon-s-management" style="font-size: 1.06rem"
-                      >全站题单管理</i
+                      >题单管理</i
+                    >
+                  </template>
+                </el-menu-item>
+                <el-menu-item index="/appmanage" v-if="$store.state.root">
+                  <template slot="title">
+                    <i class="el-icon-monitor" style="font-size: 1.06rem"
+                      >应用管理</i
                     >
                   </template>
                 </el-menu-item>

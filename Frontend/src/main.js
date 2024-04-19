@@ -516,7 +516,9 @@ Vue.prototype.logoutRemove = function (is_force = false) {
                     key?.indexOf('://') != -1 ||
                     is_force === true
                 ) {
-                    window.localStorage.removeItem(key);
+                    if (key != 'backend_network_url' || key != 'time') {
+                        window.localStorage.removeItem(key);
+                    }
                 }
             }
             window.sessionStorage.clear();
