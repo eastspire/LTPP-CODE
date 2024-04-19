@@ -273,13 +273,13 @@ class App
         $my_uid = JwtToken::getCurrentId();
         $my_aid = Base::getIdByUid($my_uid);
         $data = $request->post('data');
-        if (!$data['name']) {
+        if (!isset($data['name']) || !$data['name']) {
             return json(['code' => -1, 'msg' => '请填写应用名称']);
         }
-        if (!$data['image']) {
+        if (!isset($data['image']) || !$data['image']) {
             return json(['code' => -1, 'msg' => '请填写应用图标URL地址']);
         }
-        if (!$data['content']) {
+        if (!isset($data['content']) || !$data['content']) {
             return json(['code' => -1, 'msg' => '请填写应用介绍']);
         }
         $resid = Base::insertToDb('app', [
