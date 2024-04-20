@@ -75,11 +75,7 @@ class Oj
      */
     static public function judgeIsMyProblem($problem_id, $user_id)
     {
-        $prodb = Db::table('oj')
-            ->where('id', $problem_id)
-            ->where('isdel', 0)
-            ->select('createrid')
-            ->first();
+        $prodb = Base::getOjData($problem_id);
         if (!$prodb) {
             return false;
         }

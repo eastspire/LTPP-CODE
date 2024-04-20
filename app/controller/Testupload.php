@@ -12,7 +12,6 @@
 
 namespace app\controller;
 
-use Illuminate\Support\Facades\Redis;
 use support\Request;
 use Tinywan\Jwt\JwtToken;
 use support\Db;
@@ -29,7 +28,7 @@ class Testupload extends Oj
         $my_uid = JwtToken::getCurrentId();
         $my_aid = Base::getIdByUid($my_uid);
         $file = $request->file('file');
-        $problem_uid = \request()->post('id');
+        $problem_uid = $request->post('id');
         $problem_id = Base::getIdByUid($problem_uid);
         $ismy = Oj::judgeIsMyProblem($problem_id, $my_aid);
         if (!$ismy) {
@@ -45,7 +44,7 @@ class Testupload extends Oj
             //获取所有输入输出样例文件名称
             $testfilein = glob($alltestpath . '*.in');
             if (sizeof($testfilein) == 0) {
-                return \json(['code' => -1, 'msg' => '样例压缩包不能为空！']);
+                return \json(['code' => -1, 'msg' => '样例压缩包不能没有输入文件！']);
             }
             Db::table('oj_test_data')
                 ->where('problem_id', $problem_id)

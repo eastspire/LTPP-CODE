@@ -511,6 +511,11 @@ class Base
     static $GLOBiplimitTime = 0;
 
     /**
+     * testdata时间文件名
+     */
+    static $testdata_time_file_name = 'time.stamp';
+
+    /**
      * RobotContest Redis前缀
      */
     static $robot_contest_redis_front = 'RobotContest';
@@ -574,6 +579,11 @@ class Base
      * 判题机用户代码运行RE状态码
      */
     static $judge_code_re = 5;
+
+    /**
+     * 写入最大重试次数
+     */
+    static $write_to_file_retry_max_times = 1024;
 
     /**
      * 需要删除的key 
@@ -3304,21 +3314,31 @@ class Base
 
     /**
      * 写入文件
-     * @param string $file 文件路径
+     * @param string $path 文件路径
      * @param string $content 写入的内容
      */
-    static public function writeToFile($file, $content = '')
+    static public function writeToFile($path, $content = '')
     {
-        Base::judgeCreatPath($file);
+        Base::judgeCreatPath($path);
+        $times = 0;
         while (1) {
             try {
-                $result = file_put_contents($file, $content);
+                ++$times;
+                if ($times > Base::$write_to_file_retry_max_times) {
+                    Base::sendErrorNotice(
+                        '文件路径：' . $path . '<br>' . '文件内容：' . $content,
+                        'Base::writeToFile写入文件失败超过最大重试次数'
+                    );
+                    return;
+                }
+                $result = file_put_contents($path, $content);
                 if ($result !== false) {
                     // 写入成功
                     return;
                 }
             } catch (Exception $e) {
-                continue;
+                Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
+                return;
             }
         }
     }
@@ -5080,11 +5100,16 @@ class Base
                 $md5_problem_id = Base::doubleMd5($problem_id);
                 $path = Base::$testdata_path . $md5_problem_id . '/';
             }
-            if (Base::judgeCreatPath($path)) {
+            $need_update = Base::checkTestDataNeedUpdata($problem_id, $path);
+            if (Base::judgeCreatPath($path) && !$need_update) {
                 return;
             }
             if (!$test_data_list) {
                 $test_data_list = Base::getOjTestDataList($problem_id);
+            }
+            if ($need_update) {
+                Base::deleteAllFile($path);
+                Base::judgeCreatPath($path);
             }
             foreach ($test_data_list as &$tem) {
                 $file_in_path = $path . $tem->id . '.in';
@@ -5092,6 +5117,7 @@ class Base
                 $file_in_path = $path . $tem->id . '.out';
                 Base::writeToFile($file_in_path, $tem->test_out);
             }
+            Base::updateTestDataTime($problem_id, $path);
         } catch (Exception $e) {
             Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
         }
@@ -5708,5 +5734,40 @@ class Base
             Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
         }
         return false;
+    }
+
+    /**
+     * 判断OJ样例是否需要更新
+     * @param int $oj_id
+     * @param string $path
+     */
+    public static function checkTestDataNeedUpdata($oj_id, $path)
+    {
+        $redis37 = Redis::connection('db37');
+        $key = 'testdatalasttime' . $oj_id;
+        $now = Base::getFileText($path . Base::$testdata_time_file_name);
+        if (!$now || !$redis37->exists($key)) {
+            return true;
+        }
+        $last = $redis37->get($key);
+        if ($last != $now) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 更新OJ样例时间
+     * @param int $oj_id
+     * @param string $path
+     */
+    public static function updateTestDataTime($oj_id, $path)
+    {
+        $redis37 = Redis::connection('db37');
+        $key = 'testdatalasttime' . $oj_id;
+        $now = time();
+        $redis37->set($key, $now);
+        Base::judgeCreatPath($path);
+        Base::writeToFile($path . Base::$testdata_time_file_name, $now);
     }
 };
