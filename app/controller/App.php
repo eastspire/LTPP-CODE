@@ -58,8 +58,7 @@ class App
         $data = Db::table('app')
             ->where('isdel', 0)
             ->select(App::$app_db_list_key)
-            ->orderBy('opentimes', 'desc')
-            ->orderBy('id', 'desc')
+            ->orderBy('id', 'asc')
             ->paginate($limit, '*', 'page', $page)
             ->items();
         $allnum = Db::table('app')
@@ -93,8 +92,7 @@ class App
             ->where('name', 'like', '%' . $key . '%')
             ->where('isdel', 0)
             ->select(App::$app_db_list_key)
-            ->orderBy('opentimes', 'desc')
-            ->orderBy('id', 'desc')
+            ->orderBy('id', 'asc')
             ->paginate($limit, '*', 'page', $page)
             ->items();
         $allnum = Db::table('app')
@@ -129,7 +127,7 @@ class App
             ->where('user_id', $my_aid)
             ->where('isdel', 0)
             ->select(App::$app_db_list_key)
-            ->orderBy('id', 'desc')
+            ->orderBy('id', 'asc')
             ->paginate($limit, '*', 'page', $page)
             ->items();
         $allnum = Db::table('app')
@@ -206,7 +204,7 @@ class App
         $info = Db::table('app')
             ->where('isdel', 0)
             ->select(App::$app_db_list_key)
-            ->orderBy('id', 'desc')
+            ->orderBy('id', 'asc')
             ->paginate($limit, '*', 'page', $page)
             ->items();
         $allnum = Db::table('app')
