@@ -327,7 +327,7 @@
       <div style="overflow: hidden">
         <img
           class="animate"
-          v-show="creat_group_chat_image && reg.test(creat_group_chat_image)"
+          v-if="creat_group_chat_image && reg.test(creat_group_chat_image)"
           :src="creat_group_chat_image"
           style="display: block; width: 100%; height: 16rem; object-fit: cover"
         />
@@ -628,8 +628,9 @@ export default {
       isSeeChatUser: false,
       group_user_list: [],
       user_deep_color:
-        "background-color: rgba(117,63,178,0.66);color:rgba(255,255,255,0.9)",
-      user_no_deep_color: "background-color:rgba(117,63,178,0.06)",
+        "background-color:rgba(var(--ltpp-light-color),var(--ltpp-center-box-bk-opacity));color:var(--ltpp-main-text-color);",
+      user_no_deep_color:
+        "background-color:rgba(var(--ltpp-light-color),0.06);color:var(--ltpp-main-text-color);",
       gitclass: [
         "folder",
         "music",
@@ -696,6 +697,8 @@ export default {
     this.linuxurl = window.sessionStorage.getItem("linuxurl");
     if (!this.linuxurl) {
       await this.getlinuxurl();
+    } else {
+      this.backurl = this.linuxurl + "/File/saveImage";
     }
     await this.loadCharset();
     // 获取聊天列表
@@ -1032,7 +1035,6 @@ export default {
       this.linuxurl = res;
       this.backurl = this.linuxurl + "/File/saveImage";
     },
-
     // 滚动到顶部
     to_scroll_Top() {
       this.$nextTick(() => {
@@ -1837,10 +1839,6 @@ export default {
 
 .user {
   border-width: 0rem;
-  background-color: rgba(
-    var(--ltpp-light-color),
-    var(--ltpp-center-box-bk-opacity)
-  );
 }
 
 .user div {

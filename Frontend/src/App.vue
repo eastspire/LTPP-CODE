@@ -44,7 +44,7 @@ export default {
   name: "app",
   data() {
     return {
-      version: "2.6.2",
+      version: "2.6.3",
       get_version_lock: false,
     };
   },
@@ -238,7 +238,10 @@ export default {
 // 表格背景透明度
 --ltpp-list-box-bk-opacity: 0.36;
 // 阴影色
---ltpp-shadow-color: rgba(var(--ltpp-main-bk-color), 0.08);
+--ltpp-shadow-color: --ltpp-shadow-color: rgba(
+  var(--ltpp-main-bk-color),
+  var(--ltpp-center-box-bk-opacity)
+);
 // 弹出框背景悬浮颜色
 --ltpp-hover-bk-color: rgba(var(--ltpp-light-color), 0.36);
 // 对话框背景色
@@ -270,7 +273,10 @@ export default {
   --ltpp-code-bk-color-opacity: 1;
   --ltpp-box-text-color: #ffffffe6;
   --ltpp-list-box-bk-opacity: 0.36;
-  --ltpp-shadow-color: rgba(var(--ltpp-main-bk-color), 0.08);
+  --ltpp-shadow-color: rgba(
+    var(--ltpp-main-bk-color),
+    var(--ltpp-center-box-bk-opacity)
+  );
   --ltpp-hover-bk-color: rgba(var(--ltpp-light-color), 0.36);
   --ltpp-dialog-bk-color: 117, 63, 178;
   --ltpp-dialog-bk-opacity: 0.86;

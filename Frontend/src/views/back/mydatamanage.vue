@@ -48,7 +48,7 @@
             color: aqua;
             border-width: 0.1rem;
             border-radius: 2rem;
-            border-color: aliceblue;
+            border-color: var(--ltpp-main-text-color);
             padding: 0.6rem;
             border-radius: 0.46rem;
             border-color: rgba(var(--ltpp-main-bk-color), 0.8);
@@ -460,7 +460,7 @@
               cursor: pointer;
               border-width: 0.1rem;
               border-radius: 2rem;
-              border-color: aliceblue;
+              border-color: var(--ltpp-main-text-color);
               width: 8rem;
               height: 2.6rem;
               border-radius: 0.46rem;

@@ -359,7 +359,7 @@ export default {
         styleRes.color = "chartreuse";
         return styleRes;
       } else {
-        styleRes.color = "aliceblue";
+        styleRes.color = "var(--ltpp-main-text-color)";
         return styleRes;
       }
     },

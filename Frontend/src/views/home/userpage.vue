@@ -374,7 +374,7 @@
           text-align: left;
           font-weight: bold;
           margin: 1rem 0rem 0.5rem 0rem;
-          color: aliceblue;
+          color: var(--ltpp-main-text-color);
         "
       >
         用户发布历史

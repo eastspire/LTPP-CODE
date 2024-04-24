@@ -10,7 +10,7 @@
         <div style="height: 0.8rem"></div>
         <div
           style="
-            color: aliceblue;
+            color: var(--ltpp-main-text-color);
             font-size: 1.66rem;
             text-align: center;
             margin: 1rem 1rem 0rem 1rem;
@@ -54,7 +54,13 @@
           </div>
         </div>
         <div style="min-height: 46vh" v-show="total == 0">
-          <p style="text-align: center; color: aliceblue; font-size: 1.06rem">
+          <p
+            style="
+              text-align: center;
+              color: var(--ltpp-main-text-color);
+              font-size: 1.06rem;
+            "
+          >
             暂无消息
           </p>
         </div>

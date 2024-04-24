@@ -29,6 +29,7 @@
               font-weight: bold;
               margin: 0.88rem 0rem 0.5rem 0rem;
               float: left;
+              color: var(--ltpp-main-text-color);
             "
           >
             代码编辑区

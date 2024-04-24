@@ -165,7 +165,7 @@
                 style="
                   margin-bottom: 0rem;
                   margin-left: 0.4rem;
-                  color: aliceblue;
+                  color: var(--ltpp-main-text-color);
                 "
               >
                 <el-avatar

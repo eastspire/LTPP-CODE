@@ -414,7 +414,7 @@
                         style="
                           min-height: 0rem !important;
                           height: auto !important;
-                          color: aliceblue !important;
+                          color: var(--ltpp-main-text-color) !important;
                         "
                       ></mavon-editor>
                     </div>
@@ -571,7 +571,7 @@
                             style="
                               min-height: 0rem !important;
                               height: auto !important;
-                              color: aliceblue !important;
+                              color: var(--ltpp-main-text-color) !important;
                             "
                           ></mavon-editor>
                         </div>
