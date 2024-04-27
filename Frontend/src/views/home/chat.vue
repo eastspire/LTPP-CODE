@@ -705,7 +705,6 @@ export default {
   },
   async activated() {
     try {
-      this.now_user = {};
       this.isSeeLastBtn = false;
       const param_name = urlencode.decode(
         this.$route?.query?.path || "",
@@ -722,7 +721,7 @@ export default {
       this.checkCanScroll();
       // 获取聊天列表
       await this.getUserAndGroupList();
-      if (this.user_list?.length) {
+      if (param_name && this.user_list?.length) {
         for (let i = 0; i < this.user_list.length; ++i) {
           if (this.user_list[i].name === param_name) {
             this.changeNowWindow(this.user_list[i]);
@@ -764,6 +763,12 @@ export default {
       this.chat_msg_list = [];
       this.isSeeLastBtn = false;
       this.passparam.user_id = tem.id;
+      if (this.now_user.type == "group_chat") {
+        this.now_post_type = "group_chat";
+      } else if (this.now_user.type == "private_chat") {
+        this.now_post_type = "private_chat";
+      }
+      this.passparam.user_id = this.now_user.id;
       this.clearNolookNum();
       this.getLatestChatData();
     },
@@ -1168,32 +1173,17 @@ export default {
       });
       this.user_list = res?.data;
       this.chat_list_loadfinish = true;
-      // 初始化显示第一个用户聊天框
-      this.$nextTick(async () => {
-        let list = document.getElementById("list");
-        if (
-          list &&
-          this.user_list &&
-          typeof this.user_list == "object" &&
-          this.user_list.length > 0 &&
-          list.children[0] &&
-          list.children[0].style
-        ) {
-          list.children[0].style = this.user_deep_color;
-          this.now_user = this.user_list[0];
-          if (this.now_user.type == "group_chat") {
-            this.now_post_type = "group_chat";
-          } else if (this.now_user.type == "private_chat") {
-            this.now_post_type = "private_chat";
-          }
-          this.passparam.user_id = this.now_user.id;
-          for (let i = 1; i < this.now_user.length; ++i) {
-            list.children[i].style = this.user_no_deep_color;
-          }
-          await this.getLatestChatData();
-        }
-        this.to_scroll_bottom(1);
-      });
+      if (!this.now_user.name && this.user_list?.length) {
+        this.now_user = this.user_list[0];
+      }
+      if (this.now_user.type == "group_chat") {
+        this.now_post_type = "group_chat";
+      } else if (this.now_user.type == "private_chat") {
+        this.now_post_type = "private_chat";
+      }
+      this.passparam.user_id = this.now_user.id;
+      await this.getLatestChatData();
+      this.to_scroll_bottom(1);
       return res;
     },
     // 判断是否以及在聊天列表
@@ -1260,7 +1250,7 @@ export default {
           return;
         }
       }
-      await this.user_list.push(item);
+      this.user_list.push(item);
       await this.openUserChatWindow(item);
       this.search_user = "";
     },
@@ -1274,22 +1264,6 @@ export default {
       this.passparam.user_id = item.id;
       this.clearNolookNum();
       await this.getLatestChatData();
-      setTimeout(() => {
-        this.$nextTick(() => {
-          let list = document.getElementById("list");
-          if (!list) {
-            return;
-          }
-          for (let i = 0; i < this.user_list.length; ++i) {
-            if (this.user_list[i].id == item.id) {
-              this.user_list[i].no_look_num = 0;
-              list.children[i].style = this.user_deep_color;
-            } else {
-              list.children[i].style = this.user_no_deep_color;
-            }
-          }
-        });
-      }, 0);
     },
 
     async querySearchAsync(queryString, cb) {
