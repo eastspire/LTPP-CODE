@@ -701,8 +701,6 @@ export default {
       this.backurl = this.linuxurl + "/File/saveImage";
     }
     await this.loadCharset();
-    // 获取聊天列表
-    this.getUserAndGroupList();
   },
   activated() {
     try {
@@ -718,6 +716,8 @@ export default {
       let list = document.getElementById("list");
       list.addEventListener("click", this.onclicklist);
       this.checkCanScroll();
+      // 获取聊天列表
+      this.getUserAndGroupList();
     } catch (err) {}
     this.to_scroll_bottom(1);
   },

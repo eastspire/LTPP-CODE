@@ -19,6 +19,17 @@
                   : "「 " + userdata.name + " 」的主页"
               }}
             </p>
+            <div style="text-align: right; margin: 0.36rem 2rem">
+              <el-button
+                width="auto"
+                type="text"
+                style="font-size: 1.06rem; font-weight: bold; color: red"
+                @click="addUserChat"
+                class="el-icon-s-comment pulse-enter-active"
+              >
+                聊天</el-button
+              >
+            </div>
           </div>
           <div
             v-show="userdata.name != undefined"
@@ -765,6 +776,39 @@ export default {
       }
       this.canclick = true;
       this.judgefollow();
+    },
+    async addUserChat() {
+      const { data: res } = await this.$ajax({
+        method: "post",
+        url: "/Chat/addUserChat",
+        portType: {
+          process: "8793",
+        },
+        data: {
+          user_id: this.userid,
+        },
+      }).catch((t) => {
+        this.$msg({
+          type: "error",
+          message: t,
+          duration: 1600,
+          offset: 80,
+        });
+      });
+      if (res?.code == 1) {
+        this.userid &&
+          this.userid != this.$SqsGlobal.loading_tips &&
+          this.$router.push({
+            path: "/chat",
+          });
+      } else {
+        this.$msg({
+          type: "error",
+          message: res?.msg,
+          duration: 800,
+          offset: 80,
+        });
+      }
     },
     async lookdata() {
       const { data: res } = await this.$ajax({
