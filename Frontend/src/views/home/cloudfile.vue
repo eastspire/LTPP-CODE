@@ -400,19 +400,44 @@
                 </div>
                 <!-- 静态资源 -->
                 <div v-if="IsShowStaticFile">
-                  <iframe
-                    v-if="!iscloseFile"
-                    :style="`height:${
-                      $store.state.no_scroll_height * 0.68
-                    }vh; width: 100%`"
-                    :src="ShowStaticFileUrl"
-                    scrolling="no"
-                    border="0"
-                    frameborder="no"
-                    framespacing="0"
-                    allowfullscreen="true"
-                  ></iframe>
-
+                  <div
+                    style="
+                      display: flex;
+                      justify-content: center;
+                      align-items: center;
+                    "
+                  >
+                    <video
+                      v-if="!iscloseFile && judgeIsType(ShowStaticFileUrl, 3)"
+                      :src="ShowStaticFileUrl"
+                      :style="`height:${
+                        $store.state.no_scroll_height * 0.68
+                      }vh; width: 100%`"
+                      preload
+                      controls
+                      controlslist="nodownload"
+                    ></video>
+                    <img
+                      style="width: 100%; height: 100%; object-fit: cover"
+                      v-else-if="
+                        !iscloseFile && judgeIsType(ShowStaticFileUrl, 7)
+                      "
+                      :src="ShowStaticFileUrl"
+                      alt=""
+                    />
+                    <audio
+                      v-else-if="
+                        !iscloseFile && judgeIsType(ShowStaticFileUrl, 2)
+                      "
+                      :src="ShowStaticFileUrl"
+                      preload
+                      controls
+                      controlslist="nodownload"
+                    ></audio>
+                    <div v-else>
+                      <h3>{{ $SqsGlobal.no_support_file_tips }}</h3>
+                    </div>
+                  </div>
                   <div style="text-align: left; margin-top: 0.6rem">
                     <el-button
                       class="pulse-enter-active"
@@ -460,7 +485,7 @@
                         isShowFileDialog = false;
                         lookfile();
                       "
-                      >新页面打开</el-button
+                      >预览</el-button
                     >
                   </div>
                   <div style="clear: both"></div>

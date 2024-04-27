@@ -538,6 +538,20 @@ Vue.prototype.logoutRemove = function (is_force = false) {
     }
 };
 
+Vue.prototype.judgeIsType = function (ShowStaticFileUrl, type_index) {
+    for (const key in this.$SqsGlobal.extion_map_number) {
+        if (
+            Object.hasOwnProperty.call(this.$SqsGlobal.extion_map_number, key)
+        ) {
+            const value = this.$SqsGlobal.extion_map_number[key];
+            if (value == type_index && ShowStaticFileUrl.endsWith(key)) {
+                return true;
+            }
+        }
+    }
+    return false;
+};
+
 Vue.prototype.judgeSystemIsWin = function () {
     const user_agent = window.navigator.userAgent.toLowerCase();
     if (user_agent.indexOf('win') != -1) {

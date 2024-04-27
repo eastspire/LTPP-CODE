@@ -15,19 +15,37 @@
   >
     <div
       class="shadow main-center-box-content"
-      :style="`height:${$store.state.no_scroll_height}vh; `"
+      :style="`height:${$store.state.no_scroll_height}vh;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          border-width: 0rem;
+      `"
     >
-      <iframe
-        style="border-width: 0rem; min-height: 31.2rem"
-        height="100%"
-        width="100%"
+      <video
+        v-if="judgeIsType(url, 3)"
         :src="url"
-        scrolling="no"
-        border="0"
-        frameborder="no"
-        framespacing="0"
-        allowfullscreen="true"
-      ></iframe>
+        :style="`height:${$store.state.no_scroll_height * 0.68}vh; width: 100%`"
+        preload
+        controls
+        controlslist="nodownload"
+      ></video>
+      <img
+        style="width: 100%; height: 100%; object-fit: cover"
+        v-else-if="judgeIsType(url, 7)"
+        :src="url"
+        alt=""
+      />
+      <audio
+        v-else-if="judgeIsType(url, 2)"
+        :src="url"
+        preload
+        controls
+        controlslist="nodownload"
+      ></audio>
+      <div v-else>
+        <h3>{{ $SqsGlobal.no_support_file_tips }}</h3>
+      </div>
     </div>
   </div>
 </template>
