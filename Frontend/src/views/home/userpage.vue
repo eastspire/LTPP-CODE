@@ -800,6 +800,9 @@ export default {
           this.userid != this.$SqsGlobal.loading_tips &&
           this.$router.push({
             path: "/chat",
+            query: {
+              path: urlencode(this.userdata?.name, "gbk"),
+            },
           });
       } else {
         this.$msg({

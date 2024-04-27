@@ -36,7 +36,14 @@
           >
         </div>
         <div id="list">
-          <div v-for="tem in user_list" :key="tem.idnex" class="user">
+          <div
+            v-for="tem in user_list"
+            :key="tem.idnex"
+            class="user"
+            :style="`${
+              tem.name === now_user.name ? user_deep_color : user_no_deep_color
+            }`"
+          >
             <div @click="changeNowWindow(tem)">
               <el-image
                 fit="cover"
@@ -54,11 +61,7 @@
                     ? 'online-name'
                     : 'unonline-name'
                 }`"
-                >{{
-                  tem.name && judgeIsString(tem.name)
-                    ? tem.name.substr(0, 11)
-                    : ""
-                }}
+                >{{ tem.name && judgeIsString(tem.name) ? tem.name : "" }}
               </span>
               <span class="num" v-show="tem.no_look_num > 0">
                 <span class="num-txt">
@@ -73,7 +76,6 @@
           </div>
         </div>
       </el-aside>
-
       <el-container
         v-loading.lock="!load_msg_list_finish"
         element-loading-text="拼命加载中"
@@ -600,7 +602,6 @@ export default {
         ol: true, // 有序列表
         link: true, // 链接
         imagelink: false, // 图片链接
-
         code: true, // code
         htmlcode: false, // 展示html源码
         subfield: true, // 是否需要分栏
@@ -702,9 +703,14 @@ export default {
     }
     await this.loadCharset();
   },
-  activated() {
+  async activated() {
     try {
+      this.now_user = {};
       this.isSeeLastBtn = false;
+      const param_name = urlencode.decode(
+        this.$route?.query?.path || "",
+        "gbk"
+      );
       this.head = {
         Authorization: "Bearer " + window.localStorage.getItem("authorization"),
         Key: window.localStorage.getItem("key"),
@@ -713,11 +719,17 @@ export default {
       this.requestid_timer = setInterval(() => {
         this.head.Requestid = this.Base64Encode(new Date().getTime());
       }, 1000);
-      let list = document.getElementById("list");
-      list.addEventListener("click", this.onclicklist);
       this.checkCanScroll();
       // 获取聊天列表
-      this.getUserAndGroupList();
+      await this.getUserAndGroupList();
+      if (this.user_list?.length) {
+        for (let i = 0; i < this.user_list.length; ++i) {
+          if (this.user_list[i].name === param_name) {
+            this.changeNowWindow(this.user_list[i]);
+            break;
+          }
+        }
+      }
     } catch (err) {}
     this.to_scroll_bottom(1);
   },
@@ -732,14 +744,7 @@ export default {
     clearInterval(this.requestid_timer);
     this.deleteCheckCanScroll();
     this.requestid_timer = null;
-    let list = document.getElementById("list");
-    try {
-      list && list.removeEventListener("click", this.onclicklist);
-    } catch (e) {
-      return;
-    }
   },
-
   destroyed() {
     try {
       clearInterval(this.timer);
@@ -750,7 +755,6 @@ export default {
     }
     this.timer = null;
   },
-
   methods: {
     changeNowWindow(tem) {
       this.id = 0;
@@ -1302,21 +1306,6 @@ export default {
         cb(res);
       }, 666);
     },
-
-    onclicklist(e) {
-      let list = document.getElementById("list").children;
-      for (const tem of list) {
-        if (
-          e.target == tem.children[0] ||
-          e.target == tem.children[0].children[0].children[0] ||
-          e.target == tem.children[0].children[1]
-        ) {
-          tem.style = this.user_deep_color;
-        } else {
-          tem.style = this.user_no_deep_color;
-        }
-      }
-    },
     // 加载新消息
     async getLatestChatData() {
       try {
@@ -1380,7 +1369,7 @@ export default {
           }
           // 添加新数据
           res.data = res?.data.reverse();
-          await this.chat_msg_list.push(...res?.data);
+          this.chat_msg_list.push(...res?.data);
           window.localStorage.setItem(
             "Chat " + this.now_user.type + " " + this.now_user.id,
             JSON.stringify(res?.data)
