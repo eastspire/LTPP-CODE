@@ -376,7 +376,7 @@ const attribute = [
     "optimum", "pattern", "placeholder", "poster", "preload", "radiogroup", "readonly", "rel", "required", "reversed",
     "rows", "rowspan", "sandbox", "scope", "scoped", "selected", "shape", "size", "sizes", "span", "spellcheck",
     "src", "srcdoc", "srclang", "srcset", "start", "step", "style", "tabindex", "target", "title", "translate",
-    "type", "usemap", "value", "width", "wrap",
+    "type", "usemap", "value", "width", "wrap", "data",
     // SVG 标签属性
     "accent-height", "accumulate", "additive", "data-view-component", "aria-hidden", "alignment-baseline", "allowReorder", "alphabetic", "amplitude",
     "arabic-form", "ascent", "attributeName", "attributeType", "azimuth", "baseFrequency", "baseline-shift",
@@ -413,9 +413,8 @@ const attribute = [
     "yChannelSelector", "z", "zoomAndPan", "xmlns",
     // WebView 和 iFrame 属性
     "allow", "allowfullscreen", "allowpaymentrequest", "allowusermedia", "csp", "height", "loading", "name", "referrerpolicy",
-    "sandbox", "src", "srcdoc", "width"
+    "sandbox", "srcdoc", "width"
 ];
-
 
 /**
  * @var object extion_map_number 文件类型转数字
@@ -521,7 +520,6 @@ const extion_map_number = {
     'app': 8,
     'com': 8
 };
-
 
 // 标签白名单，均会转小写，所以只需要配置小写规则
 const white_list = {
@@ -648,10 +646,7 @@ export default {
     themelist,
     // 编辑器语言
     options,
-    /**
-     * 文章列表数据模板
-     * @var object $article_list_data
-     */
+    // 文章列表数据模板
     article_list_data,
     // OJ题库列表数据模板
     oj_problem_list_data,
