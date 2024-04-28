@@ -1528,7 +1528,6 @@ class Base
             $redis23->set($key, $not_found);
         } catch (Exception $e) {
             Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
-            $redis23->set($key, $not_found);
         }
         return response($not_found, 404, [
             'Content-Type' => Base::getContentType('html'),
