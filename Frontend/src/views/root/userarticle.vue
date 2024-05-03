@@ -294,6 +294,7 @@ export default {
       if (this.scrolllock) {
         return;
       }
+      this.scrolllock = true;
       this.initData();
       const { data: res } = await this.$ajax({
         method: "post",
@@ -313,6 +314,7 @@ export default {
           duration: 1600,
           offset: 80,
         });
+        this.scrolllock = false;
       });
       this.tableData = res?.data;
       this.scrolllock = false;
@@ -331,7 +333,9 @@ export default {
     },
 
     async keysearch() {
-      if (this.scrolllock) return;
+      if (this.scrolllock) {
+        return;
+      }
       this.lastkey = this.key;
       this.scrolllock = true;
       this.initData();
@@ -354,11 +358,11 @@ export default {
           duration: 1600,
           offset: 80,
         });
+        this.scrolllock = false;
       });
       this.tableData = res?.data;
       this.scrolllock = false;
     },
-
     search() {
       this.scrolllock = false;
       if (this.key == "" || this.key == null || this.key == undefined) {

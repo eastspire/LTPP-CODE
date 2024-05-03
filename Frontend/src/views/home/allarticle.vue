@@ -239,7 +239,6 @@ export default {
       if (this.scrolllock) {
         return;
       }
-
       this.lastkey = this.key;
       this.scrolllock = true;
       const { data: res } = await this.$ajax({
@@ -255,19 +254,18 @@ export default {
           do: "down",
         },
       }).catch((t) => {
-        this.disabledscroll = false;
-        this.scrolllock = false;
         this.$msg({
           type: "error",
           message: t,
           duration: 1600,
           offset: 80,
         });
+        this.disabledscroll = false;
+        this.scrolllock = false;
       });
       this.tableData = res?.data;
       this.scrolllock = false;
     },
-
     search() {
       this.initData();
       this.scrolllock = false;
@@ -402,6 +400,7 @@ export default {
       if (this.scrolllock) {
         return;
       }
+      this.scrolllock = true;
       const { data: res } = await this.$ajax({
         method: "post",
         url: "/Article/loadAllArticleList",

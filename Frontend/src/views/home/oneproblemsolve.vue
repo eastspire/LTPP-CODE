@@ -325,6 +325,10 @@ export default {
     },
 
     async lookarticle() {
+      if (this.disabledscroll) {
+        return;
+      }
+      this.disabledscroll = true;
       const { data: res } = await this.$ajax({
         method: "post",
         url: "/Article/problemSolveArticleList",
@@ -345,6 +349,7 @@ export default {
         });
         this.page--;
         this.isinit = true;
+        this.disabledscroll = false;
       });
       if (res?.code != 1) {
         this.$msg({
@@ -381,6 +386,7 @@ export default {
         this.userarticle.push(...res?.data);
       }
       this.isinit = true;
+      this.disabledscroll = false;
     },
   },
 };

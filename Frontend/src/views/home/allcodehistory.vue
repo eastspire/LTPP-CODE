@@ -453,6 +453,10 @@ export default {
 
     async getlist() {
       this.initData();
+      if (this.disabledscroll) {
+        return;
+      }
+      this.disabledscroll = true;
       const { data: res } = await this.$ajax({
         method: "post",
         url: "/Codehistory/getAllCodeList",
@@ -471,9 +475,10 @@ export default {
           duration: 1600,
           offset: 80,
         });
+        this.disabledscroll = false;
       });
-
       this.allcodelist = res?.data;
+      this.disabledscroll = false;
     },
   },
 };
