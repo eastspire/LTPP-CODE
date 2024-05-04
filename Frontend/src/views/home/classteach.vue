@@ -187,7 +187,7 @@ export default {
       if (res?.code == 1) {
         this.name = res.name;
       } else {
-        this.name = "无名氏";
+        this.name = "未知用户";
       }
     },
     setup() {

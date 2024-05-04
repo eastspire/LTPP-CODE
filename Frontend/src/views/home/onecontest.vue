@@ -690,7 +690,8 @@
                 round
                 style=""
                 v-if="
-                  ($store.state.root && $store.state.my_name === 'root') ||
+                  ($store.state.root &&
+                    $store.state.my_name === $SqsGlobal.root_name) ||
                   is_my_contest
                 "
                 @click="delrank()"
@@ -710,7 +711,8 @@
               >
               <el-button
                 v-if="
-                  (($store.state.root && $store.state.my_name === 'root') ||
+                  (($store.state.root &&
+                    $store.state.my_name === $SqsGlobal.root_name) ||
                     is_my_contest) &&
                   show_code_check_similarity
                 "
@@ -752,7 +754,8 @@
               >
               <el-button
                 v-if="
-                  ($store.state.root && $store.state.my_name === 'root') ||
+                  ($store.state.root &&
+                    $store.state.my_name === $SqsGlobal.root_name) ||
                   is_my_contest
                 "
                 round
@@ -764,7 +767,8 @@
               >
               <el-button
                 v-if="
-                  ($store.state.root && $store.state.my_name === 'root') ||
+                  ($store.state.root &&
+                    $store.state.my_name === $SqsGlobal.root_name) ||
                   is_my_contest
                 "
                 round

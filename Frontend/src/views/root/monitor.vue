@@ -98,9 +98,9 @@
                   "
                 >
                   {{
-                    scope.row.grade == 3
+                    scope.row.grade == 3 && scope.row.name == "root"
                       ? "超级管理员"
-                      : scope.row.grade == 2
+                      : scope.row.grade == 3 || scope.row.grade == 2
                       ? "管理员"
                       : "用户"
                   }}

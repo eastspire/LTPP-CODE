@@ -333,9 +333,7 @@
                   >
                 </template>
               </el-menu-item>
-              <el-menu-item
-                index="/mylinuxmanage"
-                v-if="$store.state.root && $store.state.my_name === 'root'"
+              <el-menu-item index="/mylinuxmanage"
                 ><template slot="title">
                   <i class="el-icon-s-platform" style="font-size: 1.06rem"
                     >云服务器管理</i
@@ -394,7 +392,10 @@
               </el-menu-item>
               <el-menu-item
                 index="/setting"
-                v-if="$store.state.root && $store.state.my_name === 'root'"
+                v-if="
+                  $store.state.root &&
+                  $store.state.my_name === $SqsGlobal.root_name
+                "
               >
                 <template slot="title">
                   <i class="el-icon-s-tools" style="font-size: 1.06rem"
@@ -404,7 +405,10 @@
               </el-menu-item>
               <el-submenu
                 index="8"
-                v-if="$store.state.root && $store.state.my_name === 'root'"
+                v-if="
+                  $store.state.root &&
+                  $store.state.my_name === $SqsGlobal.root_name
+                "
               >
                 <template slot="title">
                   <i class="el-icon-menu" style="font-size: 1.06rem"
@@ -413,7 +417,10 @@
                 </template>
                 <el-menu-item
                   index="/noticemanage"
-                  v-if="$store.state.root && $store.state.my_name === 'root'"
+                  v-if="
+                    $store.state.root &&
+                    $store.state.my_name === $SqsGlobal.root_name
+                  "
                   ><template slot="title">
                     <i class="el-icon-s-order" style="font-size: 1.06rem"
                       >公告管理</i
@@ -422,7 +429,10 @@
                 </el-menu-item>
                 <el-menu-item
                   index="/shortsentencemanage"
-                  v-if="$store.state.root && $store.state.my_name === 'root'"
+                  v-if="
+                    $store.state.root &&
+                    $store.state.my_name === $SqsGlobal.root_name
+                  "
                   ><template slot="title">
                     <i class="el-icon-s-order" style="font-size: 1.06rem"
                       >短句管理</i
@@ -431,7 +441,10 @@
                 </el-menu-item>
                 <el-menu-item
                   index="/photomanage"
-                  v-if="$store.state.root && $store.state.my_name === 'root'"
+                  v-if="
+                    $store.state.root &&
+                    $store.state.my_name === $SqsGlobal.root_name
+                  "
                   ><template slot="title">
                     <i class="el-icon-picture" style="font-size: 1.06rem"
                       >首页图片管理</i
@@ -440,7 +453,10 @@
                 </el-menu-item>
                 <el-menu-item
                   index="/linuxmanage"
-                  v-if="$store.state.root && $store.state.my_name === 'root'"
+                  v-if="
+                    $store.state.root &&
+                    $store.state.my_name === $SqsGlobal.root_name
+                  "
                   ><template slot="title">
                     <i class="el-icon-s-platform" style="font-size: 1.06rem"
                       >服务器管理</i
@@ -449,7 +465,10 @@
                 </el-menu-item>
                 <el-menu-item
                   index="/monitor"
-                  v-if="$store.state.root && $store.state.my_name === 'root'"
+                  v-if="
+                    $store.state.root &&
+                    $store.state.my_name === $SqsGlobal.root_name
+                  "
                   ><template slot="title">
                     <i
                       class="el-icon-video-camera-solid"
@@ -520,7 +539,10 @@
                 </el-menu-item>
                 <el-menu-item
                   index="/userarticle"
-                  v-if="$store.state.root && $store.state.my_name === 'root'"
+                  v-if="
+                    $store.state.root &&
+                    $store.state.my_name === $SqsGlobal.root_name
+                  "
                 >
                   <template slot="title">
                     <i class="el-icon-s-order" style="font-size: 1.06rem"
@@ -530,7 +552,10 @@
                 </el-menu-item>
                 <el-menu-item
                   index="/questionlistmanage"
-                  v-if="$store.state.root && $store.state.my_name === 'root'"
+                  v-if="
+                    $store.state.root &&
+                    $store.state.my_name === $SqsGlobal.root_name
+                  "
                   ><template slot="title">
                     <i class="el-icon-s-order" style="font-size: 1.06rem"
                       >问答圈管理</i
@@ -539,7 +564,10 @@
                 </el-menu-item>
                 <el-menu-item
                   index="/goodsmanage"
-                  v-if="$store.state.root && $store.state.my_name === 'root'"
+                  v-if="
+                    $store.state.root &&
+                    $store.state.my_name === $SqsGlobal.root_name
+                  "
                 >
                   <template slot="title">
                     <i class="el-icon-s-ticket" style="font-size: 1.06rem"
@@ -549,7 +577,10 @@
                 </el-menu-item>
                 <el-menu-item
                   index="/videomanage"
-                  v-if="$store.state.root && $store.state.my_name === 'root'"
+                  v-if="
+                    $store.state.root &&
+                    $store.state.my_name === $SqsGlobal.root_name
+                  "
                   ><template slot="title">
                     <i
                       class="el-icon-video-camera-solid"
@@ -960,7 +991,6 @@ export default {
       } catch (err) {}
       return;
     },
-
     wsOnmessage(e) {
       try {
         const temdata = eval("(" + e.data + ")");

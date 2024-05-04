@@ -195,7 +195,8 @@
                 <div style="text-align: right; margin: 0.2rem 1rem">
                   <el-button
                     v-show="
-                      ($store.state.root && $store.state.my_name === 'root') ||
+                      ($store.state.root &&
+                        $store.state.my_name === $SqsGlobal.root_name) ||
                       temcomment.userid == $store.state.my_id
                     "
                     size="medium"
@@ -287,7 +288,7 @@
                     <el-button
                       v-show="
                         ($store.state.root &&
-                          $store.state.my_name === 'root') ||
+                          $store.state.my_name === $SqsGlobal.root_name) ||
                         tem.userid == $store.state.my_id
                       "
                       size="medium"

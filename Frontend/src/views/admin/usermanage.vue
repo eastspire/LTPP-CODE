@@ -8,7 +8,9 @@
     <div class="ltpp-list-box">
       <div
         class="search shadow"
-        v-if="$store.state.root && $store.state.my_name === 'root'"
+        v-if="
+          $store.state.root && $store.state.my_name === $SqsGlobal.root_name
+        "
       >
         <el-input
           style="font-size: 1.06rem"
@@ -25,7 +27,7 @@
 
     <div
       style="height: 1rem"
-      v-if="$store.state.root && $store.state.my_name === 'root'"
+      v-if="$store.state.root && $store.state.my_name === $SqsGlobal.root_name"
     ></div>
 
     <el-button
@@ -225,7 +227,11 @@
     <div style="height: 3.4rem"></div>
     <el-pagination
       background
-      v-if="total && $store.state.root && $store.state.my_name === 'root'"
+      v-if="
+        total &&
+        $store.state.root &&
+        $store.state.my_name === $SqsGlobal.root_name
+      "
       style="text-align: center"
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
@@ -493,7 +499,7 @@
       <div class="dialog-footer">
         <div style="float: left">
           <el-button
-            v-if="userdata.name != 'root' && $store.state.root"
+            v-if="userdata.name != $SqsGlobal.root_name && $store.state.root"
             type="danger"
             class="el-icon-delete"
             style="font-size: 1.06rem; margin-left: 0rem; font-weight: bold"
@@ -507,7 +513,9 @@
         </div>
         <div style="text-align: right">
           <el-button
-            v-if="$store.state.root && $store.state.my_name === 'root'"
+            v-if="
+              $store.state.root && $store.state.my_name === $SqsGlobal.root_name
+            "
             type="warning"
             @click="
               dialogFormVisible = false;
@@ -522,9 +530,9 @@
 
           <el-button
             v-if="
-              userdata.name != 'root' &&
+              userdata.name != $SqsGlobal.root_name &&
               $store.state.root &&
-              $store.state.my_name === 'root'
+              $store.state.my_name === $SqsGlobal.root_name
             "
             type="danger"
             @click="
@@ -540,9 +548,9 @@
 
           <el-button
             v-if="
-              userdata.name != 'root' &&
+              userdata.name != $SqsGlobal.root_name &&
               $store.state.root &&
-              $store.state.my_name === 'root'
+              $store.state.my_name === $SqsGlobal.root_name
             "
             type="danger"
             @click="
@@ -556,7 +564,9 @@
             下线</el-button
           >
           <el-button
-            v-if="$store.state.root && $store.state.my_name === 'root'"
+            v-if="
+              $store.state.root && $store.state.my_name === $SqsGlobal.root_name
+            "
             type="success"
             @click="updateuser(true, true)"
             width="auto"
@@ -655,7 +665,8 @@
           <el-input
             v-model.lazy="grade"
             :disabled="
-              ($store.state.root && $store.state.my_name === 'root') === true
+              ($store.state.root &&
+                $store.state.my_name === $SqsGlobal.root_name) === true
                 ? false
                 : true
             "

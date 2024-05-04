@@ -156,7 +156,11 @@
           style="font-size: 1.06rem"
           v-model.lazy="onedata.password"
         ></el-input>
-        <div v-if="$store.state.root && $store.state.my_name === 'root'">
+        <div
+          v-if="
+            $store.state.root && $store.state.my_name === $SqsGlobal.root_name
+          "
+        >
           <p
             style="
               font-size: 1.06rem;

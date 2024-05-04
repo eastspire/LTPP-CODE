@@ -370,7 +370,8 @@
                         class="el-icon-delete pulse-enter-active"
                         v-show="
                           temanswer.userid == myid ||
-                          ($store.state.root && $store.state.my_name === 'root')
+                          ($store.state.root &&
+                            $store.state.my_name === $SqsGlobal.root_name)
                         "
                         @click="deleteanswer(temanswer.id)"
                       ></el-button>
@@ -528,7 +529,7 @@
                             v-show="
                               temtouseranswer.userid == myid ||
                               ($store.state.root &&
-                                $store.state.my_name === 'root')
+                                $store.state.my_name === $SqsGlobal.root_name)
                             "
                             @click="deleteanswer(temtouseranswer.id)"
                           ></el-button>

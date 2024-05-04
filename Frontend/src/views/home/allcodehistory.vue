@@ -143,7 +143,10 @@
                 </template>
               </el-table-column>
               <el-table-column
-                v-if="$store.state.root && $store.state.my_name === 'root'"
+                v-if="
+                  $store.state.root &&
+                  $store.state.my_name === $SqsGlobal.root_name
+                "
                 label="操作"
                 width="auto"
                 align="center"

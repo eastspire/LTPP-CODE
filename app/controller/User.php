@@ -61,13 +61,15 @@ class User
     {
         $my_uid = JwtToken::getCurrentId();
         $my_aid = Base::getIdByUid($my_uid);
-        $user_db = Db::table('user')
-            ->where('id', $my_aid)
-            ->where('isdel', 0)
-            ->select('grade')
-            ->first();
+        $user_db = Base::getUserData($my_aid);
         if (!$user_db) {
             return json(['code' => -1]);
+        }
+        if ($user_db->grade == 3) {
+            if (Base::judgeIsRoot($my_aid)) {
+                return json(['code' => $user_db->grade]);
+            }
+            return json(['code' => 2]);
         }
         return json(['code' => $user_db->grade]);
     }

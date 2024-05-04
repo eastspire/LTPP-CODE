@@ -318,7 +318,9 @@
         <div style="height: 2rem"></div>
         <div style="text-align: right">
           <el-button
-            v-if="$store.state.root && $store.state.my_name === 'root'"
+            v-if="
+              $store.state.root && $store.state.my_name === $SqsGlobal.root_name
+            "
             width="auto"
             round
             type="warning"
@@ -329,7 +331,9 @@
             开始机器答题</el-button
           >
           <el-button
-            v-if="$store.state.root && $store.state.my_name === 'root'"
+            v-if="
+              $store.state.root && $store.state.my_name === $SqsGlobal.root_name
+            "
             width="auto"
             round
             type="warning"

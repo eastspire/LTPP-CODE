@@ -124,7 +124,10 @@
               <template slot-scope="scope">
                 <el-button
                   class="pulse-enter-active"
-                  v-if="$store.state.root && $store.state.my_name === 'root'"
+                  v-if="
+                    $store.state.root &&
+                    $store.state.my_name === $SqsGlobal.root_name
+                  "
                   @click="
                     iscreat = false;
                     deleteid(scope.row.id);

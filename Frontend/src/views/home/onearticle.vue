@@ -443,7 +443,8 @@
                         class="el-icon-delete pulse-enter-active"
                         v-show="
                           temcomment.userid == myid ||
-                          ($store.state.root && $store.state.my_name === 'root')
+                          ($store.state.root &&
+                            $store.state.my_name === $SqsGlobal.root_name)
                         "
                         @click="deletecomment(temcomment.id)"
                       ></el-button>
@@ -601,7 +602,7 @@
                             v-show="
                               temtousercomment.userid == myid ||
                               ($store.state.root &&
-                                $store.state.my_name === 'root')
+                                $store.state.my_name === $SqsGlobal.root_name)
                             "
                             @click="deletecomment(temtousercomment.id)"
                           ></el-button>

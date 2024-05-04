@@ -622,7 +622,10 @@ const strip_ignore_tag_body = true;
 
 const no_support_file_tips = "该资源暂不支持预览";
 
+const root_name = 'root';
+
 export default {
+    root_name,
     no_support_file_tips,
     extion_map_number,
     strip_ignore_tag_body,
