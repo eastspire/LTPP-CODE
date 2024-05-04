@@ -86,7 +86,7 @@
                 class="md"
                 :codeStyle="prop.codeStyle"
                 :toolbars="toolbars"
-                :value="tem.name"
+                :value="tem.name || '<br>'"
                 :subfield="prop.subfield"
                 :defaultOpen="prop.defaultOpen"
                 :toolbarsFlag="prop.toolbarsFlag"

@@ -105,7 +105,7 @@
         </p>
         <el-input
           style="font-size: 1.06rem"
-          v-model.lazy="userdata['name']"
+          v-model.lazy="userdata.name"
           placeholder="请输入用户名"
         />
         <p
@@ -120,7 +120,7 @@
         </p>
         <el-input
           style="font-size: 1.06rem"
-          v-model.lazy="userdata['password']"
+          v-model.lazy="userdata.password"
           placeholder="请输入密码"
         />
 
@@ -136,10 +136,51 @@
         </p>
         <el-input
           style="font-size: 1.06rem"
-          v-model.lazy="userdata['email']"
+          v-model.lazy="userdata.email"
           placeholder="请输入邮箱"
         />
-
+        <p
+          style="
+            font-size: 1.06rem;
+            text-align: left;
+            font-weight: bold;
+            margin: 1rem 0rem 0.5rem 0rem;
+          "
+        >
+          图片保存方式
+        </p>
+        <el-switch
+          v-model.lazy="userdata.image_use_remote"
+          :active-value="1"
+          :inactive-value="0"
+          active-text="远程地址"
+          inactive-text="BASE64"
+          @change="updata()"
+          active-color="#13ce66"
+          inactive-color="#ff4949"
+        >
+        </el-switch>
+        <p
+          style="
+            font-size: 1.06rem;
+            text-align: left;
+            font-weight: bold;
+            margin: 1rem 0rem 0.5rem 0rem;
+          "
+        >
+          系统通知
+        </p>
+        <el-switch
+          v-model.lazy="userdata.open_system_notice"
+          :active-value="1"
+          :inactive-value="0"
+          active-text="开启"
+          inactive-text="关闭"
+          @change="updata()"
+          active-color="#13ce66"
+          inactive-color="#ff4949"
+        >
+        </el-switch>
         <p
           style="
             font-size: 1.06rem;
@@ -152,7 +193,7 @@
         </p>
         <el-input
           style="font-size: 1.06rem"
-          v-model.lazy="userdata['student_number']"
+          v-model.lazy="userdata.student_number"
           placeholder="请输入学号"
         />
 
@@ -168,7 +209,7 @@
         </p>
         <el-input
           style="font-size: 1.06rem"
-          v-model.lazy="userdata['enrollment_year']"
+          v-model.lazy="userdata.enrollment_year"
           placeholder="请输入入学年份"
         />
 
@@ -252,7 +293,7 @@
         </p>
         <el-input
           style="font-size: 1.06rem"
-          v-model.lazy="userdata['musicuid']"
+          v-model.lazy="userdata.musicuid"
           placeholder="请输入网易云uid（用户id）"
         />
 
@@ -268,7 +309,7 @@
         </p>
         <el-input
           style="font-size: 1.06rem"
-          v-model.lazy="userdata['musiclovelistid']"
+          v-model.lazy="userdata.musiclovelistid"
           placeholder="请输入网易云我喜欢的列表id"
         />
 
@@ -287,7 +328,7 @@
           autosize
           placeholder="请输入个性签名"
           style="font-size: 1rem"
-          v-model.lazy="userdata['mysay']"
+          v-model.lazy="userdata.mysay"
         >
         </el-input>
 
@@ -306,7 +347,7 @@
           autosize
           placeholder="请输入CSS自定义配置"
           style="font-size: 1rem"
-          v-model.lazy="userdata['root_css']"
+          v-model.lazy="userdata.root_css"
         >
         </el-input>
 
@@ -322,7 +363,7 @@
         </p>
         <el-select
           :popper-append-to-body="false"
-          v-model.lazy="userdata['sex']"
+          v-model.lazy="userdata.sex"
           placeholder="请选择"
           style="
             width: 10%;
@@ -495,6 +536,8 @@ export default {
     this.requestid_timer = setInterval(() => {
       this.head.Requestid = this.Base64Encode(new Date().getTime());
     }, 1000);
+    this.userdata.image_use_remote = this.$store.state.image_use_remote;
+    this.userdata.open_system_notice = this.$store.state.open_system_notice;
     if (!this.linuxurl) {
       await this.getlinuxurl();
     }
@@ -811,13 +854,17 @@ export default {
       this.key_search_subject = res?.data["subject"];
       this.key_search_class = res?.data["class"];
     },
-
     async updata() {
       if (this.isup) {
         return;
       }
       this.isup = true;
-
+      this.$store.commit("updateObj", {
+        image_use_remote: this.userdata?.image_use_remote,
+      });
+      this.$store.commit("updateObj", {
+        open_system_notice: this.userdata?.open_system_notice,
+      });
       const { data: res } = await this.$ajax({
         method: "post",
         url: "/User/updateUser",

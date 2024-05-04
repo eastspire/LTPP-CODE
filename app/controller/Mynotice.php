@@ -88,7 +88,7 @@ class Mynotice
         return json([
             'code' => 1,
             'time' => date('Y-m-d H:i:s', time()),
-            'msg' => '您有 ' . $allnum . ' 条消息通知',
+            'msg' => '您有 ' . $allnum . ' 条后台消息通知',
             'allnum' => $allnum
         ]);
     }
@@ -142,5 +142,4 @@ class Mynotice
             ->update(['isdel' => 1]);
         return json(['code' => 1, 'msg' => '删除成功']);
     }
-}
-;
+};

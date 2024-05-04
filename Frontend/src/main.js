@@ -25,6 +25,8 @@ import "../public/md/markdown/github-markdown.min.css";
 import "../updateCompoents/video.js/dist/video-js.css"
 import VueWorker from 'vue-worker';
 
+const reader = new FileReader();
+
 Vue.config.errorHandler = () => { }
 
 try {
@@ -522,6 +524,8 @@ Vue.prototype.logoutRemove = function (is_force = false) {
                 }
             }
             window.sessionStorage.clear();
+            // 清空自定义系统UI
+            this.setRootCSS("");
         } catch (err) {
         }
         EventBus.$emit('closeWs');
@@ -731,10 +735,109 @@ Vue.prototype.downloadUrlContent = async function (url, data, download_name) {
     return res;
 };
 
+Vue.prototype.sendNotification = function (title = '通知', body = '', icon = '/LTPPlogo.png') {
+    try {
+        if (!this.$store.state.open_system_notice) {
+            return;
+        }
+        const send = () => {
+            new Notification(title, {
+                body: body,
+                icon: icon
+            });
+        };
+        if (window.Notification.permission == "granted") {
+            // 判断是否有权限
+            send();
+        } else if (window.Notification.permission != "denied") {
+            // 没有权限发起请求
+            window.Notification.requestPermission((permission) => {
+                send();
+            });
+        }
+    } catch (err) { }
+}
+
+Vue.prototype.imgAddBase64 = async function (pos, $file, $ref_name) {
+    reader.onload = (event) => {
+        const base64_string = event.target.result;
+        this.$refs[$ref_name].$img2Url(pos, base64_string);
+    };
+    reader.readAsDataURL($file);
+}
+
+Vue.prototype.imgAddRemoteUrl = async function (pos, $file, $ref_name) {
+    let formdata = new FormData();
+    formdata.append("file", $file);
+    await this.$ajax({
+        url: "/File/saveImage",
+        method: "post",
+        data: formdata,
+        headers: { "Content-Type": "multipart/form-data" },
+    }).then((res) => {
+        this.$refs[$ref_name].$img2Url(pos, res?.data.url);
+    }).catch((t) => {
+        this.$msg({
+            type: "error",
+            message: t,
+            duration: 1600,
+            offset: 80,
+        });
+    });
+}
+
+Vue.prototype.imgAddMiddleware = function (pos, $file, $ref_name) {
+    if (this.$store.state.image_use_remote) {
+        this.imgAddRemoteUrl(pos, $file, $ref_name);
+    } else {
+        this.imgAddBase64(pos, $file, $ref_name);
+    }
+}
+
+// 更新图片保存方式配置
+Vue.prototype.changeImageSaveType = function () {
+    store.commit("updateObj", { image_use_remote: !!!store.state.image_use_remote });
+    axios({
+        url: "/User/changeImageSaveType",
+        method: "post",
+        data: {
+            image_use_remote: store.state.image_use_remote
+        },
+    }).then((res) => {
+    }).catch((t) => {
+    });
+}
+
+// 获取图片保存方式配置
+Vue.prototype.getImageSaveType = function () {
+    this.$ajax({
+        url: "/User/getImageSaveType",
+        method: "post",
+    }).then((res) => {
+        if (res?.data?.code == 1) {
+            this.$store.commit("updateObj", { image_use_remote: res?.data?.data });
+        }
+    }).catch((t) => {
+    });
+}
+
+// 获取系统通知配置
+Vue.prototype.getSystemNoticeConfig = function () {
+    this.$ajax({
+        url: "/User/getSystemNoticeConfig",
+        method: "post",
+    }).then((res) => {
+        if (res?.data?.code == 1) {
+            this.$store.commit("updateObj", { open_system_notice: res?.data?.data });
+        }
+    }).catch((t) => {
+    });
+}
+
 new Vue({
     router,
     store,
     render: h => h(App),
-}).$mount('#app');
+}).$mount('#LTPP');
 
 export default router;

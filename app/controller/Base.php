@@ -4866,7 +4866,6 @@ class Base
         return true;
     }
 
-
     /**
      * 创建文件数据表
      * 创建文件路径表
@@ -4896,6 +4895,14 @@ class Base
         foreach ($sql as &$run_sql) {
             Db::statement($run_sql);
         }
+        $now = date('Y-m-d H:i:s', time());
+        $msg = '数据表【' . $table_file_data . '】和【' . $table_file_path . '】已创建完成！';
+        Robot::sendChatToOneUserMsgAndEmail(
+            Base::getRootId(),
+            '<h4>LTPP自动分表完成【' . $now
+                . '】</h4><br><strong>信息</strong><br><pre style="white-space:pre-wrap;word-wrap:break-word;">'
+                . $msg . '</pre>'
+        );
     }
 
     /**

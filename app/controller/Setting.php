@@ -144,15 +144,12 @@ class Setting extends Image
             return json(['code' => -1, 'msg' => '无权限']);
         }
         $res = '';
-        $out = array();
+        $out = '';
         Base::deleteAllFile(Base::$judge_install_path);
         Base::judgeCreatPath(Base::$judge_install_path);
         Base::runExec('cp -f /home/LTPP/InstallMust/JudgeServer/judge ' . Base::$judge_install_path, $out);
         Base::chmodFile('/JudgeServer', 0555);
-        if (!empty($out)) {
-            foreach ($out as $tem) {
-                $res .= $tem . "\n";
-            }
+        if (strlen($out) > 0) {
             Robot::sendChatToOneUserMsg($my_aid, '判题机安装出错' . $res);
             return json(['code' => -1, 'msg' => '安装出错' . $res]);
         }

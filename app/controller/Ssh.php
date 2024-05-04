@@ -60,14 +60,15 @@ class Ssh
             ->where('userid', $user_id)
             ->where('isdel', 0)
             ->select('begin_port', 'end_port', 'password')
+            ->orderBy('end_port', 'asc')
             ->get();
         $msg = '';
         $url = Base::getSettingKeyData('ssh_back_url');
         $ssh_ip = Base::getIp($url);
-        foreach ($db as &$tem) {
-            $msg .= '<h5>LTPP-SSH服务器</h5>' . "\n\n" . '> 登录命令：ssh -p ' . ($tem->begin_port ?? '') . ' ltpp@' . $ssh_ip . "\n\n" . '> 登陆密码：' . ($tem->password ?? '') . "\n\n" .
+        foreach ($db as $key => &$tem) {
+            $msg .= '<h5>' . ($key + 1) . '号LTPP-SSH服务器</h5>' . "<details>\n\n" . '> 登录命令：ssh -p ' . ($tem->begin_port ?? '') . ' ltpp@' . $ssh_ip . "\n\n" . '> 登陆密码：' . ($tem->password ?? '') . "\n\n" .
                 '> [点击打开在线版本VSCODE](http://' . $ssh_ip . ($tem->begin_port ? (':' . $tem->begin_port + 1) : '') . ")\n\n" .
-                '> 一共可用' . Base::$ssh_default_open_ports_num . '个公网端口【' . $tem->begin_port . '-' . $tem->end_port . '】' . "\n\n";
+                '<summary>一共可用' . Base::$ssh_default_open_ports_num . '个公网端口【' . $tem->begin_port . '-' . $tem->end_port . '】</summary></details>';
         }
         return $msg;
     }

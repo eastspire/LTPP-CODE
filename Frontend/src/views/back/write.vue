@@ -112,8 +112,8 @@
               :stripIgnoreTagBody="stripIgnoreTagBody"
               style="min-height: 16rem; height: auto; border-width: 0rem"
             >
-              <!-- 引用视频链接的自定义按钮 -->
               <template v-slot:left-toolbar-after>
+                <!-- 引用视频链接的自定义按钮 -->
                 <!--点击按钮触发的事件是打开表单对话框-->
                 <el-button
                   type="text"
@@ -127,6 +127,20 @@
                 >
                   <i class="el-icon-video-camera-solid" />
                 </el-button>
+                <el-button
+                  type="text"
+                  @click="changeImageSaveType"
+                  aria-hidden="true"
+                  class="op-icon fa"
+                  title="切换图片保存方式"
+                >
+                  <i
+                    v-if="$store.state.image_use_remote"
+                    class="el-icon-upload"
+                  />
+                  <i v-else class="el-icon-picture" />
+                </el-button>
+                <!-- 图片保存方式 -->
               </template>
               <!-- 发布 -->
               <template v-slot:right-toolbar-after>
@@ -216,6 +230,7 @@ export default {
   computed: {
     prop() {
       let data = {
+        image_use_remote: true,
         subfield: false, // 单双栏模式
         defaultOpen: "edit", //edit： 默认展示编辑区域 ， preview： 默认展示预览区域
         editable: true,
@@ -402,35 +417,12 @@ export default {
       // 拼接并替换文本域内容
       this.$refs.md.d_value = subStart + "\n" + linkFrame + "\n" + subEnd;
       // document.getElementsByClassName("v-note-edit")[0].scrollTop = posScroll;
-
       // 关闭对话框
       this.dialogFormVisible = false;
     },
-
     // 绑定@imgAdd event
     async $imgAdd(pos, $file) {
-      // 第一步.将图片上传到服务器.
-      let formdata = new FormData();
-      formdata.append("file", $file);
-      await this.$ajax({
-        url: "/File/saveImage",
-        method: "post",
-        data: formdata,
-        headers: { "Content-Type": "multipart/form-data" },
-      })
-        .then((res) => {
-          // 第二步.将返回的url替换到文本原位置![...](0) -> ![...](url)
-          // $vm.$img2Url 详情见本页末尾
-          this.$refs.md.$img2Url(pos, res?.data.url);
-        })
-        .catch((t) => {
-          this.$msg({
-            type: "error",
-            message: t,
-            duration: 1600,
-            offset: 80,
-          });
-        });
+      this.imgAddMiddleware(pos, $file, "md");
     },
     async uparticle() {
       if (!this.issendfinish) {

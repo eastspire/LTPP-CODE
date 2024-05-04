@@ -44,7 +44,12 @@
               tem.name === now_user.name ? user_deep_color : user_no_deep_color
             }`"
           >
-            <div @click="changeNowWindow(tem)">
+            <div
+              @click="changeNowWindow(tem)"
+              @contextmenu.prevent="
+                deleteChatUser(tem?.id, tem?.name, tem.type !== 'group_chat')
+              "
+            >
               <el-image
                 fit="cover"
                 style="height: 3.4rem; width: 3.4rem"
@@ -151,7 +156,7 @@
                 >
                   <mavon-editor
                     class="md shadow"
-                    :value="tem.msg"
+                    :value="tem.msg || '<br>'"
                     :subfield="prop.subfield"
                     :defaultOpen="prop.defaultOpen"
                     :toolbarsFlag="prop.toolbarsFlag"
@@ -251,6 +256,19 @@
                   title="插入视频资源"
                 >
                   <i class="el-icon-video-camera-solid" />
+                </el-button>
+                <el-button
+                  type="text"
+                  @click="changeImageSaveType"
+                  aria-hidden="true"
+                  class="op-icon fa"
+                  title="切换图片保存方式"
+                >
+                  <i
+                    v-if="$store.state.image_use_remote"
+                    class="el-icon-upload"
+                  />
+                  <i v-else class="el-icon-picture" />
                 </el-button>
               </template>
               <!-- 发送 -->
@@ -755,6 +773,60 @@ export default {
     this.timer = null;
   },
   methods: {
+    async removeUserChat(user_id) {
+      await this.$ajax({
+        method: "post",
+        url: "/Chat/removeUserChat",
+        portType: {
+          process: "8793",
+        },
+        data: {
+          user_id: user_id,
+        },
+      }).catch((t) => {
+        this.$msg({
+          type: "error",
+          message: t,
+          duration: 1600,
+          offset: 80,
+        });
+      });
+      if (this.now_user.id == user_id) {
+        // 当前窗口用户移除需要切换窗口
+        this.changeNowWindow(this.user_list?.length ? this.user_list[0] : {});
+      }
+      await this.getUserAndGroupList();
+    },
+    async deleteChatUser(user_id, user_name, is_private_chat = false) {
+      if (!user_id || user_id == this.$SqsGlobal.loading_tips) {
+        return;
+      }
+      if (!is_private_chat) {
+        this.$msg({
+          type: "warning",
+          message: "禁止从聊天列表中移除群聊",
+          duration: 1600,
+          offset: 80,
+        });
+        return;
+      }
+      this.$confirm(`确定从聊天列表中移除用户${user_name}吗？`, "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(() => {
+          this.removeUserChat(user_id);
+        })
+        .catch(() => {
+          this.$msg({
+            type: "info",
+            duration: 1600,
+            offset: 80,
+            message: "操作取消",
+          });
+        });
+    },
     changeNowWindow(tem) {
       this.id = 0;
       tem.no_look_num = 0;
@@ -829,33 +901,9 @@ export default {
       // 关闭对话框
       this.dialogFormVisible = false;
     },
-
     // 绑定@imgAdd event
     async $imgAdd(pos, $file) {
-      // 第一步.将图片上传到服务器.
-      let formdata = new FormData();
-      formdata.append("file", $file);
-      await this.$ajax({
-        url: "/File/saveImage",
-        method: "post",
-        data: formdata,
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      })
-        .then((res) => {
-          // 第二步.将返回的url替换到文本原位置![...](0) -> ![...](url)
-          // $vm.$img2Url 详情见本页末尾
-          this.$refs.md.$img2Url(pos, res?.data.url);
-        })
-        .catch((t) => {
-          this.$msg({
-            type: "error",
-            message: t,
-            duration: 1600,
-            offset: 80,
-          });
-        });
+      this.imgAddMiddleware(pos, $file, "md");
     },
     async getGroupUserList() {
       this.isSeeChatUser = true;
@@ -881,6 +929,15 @@ export default {
       }
     },
     async clearNolookNum() {
+      for (let i = 0; i < this.user_list.length; ++i) {
+        if (this.user_list[i].id == this.now_user.id) {
+          if (this.user_list[i].no_look_num == 0) {
+            return;
+          }
+          this.user_list[i].no_look_num = 0;
+          break;
+        }
+      }
       this.$ajax({
         method: "post",
         url: "/Chat/clearNolookNum",
@@ -1073,6 +1130,7 @@ export default {
           this.can_scroll = false;
         } else {
           this.can_scroll = true;
+          this.clearNolookNum();
         }
       }, 360);
     },
@@ -1485,12 +1543,6 @@ export default {
             // 是当前窗口的用户直接显示
             this.to_scroll_bottom(0);
             if (this.can_scroll) {
-              for (let i = 0; i < this.user_list.length; ++i) {
-                if (this.user_list[i].id == this.now_user.id) {
-                  this.user_list[i].no_look_num = 0;
-                  break;
-                }
-              }
               this.clearNolookNum();
             } else {
               this.addNoLookNum(tem_id);
@@ -1528,6 +1580,8 @@ export default {
           // 新建群聊完成时的操作
           this.isSeeJoinGroupDia = false;
           this.willJoinGroupData = {};
+          this.group_data = {};
+          this.creat_group_chat_image = "";
           this.my_join_group_code = "";
           // 群聊加入列表
           if (this.judge_user_list_has_persion(temdata.group_data.id)) {

@@ -42,7 +42,7 @@
     >
     <div style="height: 1rem"></div>
     <div :style="`min-height:${$store.state.no_scroll_height * 0.76}vh;`">
-      <div v-if="$store.state.root && $store.state.my_name === 'root'">
+      <div>
         <div v-for="temtable in tableData" :key="temtable.index">
           <div
             @click="
@@ -443,6 +443,52 @@
         v-model.lazy="userdata.root_css"
         style="font-size: 1.06rem; overflow: hidden"
       ></el-input>
+      <p
+        v-if="$store.state.root"
+        style="
+          font-size: 1.06rem;
+          text-align: left;
+          font-weight: bold;
+          margin: 1rem 0rem 0.5rem 0rem;
+        "
+      >
+        图片保存方式
+      </p>
+      <el-switch
+        v-if="$store.state.root"
+        v-model.lazy="userdata.image_use_remote"
+        :active-value="1"
+        :inactive-value="0"
+        active-text="远程地址"
+        inactive-text="BASE64"
+        @change="updateuser(false, false)"
+        active-color="#13ce66"
+        inactive-color="#ff4949"
+      >
+      </el-switch>
+      <p
+        v-if="$store.state.root"
+        style="
+          font-size: 1.06rem;
+          text-align: left;
+          font-weight: bold;
+          margin: 1rem 0rem 0.5rem 0rem;
+        "
+      >
+        系统通知
+      </p>
+      <el-switch
+        v-if="$store.state.root"
+        v-model.lazy="userdata.open_system_notice"
+        :active-value="1"
+        :inactive-value="0"
+        active-text="开启"
+        inactive-text="关闭"
+        @change="updateuser(false, false)"
+        active-color="#13ce66"
+        inactive-color="#ff4949"
+      >
+      </el-switch>
       <div style="height: 1.6rem"></div>
       <div class="dialog-footer">
         <div style="float: left">
@@ -512,7 +558,7 @@
           <el-button
             v-if="$store.state.root && $store.state.my_name === 'root'"
             type="success"
-            @click="updateuser()"
+            @click="updateuser(true, true)"
             width="auto"
             class="el-icon-upload2"
             style="font-size: 1.06rem; margin-right: 2rem; font-weight: bold"
@@ -924,7 +970,7 @@ export default {
       this.total = res.allnum; //总条数
     },
 
-    async updateuser() {
+    async updateuser(is_close_dialog = true, need_get_new_list = true) {
       const { data: res } = await this.$ajax({
         method: "post",
         url: "/User/rootUpdateUser",
@@ -949,7 +995,9 @@ export default {
           duration: 1600,
           offset: 80,
         });
-        this.dialogFormVisible = false;
+        if (is_close_dialog) {
+          this.dialogFormVisible = false;
+        }
       } else {
         this.$msg({
           type: "error",
@@ -958,9 +1006,10 @@ export default {
           offset: 80,
         });
       }
-      this.search();
+      if (need_get_new_list) {
+        this.search();
+      }
     },
-
     async deleteuser() {
       this.$confirm("确定删除该用户吗？", "提示", {
         confirmButtonText: "确定",

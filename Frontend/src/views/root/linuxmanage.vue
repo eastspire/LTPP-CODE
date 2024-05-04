@@ -57,7 +57,10 @@
                         cursor: pointer;
                         margin-left: 1rem;
                       "
-                      @click="tojoinpage(scope.row.id)"
+                      @click="
+                        now_linux = scope.row;
+                        isseedialog = true;
+                      "
                       >{{ scope.row.name }}</span
                     >
                   </el-tooltip>
@@ -182,14 +185,14 @@
           >
             服务器购买时间：{{ now_linux.buy_time }}
           </p>
-          <div style="display: flex; justify-content: center">
+          <div style="display: flex; justify-content: center; flex-wrap: wrap">
             <el-button
               class="pulse-enter-active"
               @click="copy(now_linux.password)"
               style="
                 font-size: 1.06rem;
                 font-weight: bold;
-                margin: 1rem 2rem 0rem 2rem;
+                margin: 1rem 1rem 0rem 1rem;
               "
               type="success"
               >密码
@@ -203,7 +206,7 @@
               style="
                 font-size: 1.06rem;
                 font-weight: bold;
-                margin: 1rem 2rem 0rem 2rem;
+                margin: 1rem 1rem 0rem 1rem;
               "
               type="success"
               >开机
@@ -217,7 +220,7 @@
               style="
                 font-size: 1.06rem;
                 font-weight: bold;
-                margin: 1rem 2rem 0rem 2rem;
+                margin: 1rem 1rem 0rem 1rem;
               "
               type="danger"
               >关机
@@ -231,10 +234,52 @@
               style="
                 font-size: 1.06rem;
                 font-weight: bold;
-                margin: 1rem 2rem 0rem 2rem;
+                margin: 1rem 1rem 0rem 1rem;
               "
               type="danger"
               >重启
+            </el-button>
+            <el-button
+              class="pulse-enter-active"
+              @click="
+                isCreatImage(now_linux.name);
+                isseedialog = false;
+              "
+              style="
+                font-size: 1.06rem;
+                font-weight: bold;
+                margin: 1rem 1rem 0rem 1rem;
+              "
+              type="danger"
+              >快照
+            </el-button>
+            <el-button
+              class="pulse-enter-active"
+              @click="
+                isBackLastImage(now_linux.name);
+                isseedialog = false;
+              "
+              style="
+                font-size: 1.06rem;
+                font-weight: bold;
+                margin: 1rem 1rem 0rem 1rem;
+              "
+              type="danger"
+              >回滚
+            </el-button>
+            <el-button
+              class="pulse-enter-active"
+              @click="
+                isResetImage(now_linux.name);
+                isseedialog = false;
+              "
+              style="
+                font-size: 1.06rem;
+                font-weight: bold;
+                margin: 1rem 1rem 0rem 1rem;
+              "
+              type="danger"
+              >重置
             </el-button>
             <el-button
               class="pulse-enter-active"
@@ -245,7 +290,7 @@
               style="
                 font-size: 1.06rem;
                 font-weight: bold;
-                margin: 1rem 2rem 0rem 2rem;
+                margin: 1rem 1rem 0rem 1rem;
               "
               type="danger"
               >删除
@@ -391,6 +436,190 @@ export default {
             duration: 1600,
             offset: 80,
             message: "取消删除",
+          });
+        });
+    },
+    // 制作镜像
+    async creatImage(name) {
+      if (!name || name == this.$SqsGlobal.loading_tips) {
+        return;
+      }
+      const { data: res } = await this.$ajax({
+        method: "post",
+        url: "/Linux/creatImage",
+        portType: {
+          process: "8796",
+        },
+        data: {
+          name: name,
+        },
+      }).catch((t) => {
+        this.$msg({
+          type: "error",
+          message: t,
+          duration: 1600,
+          offset: 80,
+        });
+      });
+      if (res?.code == 1) {
+        this.$msg({
+          type: "success",
+          message: res?.msg,
+          duration: 1600,
+          offset: 80,
+        });
+      } else {
+        this.$msg({
+          type: "error",
+          message: res?.msg,
+          duration: 1600,
+          offset: 80,
+        });
+      }
+    },
+    // 制作镜像
+    async isCreatImage(name) {
+      if (!name || name == this.$SqsGlobal.loading_tips) {
+        return;
+      }
+      this.$confirm("确定制作快照吗（此操作会覆盖旧的快照）？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(() => {
+          this.creatImage(name);
+        })
+        .catch(() => {
+          this.$msg({
+            type: "info",
+            duration: 1600,
+            offset: 80,
+            message: "取消制作快照",
+          });
+        });
+    },
+    // 回滚镜像
+    async backLastImage(name) {
+      if (!name || name == this.$SqsGlobal.loading_tips) {
+        return;
+      }
+      const { data: res } = await this.$ajax({
+        method: "post",
+        url: "/Linux/backLastImage",
+        portType: {
+          process: "8796",
+        },
+        data: {
+          name: name,
+        },
+      }).catch((t) => {
+        this.$msg({
+          type: "error",
+          message: t,
+          duration: 1600,
+          offset: 80,
+        });
+      });
+      if (res?.code == 1) {
+        this.$msg({
+          type: "success",
+          message: res?.msg,
+          duration: 1600,
+          offset: 80,
+        });
+      } else {
+        this.$msg({
+          type: "error",
+          message: res?.msg,
+          duration: 1600,
+          offset: 80,
+        });
+      }
+    },
+    // 回滚镜像
+    async isBackLastImage(name) {
+      if (!name || name == this.$SqsGlobal.loading_tips) {
+        return;
+      }
+      this.$confirm(
+        "确定回滚到最新的快照吗（此操作会覆盖当前数据）？",
+        "提示",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        }
+      )
+        .then(() => {
+          this.backLastImage(name);
+        })
+        .catch(() => {
+          this.$msg({
+            type: "info",
+            duration: 1600,
+            offset: 80,
+            message: "取消回滚快照",
+          });
+        });
+    },
+    // 重置镜像
+    async resetImage(name) {
+      if (!name || name == this.$SqsGlobal.loading_tips) {
+        return;
+      }
+      const { data: res } = await this.$ajax({
+        method: "post",
+        url: "/Linux/resetImage",
+        portType: {
+          process: "8796",
+        },
+        data: {
+          name: name,
+        },
+      }).catch((t) => {
+        this.$msg({
+          type: "error",
+          message: t,
+          duration: 1600,
+          offset: 80,
+        });
+      });
+      if (res?.code == 1) {
+        this.$msg({
+          type: "success",
+          message: res?.msg,
+          duration: 1600,
+          offset: 80,
+        });
+      } else {
+        this.$msg({
+          type: "error",
+          message: res?.msg,
+          duration: 1600,
+          offset: 80,
+        });
+      }
+    },
+    // 重置镜像
+    async isResetImage(name) {
+      if (!name || name == this.$SqsGlobal.loading_tips) {
+        return;
+      }
+      this.$confirm("确定重置快照吗（此操作会恢复出厂设置）？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(() => {
+          this.resetImage(name);
+        })
+        .catch(() => {
+          this.$msg({
+            type: "info",
+            duration: 1600,
+            offset: 80,
+            message: "取消重置快照",
           });
         });
     },

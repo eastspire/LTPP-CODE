@@ -58,7 +58,7 @@
               class="md"
               :codeStyle="prop.codeStyle"
               :toolbars="toolbars"
-              :value="article"
+              :value="article || '<br>'"
               :subfield="prop.subfield"
               :defaultOpen="prop.defaultOpen"
               :toolbarsFlag="prop.toolbarsFlag"
@@ -177,6 +177,19 @@
                     title="插入视频资源"
                   >
                     <i class="el-icon-video-camera-solid" />
+                  </el-button>
+                  <el-button
+                    type="text"
+                    @click="changeImageSaveType"
+                    aria-hidden="true"
+                    class="op-icon fa"
+                    title="切换图片保存方式"
+                  >
+                    <i
+                      v-if="$store.state.image_use_remote"
+                      class="el-icon-upload"
+                    />
+                    <i v-else class="el-icon-picture" />
                   </el-button>
                 </template>
                 <!-- 发表评论 -->
@@ -395,7 +408,7 @@
                         ref="md2"
                         :ishljs="true"
                         :toolbars="toolbars"
-                        :value="temcomment.text"
+                        :value="temcomment.text || '<br>'"
                         :subfield="prop.subfield"
                         :defaultOpen="prop.defaultOpen"
                         :toolbarsFlag="prop.toolbarsFlag"
@@ -552,7 +565,7 @@
                             ref="md3"
                             :ishljs="true"
                             :toolbars="toolbars"
-                            :value="temtousercomment.text"
+                            :value="temtousercomment.text || '<br>'"
                             :subfield="prop.subfield"
                             :defaultOpen="prop.defaultOpen"
                             :toolbarsFlag="prop.toolbarsFlag"
@@ -662,6 +675,19 @@
                       title="插入视频资源"
                     >
                       <i class="el-icon-video-camera-solid" />
+                    </el-button>
+                    <el-button
+                      type="text"
+                      @click="changeImageSaveType"
+                      aria-hidden="true"
+                      class="op-icon fa"
+                      title="切换图片保存方式"
+                    >
+                      <i
+                        v-if="$store.state.image_use_remote"
+                        class="el-icon-upload"
+                      />
+                      <i v-else class="el-icon-picture" />
                     </el-button>
                   </template>
                   <!-- 回复评论 -->

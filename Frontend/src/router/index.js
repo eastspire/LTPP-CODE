@@ -57,6 +57,7 @@ import myappmamage from '../views/back/myappmamage.vue';
 import fabulousvideo from '../views/back/fabulousvideo.vue';
 import lovevideo from '../views/back/lovevideo.vue';
 import mygoods from '../views/back/mygoods.vue';
+import mylinuxmanage from '../views/back/mylinuxmanage.vue';
 // admin
 import oneproblemmanage from "../views/admin/oneproblemmanage.vue";
 import problemmanage from '../views/admin/problemmanage.vue';
@@ -224,6 +225,18 @@ const routes = [{
                 import('../views/back/mygoods.vue'),
             meta: {
                 title: '我的商品',
+                keepAlive: true,
+                index: 2,
+
+            }
+        },
+        {
+            path: '/mylinuxmanage',
+            name: 'mylinuxmanage',
+            component: () =>
+                import('../views/back/mylinuxmanage.vue'),
+            meta: {
+                title: '云服务器管理',
                 keepAlive: true,
                 index: 2,
 

@@ -58,7 +58,7 @@
             <mavon-editor
               class="md"
               :toolbars="toolbars"
-              :value="question_sheet_data.content"
+              :value="question_sheet_data.content || '<br>'"
               :subfield="prop.subfield"
               :defaultOpen="prop.defaultOpen"
               :toolbarsFlag="prop.toolbarsFlag"

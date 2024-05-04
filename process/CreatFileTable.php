@@ -47,10 +47,12 @@ class CreatFileTable
                 $cnt_file_data_name =   Db::table($file_data_name)
                     ->count();
                 if (
-                    $cnt_file_path_name >= Base::$one_table_length_limit &&
+                    $cnt_file_path_name >= Base::$one_table_length_limit ||
                     $cnt_file_data_name >= Base::$one_table_length_limit
                 ) {
+                    // 先创建好表
                     Base::creatFilePathDataTable($index + 1);
+                    // 再添加数据到索引表
                     $index = Base::insertToDb('file_table_index', [
                         'md5' => ''
                     ]);

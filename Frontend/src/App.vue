@@ -1,5 +1,5 @@
 <template>
-  <div id="app" @contextmenu.prevent="" class="no-select;">
+  <div id="LTPP" @contextmenu.prevent="" class="no-select;">
     <div class="default-bk"></div>
     <router-view @contextmenu.prevent=""></router-view>
   </div>
@@ -41,10 +41,10 @@ try {
 } catch (err) {}
 
 export default {
-  name: "app",
+  name: "LTPP",
   data() {
     return {
-      version: "2.6.6",
+      version: "2.7.1",
       get_version_lock: false,
     };
   },
@@ -86,6 +86,8 @@ export default {
         this.getVersion();
       }, 6000);
       this.getVersion();
+      this.getImageSaveType();
+      this.getSystemNoticeConfig();
     } catch (err) {}
   },
   methods: {

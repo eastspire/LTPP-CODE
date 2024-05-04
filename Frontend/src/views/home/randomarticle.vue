@@ -51,7 +51,7 @@
             <div class="markdown-body">
               <mavon-editor
                 class="md"
-                :value="tableData.article"
+                :value="tableData.article || '<br>'"
                 :codeStyle="prop.codeStyle"
                 :toolbars="toolbars"
                 :subfield="prop.subfield"

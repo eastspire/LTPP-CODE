@@ -477,6 +477,25 @@ class Chat
     }
 
     /**
+     * 移除用户对话
+     */
+    public function removeUserChat(Request $request)
+    {
+        $my_uid = JwtToken::getCurrentId();
+        $my_aid = Base::getIdByUid($my_uid);
+        $user_uid = $request->post('user_id');
+        $user_id = Base::getIdByUid($user_uid);
+        Db::table('privateuser')
+            ->where('get_user_id', $my_aid)
+            ->where('post_user_id', $user_id)
+            ->where('isdel', 0)
+            ->update([
+                'isdel' => 1
+            ]);
+        return json(['code' => 1, 'msg' => '操作成功']);
+    }
+
+    /**
      * 获取全部列表
      * @param Request $request 请求
      * @return string $res json

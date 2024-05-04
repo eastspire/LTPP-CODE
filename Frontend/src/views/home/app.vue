@@ -161,7 +161,7 @@
             class="md"
             :codeStyle="prop.codeStyle"
             :toolbars="toolbars"
-            :value="onedata.content"
+            :value="onedata.content || '<br>'"
             :subfield="prop.subfield"
             :defaultOpen="prop.defaultOpen"
             :toolbarsFlag="prop.toolbarsFlag"

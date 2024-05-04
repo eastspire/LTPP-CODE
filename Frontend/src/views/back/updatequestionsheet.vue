@@ -74,6 +74,19 @@
               >
                 <i class="el-icon-video-camera-solid" />
               </el-button>
+              <el-button
+                type="text"
+                @click="changeImageSaveType"
+                aria-hidden="true"
+                class="op-icon fa"
+                title="切换图片保存方式"
+              >
+                <i
+                  v-if="$store.state.image_use_remote"
+                  class="el-icon-upload"
+                />
+                <i v-else class="el-icon-picture" />
+              </el-button>
             </template>
           </mavon-editor>
         </div>
@@ -613,28 +626,7 @@ export default {
     },
     // 绑定@imgAdd event
     $imgAdd(pos, $file) {
-      // 第一步.将图片上传到服务器.
-      let formdata = new FormData();
-      formdata.append("file", $file);
-      this.$ajax({
-        url: "/File/saveImage",
-        method: "post",
-        data: formdata,
-        headers: { "Content-Type": "multipart/form-data" },
-      })
-        .then((url) => {
-          // 第二步.将返回的url替换到文本原位置![...](0) -> ![...](url)
-          // $vm.$img2Url 详情见本页末尾
-          this.$refs.md.$img2Url(pos, url.data.url);
-        })
-        .catch((t) => {
-          this.$msg({
-            type: "error",
-            message: t,
-            duration: 1600,
-            offset: 80,
-          });
-        });
+      this.imgAddMiddleware(pos, $file, "md");
     },
     handleCurrentChange(val) {
       this.page = val;

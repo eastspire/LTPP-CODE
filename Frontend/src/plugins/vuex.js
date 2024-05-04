@@ -35,6 +35,8 @@ const state = {
     no_scroll_height: 92,//无滚动高度，单位vw
     max_width: 0,//最大宽度
     server_error: false,
+    image_use_remote: true,
+    open_system_notice: true,
 };
 
 const root_state = {
@@ -59,6 +61,8 @@ const root_state = {
     no_scroll_height: 92,//无滚动高度，单位vw
     max_width: 0,//最大宽度
     server_error: false,
+    image_use_remote: true,
+    open_system_notice: true,
 };
 let timer = null;
 let old_msg = null;

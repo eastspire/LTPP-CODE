@@ -333,6 +333,15 @@
                   >
                 </template>
               </el-menu-item>
+              <el-menu-item
+                index="/mylinuxmanage"
+                v-if="$store.state.root && $store.state.my_name === 'root'"
+                ><template slot="title">
+                  <i class="el-icon-s-platform" style="font-size: 1.06rem"
+                    >云服务器管理</i
+                  >
+                </template>
+              </el-menu-item>
             </el-submenu>
             <el-menu-item index="/fabulousvideo">
               <i class="el-icon-video-camera-solid"></i>
@@ -972,13 +981,16 @@ export default {
           } catch (e) {}
           if (!is_shell) {
             // 不是命令就提示用户
+            const title = "通知(" + temdata.time + ")";
+            const body = temdata?.msg;
             this.$notice({
-              title: "通知(" + temdata.time + ")",
+              title: title,
               dangerouslyUseHTMLString: true,
-              message: temdata.msg,
+              message: body,
               duration: 0,
               offset: 80,
             });
+            this.sendNotification(title, body);
           }
         } else if (
           temdata.msgtype &&
@@ -997,14 +1009,17 @@ export default {
           });
         } else {
           this.$EventBus.$emit("chatGetMsg", e);
-          if (this.$route.path != "/chat") {
+          if (this.$route.path?.indexOf("/chat") === -1) {
+            const title = "新消息提醒";
+            const body = "您有一条新聊天消息";
             this.$notice({
-              title: "新消息提醒",
+              title: title,
               dangerouslyUseHTMLString: true,
-              message: "您有一条新聊天消息",
+              message: body,
               duration: 1600,
               offset: 80,
             });
+            this.sendNotification(title, body);
           }
         }
       } catch (err) {

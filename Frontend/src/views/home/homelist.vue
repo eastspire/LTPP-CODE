@@ -143,7 +143,7 @@
               class="md"
               :codeStyle="prop.codeStyle"
               :toolbars="toolbars"
-              :value="notice.content"
+              :value="notice.content || '<br>'"
               :subfield="prop.subfield"
               :defaultOpen="prop.defaultOpen"
               :toolbarsFlag="prop.toolbarsFlag"

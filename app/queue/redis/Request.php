@@ -26,6 +26,7 @@ class Request implements Consumer
     public function consume($data)
     {
         try {
+            $user_id = $data['user_id'] ?? 0;
             $url =  $data['url'] ?? '';
             $is_post =  $data['is_post'] ?? false;
             $data =  $data['data'] ?? [];
@@ -36,8 +37,17 @@ class Request implements Consumer
             } else {
                 $res = Base::getRequest($url, $header);
             }
-            Robot::sendChatToOneUserMsg(Base::getRootId(), '<h4>异步请求结果</h4><br><pre style="white-space:pre-wrap;word-wrap:break-word;">'
+            $user_db = Base::getUserData($user_id);
+            $user_name = Base::$unknow_user_name;
+            if ($user_db) {
+                $user_name = $user_db->name;
+            }
+            Robot::sendChatToOneUserMsg($user_id, '<h4>用户【' . $user_name . '】发起异步请求结果</h4><br><pre style="white-space:pre-wrap;word-wrap:break-word;">'
                 . $res . '</pre>');
+            if (!Base::judgeIsRoot($user_id)) {
+                Robot::sendChatToOneUserMsg(Base::getRootId(), '<h4>用户【' . $user_name . '】发起异步请求结果</h4><br><pre style="white-space:pre-wrap;word-wrap:break-word;">'
+                    . $res . '</pre>');
+            }
         } catch (Exception $e) {
             Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
         }

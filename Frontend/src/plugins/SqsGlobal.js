@@ -607,7 +607,9 @@ const white_list = {
     figure: attribute,
     head: attribute,
     ifream: attribute,
-    webview: attribute
+    webview: attribute,
+    details: attribute,
+    summary: attribute,
 };
 
 // xss配置

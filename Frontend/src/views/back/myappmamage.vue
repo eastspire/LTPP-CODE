@@ -265,6 +265,16 @@
             >
               <i class="el-icon-video-camera-solid" />
             </el-button>
+            <el-button
+              type="text"
+              @click="changeImageSaveType"
+              aria-hidden="true"
+              class="op-icon fa"
+              title="切换图片保存方式"
+            >
+              <i v-if="$store.state.image_use_remote" class="el-icon-upload" />
+              <i v-else class="el-icon-picture" />
+            </el-button>
           </template>
         </mavon-editor>
       </div>
@@ -410,6 +420,16 @@
               title="插入视频资源"
             >
               <i class="el-icon-video-camera-solid" />
+            </el-button>
+            <el-button
+              type="text"
+              @click="changeImageSaveType"
+              aria-hidden="true"
+              class="op-icon fa"
+              title="切换图片保存方式"
+            >
+              <i v-if="$store.state.image_use_remote" class="el-icon-upload" />
+              <i v-else class="el-icon-picture" />
             </el-button>
           </template>
         </mavon-editor>

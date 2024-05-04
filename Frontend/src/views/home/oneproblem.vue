@@ -56,7 +56,7 @@
         <mavon-editor
           class="md"
           :toolbars="toolbars"
-          :value="tableData.problemContent"
+          :value="tableData.problemContent || '<br>'"
           :subfield="prop.subfield"
           :defaultOpen="prop.defaultOpen"
           :toolbarsFlag="prop.toolbarsFlag"

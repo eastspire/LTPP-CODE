@@ -1076,6 +1076,8 @@ class User
             'root_css' => $data['root_css'],
             'money' => $data['money'],
             'headimage' => $data['headimage'],
+            'image_use_remote' => $data['image_use_remote'],
+            'open_system_notice' => $data['open_system_notice']
         ];
 
         if (isset($data['password']) && $data['password']) {
@@ -1250,6 +1252,8 @@ class User
                     'subject' => $data['subject'],
                     'class' => $data['class'],
                     'root_css' => $data['root_css'],
+                    'image_use_remote' => $data['image_use_remote'],
+                    'open_system_notice' => $data['open_system_notice']
                 ]);
         } else {
             $info = Db::table('user')
@@ -1269,6 +1273,8 @@ class User
                     'subject' => $data['subject'],
                     'class' => $data['class'],
                     'root_css' => $data['root_css'],
+                    'image_use_remote' => $data['image_use_remote'],
+                    'open_system_notice' => $data['open_system_notice']
                 ]);
         }
         Base::updateUserDataRedis($my_aid);
@@ -1448,5 +1454,55 @@ class User
         }
         Base::dataToSafe($res);
         return \json(['code' => 1, 'data' => $res]);
+    }
+
+    /**
+     * 更新用户图片保存方式
+     */
+    public function changeImageSaveType(Request $request)
+    {
+        $my_uid = JwtToken::getCurrentId();
+        $my_aid = Base::getIdByUid($my_uid);
+        $image_use_remote = $request->post('image_use_remote');
+        $db = Base::getUserData($my_aid);
+        if (!$db) {
+            return json(['code' => -1, 'msg' => '用户不存在']);
+        }
+        Db::table('user')
+            ->where('id', $my_aid)
+            ->where('isdel', 0)
+            ->update([
+                'image_use_remote' => $image_use_remote
+            ]);
+        Base::updateUserDataRedis($my_aid);
+        return json(['code' => 1, 'msg' => '更新完成']);
+    }
+
+    /**
+     * 获取用户图片保存方式
+     */
+    public function getImageSaveType()
+    {
+        $my_uid = JwtToken::getCurrentId();
+        $my_aid = Base::getIdByUid($my_uid);
+        $db = Base::getUserData($my_aid);
+        if (!$db) {
+            return json(['code' => -1, 'msg' => '用户不存在', 'data' => false]);
+        }
+        return json(['code' => 1, 'msg' => '加载完成', 'data' => $db->image_use_remote]);
+    }
+
+    /**
+     * 获取用户系统通知配置
+     */
+    public function getSystemNoticeConfig()
+    {
+        $my_uid = JwtToken::getCurrentId();
+        $my_aid = Base::getIdByUid($my_uid);
+        $db = Base::getUserData($my_aid);
+        if (!$db) {
+            return json(['code' => -1, 'msg' => '用户不存在', 'data' => false]);
+        }
+        return json(['code' => 1, 'msg' => '加载完成', 'data' => $db->open_system_notice]);
     }
 };

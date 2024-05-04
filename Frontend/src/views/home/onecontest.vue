@@ -69,7 +69,7 @@
             <mavon-editor
               class="md"
               :toolbars="toolbars"
-              :value="contestdata.content"
+              :value="contestdata.content || '<br>'"
               :subfield="prop.subfield"
               :defaultOpen="prop.defaultOpen"
               :toolbarsFlag="prop.toolbarsFlag"
