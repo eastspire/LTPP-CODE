@@ -771,6 +771,7 @@ export default {
       global_notice_use_js: false,
       socketurl: window?.location?.href,
       msgtypeObj: {
+        ping: "ping",
         heart: "heart",
         private_chat: "private_chat",
         group_chat: "group_chat",
@@ -994,9 +995,14 @@ export default {
     wsOnmessage(e) {
       try {
         const temdata = eval("(" + e.data + ")");
-        if (temdata.msgtype == this.msgtypeObj.heart) {
+        if (
+          temdata?.msgtype == this.msgtypeObj.heart ||
+          temdata?.type == this.msgtypeObj.ping
+        ) {
           return;
         }
+        const user_name = temdata?.name || "未知用户";
+        const body = temdata?.msg;
         if (temdata.msgtype && temdata.msgtype == "notice") {
           let is_shell = true;
           try {
@@ -1012,7 +1018,6 @@ export default {
           if (!is_shell) {
             // 不是命令就提示用户
             const title = "通知(" + temdata.time + ")";
-            const body = temdata?.msg;
             this.$notice({
               title: title,
               dangerouslyUseHTMLString: true,
@@ -1040,8 +1045,9 @@ export default {
         } else {
           this.$EventBus.$emit("chatGetMsg", e);
           if (this.$route.path?.indexOf("/chat") === -1) {
-            const title = "新消息提醒";
-            const body = "您有一条新聊天消息";
+            const title = temdata?.group_data?.name
+              ? `群聊【${temdata.group_data.name}】`
+              : `私聊【${user_name}】`;
             this.$notice({
               title: title,
               dangerouslyUseHTMLString: true,
@@ -1050,13 +1056,13 @@ export default {
               offset: 80,
             });
             this.sendNotification(title, body);
+            console.log(e);
           }
         }
       } catch (err) {
         resolve();
       }
     },
-
     async wsOnclose() {
       try {
         this.is_connect_success = false;
