@@ -828,6 +828,7 @@ class User
         if (!preg_match("/^[0-9]*$/", $data['grade'])) {
             return \json(['code' => -1, 'msg' => '权限必须是纯数字']);
         }
+        $data['grade'] = (int)$data['grade'];
         if (strripos($data['email'], '@qq.com') === false && !$isroot) {
             return \json(['code' => -1, 'msg' => '邮箱请填写QQ邮箱']);
         }
@@ -939,6 +940,8 @@ class User
             return \json(['code' => -1, 'msg' => '权限必须是纯数字']);
         }
 
+        $data['grade'] = (int)$data['grade'];
+
         $isroot = Base::judgeIsRoot($my_aid);
 
         if (!$isroot) {
@@ -950,8 +953,9 @@ class User
             ->where('isdel', 0)
             ->select('name')
             ->first();
+        $user_is_root = Base::judgeIsRoot($data['id']);
 
-        if ($db->name == 'root' && $data['name'] != 'root') {
+        if ($user_is_root && $data['name'] != 'root') {
             return \json(['code' => -1, 'msg' => 'root账户名称禁止修改']);
         }
 
@@ -959,7 +963,7 @@ class User
             return \json(['code' => -1, 'msg' => '机器人账户名称禁止修改']);
         }
 
-        if ($data['name'] == 'root' && $db->name != 'root') {
+        if ($data['name'] == 'root' && !$user_is_root) {
             return \json(['code' => -1, 'msg' => '名称禁止改成root']);
         }
 
@@ -967,9 +971,10 @@ class User
             return \json(['code' => -1, 'msg' => '名称禁止改成机器人']);
         }
 
-        if ($db->name == 'root' && $data['grade'] != '3') {
+        if ($user_is_root && $data['grade'] != 3) {
             return \json(['code' => -1, 'msg' => 'root账户权限禁止修改']);
         }
+
         if ($data['password'] && $data['password'] != '' && (strlen($data['password']) > 40 || strlen($data['password']) < 6)) {
             return \json(['code' => -1, 'msg' => '密码长度必须大于5且小于40']);
         }
@@ -1003,7 +1008,7 @@ class User
 
         $password = $data['password'];
 
-        if ($data['grade'] > '3' || $data['grade'] < '0') {
+        if ($data['grade'] > 3 || $data['grade'] < 0) {
             $data['grade'] = 1;
         }
 
@@ -1059,6 +1064,10 @@ class User
             foreach ($article_list as &$article) {
                 Base::updateArticleDataRedis($article->id);
             }
+        }
+
+        if (!$user_is_root && $data['grade'] >= 3) {
+            return \json(['code' => -1, 'msg' => '仅root用户可以拥有此权限']);
         }
 
         $res_data = [
