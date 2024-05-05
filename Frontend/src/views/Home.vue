@@ -1056,7 +1056,6 @@ export default {
               offset: 80,
             });
             this.sendNotification(title, body);
-            console.log(e);
           }
         }
       } catch (err) {

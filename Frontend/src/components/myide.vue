@@ -199,15 +199,15 @@
           </p>
           <div v-show="isshow">
             <div v-show="iswrong" @dblclick="copy(wrong)">
-              <div v-show="!istestres" style="color: #fa278e; min-height: 1rem">
+              <div v-show="!istestres" style="color: #fa278e">
                 <pre>{{ wrong ? wrong : "\n" }}</pre>
               </div>
-              <div v-show="istestres" style="min-height: 1rem">
+              <div v-show="istestres">
                 <pre>{{ wrong ? wrong : "\n" }}</pre>
               </div>
             </div>
             <div v-show="isac">
-              <div style="text-align: center; color: #21e016; min-height: 1rem">
+              <div style="text-align: center; color: #21e016">
                 <pre style="font-size: 1.6rem !important">{{
                   ac ? ac : "\n"
                 }}</pre>
@@ -987,15 +987,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-/* pre保持格式的同时实现自动换行 */
-/* pre保持格式的同时实现自动换行 */
-pre {
-  white-space: pre-wrap;
-  word-wrap: break-word;
-  font-size: 1.06rem;
-  font-family: "Microsoft YaHei", 微软雅黑, "MicrosoftJhengHei", 华文细黑,
-    STHeiti, MingLiu;
-}
-</style>

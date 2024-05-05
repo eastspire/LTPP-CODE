@@ -327,7 +327,7 @@ class Linux
         ]);
         return json([
             'code' => 1,
-            'msg' => '任务已提交',
+            'msg' => '任务已提交！请等待机器人回复结果！',
         ]);
     }
 
@@ -358,7 +358,7 @@ class Linux
         ]);
         return json([
             'code' => 1,
-            'msg' => '任务已提交',
+            'msg' => '任务已提交！请等待机器人回复结果！',
         ]);
     }
 
@@ -389,7 +389,7 @@ class Linux
         ]);
         return json([
             'code' => 1,
-            'msg' => '任务已提交',
+            'msg' => '任务已提交！请等待机器人回复结果！',
         ]);
     }
 
@@ -426,7 +426,7 @@ class Linux
         ]);
         return json([
             'code' => 1,
-            'msg' => '任务已提交',
+            'msg' => '任务已提交！请等待机器人回复结果！',
         ]);
     }
 
@@ -457,7 +457,7 @@ class Linux
         ]);
         return json([
             'code' => 1,
-            'msg' => '任务已提交',
+            'msg' => '任务已提交！请等待机器人回复结果！',
         ]);
     }
 
@@ -495,7 +495,7 @@ class Linux
         ]);
         return json([
             'code' => 1,
-            'msg' => '任务已提交',
+            'msg' => '任务已提交！请等待机器人回复结果！',
         ]);
     }
 
@@ -533,7 +533,7 @@ class Linux
         ]);
         return json([
             'code' => 1,
-            'msg' => '任务已提交',
+            'msg' => '任务已提交！请等待机器人回复结果！',
         ]);
     }
 };

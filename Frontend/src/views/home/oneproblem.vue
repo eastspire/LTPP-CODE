@@ -396,13 +396,4 @@ export default {
 </script>
 <style scoped>
 @import "../../../public/md/markdown/github-markdown.min.css";
-
-/* pre保持格式的同时实现自动换行 */
-pre {
-  white-space: pre-wrap;
-  word-wrap: break-word;
-  font-size: 1.06rem;
-  font-family: "Microsoft YaHei", 微软雅黑, "MicrosoftJhengHei", 华文细黑,
-    STHeiti, MingLiu;
-}
 </style>

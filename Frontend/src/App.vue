@@ -44,7 +44,7 @@ export default {
   name: "LTPP",
   data() {
     return {
-      version: "2.7.3",
+      version: "2.7.4",
       get_version_lock: false,
     };
   },
@@ -368,15 +368,16 @@ export default {
 }
 
 blockquote {
+  margin: 0.36rem 0rem !important;
+  color: #ffffff !important;
+  font-weight: 400;
+  min-height: 2.909rem !important;
+  padding: 0.66rem !important;
   background-color: rgba(
     var(--ltpp-blockquote-color),
     var(--ltpp-blockquote-opacity)
   ) !important;
   border-left: 0.58rem solid rgb(var(--ltpp-blockquote-color)) !important;
-  padding: 0.66rem !important;
-  margin: 0.36rem 0rem !important;
-  color: #ffffff !important;
-  font-weight: 400;
 }
 
 .main-center-box-content {
@@ -418,7 +419,19 @@ hr {
   border-bottom: none;
 }
 
+.v-note-show pre {
+  min-height: 2.97201rem !important;
+}
+
+.el-notification__content pre {
+  color: var(--ltpp-main-text-color);
+}
+
 pre {
+  min-height: 1rem !important;
+  white-space: pre-wrap !important;
+  word-wrap: break-word !important;
+  overflow-wrap: break-word !important;
   font-family: Consolas, Monaco, DejaVu Sans Mono, monospace !important;
   display: block !important;
   overflow-x: auto !important;
@@ -435,6 +448,9 @@ pre {
 }
 
 .comment-pre {
+  min-height: 2.97201rem !important;
+  white-space: pre-wrap !important;
+  overflow-wrap: break-word !important;
   margin-right: 1rem !important;
   background-color: transparent !important;
   color: var(--ltpp-box-text-color);
@@ -582,7 +598,7 @@ span.hljs-string {
   width: 50px !important;
 }
 
-can-select {
+.can-select {
   -webkit-user-select: auto !important;
   -moz-user-select: auto !important;
   -ms-user-select: auto !important;

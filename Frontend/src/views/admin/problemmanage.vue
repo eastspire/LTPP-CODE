@@ -262,7 +262,6 @@ export default {
      */
     cellStyle({ row, rowIndex }) {
       let acpoint = (row.ACpoint * 100).toFixed(0);
-
       let styleRes = {
         background: "rgba(var(--ltpp-light-color), 0.16) !important",
         height: "3.6rem !important",
@@ -272,7 +271,6 @@ export default {
         styleRes.background =
           "rgba(var(--ltpp-main-bk-color), 0.06) !important";
       }
-
       if (acpoint <= 30) {
         /* 正确率低于30*/
         styleRes.color = "red";

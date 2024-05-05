@@ -44,7 +44,7 @@ class CreatFileTable
                 $file_data_name = $index . '_file_data';
                 $cnt_file_path_name = Db::table($file_path_name)
                     ->count();
-                $cnt_file_data_name =   Db::table($file_data_name)
+                $cnt_file_data_name = Db::table($file_data_name)
                     ->count();
                 if (
                     $cnt_file_path_name >= Base::$one_table_length_limit ||

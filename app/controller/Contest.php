@@ -1071,7 +1071,7 @@ class Contest
         RedisQueue::send(Base::$redis_queue_delete_contest_name, [
             'contest_id' => $contest_id
         ]);
-        return json(['code' => 1, 'msg' => '竞赛删除任务已提交']);
+        return json(['code' => 1, 'msg' => '竞赛删除任务已提交！请等待机器人回复结果！']);
     }
 
     /**

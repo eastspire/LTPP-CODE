@@ -740,6 +740,7 @@ Vue.prototype.sendNotification = function (title = '通知', body = '', icon = '
         if (!this.$store.state.open_system_notice) {
             return;
         }
+        body = this.removeHtmlTags(body);
         const send = () => {
             new Notification(title, {
                 body: body,
@@ -832,6 +833,11 @@ Vue.prototype.getSystemNoticeConfig = function () {
         }
     }).catch((t) => {
     });
+}
+
+// 去除HTML标签
+Vue.prototype.removeHtmlTags = function (html) {
+    return html.replace(/<[^>]*>/g, '');
 }
 
 new Vue({

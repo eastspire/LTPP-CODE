@@ -448,7 +448,7 @@ export default {
       this.getproblem(this.tableData.id);
     } else {
       //添加题目
-      this.tableData.problemContent = `<h4>题目内容</h4>\n<pre style="background-color:rgba(0,0,0,0);font-size:1.06rem;padding:0rem;margin:0rem;white-space:pre-wrap;">\n\n</pre>\n\n<h4>输入说明</h4>\n<pre style="background-color:rgba(0,0,0,0);font-size:1.06rem;padding:0rem;margin:0rem;white-space:pre-wrap;">\n\n</pre>\n\n<h4>输出说明</h4>\n<pre style="background-color:rgba(0,0,0,0);font-size:1.06rem;padding:0rem;margin:0rem;white-space:pre-wrap;">\n\n</pre>\n\n<h5>输入样例1</h5>\n<pre style="background-color:rgba(0,0,0,0);font-size:1.06rem;padding:0rem;margin:0rem;white-space:pre-wrap;">\n\n</pre>\n\n<h5>输出样例1</h5>\n<pre style="background-color:rgba(0,0,0,0);font-size:1.06rem;padding:0rem;margin:0rem;white-space:pre-wrap;">\n\n</pre>\n\n<h4>提示</h4>\n<pre style="background-color:rgba(0,0,0,0);font-size:1.06rem;color:deeppink;padding:0rem;margin:0rem;white-space:pre-wrap;">\n\n</pre>\n`;
+      this.tableData.problemContent = `<h4>题目内容</h4>\n<pre>\n\n</pre>\n\n<h4>输入说明</h4>\n<pre>\n\n</pre>\n\n<h4>输出说明</h4>\n<pre>\n\n</pre>\n\n<h5>输入样例1</h5>\n<blockquote>\n\n</blockquote>\n\n<h5>输出样例1</h5>\n<blockquote>\n\n</blockquote>\n\n<h4>提示</h4>\n<pre>\n\n</pre>\n`;
       this.tableData.problemName = "";
       this.tableData.problemCinTest = "";
       this.tableData.problemCoutTest = "";
@@ -853,12 +853,4 @@ export default {
 </script>
 <style scoped>
 @import "../../../public/md/markdown/github-markdown.min.css";
-/* pre保持格式的同时实现自动换行 */
-pre {
-  white-space: pre-wrap;
-  word-wrap: break-word;
-  font-size: 1.06rem;
-  font-family: "Microsoft YaHei", 微软雅黑, "MicrosoftJhengHei", 华文细黑,
-    STHeiti, MingLiu;
-}
 </style>
