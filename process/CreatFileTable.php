@@ -40,16 +40,13 @@ class CreatFileTable
                     $key = 'md5' . $md5;
                     $redis35->setEx($key, Base::$redis_code_run_res_timeout, $index);
                 }
-                $file_path_name = $index . '_file_path';
-                $file_data_name = $index . '_file_data';
+                $file_path_name = $index . Base::$db_file_path_same_name;
+                $file_data_name = $index .  Base::$db_file_data_same_name;
                 $cnt_file_path_name = Db::table($file_path_name)
                     ->count();
                 $cnt_file_data_name = Db::table($file_data_name)
                     ->count();
-                if (
-                    $cnt_file_path_name >= Base::$one_table_length_limit ||
-                    $cnt_file_data_name >= Base::$one_table_length_limit
-                ) {
+                if ($cnt_file_path_name >= Base::$one_table_length_limit || $cnt_file_data_name >= Base::$one_table_length_limit) {
                     // 先创建好表
                     Base::creatFilePathDataTable($index + 1);
                     // 再添加数据到索引表

@@ -44,7 +44,7 @@ export default {
   name: "LTPP",
   data() {
     return {
-      version: "2.7.4",
+      version: "2.7.5",
       get_version_lock: false,
     };
   },
@@ -1099,6 +1099,10 @@ a:active {
 .el-select-dropdown__wrap {
   max-height: 26rem !important;
   border: none !important;
+}
+
+p {
+  line-height: 1.67;
 }
 
 .md,

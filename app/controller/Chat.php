@@ -603,11 +603,11 @@ class Chat
         if ($type == 'private_chat') {
             $redis16 = Redis::connection('db16');
             $name = $user_id . 'TO' . $my_aid;
-            $redis16->set($name, 0);
+            $redis16->del($name, 0);
         } else if ($type == 'group_chat') {
             $redis17 = Redis::connection('db17');
             $name = $user_id . 'TO' . $my_aid;
-            $redis17->set($name, 0);
+            $redis17->del($name, 0);
         }
     }
 

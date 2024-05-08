@@ -239,6 +239,16 @@ class Base
     static $chat_gpt_api_url_key = 'chatgpt_api_url';
 
     /**
+     * 文件数据数据表公有后缀名称
+     */
+    static $db_file_data_same_name = '_file_data';
+
+    /**
+     * 文件路径数据表公有后缀名称
+     */
+    static $db_file_path_same_name = '_file_path';
+
+    /**
      * @var array $extion_map_number 文件类型转数字
      */
     static public $extion_map_number = [
@@ -1975,11 +1985,11 @@ class Base
                 $md5 = $matches[2];
                 $id = Base::md5GetFileTableIndexId($md5);
                 if ($id) {
-                    return $id . '_file_path';
+                    return $id . Base::$db_file_path_same_name;
                 }
             }
         }
-        return Base::getFileTableIndex()[0] . '_file_path';
+        return Base::getFileTableIndex()[0] . Base::$db_file_path_same_name;
     }
 
     /**
@@ -2025,11 +2035,11 @@ class Base
                 $md5 = $matches[2];
                 $id = Base::md5GetFileTableIndexId($md5);
                 if ($id) {
-                    return $id . '_file_data';
+                    return $id . Base::$db_file_data_same_name;
                 }
             }
         }
-        return Base::getFileTableIndex()[0] . '_file_data';
+        return Base::getFileTableIndex()[0] . Base::$db_file_data_same_name;
     }
 
     /**
@@ -2741,8 +2751,8 @@ class Base
         $index = 0;
         $md5 = '';
         $index = max(1, Db::table('file_table_index')->count());
-        $file_path_name = $index . '_file_path';
-        $file_data_name = $index . '_file_data';
+        $file_path_name = $index . Base::$db_file_path_same_name;
+        $file_data_name = $index .  Base::$db_file_data_same_name;
         $file_path_has = Db::schema()
             ->hasTable($file_path_name);
         $file_data_has = Db::schema()
@@ -4872,8 +4882,8 @@ class Base
      */
     static public function creatFilePathDataTable($index = 0)
     {
-        $table_file_data = $index . '_file_data';
-        $table_file_path = $index . '_file_path';
+        $table_file_data = $index .  Base::$db_file_data_same_name;
+        $table_file_path = $index . Base::$db_file_path_same_name;
         $sql = [
             'CREATE TABLE `' . $table_file_data . '` (
                     `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT \'文件ID\',

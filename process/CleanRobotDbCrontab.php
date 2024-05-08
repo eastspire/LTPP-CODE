@@ -15,6 +15,7 @@ namespace process;
 use Workerman\Crontab\Crontab;
 use app\controller\Base;
 use support\Db;
+use support\Redis;
 use Exception;
 
 class CleanRobotDbCrontab
@@ -24,10 +25,11 @@ class CleanRobotDbCrontab
         // 每天凌晨三点执行一次
         new Crontab('00 3 * * *', function () {
             try {
+                $redis16 = Redis::connection('db16');
                 $robot_email = Base::getRobotEmail();
                 $time = date('Y-m-d', time());
-
-                Db::table('articlecomment')
+                $robot_id = Base::getRobotId();
+                $db = Db::table('articlecomment')
                     ->where('isdel', 0)
                     ->where('time', '<', $time)
                     ->whereExists(function ($query) use ($robot_email) {
@@ -36,9 +38,18 @@ class CleanRobotDbCrontab
                             ->where('user.email', $robot_email)
                             ->whereColumn('articlecomment.userid', 'user.id');
                     })
-                    ->update([
-                        'isdel' => 1
-                    ]);
+                    ->select('id')
+                    ->get();
+
+                foreach ($db as &$row) {
+                    $key = $robot_id . 'TO' . $row->id;
+                    $redis16->del($key);
+                    Db::table('articlecomment')
+                        ->where('id', $row->id)
+                        ->update([
+                            'isdel' => 1
+                        ]);
+                }
 
                 Db::table('codehistory')
                     ->where('isdel', 0)
@@ -49,9 +60,15 @@ class CleanRobotDbCrontab
                             ->where('user.email', $robot_email)
                             ->whereColumn('codehistory.userid', 'user.id');
                     })
-                    ->update([
-                        'isdel' => 1
-                    ]);
+                    ->select('id')
+                    ->get();
+                foreach ($db as &$row) {
+                    Db::table('codehistory')
+                        ->where('id', $row->id)
+                        ->update([
+                            'isdel' => 1
+                        ]);
+                }
 
                 Db::table('privatechat')
                     ->where('isdel', 0)
@@ -62,9 +79,15 @@ class CleanRobotDbCrontab
                             ->where('user.email', $robot_email)
                             ->whereColumn('privatechat.post_user_id', 'user.id');
                     })
-                    ->update([
-                        'isdel' => 1
-                    ]);
+                    ->select('id')
+                    ->get();
+                foreach ($db as &$row) {
+                    Db::table('privatechat')
+                        ->where('id', $row->id)
+                        ->update([
+                            'isdel' => 1
+                        ]);
+                }
 
                 Db::table('solveproblem')
                     ->where('isdel', 0)
@@ -75,9 +98,15 @@ class CleanRobotDbCrontab
                             ->where('user.email', $robot_email)
                             ->whereColumn('solveproblem.userid', 'user.id');
                     })
-                    ->update([
-                        'isdel' => 1
-                    ]);
+                    ->select('id')
+                    ->get();
+                foreach ($db as &$row) {
+                    Db::table('solveproblem')
+                        ->where('id', $row->id)
+                        ->update([
+                            'isdel' => 1
+                        ]);
+                }
 
                 Db::table('usernotice')
                     ->where('isdel', 0)
@@ -88,9 +117,15 @@ class CleanRobotDbCrontab
                             ->where('user.email', $robot_email)
                             ->whereColumn('usernotice.userid', 'user.id');
                     })
-                    ->update([
-                        'isdel' => 1
-                    ]);
+                    ->select('id')
+                    ->get();
+                foreach ($db as &$row) {
+                    Db::table('usernotice')
+                        ->where('id', $row->id)
+                        ->update([
+                            'isdel' => 1
+                        ]);
+                }
             } catch (Exception $e) {
                 Base::sendErrorNotice($e->getTraceAsString(), '定时任务进程<strong>【CleanRobotDbCrontab】</strong>运行出错：' . $e->getMessage());
             }
