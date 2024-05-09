@@ -1979,12 +1979,10 @@ class Base
     static public function getFilePathTableName($file_path = '')
     {
         if ($file_path) {
-            $escaped_search = preg_quote(Base::$LTPP_public_static_path, '/');
-            $pattern = '/(' . $escaped_search . ')\/(\w+)\/(\w+)\//';
-            if (preg_match($pattern, $file_path, $matches) && sizeof($matches) > 1) {
-                $md5 = $matches[2];
-                $id = Base::md5GetFileTableIndexId($md5);
-                if ($id) {
+            $array = explode('/', $file_path);
+            if (sizeof($array) >= 3) {
+                $id = Base::md5GetFileTableIndexId($array[2]);
+                if (is_numeric($id)) {
                     return $id . Base::$db_file_path_same_name;
                 }
             }
@@ -2029,12 +2027,10 @@ class Base
     static public function getFileDataTableName($file_path = '')
     {
         if ($file_path) {
-            $escaped_search = preg_quote(Base::$LTPP_public_static_path, '/');
-            $pattern = '/(' . $escaped_search . ')\/(\w+)\/(\w+)\//';
-            if (preg_match($pattern, $file_path, $matches) && sizeof($matches) > 1) {
-                $md5 = $matches[2];
-                $id = Base::md5GetFileTableIndexId($md5);
-                if ($id) {
+            $array = explode('/', $file_path);
+            if (sizeof($array) >= 3) {
+                $id = Base::md5GetFileTableIndexId($array[2]);
+                if (is_numeric($id)) {
                     return $id . Base::$db_file_data_same_name;
                 }
             }
