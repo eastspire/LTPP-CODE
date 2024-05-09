@@ -315,6 +315,9 @@ export default {
     this.isseetip = true;
     this.page = 1;
     this.blogpagesize = 50;
+    this.id = 0;
+    this.hitokoto = "";
+    this.from = "";
     this.search();
   },
   deactivated() {

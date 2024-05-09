@@ -66,20 +66,6 @@
                   </el-tooltip>
                 </template>
               </el-table-column>
-              <el-table-column label="购买时间" width="210" align="center">
-                <template slot-scope="scope">
-                  <span
-                    class="my-span"
-                    style="
-                      font-weight: bold;
-                      font-size: 1.06rem;
-                      color: #67c23a;
-                    "
-                  >
-                    {{ scope.row.buy_time }}
-                  </span>
-                </template>
-              </el-table-column>
               <el-table-column label="购买用户" width="auto" align="center">
                 <template slot-scope="scope">
                   <span
@@ -94,6 +80,20 @@
                   </span>
                 </template>
               </el-table-column>
+              <el-table-column label="购买时间" width="210" align="center">
+                <template slot-scope="scope">
+                  <span
+                    class="my-span"
+                    style="
+                      font-weight: bold;
+                      font-size: 1.06rem;
+                      color: #67c23a;
+                    "
+                  >
+                    {{ scope.row.buy_time }}
+                  </span>
+                </template>
+              </el-table-column>
               <el-table-column label="端口" width="auto" align="center">
                 <template slot-scope="scope">
                   <span
@@ -105,6 +105,56 @@
                     "
                   >
                     {{ scope.row.begin_port }} - {{ scope.row.end_port }}
+                  </span>
+                </template>
+              </el-table-column>
+              <el-table-column label="端口数" width="auto" align="center">
+                <template slot-scope="scope">
+                  <span
+                    class="my-span"
+                    style="
+                      font-weight: bold;
+                      font-size: 1.06rem;
+                      color: #67c23a;
+                    "
+                  >
+                    {{
+                      isNaN(scope.row.end_port - scope.row.begin_port + 1)
+                        ? $SqsGlobal.loading_tips
+                        : scope.row.end_port - scope.row.begin_port + 1
+                    }}
+                  </span>
+                </template>
+              </el-table-column>
+              <el-table-column
+                label="CPU（核心数）"
+                width="auto"
+                align="center"
+              >
+                <template slot-scope="scope">
+                  <span
+                    class="my-span"
+                    style="
+                      font-weight: bold;
+                      font-size: 1.06rem;
+                      color: #67c23a;
+                    "
+                  >
+                    {{ scope.row.cpu }}
+                  </span>
+                </template>
+              </el-table-column>
+              <el-table-column label="内存（GB）" width="auto" align="center">
+                <template slot-scope="scope">
+                  <span
+                    class="my-span"
+                    style="
+                      font-weight: bold;
+                      font-size: 1.06rem;
+                      color: #67c23a;
+                    "
+                  >
+                    {{ scope.row.memory }}
                   </span>
                 </template>
               </el-table-column>
@@ -163,6 +213,16 @@
               margin: 0rem 0rem 0.5rem 0rem;
             "
           >
+            服务器购买用户：{{ now_linux.user_name }}
+          </p>
+          <p
+            style="
+              font-size: 1.06rem;
+              text-align: left;
+              font-weight: bold;
+              margin: 0rem 0rem 0.5rem 0rem;
+            "
+          >
             服务器端口：{{ now_linux.begin_port }} - {{ now_linux.end_port }}
           </p>
           <p
@@ -173,7 +233,31 @@
               margin: 0rem 0rem 0.5rem 0rem;
             "
           >
-            服务器购买用户：{{ now_linux.user_name }}
+            服务器端口数：{{
+              isNaN(now_linux.end_port - now_linux.begin_port + 1)
+                ? $SqsGlobal.loading_tips
+                : now_linux.end_port - now_linux.begin_port + 1
+            }}
+          </p>
+          <p
+            style="
+              font-size: 1.06rem;
+              text-align: left;
+              font-weight: bold;
+              margin: 0rem 0rem 0.5rem 0rem;
+            "
+          >
+            服务器CPU核心数：{{ now_linux.cpu }} 核
+          </p>
+          <p
+            style="
+              font-size: 1.06rem;
+              text-align: left;
+              font-weight: bold;
+              margin: 0rem 0rem 0.5rem 0rem;
+            "
+          >
+            服务器内存：{{ now_linux.memory }} GB
           </p>
           <p
             style="

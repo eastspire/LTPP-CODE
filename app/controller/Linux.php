@@ -29,8 +29,34 @@ class Linux
         'end_port',
         'begin_port',
         'buy_time',
-        'password'
+        'password',
+        'cpu',
+        'memory'
     ];
+
+    /**
+     * 购买服务器
+     */
+    public function buyLinux(Request $request)
+    {
+        $my_uid = JwtToken::getCurrentId();
+        $my_aid = Base::getIdByUid($my_uid);
+        if (!Base::judgeIsRoot($my_aid)) {
+            return json([
+                'code' => -1,
+                'msg' => '权限不足',
+            ]);
+        }
+        $password = $request->post('passsword');
+        $cpu = $request->post('cpu');
+        $memory = $request->post('memory');
+        $port_num = $request->post('port_num');
+        $msg = Ssh::buy($my_aid, $password, $cpu, $memory, $port_num);
+        return json([
+            'code' => 1,
+            'msg' => $msg,
+        ]);
+    }
 
     /**
      * 获取我的服务器数据
@@ -481,11 +507,15 @@ class Linux
         $port  = $db->begin_port;
         $password = $db->password;
         $port_num = $db->end_port - $db->begin_port + 1;
+        $cpu = $db->cpu;
+        $memory = $db->memory;
         $data = [
             'name' => $name,
             'port' => $port,
             'password' => $password,
             'port_num' => $port_num,
+            'cpu' =>  $cpu,
+            'memory' => $memory
         ];
         RedisQueue::send(Base::$redis_queue_request_name, [
             'user_id' => $my_aid,
@@ -519,6 +549,8 @@ class Linux
         $port  = $db->begin_port;
         $password = $db->password;
         $port_num = $db->end_port - $db->begin_port + 1;
+        $cpu = $db->cpu;
+        $memory = $db->memory;
         $data = [
             'name' => $name,
             'port' => $port,
@@ -530,6 +562,8 @@ class Linux
             'url' => $url,
             'is_post' => true,
             'data' => $data,
+            'cpu' =>  $cpu,
+            'memory' => $memory
         ]);
         return json([
             'code' => 1,

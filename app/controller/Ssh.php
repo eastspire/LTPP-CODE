@@ -67,8 +67,8 @@ class Ssh
         $ssh_ip = Base::getIp($url);
         foreach ($db as $key => &$tem) {
             $msg .= '<h5>' . ($key + 1) . '号LTPP-SSH服务器</h5>' . "<details>\n\n" . '> 登录命令：ssh -p ' . ($tem->begin_port ?? '') . ' ltpp@' . $ssh_ip . "\n\n" . '> 登陆密码：' . ($tem->password ?? '') . "\n\n" .
-                '> [点击打开在线版本VSCODE](http://' . $ssh_ip . ($tem->begin_port ? (':' . $tem->begin_port + 1) : '') . ")\n\n" .
-                '<summary>一共可用' . Base::$ssh_default_open_ports_num . '个公网端口【' . $tem->begin_port . '-' . $tem->end_port . '】</summary></details>';
+                '> [点击打开在线版本VSCODE](http://' . $ssh_ip . ':' . ($tem->begin_port + 1) . ")\n\n" .
+                '<summary>一共可用' . ($tem->end_port - $tem->begin_port + 1) . '个公网端口【' . $tem->begin_port . '-' . $tem->end_port . '】</summary></details>';
         }
         return $msg;
     }
@@ -79,7 +79,7 @@ class Ssh
      * @param string $my_password
      * @return $res 结果
      */
-    static public function buy($my_aid, $my_password = null)
+    static public function buy($my_aid, $my_password = null, $cpu = 0, $memory = 0, $port_num = 0)
     {
         try {
             if (!$my_aid || !is_numeric($my_aid)) {
@@ -89,9 +89,21 @@ class Ssh
             if (!$my_data || !isset($my_data->email)) {
                 return '用户不存在！';
             }
+            if (!$cpu || $cpu < 0) {
+                return 'CPU核心数设置不正确';
+            }
+            if (!$memory || $memory < 0) {
+                return '内存大小设置不正确';
+            }
+            if (!$port_num || $port_num < Base::$ssh_min_open_ports_num) {
+                return '端口个数设置不正确（最低设置' . Base::$ssh_min_open_ports_num . '个公网端口）';
+            }
             RedisQueue::send(Base::$redis_queue_buy_ssh_name, [
                 'my_aid' => $my_aid,
-                'my_password' => $my_password
+                'my_password' => $my_password,
+                'cpu' => $cpu,
+                'memory' => $memory,
+                'port_num' => $port_num
             ]);
         } catch (Exception $e) {
             return '系统错误';

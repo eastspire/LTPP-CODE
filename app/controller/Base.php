@@ -89,9 +89,9 @@ class Base
     static $request_timout = 600;
 
     /**
-     * 默认SSH开放端口数目
+     * 默认SSH最小公网端口数目
      */
-    static $ssh_default_open_ports_num = 4;
+    static $ssh_min_open_ports_num = 2;
 
     /**
      * gzip压缩率

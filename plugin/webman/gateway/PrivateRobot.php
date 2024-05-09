@@ -66,11 +66,10 @@ class PrivateRobot extends ChatBase
         '|16|设置全站用户图片背景|16 http://xxx.com/x.png（PS：序号后第一个空格后为图片URL）|' . "\n" .
         '|17|设置全站用户视频背景|17 http://xxx.com/x.mp4（PS：序号后第一个空格后为视频URL）|' . "\n" .
         '|18|重判题目在竞赛中的代码|18 A+B（PS：序号后第一个空格后为重判的题目完整标题）|' . "\n" .
-        '|19|购买私人轻量云服务器，系统自带多种编程语言的运行环境和在线VSCODE|19 LTPP（PS：序号后第一个空格后为SSH登录密码，若不设置系统会自动生成随机密码，若已购买可查看登录命令和密码）|' . "\n" .
-        '|20|查询当前在线客户端总数|20|' . "\n" .
-        '|21|重置所有机器人账号的密码|21|' . "\n" .
-        '|22|查看机器人用户个数和非机器人用户个数|22|' . "\n" .
-        '|23|查看自己购买的LTPP-SSH服务器信息|23|';
+        '|19|查询当前在线客户端总数|20|' . "\n" .
+        '|20|重置所有机器人账号的密码|21|' . "\n" .
+        '|21|查看机器人用户个数和非机器人用户个数|22|' . "\n" .
+        '|22|查看自己购买的LTPP-SSH服务器信息|23|';
 
     static $robot_admin_default =
     '<h4>您可以输入以下单个序号来进行操作</h4>' . "\n\n" .
@@ -843,12 +842,9 @@ class PrivateRobot extends ChatBase
                 $reply = PrivateRobot::rejudgeOneProblem($client_id, $db_my->id, $reply, $user_db);
                 break;
             case '19':
-                $reply = Ssh::buy($db_my->id, $reply);
-                break;
-            case '20':
                 $reply = '【' . $now . '】在线客户端总数：' . Gateway::getAllUidCount();
                 break;
-            case '21':
+            case '20':
                 $new_password = md5(uniqid() . mt_rand(1, 100000) . time());
                 Db::table('user')
                     ->where('email', Base::getRobotEmail())
@@ -858,7 +854,7 @@ class PrivateRobot extends ChatBase
                 Base::clearAllUserDataRedis();
                 $reply = '重置所有机器人账号的密码完成【新密码：' . $new_password . '】';
                 break;
-            case '22':
+            case '21':
                 $robot_email = Base::getRobotEmail();
                 $robot_num = Db::table('user')
                     ->where('email', $robot_email)
@@ -870,7 +866,7 @@ class PrivateRobot extends ChatBase
                     ->count();
                 $reply = '机器人用户个数【' . $robot_num . '】<br>非机器人用户个数【' . $people_num . '】';
                 break;
-            case '23':
+            case '22':
                 $reply = Ssh::getHasBuyMsg($db_my->id);
                 break;
             case '帮助':

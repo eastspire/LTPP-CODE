@@ -49,7 +49,10 @@ class BuySsh implements Consumer
         $my_aid = 0;
         try {
             $my_aid = (int) $data['my_aid'];
-            if (!$my_aid) {
+            $cpu = (int)$data['cpu'];
+            $memory = (int)$data['memory'];
+            $port_num = (int)$data['port_num'];
+            if (!$my_aid || !$cpu || !$memory || !$port_num) {
                 return;
             }
 
@@ -73,7 +76,6 @@ class BuySsh implements Consumer
                 Robot::sendChatToOneUserMsg($my_aid, '<h4>' . $title . "</h4>\n\n" . $msg);
                 return;
             }
-            Base::$ssh_default_open_ports_num = max(Base::$ssh_default_open_ports_num, 2);
             $port = $this->getPort();
             while (1) {
                 try {
@@ -82,7 +84,9 @@ class BuySsh implements Consumer
                         'name' => $name,
                         'port' => (int)$port,
                         'password' => (string)$password,
-                        'port_num' => (int)Base::$ssh_default_open_ports_num,
+                        'port_num' => max(2, $port_num),
+                        'cpu' =>  $cpu,
+                        'memory' => $memory
                     ]);
                     if (!$res) {
                         $msg = 'LTPP-SSH服务未启动！购买失败！请重试！';
@@ -121,9 +125,11 @@ class BuySsh implements Consumer
                 'name' => $name,
                 'userid' => $my_aid,
                 'begin_port' => (int) $port,
-                'end_port' => (int) ($port + Base::$ssh_default_open_ports_num - 1),
+                'end_port' => (int) ($port + $port_num - 1),
                 'password' => (string) $password,
-                'buy_time' => $now
+                'buy_time' => $now,
+                'cpu' =>  $cpu,
+                'memory' => $memory
             ];
 
             $res = Base::insertToDb('ssh', $data);

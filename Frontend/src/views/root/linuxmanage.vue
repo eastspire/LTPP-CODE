@@ -21,6 +21,33 @@
           </el-input>
         </div>
       </div>
+      <div
+        v-if="
+          $store.state.root && $store.state.my_name === $SqsGlobal.root_name
+        "
+        style="text-align: left"
+      >
+        <el-button
+          type="text"
+          @click="is_show_buy_dialog = true"
+          class="el-icon-plus pulse-enter-active"
+          style="
+            font-size: 1.06rem;
+            font-weight: bold;
+            color: deeppink;
+            margin-top: 1rem;
+            margin-left: 1rem;
+          "
+        >
+          购买服务器</el-button
+        >
+      </div>
+      <div
+        v-if="
+          $store.state.root && $store.state.my_name === $SqsGlobal.root_name
+        "
+        style="height: 1rem"
+      ></div>
       <div style="color: azure; height: auto; width: 100%">
         <div :style="`min-height:${$store.state.no_scroll_height * 0.82}vh;`">
           <div style="height: 0.8rem"></div>
@@ -66,20 +93,6 @@
                   </el-tooltip>
                 </template>
               </el-table-column>
-              <el-table-column label="购买时间" width="210" align="center">
-                <template slot-scope="scope">
-                  <span
-                    class="my-span"
-                    style="
-                      font-weight: bold;
-                      font-size: 1.06rem;
-                      color: #67c23a;
-                    "
-                  >
-                    {{ scope.row.buy_time }}
-                  </span>
-                </template>
-              </el-table-column>
               <el-table-column label="购买用户" width="auto" align="center">
                 <template slot-scope="scope">
                   <span
@@ -94,6 +107,20 @@
                   </span>
                 </template>
               </el-table-column>
+              <el-table-column label="购买时间" width="210" align="center">
+                <template slot-scope="scope">
+                  <span
+                    class="my-span"
+                    style="
+                      font-weight: bold;
+                      font-size: 1.06rem;
+                      color: #67c23a;
+                    "
+                  >
+                    {{ scope.row.buy_time }}
+                  </span>
+                </template>
+              </el-table-column>
               <el-table-column label="端口" width="auto" align="center">
                 <template slot-scope="scope">
                   <span
@@ -105,6 +132,56 @@
                     "
                   >
                     {{ scope.row.begin_port }} - {{ scope.row.end_port }}
+                  </span>
+                </template>
+              </el-table-column>
+              <el-table-column label="端口数" width="auto" align="center">
+                <template slot-scope="scope">
+                  <span
+                    class="my-span"
+                    style="
+                      font-weight: bold;
+                      font-size: 1.06rem;
+                      color: #67c23a;
+                    "
+                  >
+                    {{
+                      isNaN(scope.row.end_port - scope.row.begin_port + 1)
+                        ? $SqsGlobal.loading_tips
+                        : scope.row.end_port - scope.row.begin_port + 1
+                    }}
+                  </span>
+                </template>
+              </el-table-column>
+              <el-table-column
+                label="CPU（核心数）"
+                width="auto"
+                align="center"
+              >
+                <template slot-scope="scope">
+                  <span
+                    class="my-span"
+                    style="
+                      font-weight: bold;
+                      font-size: 1.06rem;
+                      color: #67c23a;
+                    "
+                  >
+                    {{ scope.row.cpu }}
+                  </span>
+                </template>
+              </el-table-column>
+              <el-table-column label="内存（GB）" width="auto" align="center">
+                <template slot-scope="scope">
+                  <span
+                    class="my-span"
+                    style="
+                      font-weight: bold;
+                      font-size: 1.06rem;
+                      color: #67c23a;
+                    "
+                  >
+                    {{ scope.row.memory }}
                   </span>
                 </template>
               </el-table-column>
@@ -130,6 +207,106 @@
           </div>
         </div>
       </div>
+      <el-dialog
+        :close-on-click-modal="false"
+        :append-to-body="true"
+        :width="($store.state.max_width / $store.state.now_width) * 100 + '%'"
+        title="购买服务器（提交信息服务器创建成功后信息禁止修改）"
+        :visible.sync="is_show_buy_dialog"
+      >
+        <div>
+          <div style="text-align: left">
+            <p
+              class="my-span"
+              style="
+                font-size: 1.06rem;
+                text-align: left;
+                font-weight: bold;
+                margin: 0rem 0rem 1rem 0rem;
+              "
+            >
+              服务器默认用户密码
+            </p>
+            <el-input
+              style="font-size: 1.06rem"
+              placeholder="请输入服务器默认用户密码"
+              v-model.lazy="buy_data.password"
+            ></el-input>
+            <p
+              class="my-span"
+              style="
+                font-size: 1.06rem;
+                text-align: left;
+                font-weight: bold;
+                margin: 1rem 0rem 1rem 0rem;
+              "
+            >
+              CPU（核心数）
+            </p>
+            <el-input
+              style="font-size: 1.06rem"
+              placeholder="请输入CPU（核心数）"
+              v-model.lazy="buy_data.cpu"
+            ></el-input>
+            <p
+              class="my-span"
+              style="
+                font-size: 1.06rem;
+                text-align: left;
+                font-weight: bold;
+                margin: 1rem 0rem 1rem 0rem;
+              "
+            >
+              内存大小（GB）
+            </p>
+            <el-input
+              style="font-size: 1.06rem"
+              placeholder="请输入内存大小（GB）"
+              v-model.lazy="buy_data.memory"
+            ></el-input>
+            <p
+              class="my-span"
+              style="
+                font-size: 1.06rem;
+                text-align: left;
+                font-weight: bold;
+                margin: 1rem 0rem 1rem 0rem;
+              "
+            >
+              公网端口数（不得低于2个公网端口）
+            </p>
+            <el-input
+              style="font-size: 1.06rem"
+              placeholder="请输入公网端口数（不得低于2个公网端口）"
+              v-model.lazy="buy_data.port_num"
+            ></el-input>
+            <div style="height: 1.06rem"></div>
+          </div>
+          <div style="float: left; text-align: left">
+            <el-button
+              width="auto"
+              style="font-size: 1.06rem; margin: 1.6rem 2.6rem"
+              class="pulse-enter-active"
+              type="danger"
+              @click="
+                buyLinux();
+                is_show_buy_dialog = false;
+              "
+              >购买</el-button
+            >
+          </div>
+          <div style="text-align: right">
+            <el-button
+              type="success"
+              width="auto"
+              style="margin: 1.6rem 2.6rem; font-size: 1.06rem"
+              class="pulse-enter-active"
+              @click="is_show_buy_dialog = false"
+              >取消</el-button
+            >
+          </div>
+        </div>
+      </el-dialog>
       <el-dialog
         :close-on-click-modal="false"
         :append-to-body="true"
@@ -163,6 +340,16 @@
               margin: 0rem 0rem 0.5rem 0rem;
             "
           >
+            服务器购买用户：{{ now_linux.user_name }}
+          </p>
+          <p
+            style="
+              font-size: 1.06rem;
+              text-align: left;
+              font-weight: bold;
+              margin: 0rem 0rem 0.5rem 0rem;
+            "
+          >
             服务器端口：{{ now_linux.begin_port }} - {{ now_linux.end_port }}
           </p>
           <p
@@ -173,7 +360,31 @@
               margin: 0rem 0rem 0.5rem 0rem;
             "
           >
-            服务器购买用户：{{ now_linux.user_name }}
+            服务器端口数：{{
+              isNaN(now_linux.end_port - now_linux.begin_port + 1)
+                ? $SqsGlobal.loading_tips
+                : now_linux.end_port - now_linux.begin_port + 1
+            }}
+          </p>
+          <p
+            style="
+              font-size: 1.06rem;
+              text-align: left;
+              font-weight: bold;
+              margin: 0rem 0rem 0.5rem 0rem;
+            "
+          >
+            服务器CPU核心数：{{ now_linux.cpu }} 核
+          </p>
+          <p
+            style="
+              font-size: 1.06rem;
+              text-align: left;
+              font-weight: bold;
+              margin: 0rem 0rem 0.5rem 0rem;
+            "
+          >
+            服务器内存：{{ now_linux.memory }} GB
           </p>
           <p
             style="
@@ -320,8 +531,10 @@
 export default {
   name: "linuxmanage",
   activated() {
+    this.is_show_buy_dialog = false;
     this.isseedialog = false;
     this.now_linux = {};
+    this.buy_data = {};
     this.isseetip = true;
     this.search();
   },
@@ -341,6 +554,8 @@ export default {
   },
   data() {
     return {
+      is_show_buy_dialog: false,
+      buy_data: {},
       now_linux: {},
       isseedialog: false,
       lastkey: "",
@@ -438,6 +653,40 @@ export default {
             message: "取消删除",
           });
         });
+    },
+    // 购买服务器
+    async buyLinux() {
+      const { data: res } = await this.$ajax({
+        method: "post",
+        url: "/Linux/buyLinux",
+        portType: {
+          process: "8796",
+        },
+        data: this.buy_data,
+      }).catch((t) => {
+        this.$msg({
+          type: "error",
+          message: t,
+          duration: 1600,
+          offset: 80,
+        });
+      });
+      if (res?.code == 1) {
+        this.$msg({
+          type: "success",
+          message: res?.msg,
+          duration: 1600,
+          offset: 80,
+        });
+        this.buy_data = {};
+      } else {
+        this.$msg({
+          type: "error",
+          message: res?.msg,
+          duration: 1600,
+          offset: 80,
+        });
+      }
     },
     // 制作镜像
     async creatImage(name) {

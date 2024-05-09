@@ -279,7 +279,9 @@ const linux_list_data = {
     begin_port: loading_tips,
     password: loading_tips,
     buy_time: loading_tips,
-    user_name: loading_tips
+    user_name: loading_tips,
+    cpu: loading_tips,
+    memory: loading_tips
 };
 
 const video_list_data = {
