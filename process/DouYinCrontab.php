@@ -78,11 +78,17 @@ class DouYinCrontab
         try {
             $noupdate_limit_seconds = Base::getSettingKeyData('douyin_noupdate_limit_seconds');
             // 删除过期的抖音视频
-            Db::table('video')
+            $list =  Db::table('video')
                 ->where('isdouyin', 1)
                 ->where('isdel', 0)
                 ->where('time', '<', date('Y-m-d H:i:s', time() - $noupdate_limit_seconds))
-                ->update(['isdel' => 1]);
+                ->select('id')
+                ->get();
+            foreach ($list as &$tem) {
+                Db::table('video')
+                    ->where('id', $tem->id)
+                    ->update(['isdel' => 1]);
+            }
         } catch (Exception $e) {
             Base::sendErrorNotice($e->getTraceAsString(), '定时任务进程<strong>【DouYinCrontab】</strong>运行出错：' . $e->getMessage());
         }
@@ -99,7 +105,13 @@ class DouYinCrontab
         $res = [];
         try {
             $url = Base::getSettingKeyData('douyin_listcollection_url');
+            if (!$url) {
+                return $res;
+            }
             $cookie = Base::getSettingKeyData('douyin_cookie');
+            if (!$cookie) {
+                return $res;
+            }
             $user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36 Edg/119.0.0.0';
             $headers = [
                 'Content-Type:application/x-www-form-urlencoded',
