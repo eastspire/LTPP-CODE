@@ -1491,6 +1491,33 @@ class Base
     }
 
     /**
+     * 获取404内容
+     */
+    static public function notFoundData()
+    {
+        $not_found = '';
+        try {
+            $redis23 = Redis::connection('db23');
+            $key = '404_PAGE';
+            if ($redis23->get($key)) {
+                $not_found = $redis23->get($key);
+                return $not_found;
+            }
+            $path = Base::$LTPP_public_path . '/404.html';
+            if (file_exists($path)) {
+                $not_found = file_get_contents($path);
+                $redis23->set($key, $not_found);
+            } else {
+                $not_found = gzencode($not_found, Base::$gzip_num);
+                $redis23->set($key, $not_found);
+            }
+        } catch (Exception $e) {
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
+        }
+        return $not_found;
+    }
+
+    /**
      * 返回404页面
      */
     static public function notFoundPage($path = '', $file_extion = '')
@@ -1503,42 +1530,7 @@ class Base
                 $file_extion = Base::getDbFileExtion($path);
             }
         }
-        try {
-            $not_found = '';
-            $redis23 = Redis::connection('db23');
-            $key = '404_PAGE';
-            if ($redis23->get($key)) {
-                $not_found = $redis23->get($key);
-                return response($not_found, 404, [
-                    'Content-Type' => Base::getContentType('html'),
-                    'Accept-Ranges' => 'bytes',
-                    'Content-Length' => strlen($not_found),
-                    'File-Content-Type' => Base::getContentType($not_found),
-                    'Content-Encoding' => 'gzip',
-                    'File-Path' => $path,
-                    'File-Extion' => $file_extion,
-                ]);
-            }
-            $path = Base::$LTPP_public_path . '/404.html';
-            if (!$path) {
-                $not_found = gzencode($not_found, Base::$gzip_num);
-                $redis23->set($key, $not_found);
-                return response($not_found, 404, [
-                    'Content-Type' => Base::getContentType('html'),
-                    'Accept-Ranges' => 'bytes',
-                    'Content-Length' => strlen($not_found),
-                    'File-Content-Type' => Base::getContentType($not_found),
-                    'Content-Encoding' => 'gzip',
-                    'File-Path' => $path,
-                    'File-Extion' => $file_extion,
-                ]);
-            }
-            $not_found = file_get_contents($path);
-            $not_found = gzencode($not_found, Base::$gzip_num);
-            $redis23->set($key, $not_found);
-        } catch (Exception $e) {
-            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
-        }
+        $not_found = Base::notFoundData();
         return response($not_found, 404, [
             'Content-Type' => Base::getContentType('html'),
             'Accept-Ranges' => 'bytes',

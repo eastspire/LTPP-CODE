@@ -591,6 +591,9 @@ class Article extends Image
             ->select('id')
             ->inRandomOrder()
             ->first();
+        if (!$db) {
+            return json(['data' => []]);
+        }
         $db = Base::getArticleData($db->id);
         Base::dataToSafe($db);
         return json(['data' => $db]);
