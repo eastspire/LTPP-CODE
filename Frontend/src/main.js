@@ -33,12 +33,11 @@ try {
     const is_dev = window?.location?.href?.indexOf('http://localhost') !== -1 || window?.location?.href?.indexOf('http://127.0.0.1') !== -1;
     window.addEventListener('error', function (event) {
         event.preventDefault();
-        is_dev && console.log(event);
-        console.log(event);
+        is_dev && console.error(event);
     });
     window.addEventListener('unhandledrejection', function (event) {
         event.preventDefault();
-        is_dev && console.log(event);
+        is_dev && console.error(event);
     });
 } catch (err) { }
 
@@ -838,6 +837,82 @@ Vue.prototype.getSystemNoticeConfig = function () {
 // 去除HTML标签
 Vue.prototype.removeHtmlTags = function (html) {
     return html.replace(/<[^>]*>/g, '');
+}
+
+// 打开外部网站
+Vue.prototype.openOuterUrl = function (url) {
+    url && window.open(url, "_blank", "noopener,noreferrer");
+}
+
+// 使用a标签打开网站
+Vue.prototype.openUrlUseATag = function (url) {
+    const link = document.createElement('a');
+    try {
+        link.href = url;
+        link.target = '_blank';
+        document.body.appendChild(link);
+        link.click();
+    } finally {
+        document.body.removeChild(link);
+    }
+}
+
+// 访问外部数据
+Vue.prototype.fetchData = async function (url = '', func = () => { }) {
+    try {
+        this.$msg({
+            type: "success",
+            message: '资源检测中！系统检测通过后将自动访问！',
+            duration: 1600,
+            offset: 80,
+        });
+        if (!url) {
+            return;
+        }
+        // 获取当前页面的 URL 作为 Referer
+        const referer = window.location.href;
+
+        // 构造请求头对象
+        const headers = new Headers();
+        headers.append('Referer', referer);
+
+        // 发起 Fetch 请求
+        fetch(url, {
+            headers: headers
+        }).then(async (response) => {
+            let res = '';
+            const reader = response?.body?.getReader();
+            const text_decoder = new TextDecoder();
+            while (true) {
+                const { done, value } = await reader?.read();
+                if (done) {
+                    break;
+                }
+                res += text_decoder?.decode(value);
+            }
+            this.$msg({
+                type: "success",
+                message: '系统检测通过！',
+                duration: 1600,
+                offset: 80,
+            });
+            func(res);
+        }).catch((error) => {
+            this.$msg({
+                type: "error",
+                message: '系统检测未通过！',
+                duration: 1600,
+                offset: 80,
+            });
+        });
+    } catch (error) {
+        this.$msg({
+            type: "success",
+            message: '系统检测未通过！',
+            duration: 1600,
+            offset: 80,
+        });
+    }
 }
 
 new Vue({

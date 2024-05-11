@@ -1275,15 +1275,18 @@ class Base
      */
     static public function judgeAuthCheckTestSafe(Request &$request,  callable $handler = null)
     {
+        $my_uid = '';
         if (!$handler) {
             $handler = function () {
             };
         }
-
         try {
-            $my_uid = '';
+
             $is_logout = false;
             $func = $request->action;
+            if (!$func) {
+                $func = '';
+            }
             $header = $request->header();
             if (!$header) {
                 $header = [];
@@ -1293,13 +1296,16 @@ class Base
             } catch (Exception $e) {
                 $is_logout = true;
             }
+            $controller =  $request->controller;
+            if (!$controller) {
+                $controller = '';
+            }
             // 监控
             RedisQueue::send(Base::$redis_queue_monitor, [
-                'path' => $request->controller,
+                'path' => $controller,
                 'function' => $func,
                 'user_uid' => $my_uid,
             ]);
-
             // 判断是否是文件资源
             $path = $request->path();
             if (!empty($path) && stripos($path, Base::$LTPP_public_static_path) === 0) {

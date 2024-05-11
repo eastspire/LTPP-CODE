@@ -72,6 +72,7 @@
                   placement="right"
                 >
                   <span
+                    class="my-span"
                     @click="lookvideo(scope.row.url)"
                     :style="`
                       font-weight: bold;
@@ -411,13 +412,16 @@ export default {
       this.videoList = tem_list;
     },
     lookvideo(url) {
-      this.reg.test(url) &&
+      if (this.reg.test(url)) {
         this.$router.push({
           path: "/staticfile",
           query: {
             path: urlencode(url, "gbk"),
           },
         });
+      } else {
+        this.openOuterUrl(url);
+      }
     },
     cellStyle({ rowIndex }) {
       let styleRes = {

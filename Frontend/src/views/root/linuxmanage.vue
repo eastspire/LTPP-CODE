@@ -61,7 +61,7 @@
                 'font-size': '1.06rem',
               }"
             >
-              <el-table-column width="380">
+              <el-table-column width="auto">
                 <template slot="header">
                   <span
                     style="text-align: left; margin-left: 1rem"
@@ -74,7 +74,7 @@
                     class="item"
                     effect="dark"
                     :content="'服务器名称：' + scope.row.name"
-                    placement="right"
+                    placement="top"
                   >
                     <span
                       class="my-span el-icon-lock"
@@ -93,14 +93,16 @@
                   </el-tooltip>
                 </template>
               </el-table-column>
-              <el-table-column label="购买用户" width="auto" align="center">
+              <el-table-column label="购买用户" width="200" align="center">
                 <template slot-scope="scope">
                   <span
+                    @click="touserpage(scope.row.userid)"
                     class="my-span"
                     style="
                       font-weight: bold;
                       font-size: 1.06rem;
                       color: #e6a23c;
+                      cursor: pointer;
                     "
                   >
                     {{ scope.row.user_name }}
@@ -121,7 +123,7 @@
                   </span>
                 </template>
               </el-table-column>
-              <el-table-column label="端口" width="auto" align="center">
+              <el-table-column label="端口" width="200" align="center">
                 <template slot-scope="scope">
                   <span
                     class="my-span"
@@ -135,7 +137,7 @@
                   </span>
                 </template>
               </el-table-column>
-              <el-table-column label="端口数" width="auto" align="center">
+              <el-table-column label="端口数" width="100" align="center">
                 <template slot-scope="scope">
                   <span
                     class="my-span"
@@ -153,11 +155,7 @@
                   </span>
                 </template>
               </el-table-column>
-              <el-table-column
-                label="CPU（核心数）"
-                width="auto"
-                align="center"
-              >
+              <el-table-column label="CPU" width="100" align="center">
                 <template slot-scope="scope">
                   <span
                     class="my-span"
@@ -167,11 +165,11 @@
                       color: #67c23a;
                     "
                   >
-                    {{ scope.row.cpu }}
+                    {{ scope.row.cpu }} 核
                   </span>
                 </template>
               </el-table-column>
-              <el-table-column label="内存（GB）" width="auto" align="center">
+              <el-table-column label="内存" width="100" align="center">
                 <template slot-scope="scope">
                   <span
                     class="my-span"
@@ -181,7 +179,7 @@
                       color: #67c23a;
                     "
                   >
-                    {{ scope.row.memory }}
+                    {{ scope.row.memory }} GB
                   </span>
                 </template>
               </el-table-column>
@@ -528,6 +526,7 @@
 </template>
 
 <script>
+import urlencode from "../../../updateCompoents/urlencode";
 export default {
   name: "linuxmanage",
   activated() {
@@ -569,7 +568,16 @@ export default {
     };
   },
   methods: {
-    toadd() {},
+    touserpage(id) {
+      id &&
+        id != this.$SqsGlobal.loading_tips &&
+        this.$router.push({
+          path: "/userpage",
+          query: {
+            path: urlencode(id, "gbk"),
+          },
+        });
+    },
     initData() {
       this.linux_list = [];
       let tem_list = [];
