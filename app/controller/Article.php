@@ -499,6 +499,14 @@ class Article extends Image
                 }
             }
         }
+        foreach ($info as &$tem) {
+            $db = Base::getUserData($tem->writerid);
+            if (!$db) {
+                $tem->writer = Base::$unknow_user_name;
+                continue;
+            }
+            $tem->writer = $db->name;
+        }
         Base::dataToSafe($info);
         return json(['code' => 1, 'data' => $info, 'msg' => "加载成功"]);
     }
