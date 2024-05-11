@@ -71,13 +71,7 @@
           status="success"
         ></el-progress>
         <div>
-          <div
-            style="
-              margin-left: 1.6rem;
-              margin-right: 1.6rem;
-              will-change: transform;
-            "
-          >
+          <div style="margin-left: 1.6rem; margin-right: 1.6rem">
             <div style="height: 0.8rem"></div>
             <div
               v-for="(tem, index) in list"
@@ -1177,57 +1171,11 @@ export default {
     },
     //下载单个文件
     async downloadonefile() {
-      this.$msg({
-        type: "success",
-        message: "开始下载",
-        duration: 1600,
-        offset: 80,
-      });
-      await this.$ajax({
-        method: "post",
-        url: "/Cloudfile/downloadFile",
-        responseType: "blob",
-        headers: {
-          "Content-Type": "application/json; application/octet-stream;",
-        },
-        data: {
-          path: this.filepath,
-        },
-      })
-        .then((res) => {
-          let name = this.Base64Decode(this.filename, this.char_set);
-          if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-            const blob = new Blob([res?.data], {
-              type: "application/octet-stream;application/zip",
-            });
-            window.navigator.msSaveOrOpenBlob(blob, name);
-          } else {
-            /* 火狐谷歌的文件下载方式 */
-            const blob = new Blob([res?.data], {
-              type: "application/octet-stream;application/zip",
-            });
-            let url = window.URL.createObjectURL(blob);
-            const link = document.createElement("a"); // 创建a标签
-            link.href = url;
-            link.download = name; // 重命名文件
-            link.click();
-            URL.revokeObjectURL(url); // 释放内存
-          }
-          this.$msg({
-            type: "success",
-            message: "下载完成",
-            duration: 1600,
-            offset: 80,
-          });
-        })
-        .catch((t) => {
-          this.$msg({
-            type: "error",
-            message: t,
-            duration: 1600,
-            offset: 80,
-          });
-        });
+      this.downloadUrlContent(
+        "/Cloudfile/downloadFile",
+        { path: this.filepath },
+        this.Base64Decode(this.filename, this.char_set)
+      );
     },
   },
 };

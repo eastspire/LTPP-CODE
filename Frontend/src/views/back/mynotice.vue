@@ -34,9 +34,7 @@
         </div>
         <div
           v-show="total > 0"
-          :style="`min-height:${
-            $store.state.no_scroll_height * 0.74
-          }vh;will-change: transform;`"
+          :style="`min-height:${$store.state.no_scroll_height * 0.74}vh;`"
         >
           <div v-for="tem in noticeList" :key="tem.index">
             <div @dblclick="toPage(tem)">

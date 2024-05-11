@@ -27,14 +27,7 @@
       </div>
       <div style="height: 1rem"></div>
       <div>
-        <div
-          style="
-            width: 100%;
-            margin-left: auto;
-            margin-right: auto;
-            will-change: transform;
-          "
-        >
+        <div style="width: 100%; margin-left: auto; margin-right: auto">
           <div
             v-for="temtable in tableData"
             :key="temtable.index"

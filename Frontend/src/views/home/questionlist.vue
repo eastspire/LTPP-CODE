@@ -42,7 +42,7 @@
           </el-input>
         </div>
       </div>
-      <div style="will-change: transform">
+      <div>
         <div
           v-for="(tem, index) in data_list"
           :key="index"

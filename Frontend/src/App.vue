@@ -44,7 +44,7 @@ export default {
   name: "LTPP",
   data() {
     return {
-      version: "2.7.6",
+      version: "2.7.7",
       get_version_lock: false,
     };
   },
@@ -636,7 +636,6 @@ video:focus {
   width: 100%;
   background-color: transparent !important;
   z-index: -1000000;
-  will-change: transform;
 }
 
 .default-bk {
@@ -647,7 +646,6 @@ video:focus {
   width: 100vw;
   margin: 0;
   z-index: -1000000;
-  will-change: transform;
   background-color: var(--ltpp-main-color);
   background-image: radial-gradient(
       closest-side,
@@ -726,7 +724,6 @@ video:focus {
   width: auto;
   background-color: transparent !important;
   z-index: -100000;
-  will-change: transform;
 }
 
 .el-progress-bar__outer {
@@ -818,7 +815,7 @@ video:focus {
 }
 
 .el-table {
-  will-change: transform;
+  will-change: transform !important;
 }
 
 .footer {

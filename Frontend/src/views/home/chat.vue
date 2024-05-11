@@ -969,50 +969,11 @@ export default {
     },
     //下载单个文件
     async downloadonefile(file_name, file_path) {
-      this.$msg({
-        type: "success",
-        message: "开始下载",
-        duration: 1600,
-        offset: 80,
-      });
-      await this.$ajax({
-        method: "post",
-        url: "/Chatfile/downloadFile",
-        responseType: "blob",
-        headers: {
-          "Content-Type": "application/json; application/octet-stream;",
-        },
-        data: {
-          path: file_path,
-        },
-      })
-        .then((res) => {
-          this.$msg({
-            type: "success",
-            message: "下载完成",
-            duration: 1600,
-            offset: 80,
-          });
-          file_name = this.Base64Decode(file_name, this.char_set);
-          /* 火狐谷歌的文件下载方式 */
-          const blob = new Blob([res?.data], {
-            type: "application/octet-stream;application/zip",
-          });
-          let url = window.URL.createObjectURL(blob);
-          const link = document.createElement("a"); // 创建a标签
-          link.href = url;
-          link.download = file_name; // 重命名文件
-          link.click();
-          URL.revokeObjectURL(url); // 释放内存
-        })
-        .catch((t) => {
-          this.$msg({
-            type: "error",
-            message: t,
-            duration: 1600,
-            offset: 80,
-          });
-        });
+      this.downloadUrlContent(
+        "/Chatfile/downloadFile",
+        { path: file_path },
+        this.Base64Decode(file_name, this.char_set)
+      );
     },
     // 文件解码
     get_name(str) {
@@ -1928,7 +1889,6 @@ export default {
 .user_chat_dia {
   margin-top: 0.6rem;
   width: 100%;
-  will-change: transform;
 }
 
 .main_dia {

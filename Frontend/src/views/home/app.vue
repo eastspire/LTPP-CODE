@@ -28,7 +28,6 @@
             width: 100%;
             margin-left: auto;
             margin-right: auto;
-            will-change: transform;
             display: flex;
             justify-content: space-between;
             align-items: flex-start;

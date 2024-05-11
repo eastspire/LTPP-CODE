@@ -22,7 +22,7 @@
       </div>
     </div>
     <div style="height: 2rem"></div>
-    <div style="will-change: transform">
+    <div>
       <div v-for="temtable in tableData" :key="temtable.index">
         <div
           @click="passid(temtable.id)"

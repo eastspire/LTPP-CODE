@@ -52,7 +52,6 @@ export default {
   left: 0;
   width: 100vw;
   height: 100vh;
-  will-change: transform;
   background-color: var(--ltpp-main-color);
   background-image: radial-gradient(
       closest-side,
@@ -141,7 +140,6 @@ h1 {
   margin-left: -50px;
   left: 50%;
   animation: speeder 0.4s linear infinite;
-  will-change: transform;
 }
 .body > span {
   height: 5px;

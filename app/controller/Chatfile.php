@@ -80,12 +80,19 @@ class Chatfile
     public function downloadFile(Request $request)
     {
         $path = $request->post('path');
-        $path = Base::Base64Decode($path);
-        if (!$path) {
-            return json(['code' => -1, 'msg' => Base::$param_error_msg]);
-        }
         $file_data = Base::getStaticFileData($path);
         $file_extion = Base::getDbFileExtion($path);
+        $path = Base::Base64Decode($path);
+        if (!$path) {
+            return Response(Base::$param_error_msg, 404, [
+                'Content-Type' => Base::getContentType($file_extion),
+                'Accept-Ranges' => 'bytes',
+                'Content-Length' => strlen($file_data),
+                'File-Path' => $path,
+                'File-Extion' => $file_extion,
+                'File-Content-Type' => Base::getContentType($file_extion),
+            ]);
+        }
         return Response($file_data, 200, [
             'Content-Type' => Base::getContentType($file_extion),
             'Accept-Ranges' => 'bytes',

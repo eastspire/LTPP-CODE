@@ -98,7 +98,7 @@
               <div
                 v-for="(tem, index) in problemList"
                 :key="index"
-                style="padding: 0.6rem 0rem 0.6rem 2rem; will-change: transform"
+                style="padding: 0.6rem 0rem 0.6rem 2rem"
               >
                 <el-tooltip
                   class="item"

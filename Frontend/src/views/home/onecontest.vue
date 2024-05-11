@@ -114,7 +114,7 @@
               <div
                 v-for="(tem, index) in problemList"
                 :key="index"
-                style="padding: 0.6rem 0rem 0.6rem 2rem; will-change: transform"
+                style="padding: 0.6rem 0rem 0.6rem 2rem"
               >
                 <el-tooltip
                   v-show="tem.hasac === 0"
@@ -192,8 +192,7 @@
                     margin-right: 0.36rem;
                     width: calc(${$store.state.max_width}px - 0.72rem);
                     height: 30rem;
-                    background-color: rgba(var(--ltpp-main-bk-color), 0);
-                    will-change: transform;
+                    background-color: rgba(var(--ltpp-main-bk-color), 0);                  
                   `"
                 ></div>
               </div>
