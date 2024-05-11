@@ -66,7 +66,6 @@ class Monitor
                     ->where('time', '>=', $begin)
                     ->where('time', '<=', $end)
                     ->orderBy('id', 'desc')
-                    ->limit($limit)
                     ->select(Monitor::$monitor_db_key)
                     ->paginate($limit, '*', 'page', $page)
                     ->items();
@@ -84,7 +83,6 @@ class Monitor
                     ->where('time', '>=', $begin)
                     ->where('time', '<=', $end)
                     ->orderBy('id', 'desc')
-                    ->limit($limit)
                     ->paginate($limit, '*', 'page', $page)
                     ->items();
                 $allnum = Db::table('monitor')
@@ -102,7 +100,6 @@ class Monitor
                     ->where('time', '<=', $end)
                     ->where('function', 'like', '%' . $search_func_key . '%')
                     ->orderBy('id', 'desc')
-                    ->limit($limit)
                     ->paginate($limit, '*', 'page', $page)
                     ->items();
                 $allnum = Db::table('monitor')
@@ -117,7 +114,6 @@ class Monitor
                     ->where('time', '>=', $begin)
                     ->where('time', '<=', $end)
                     ->orderBy('id', 'desc')
-                    ->limit($limit)
                     ->paginate($limit, '*', 'page', $page)
                     ->items();
                 $allnum = Db::table('monitor')
