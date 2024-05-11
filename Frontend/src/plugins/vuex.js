@@ -12,6 +12,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 Vue.use(Vuex);
 const default_backend_network_url = 'https://api.ltpp.vip';
+const default_home_to_left_right = 56;
 
 const state = {
     default_backend_network_url: default_backend_network_url,
@@ -23,7 +24,7 @@ const state = {
     html_reg: /<[^>]+>|#|```/g,//HTML预览文字替换规则
     menu_width: 64,//首页菜单宽度，单位px
     default_margin_top_bottom: 1.6,//所有页面距离顶部和底部的距离，单位rem
-    default_home_to_left_right: 56,//单位px
+    default_home_to_left_right: default_home_to_left_right,//单位px
     headimage: '',//头像
     bkimage: '',//图片背景
     bkvideo: '',//视频背景
@@ -33,7 +34,7 @@ const state = {
     my_id: '',//我的id
     now_width: 0,//宽度
     no_scroll_height: 92,//无滚动高度，单位vw
-    max_width: 0,//最大宽度
+    max_width: ((Math.min(1920, window.screen.width) - default_home_to_left_right * 2) / 100) * 86.3,//最大宽度
     server_error: false,
     image_use_remote: true,
     open_system_notice: true,
@@ -49,7 +50,7 @@ const root_state = {
     html_reg: /<[^>]+>|#|```/g,//文章卡片预览文字替换规则
     menu_width: 64,//首页菜单宽度，单位px
     default_margin_top_bottom: 1.6,//所有页面距离顶部和底部的距离，单位rem
-    default_home_to_left_right: 56,//单位px
+    default_home_to_left_right: default_home_to_left_right,//单位px
     headimage: '',//头像
     bkimage: '',//图片背景
     bkvideo: '',//视频背景
@@ -59,11 +60,12 @@ const root_state = {
     my_id: '',//我的id
     now_width: 0,//宽度
     no_scroll_height: 92,//无滚动高度，单位vw
-    max_width: 0,//最大宽度
+    max_width: ((Math.min(1920, window.screen.width) - default_home_to_left_right * 2) / 100) * 86.3,//最大宽度
     server_error: false,
     image_use_remote: true,
     open_system_notice: true,
 };
+
 let timer = null;
 let old_msg = null;
 let old_notice = null;

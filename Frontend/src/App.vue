@@ -44,11 +44,12 @@ export default {
   name: "LTPP",
   data() {
     return {
-      version: "2.7.7",
+      version: "2.7.8",
       get_version_lock: false,
     };
   },
   beforeCreate() {
+    this.initDevice();
     let authorization = window.localStorage.getItem("authorization");
     let key = window.localStorage.getItem("key");
     if (!authorization || !key) {
