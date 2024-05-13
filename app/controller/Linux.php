@@ -47,7 +47,7 @@ class Linux
                 'msg' => '权限不足',
             ]);
         }
-        $password = $request->post('passsword');
+        $password = $request->post('password');
         $cpu = $request->post('cpu');
         $memory = $request->post('memory');
         $port_num = $request->post('port_num');
