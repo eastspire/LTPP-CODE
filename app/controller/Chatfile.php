@@ -80,6 +80,7 @@ class Chatfile
     public function downloadFile(Request $request)
     {
         $path = $request->post('path');
+        $path = Base::Base64Decode($path);
         $file_data = Base::getStaticFileData($path);
         $file_extion = Base::getDbFileExtion($path);
         $path = Base::Base64Decode($path);
