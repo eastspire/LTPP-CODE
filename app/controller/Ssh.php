@@ -72,42 +72,4 @@ class Ssh
         }
         return $msg;
     }
-
-    /**
-     * 购买
-     * @param int $my_aid
-     * @param string $my_password
-     * @return $res 结果
-     */
-    static public function buy($my_aid, $my_password = null, $cpu = 0, $memory = 0, $port_num = 0)
-    {
-        try {
-            if (!$my_aid || !is_numeric($my_aid)) {
-                return Base::$param_error_msg;
-            }
-            $my_data = Base::getUserData($my_aid);
-            if (!$my_data || !isset($my_data->email)) {
-                return '用户不存在！';
-            }
-            if (!$cpu || $cpu < 0) {
-                return 'CPU核心数设置不正确';
-            }
-            if (!$memory || $memory < 0) {
-                return '内存大小设置不正确';
-            }
-            if (!$port_num || $port_num < Base::$ssh_min_open_ports_num) {
-                return '端口个数设置不正确（最低设置' . Base::$ssh_min_open_ports_num . '个公网端口）';
-            }
-            RedisQueue::send(Base::$redis_queue_buy_ssh_name, [
-                'my_aid' => $my_aid,
-                'my_password' => $my_password,
-                'cpu' => $cpu,
-                'memory' => $memory,
-                'port_num' => $port_num
-            ]);
-        } catch (Exception $e) {
-            return '系统错误';
-        }
-        return '系统正在购买！请耐心等待机器人通知购买结果！';
-    }
 }

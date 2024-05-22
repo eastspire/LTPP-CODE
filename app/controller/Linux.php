@@ -51,10 +51,44 @@ class Linux
         $cpu = $request->post('cpu');
         $memory = $request->post('memory');
         $port_num = $request->post('port_num');
-        $msg = Ssh::buy($my_aid, $password, $cpu, $memory, $port_num);
+        if (!$my_aid || !is_numeric($my_aid)) {
+            return Base::$param_error_msg;
+        }
+        $my_data = Base::getUserData($my_aid);
+        if (!$my_data || !isset($my_data->email)) {
+            return json([
+                'code' => -1,
+                'msg' => '用户不存在！',
+            ]);
+        }
+        if (!$cpu || $cpu < 0) {
+            return json([
+                'code' => -1,
+                'msg' => 'CPU核心数设置不正确！',
+            ]);
+        }
+        if (!$memory || $memory < 0) {
+            return json([
+                'code' => -1,
+                'msg' => '内存大小设置不正确！',
+            ]);
+        }
+        if (!$port_num || $port_num < Base::$ssh_min_open_ports_num) {
+            return json([
+                'code' => -1,
+                'msg' => '端口个数设置不正确（最低设置' . Base::$ssh_min_open_ports_num . '个公网端口）',
+            ]);
+        }
+        RedisQueue::send(Base::$redis_queue_buy_ssh_name, [
+            'my_aid' => $my_aid,
+            'my_password' => $password,
+            'cpu' => $cpu,
+            'memory' => $memory,
+            'port_num' => $port_num
+        ]);
         return json([
             'code' => 1,
-            'msg' => $msg,
+            'msg' => '系统正在购买！请耐心等待机器人通知购买结果！',
         ]);
     }
 

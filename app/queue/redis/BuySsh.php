@@ -30,6 +30,7 @@ class BuySsh implements Consumer
     public function getPort()
     {
         $db = Db::table('ssh')
+            ->where('isdel', 0)
             ->orderBy('end_port', 'desc')
             ->select('end_port')
             ->first();
@@ -46,22 +47,24 @@ class BuySsh implements Consumer
     // 消费
     public function consume($data)
     {
+        $title = 'LTPP-SSH购买详情';
         $my_aid = 0;
+        $msg = '';
         try {
             $my_aid = (int) $data['my_aid'];
-            $cpu = (int)$data['cpu'];
-            $memory = (int)$data['memory'];
+            $cpu = (float)$data['cpu'];
+            $memory = (float)$data['memory'];
             $port_num = (int)$data['port_num'];
             if (!$my_aid || !$cpu || !$memory || !$port_num) {
+                $msg = '参数错误！购买失败！';
+                Robot::sendChatToOneUserMsg($my_aid, '<h4>' . $title . "</h4>\n\n" . $msg);
                 return;
             }
 
-            $title = 'LTPP-SSH购买详情';
-
-            $msg = '';
-
             $my_data = Base::getUserData($my_aid);
             if (!$my_data) {
+                $msg = '用户不存在！购买失败！';
+                Robot::sendChatToOneUserMsg($my_aid, '<h4>' . $title . "</h4>\n\n" . $msg);
                 return;
             }
 
