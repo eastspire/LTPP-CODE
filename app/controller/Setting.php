@@ -34,7 +34,7 @@ class Setting extends Image
         'idemaxmemory',
         'usercloudfilememory',
         'GLOBfronturl',
-        'ssh_back_url',
+        'private_ssh_url',
         'default_contest_content',
         'default_contest_duration',
         'default_contest_begin_time',
@@ -720,13 +720,22 @@ class Setting extends Image
                 $redis5->set('GLOBfronturl', $data['GLOBfronturl']);
             }
 
-            if ($data['ssh_back_url'] != $redis5->get('ssh_back_url')) {
+            if ($data['public_ssh_domain'] != $redis5->get('public_ssh_domain')) {
                 Db::table('setting')
                     ->where('id', $db->id)
                     ->where('isdel', 0)
-                    ->update(['ssh_back_url' => $data['ssh_back_url']]);
-                $redis5->del('ssh_back_url');
-                $redis5->set('ssh_back_url', $data['ssh_back_url']);
+                    ->update(['public_ssh_domain' => $data['public_ssh_domain']]);
+                $redis5->del('public_ssh_domain');
+                $redis5->set('public_ssh_domain', $data['public_ssh_domain']);
+            }
+
+            if ($data['private_ssh_url'] != $redis5->get('private_ssh_url')) {
+                Db::table('setting')
+                    ->where('id', $db->id)
+                    ->where('isdel', 0)
+                    ->update(['private_ssh_url' => $data['private_ssh_url']]);
+                $redis5->del('private_ssh_url');
+                $redis5->set('private_ssh_url', $data['private_ssh_url']);
             }
 
             if ($data['mysmtpurl'] != $redis5->get('mysmtpurl')) {

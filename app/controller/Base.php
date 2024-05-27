@@ -41,22 +41,17 @@ class Base
     /**
      * mysql域名
      */
-    static $mysql_domain_name = 'mysql.ltpp.vip';
+    static $mysql_domain_name = 'MYSQL';
 
     /**
      * redis域名
      */
-    static $redis_domain_name = 'redis.ltpp.vip';
-
-    /**
-     * ltpp-ssh ip
-     */
-    static $ssh_ip = '127.0.0.1';
+    static $redis_domain_name = 'REDIS';
 
     /**
      * clash域名
      */
-    static $clash_domain_name = 'clash.ltpp.vip';
+    static $clash_domain_name = 'CLASH';
 
     /**
      * 音乐端口
@@ -1171,7 +1166,7 @@ class Base
      * 单表数据限制
      * @var string $one_table_length_limit 单表数据限制
      */
-    static $one_table_length_limit = 5000000;
+    static $one_table_length_limit = 1000000;
 
     /**
      * 保存文件名长度限制

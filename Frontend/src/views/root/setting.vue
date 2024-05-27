@@ -391,14 +391,40 @@
               margin: 1rem 0rem 1rem 0rem;
             "
           >
-            SSH服务器地址-协议+IP地址/域名:端口
+            SSH服务器公网IP地址/域名
           </p>
           <el-input
             type="password"
             show-password
             style="font-size: 1.06rem"
-            placeholder="请输入SSH服务器协议+IP地址/域名:端口"
-            v-model.lazy="resdata.ssh_back_url"
+            placeholder="SSH服务器公网IP地址/域名"
+            v-model.lazy="resdata.public_ssh_domain"
+            @keyup.enter.native="updatesetting()"
+          >
+            <el-button
+              slot="append"
+              icon="el-icon-upload"
+              @click="updatesetting()"
+              >更新</el-button
+            >
+          </el-input>
+
+          <p
+            style="
+              font-size: 1.06rem;
+              text-align: left;
+              font-weight: bold;
+              margin: 1rem 0rem 1rem 0rem;
+            "
+          >
+            SSH服务器内网地址-协议+IP地址/域名:端口
+          </p>
+          <el-input
+            type="password"
+            show-password
+            style="font-size: 1.06rem"
+            placeholder="SSH服务器内网地址-协议+IP地址/域名:端口"
+            v-model.lazy="resdata.private_ssh_url"
             @keyup.enter.native="updatesetting()"
           >
             <el-button

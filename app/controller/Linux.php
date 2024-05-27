@@ -375,7 +375,7 @@ class Linux
                 'msg' => '权限不足',
             ]);
         }
-        $url = 'http://' . Base::$ssh_ip . ':' . Base::$ssh_port . '/SSH/shutdown';
+        $url = Base::getSettingKeyData('private_ssh_url') . '/SSH/shutdown';
         $data = [
             'name' => $name
         ];
@@ -406,7 +406,7 @@ class Linux
                 'msg' => '权限不足',
             ]);
         }
-        $url = 'http://' . Base::$ssh_ip . ':' . Base::$ssh_port . '/SSH/poweron';
+        $url = Base::getSettingKeyData('private_ssh_url') . '/SSH/poweron';
         $data = [
             'name' => $name
         ];
@@ -437,7 +437,7 @@ class Linux
                 'msg' => '权限不足',
             ]);
         }
-        $url = 'http://' . Base::$ssh_ip . ':' . Base::$ssh_port . '/SSH/reboot';
+        $url = Base::getSettingKeyData('private_ssh_url') . '/SSH/reboot';
         $data = [
             'name' => $name
         ];
@@ -474,7 +474,7 @@ class Linux
             ->update([
                 'isdel' => 1
             ]);
-        $url = 'http://' . Base::$ssh_ip . ':' . Base::$ssh_port . '/SSH/delete';
+        $url = Base::getSettingKeyData('private_ssh_url') . '/SSH/delete';
         $data = [
             'name' => $name
         ];
@@ -505,7 +505,7 @@ class Linux
                 'msg' => '权限不足',
             ]);
         }
-        $url = 'http://' . Base::$ssh_ip . ':' . Base::$ssh_port . '/SSH/creatImage';
+        $url = Base::getSettingKeyData('private_ssh_url') . '/SSH/creatImage';
         $data = [
             'name' => $name
         ];
@@ -537,7 +537,7 @@ class Linux
                 'msg' => '权限不足',
             ]);
         }
-        $url = 'http://' . Base::$ssh_ip . ':' . Base::$ssh_port . '/SSH/backLastImage';
+        $url = Base::getSettingKeyData('private_ssh_url') . '/SSH/backLastImage';
         $port  = $db->begin_port;
         $password = $db->password;
         $port_num = $db->end_port - $db->begin_port + 1;
@@ -579,7 +579,7 @@ class Linux
                 'msg' => '权限不足',
             ]);
         }
-        $url = 'http://' . Base::$ssh_ip . ':' . Base::$ssh_port . '/SSH/resetImage';
+        $url = Base::getSettingKeyData('private_ssh_url') . '/SSH/resetImage';
         $port  = $db->begin_port;
         $password = $db->password;
         $port_num = $db->end_port - $db->begin_port + 1;

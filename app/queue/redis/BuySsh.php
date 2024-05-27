@@ -83,7 +83,7 @@ class BuySsh implements Consumer
             while (1) {
                 try {
                     $name = Base::creatDockerName($port);
-                    $res = Base::postRequest('http://' . Base::$ssh_ip . ':' . Base::$ssh_port . '/SSH/buy', [], [
+                    $res = Base::postRequest(Base::getSettingKeyData('private_ssh_url') . '/SSH/buy', [], [
                         'name' => $name,
                         'port' => (int)$port,
                         'password' => (string)$password,
