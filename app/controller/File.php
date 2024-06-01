@@ -1051,12 +1051,21 @@ class File
             return json(['code' => -1, 'msg' => '图片大小不能大于' . Base::$image_size_limit / Base::$one_mb_size . 'MB', 'url' => '']);
         }
         $file_path = $file->getRealPath();
-        // 压缩图片
-        $old_image = imagecreatefromjpeg($file_path);
+        switch ($file_extion) {
+            case 'png':
+                $new_image = imagecreatefrompng($file_path);
+                break;
+            case 'gif':
+                $new_image = imagecreatefromgif($file_path);
+                break;
+            default:
+                $new_image = imagecreatefromjpeg($file_path);
+                break;
+        }
         // 替换原图片
-        imagejpeg($old_image, $file_path, Base::$img_quality);
+        imagejpeg($new_image, $file_path, Base::$img_quality);
         // 释放资源
-        imagedestroy($old_image);
+        imagedestroy($new_image);
         $url = Base::uploadFileToDb('file_path', $my_aid, $file, $file_extion);
         return \json(['url' => $url]);
     }
