@@ -1054,18 +1054,22 @@ class File
         switch ($file_extion) {
             case 'png':
                 $new_image = imagecreatefrompng($file_path);
+                // 替换原图片
+                imagejpeg($new_image, $file_path, Base::$img_quality);
+                // 释放资源
+                imagedestroy($new_image);
                 break;
-            case 'gif':
-                $new_image = imagecreatefromgif($file_path);
+            case 'jpeg':
+            case 'jpg':
+                $new_image = imagecreatefromjpeg($file_path);
+                // 替换原图片
+                imagejpeg($new_image, $file_path, Base::$img_quality);
+                // 释放资源
+                imagedestroy($new_image);
                 break;
             default:
-                $new_image = imagecreatefromjpeg($file_path);
                 break;
         }
-        // 替换原图片
-        imagejpeg($new_image, $file_path, Base::$img_quality);
-        // 释放资源
-        imagedestroy($new_image);
         $url = Base::uploadFileToDb('file_path', $my_aid, $file, $file_extion);
         return \json(['url' => $url]);
     }
