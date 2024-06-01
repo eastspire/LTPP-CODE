@@ -5072,13 +5072,16 @@ class Base
                 $msg = Base::$default_error_msg;
             }
             $now = date('Y-m-d H:i:s', time());
+            $same_start = '<h4>LTPP运行出错【' . $now
+                . '】</h4><br><strong>报错信息</strong><br><pre style="white-space:pre-wrap;word-wrap:break-word;">'
+                . $msg .
+                '</pre><br><strong>Trace信息</strong><br><pre style="white-space:pre-wrap;word-wrap:break-word;">';
+            $same_end = '</pre>';
+            $msg = $same_start
+                . ($trace_str == Base::$default_trace_msg ? $trace_str : Base::noticeSaveFile($same_start . $trace_str . $same_end)) . $same_end;
             Robot::sendChatToOneUserMsgAndEmail(
                 Base::getRootId(),
-                '<h4>LTPP运行出错【' . $now
-                    . '】</h4><br><strong>报错信息</strong><br><pre style="white-space:pre-wrap;word-wrap:break-word;">'
-                    . $msg .
-                    '</pre><br><strong>Trace信息</strong><br><pre style="white-space:pre-wrap;word-wrap:break-word;">'
-                    . $trace_str == Base::$default_trace_msg ? $trace_str : Base::noticeSaveFile($trace_str) . '</pre>'
+                $msg,
             );
         } catch (Exception $e) {
             Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), $e->getMessage());
