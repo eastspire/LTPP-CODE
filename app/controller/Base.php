@@ -94,6 +94,26 @@ class Base
     static $gzip_num = 5;
 
     /**
+     * 图片压缩质量
+     */
+    static $img_quality = 60;
+
+    /**
+     * 通知文件扩展名
+     */
+    static $notice_file_extension = 'md';
+
+    /**
+     * 默认trace信息
+     */
+    static $default_trace_msg = '暂无Trace信息';
+
+    /**
+     * 默认错误信息
+     */
+    static $default_error_msg = '暂无报错信息';
+
+    /**
      * 代码提交成功提示
      */
     static $code_up_success_msg = '代码提交成功';
@@ -5008,6 +5028,28 @@ class Base
     }
 
     /**
+     * 保存错误到数据库
+     */
+    static public function noticeSaveFile(&$str)
+    {
+        $new_path = Base::creatFilePath(Base::$notice_file_extension);
+        $id = Base::insertToDb(Base::getFileDataTableName($new_path), [
+            'data' => $str
+        ]);
+        if (!$id) {
+            return Base::$default_trace_msg;
+        }
+        Base::insertToDb(Base::getFilePathTableName($new_path), [
+            'path' => $new_path,
+            'file_id' => $id,
+            'userid' => Base::getRobotId(),
+            'time' => date('Y-m-d H:i:s', time())
+        ]);
+        Base::$GLOBlinuxurl = Base::getSettingKeyData('GLOBlinuxurl');
+        return '<a href="' . Base::$GLOBlinuxurl . $new_path . '" target="_blank">点击查看</a>';
+    }
+
+    /**
      * 发送错误通知
      */
     static public function sendErrorNotice($trace = false, $msg = '')
@@ -5024,10 +5066,10 @@ class Base
                 $msg = Base::debugTrace($msg);
             }
             if (!$trace_str) {
-                $trace_str = '暂无Trace信息';
+                $trace_str = Base::$default_trace_msg;
             }
             if (!$msg) {
-                $msg = '暂无报错信息';
+                $msg = Base::$default_error_msg;
             }
             $now = date('Y-m-d H:i:s', time());
             Robot::sendChatToOneUserMsgAndEmail(
@@ -5036,7 +5078,7 @@ class Base
                     . '】</h4><br><strong>报错信息</strong><br><pre style="white-space:pre-wrap;word-wrap:break-word;">'
                     . $msg .
                     '</pre><br><strong>Trace信息</strong><br><pre style="white-space:pre-wrap;word-wrap:break-word;">'
-                    . $trace_str . '</pre>'
+                    . $trace_str == Base::$default_trace_msg ? $trace_str : Base::noticeSaveFile($trace_str) . '</pre>'
             );
         } catch (Exception $e) {
             Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), $e->getMessage());

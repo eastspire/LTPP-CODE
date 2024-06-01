@@ -29,7 +29,6 @@ class Image
      */
     static public function randImage()
     {
-
         $table = Db::table('image')
             ->where('isdel', 0)
             ->select('url')
