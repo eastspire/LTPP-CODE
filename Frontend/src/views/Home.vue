@@ -1,7 +1,7 @@
 <!--
- * @Author: wmzn-ltpp 1491579574@qq.com
+ * @Author: ltpp-universe 1491579574@qq.com
  * @Date: 2024-01-07 15:25:08
- * @LastEditors: wmzn-ltpp 1491579574@qq.com
+ * @LastEditors: ltpp-universe 1491579574@qq.com
  * @LastEditTime: 2024-01-08 22:09:46
  * @FilePath: \LTPP-CODE\Frontend\src\views\Home.vue
  * @Description: Email:1491579574@qq.com
@@ -681,24 +681,24 @@
 </template>
 
 <script>
-import { resolve } from "../../updateCompoents/monaco-editor/esm/vs/base/common/path";
-import music from "./home/music.vue";
-import totopbottom from "../components/totopbottom.vue";
+import { resolve } from '../../updateCompoents/monaco-editor/esm/vs/base/common/path';
+import music from './home/music.vue';
+import totopbottom from '../components/totopbottom.vue';
 
 export default {
-  name: "Home",
+  name: 'Home',
   components: { music, totopbottom },
   beforeCreate() {
-    this.$store.commit("updateObj", { login: false });
-    let authorization = window.localStorage.getItem("authorization");
-    let key = window.localStorage.getItem("key");
+    this.$store.commit('updateObj', { login: false });
+    let authorization = window.localStorage.getItem('authorization');
+    let key = window.localStorage.getItem('key');
     if (!authorization || !key) {
       this.logoutRemove();
       return;
     }
   },
   async created() {
-    addEventListener("scroll", () => {
+    addEventListener('scroll', () => {
       if (document.body.scrollHeight <= window.innerHeight) {
         this.scroll_percent = 0;
         return;
@@ -726,10 +726,10 @@ export default {
       this.$nextTick(async () => {
         await this.videoPlay();
         this.video_dom &&
-          this.video_dom.addEventListener("ended", this.videoEnd);
+          this.video_dom.addEventListener('ended', this.videoEnd);
       });
     }, 0);
-    this.$store.commit("updateObj", { my_id: this.getMyId() });
+    this.$store.commit('updateObj', { my_id: this.getMyId() });
     this.loadmynoticenum();
     this.isseenotice = false;
     this.getisusemusic();
@@ -757,7 +757,7 @@ export default {
       clearInterval(this.timer);
       clearInterval(this.socket_timer);
       this.video_dom &&
-        this.video_dom.removeEventListener("ended", this.videoEnd);
+        this.video_dom.removeEventListener('ended', this.videoEnd);
     } catch (e) {
       this.timer = null;
       this.socket_timer = null;
@@ -771,31 +771,31 @@ export default {
       global_notice_use_js: false,
       socketurl: window?.location?.href,
       msgtypeObj: {
-        ping: "ping",
-        heart: "heart",
-        private_chat: "private_chat",
-        group_chat: "group_chat",
-        create_group: "create_group",
-        join_group: "join_group",
-        delete_group: "delete_group",
-        exit_group: "exit_group",
-        connect_group: "connect_group",
+        ping: 'ping',
+        heart: 'heart',
+        private_chat: 'private_chat',
+        group_chat: 'group_chat',
+        create_group: 'create_group',
+        join_group: 'join_group',
+        delete_group: 'delete_group',
+        exit_group: 'exit_group',
+        connect_group: 'connect_group',
       },
       is_connect_success: false,
-      icon_left: "<",
-      icon_right: ">",
+      icon_left: '<',
+      icon_right: '>',
       scroll_percent: 0,
       last_notice_num: 0,
       video_load_error: false,
       timer: null,
       reg: /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\*\+,;=.]+$/,
       socket_timer: null,
-      activeIndex: "1",
+      activeIndex: '1',
       lookmusic: 0,
       classurl: window?.location?.href,
       websocket: null,
       isseenotice: false,
-      notice: "",
+      notice: '',
       video_dom: null,
       ws_connect_finish: false,
     };
@@ -804,15 +804,15 @@ export default {
     setInterval(() => {
       this.initDevice();
     }, 1000);
-    this.$EventBus.$on("closeWs", () => this.closeWs());
-    this.$EventBus.$on("chatSendMsg", (e) => {
+    this.$EventBus.$on('closeWs', () => this.closeWs());
+    this.$EventBus.$on('chatSendMsg', (e) => {
       this.postmessage(e);
     });
     await this.getsocketurl();
     await this.getclassurl();
     await this.setup();
     // 点击关闭浏览器时触发关闭事件
-    window.addEventListener("beforeunload", (e) => {
+    window.addEventListener('beforeunload', (e) => {
       try {
         this.websocket && this.websocket.close && this.websocket.close();
       } catch (err) {}
@@ -831,7 +831,7 @@ export default {
     },
     async videoPlay() {
       let deep = 0;
-      this.video_dom = document.getElementById("video");
+      this.video_dom = document.getElementById('video');
       while (deep < this.$SqsGlobal.max_video_retry_times) {
         try {
           if (this.video_load_error || !this.video_dom) {
@@ -854,7 +854,7 @@ export default {
       this.isseenotice = true;
     },
     extractScriptContent(html) {
-      let scripts = "";
+      let scripts = '';
       try {
         const script_regex = /<script\b[^>]*>([\s\S]*?)<\/script>/gi;
         let match;
@@ -876,11 +876,11 @@ export default {
             this.websocket.readyState === WebSocket.OPEN
           ) {
             this.websocket.onclose = (event) => {
-              this.websocket.close(1000, "断开通知服务器连接");
+              this.websocket.close(1000, '断开通知服务器连接');
               this.$destroy();
               resolve();
             };
-            this.websocket.close(1000, "断开通知服务器连接");
+            this.websocket.close(1000, '断开通知服务器连接');
             this.ws_connect_finish = false;
           }
         } catch (error) {
@@ -892,7 +892,7 @@ export default {
       this.ws_connect_finish = false;
       await this.closeWsAsync().catch((error) => {
         this.$notice({
-          title: "通知(通知服务器连接断开异常)",
+          title: '通知(通知服务器连接断开异常)',
           dangerouslyUseHTMLString: true,
           message: error.message,
           duration: 3600,
@@ -901,9 +901,9 @@ export default {
         return;
       });
       this.$notice({
-        title: "通知(通知服务器连接已断开)",
+        title: '通知(通知服务器连接已断开)',
         dangerouslyUseHTMLString: true,
-        message: "断开成功",
+        message: '断开成功',
         duration: 3600,
         offset: 80,
       });
@@ -911,19 +911,19 @@ export default {
     postNoticemessage(mymessage) {
       if (!this.ws_connect_finish) {
         this.$msg({
-          type: "error",
-          message: "请等待通知服务器连接完成",
+          type: 'error',
+          message: '请等待通知服务器连接完成',
           duration: 1600,
           offset: 80,
         });
         return;
       }
       let t1 = mymessage;
-      let value1 = t1.replace(/\s+/g, "");
-      if (value1 == "") {
+      let value1 = t1.replace(/\s+/g, '');
+      if (value1 == '') {
         this.$msg({
-          type: "error",
-          message: "内容不能为空",
+          type: 'error',
+          message: '内容不能为空',
           duration: 1600,
           offset: 80,
         });
@@ -934,15 +934,15 @@ export default {
         mymessage = `<script>${mymessage}<\/script>`;
       }
       let msg = {
-        msgtype: "notice",
+        msgtype: 'notice',
         name: this.name,
         msg: mymessage,
       };
       this.postmessage(msg);
-      this.mymessage = "";
+      this.mymessage = '';
       this.$msg({
-        type: "success",
-        message: "通知下达成功",
+        type: 'success',
+        message: '通知下达成功',
         duration: 1600,
         offset: 80,
       });
@@ -961,22 +961,22 @@ export default {
      */
     async wsInitConnect() {
       try {
-        let authorization = window.localStorage.getItem("authorization");
-        let key = window.localStorage.getItem("key");
+        let authorization = window.localStorage.getItem('authorization');
+        let key = window.localStorage.getItem('key');
         if (!authorization || !key) {
           this.logoutRemove();
           return;
         }
         this.$notice({
-          title: "聊天服务器",
+          title: '聊天服务器',
           dangerouslyUseHTMLString: true,
-          message: "正在连接！",
+          message: '正在连接！',
           duration: 1000,
           offset: 80,
         });
         this.websocket = new WebSocket(
           this.socketurl +
-            "?" +
+            '?' +
             authorization +
             this.$SqsGlobal.websocket_connect_str +
             key
@@ -994,16 +994,16 @@ export default {
     },
     wsOnmessage(e) {
       try {
-        const temdata = eval("(" + e.data + ")");
+        const temdata = eval('(' + e.data + ')');
         if (
           temdata?.msgtype == this.msgtypeObj.heart ||
           temdata?.type == this.msgtypeObj.ping
         ) {
           return;
         }
-        const user_name = temdata?.name || "未知用户";
+        const user_name = temdata?.name || '未知用户';
         const body = temdata?.msg;
-        if (temdata.msgtype && temdata.msgtype == "notice") {
+        if (temdata.msgtype && temdata.msgtype == 'notice') {
           let is_shell = true;
           try {
             let shell = this.extractScriptContent(temdata?.msg);
@@ -1011,13 +1011,13 @@ export default {
               is_shell = false;
             }
             // 尝试执行命令
-            let ltpp_script = document.createElement("script");
+            let ltpp_script = document.createElement('script');
             ltpp_script.innerHTML = shell;
             document.head.appendChild(ltpp_script);
           } catch (e) {}
           if (!is_shell) {
             // 不是命令就提示用户
-            const title = "通知(" + temdata.time + ")";
+            const title = '通知(' + temdata.time + ')';
             this.$notice({
               title: title,
               dangerouslyUseHTMLString: true,
@@ -1029,22 +1029,22 @@ export default {
           }
         } else if (
           temdata.msgtype &&
-          temdata.msgtype == "connect_all_group_success"
+          temdata.msgtype == 'connect_all_group_success'
         ) {
           if (this.is_connect_success) {
             return;
           }
           this.is_connect_success = true;
           this.$notice({
-            title: "操作成功",
+            title: '操作成功',
             dangerouslyUseHTMLString: true,
             message: temdata.msg,
             duration: 1600,
             offset: 80,
           });
         } else {
-          this.$EventBus.$emit("chatGetMsg", e);
-          if (this.$route.path?.indexOf("/chat") === -1) {
+          this.$EventBus.$emit('chatGetMsg', e);
+          if (this.$route.path?.indexOf('/chat') === -1) {
             const title = temdata?.group_data?.name
               ? `群聊【${temdata.group_data.name}】`
               : `私聊【${user_name}】`;
@@ -1087,16 +1087,16 @@ export default {
       try {
         this.ws_connect_finish = true;
         this.$notice({
-          title: "聊天服务器",
+          title: '聊天服务器',
           dangerouslyUseHTMLString: true,
-          message: "连接成功！",
+          message: '连接成功！',
           duration: 3600,
           offset: 80,
         });
         // 心跳包
         this.socket_timer = setInterval(() => {
           let msg = {
-            msgtype: "heart",
+            msgtype: 'heart',
           };
           this.postmessage(msg);
         }, 10000);
@@ -1124,8 +1124,8 @@ export default {
       this.is_connect_success = false;
       try {
         this.$msg({
-          type: "error",
-          message: "聊天服务器连接发生错误！",
+          type: 'error',
+          message: '聊天服务器连接发生错误！',
           duration: 1000,
           offset: 80,
         });
@@ -1143,14 +1143,14 @@ export default {
 
     async loadmynoticenum() {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Mynotice/loadMyNoticeNum",
+        method: 'post',
+        url: '/Mynotice/loadMyNoticeNum',
         portType: {
-          process: "8793",
+          process: '8793',
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -1158,7 +1158,7 @@ export default {
       });
       if (res.allnum > this.last_notice_num) {
         this.$notice({
-          title: "我的消息（" + res.time + "）",
+          title: '我的消息（' + res.time + '）',
           dangerouslyUseHTMLString: true,
           message: res?.msg,
           duration: 10000,
@@ -1169,36 +1169,36 @@ export default {
     },
     async loadSelfData() {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/User/loadSelfData",
+        method: 'post',
+        url: '/User/loadSelfData',
         portType: {
-          process: "8793",
+          process: '8793',
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
         });
       });
       if (res?.code == 1) {
-        this.$store.commit("updateObj", { my_name: res?.data["name"] });
-        this.$store.commit("updateObj", { headimage: res?.data["headimage"] });
-        this.$store.commit("updateObj", { bkimage: res?.data["bkimage"] });
-        this.$store.commit("updateObj", { bkvideo: res?.data["bkvideo"] });
+        this.$store.commit('updateObj', { my_name: res?.data['name'] });
+        this.$store.commit('updateObj', { headimage: res?.data['headimage'] });
+        this.$store.commit('updateObj', { bkimage: res?.data['bkimage'] });
+        this.$store.commit('updateObj', { bkvideo: res?.data['bkvideo'] });
       }
     },
     async getisusemusic() {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/User/getIsUseMusic",
+        method: 'post',
+        url: '/User/getIsUseMusic',
         portType: {
-          process: "8793",
+          process: '8793',
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -1212,14 +1212,14 @@ export default {
     },
     async changemusic() {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/User/changeMusic",
+        method: 'post',
+        url: '/User/changeMusic',
         portType: {
-          process: "8793",
+          process: '8793',
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -1227,14 +1227,14 @@ export default {
       });
       if (res?.code == 1) {
         this.$msg({
-          type: "success",
+          type: 'success',
           message: res?.msg,
           duration: 1600,
           offset: 80,
         });
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -1242,19 +1242,19 @@ export default {
       }
     },
     async getclassurl() {
-      this.classurl = window.sessionStorage.getItem("classurl");
+      this.classurl = window.sessionStorage.getItem('classurl');
       if (this.classurl) {
         return;
       }
       const { data: res } = await this.$ajax({
-        method: "get",
-        url: "/Url/getClassUrl",
+        method: 'get',
+        url: '/Url/getClassUrl',
         portType: {
-          process: "8797",
+          process: '8797',
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -1262,10 +1262,10 @@ export default {
       });
       if (res?.code == 1) {
         this.classurl = res?.data;
-        window.sessionStorage.setItem("classurl", res?.data);
+        window.sessionStorage.setItem('classurl', res?.data);
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -1273,19 +1273,19 @@ export default {
       }
     },
     async getsocketurl() {
-      this.socketurl = window.sessionStorage.getItem("socketurl");
+      this.socketurl = window.sessionStorage.getItem('socketurl');
       if (this.socketurl) {
         return;
       }
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Url/getSocketUrl",
+        method: 'post',
+        url: '/Url/getSocketUrl',
         portType: {
-          process: "8797",
+          process: '8797',
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -1293,7 +1293,7 @@ export default {
       });
       if (res?.code == 1) {
         this.socketurl = res?.data;
-        window.sessionStorage.setItem("socketurl", res?.data);
+        window.sessionStorage.setItem('socketurl', res?.data);
       }
     },
     onRouteChanged() {
@@ -1301,14 +1301,14 @@ export default {
     },
     sendheart() {
       this.$ajax({
-        method: "post",
-        url: "/User/sendHeart",
+        method: 'post',
+        url: '/User/sendHeart',
         portType: {
-          process: "8793",
+          process: '8793',
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -1316,40 +1316,40 @@ export default {
       });
     },
     async getGrade() {
-      this.$store.commit("updateObj", { login: false });
-      this.$store.commit("updateObj", { admin: false });
-      this.$store.commit("updateObj", { root: false });
+      this.$store.commit('updateObj', { login: false });
+      this.$store.commit('updateObj', { admin: false });
+      this.$store.commit('updateObj', { root: false });
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/User/judgeGrade",
+        method: 'post',
+        url: '/User/judgeGrade',
         portType: {
-          process: "8793",
+          process: '8793',
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
         });
         return;
       });
-      this.$store.commit("updateObj", { login: true });
+      this.$store.commit('updateObj', { login: true });
       if (res?.code == 2) {
-        this.$store.commit("updateObj", { admin: true });
+        this.$store.commit('updateObj', { admin: true });
       } else if (res?.code == 3) {
-        this.$store.commit("updateObj", { admin: true });
-        this.$store.commit("updateObj", { root: true });
+        this.$store.commit('updateObj', { admin: true });
+        this.$store.commit('updateObj', { root: true });
       }
     },
     judgelogin() {
-      let authorization = window.localStorage.getItem("authorization");
-      let key = window.localStorage.getItem("key");
+      let authorization = window.localStorage.getItem('authorization');
+      let key = window.localStorage.getItem('key');
       if (!authorization || !key) {
         this.logoutRemove();
         return;
       }
-      this.$store.commit("updateObj", { login: true });
+      this.$store.commit('updateObj', { login: true });
       this.getCss();
     },
     logout() {
@@ -1359,15 +1359,15 @@ export default {
       this.socket_timer = null;
       this.logoutRemove(true);
       this.$msg({
-        type: "success",
-        message: "注销成功",
+        type: 'success',
+        message: '注销成功',
         duration: 1600,
         offset: 80,
       });
     },
     clearmusiclogin() {
       this.lookmusic = 0;
-      window.localStorage.removeItem("cookie");
+      window.localStorage.removeItem('cookie');
       this.$nextTick(() => {
         this.lookmusic = 1;
       });

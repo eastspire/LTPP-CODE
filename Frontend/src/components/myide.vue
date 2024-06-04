@@ -1,7 +1,7 @@
 <!--
  * @Author: 18855190718 1491579574@qq.com
  * @Date: 2023-08-07 22:11:28
- * @LastEditors: wmzn-ltpp 1491579574@qq.com
+ * @LastEditors: ltpp-universe 1491579574@qq.com
  * @LastEditTime: 2024-01-07 16:23:11
  * @FilePath: \LTPP-CODE\Frontend\src\components\myide.vue
  * @Description: Email:1491579574@qq.com
@@ -190,26 +190,26 @@
             v-show="isshow"
           >
             输出/运行结果{{
-              "（ 时间消耗：" +
+              '（ 时间消耗：' +
               (usetime ? usetime : 0) +
-              " MS ，内存消耗：" +
+              ' MS ，内存消耗：' +
               (usememory ? usememory : 0) +
-              " KB ）"
+              ' KB ）'
             }}
           </p>
           <div v-show="isshow">
             <div v-show="iswrong" @dblclick="copy(wrong)">
               <div v-show="!istestres" style="color: #fa278e">
-                <pre>{{ wrong ? wrong : "\n" }}</pre>
+                <pre>{{ wrong ? wrong : '\n' }}</pre>
               </div>
               <div v-show="istestres">
-                <pre>{{ wrong ? wrong : "\n" }}</pre>
+                <pre>{{ wrong ? wrong : '\n' }}</pre>
               </div>
             </div>
             <div v-show="isac">
               <div style="text-align: center; color: #21e016">
                 <pre style="font-size: 1.6rem !important">{{
-                  ac ? ac : "\n"
+                  ac ? ac : '\n'
                 }}</pre>
               </div>
             </div>
@@ -221,27 +221,27 @@
 </template>
 
 <script>
-import urlencode from "../../updateCompoents/urlencode";
-import { monaco } from "../plugins/monacoEditor";
+import urlencode from '../../updateCompoents/urlencode';
+import { monaco } from '../plugins/monacoEditor';
 let contentWidth = 0;
 let contentHeight = 0;
 let last_max_width = 0;
 let timer = null;
 
 export default {
-  name: "Myide",
+  name: 'Myide',
   props: {
     language: {
       default: null,
     },
     code: {
-      default: "",
+      default: '',
     },
     testin: {
-      default: "",
+      default: '',
     },
     contest_id: {
-      default: "",
+      default: '',
     },
     iscloudfile: {
       default: false,
@@ -257,8 +257,8 @@ export default {
     this.my_ide_id = this.randomString();
     this.istestres = false;
     this.isshow = false;
-    this.ac = "";
-    this.wrong = "";
+    this.ac = '';
+    this.wrong = '';
     this.isac = false;
     this.iswrong = false;
     this.isup = false;
@@ -269,15 +269,15 @@ export default {
     this.listenKeydown();
     this.local_testin = this.testin;
     if (!this.iscloudfile) {
-      let language = window.localStorage.getItem("language") ?? "cpp";
+      let language = window.localStorage.getItem('language') ?? 'cpp';
       if (language) {
         this.my_language = language;
       }
-      let problem_name = this.problem_data?.problemName ?? "";
+      let problem_name = this.problem_data?.problemName ?? '';
       this.my_code =
         window.localStorage.getItem(
-          "idecode" + problem_name + this.my_language
-        ) ?? "";
+          'idecode' + problem_name + this.my_language
+        ) ?? '';
     } else {
       this.my_language = this.language;
       this.my_code = this.code;
@@ -290,7 +290,7 @@ export default {
         value: this.my_code,
         language: this.my_language,
         theme: this.usertheme,
-        accessibilityHelpUrl: "",
+        accessibilityHelpUrl: '',
         fontSize: 18,
         tabSize: 4,
         smoothScrolling: true,
@@ -300,20 +300,20 @@ export default {
         folding: true,
         contextmenu: false,
         suggestOnTriggerCharacters: true,
-        cursorBlinking: "smooth",
+        cursorBlinking: 'smooth',
         cursorWidth: 2,
         automaticLayout: false,
         mouseWheelZoom: true, // 缩放字体
         scrollbar: {
           verticalScrollbarSize: 0,
-          vertical: "hidden", // 垂直滚动条根据内容溢出自动显示
+          vertical: 'hidden', // 垂直滚动条根据内容溢出自动显示
           horizontalSliderSize: 8,
-          horizontal: "auto", // 水平滚动条根据内容溢出自动显示
+          horizontal: 'auto', // 水平滚动条根据内容溢出自动显示
           alwaysConsumeMouseWheel: false, // 滚动
         },
         scrollBeyondLastLine: false, // 最后一行多出一个屏幕高度
-        wordWrap: "off", // 溢出换行
-        wrappingStrategy: "advanced",
+        wordWrap: 'off', // 溢出换行
+        wrappingStrategy: 'advanced',
         minimap: {
           enabled: false, // 关闭预览栏
         },
@@ -374,13 +374,13 @@ export default {
   data() {
     return {
       test_query_one_can_next: true,
-      has_ac_code: "",
+      has_ac_code: '',
       is_has_ac_code: false,
-      local_testin: "",
-      code_id: "",
+      local_testin: '',
+      code_id: '',
       up_timer: null,
-      my_language: "cpp",
-      my_ide_id: "",
+      my_language: 'cpp',
+      my_ide_id: '',
       isac: false,
       iswrong: false,
       istestres: false,
@@ -390,11 +390,11 @@ export default {
       editor: null,
       usememory: 0,
       usetime: 0,
-      usertheme: window.localStorage.getItem("theme") ?? "vs-dark",
-      my_code: "",
-      wrong: "",
-      ac: "",
-      res: "",
+      usertheme: window.localStorage.getItem('theme') ?? 'vs-dark',
+      my_code: '',
+      wrong: '',
+      ac: '',
+      res: '',
       timer_id: null,
     };
   },
@@ -443,12 +443,12 @@ export default {
     },
     listenKeydown() {
       try {
-        window.addEventListener("keydown", this.keydownTestCode);
+        window.addEventListener('keydown', this.keydownTestCode);
       } catch (err) {}
     },
     removeListenKeydown() {
       try {
-        window.removeEventListener("keydown", this.keydownTestCode);
+        window.removeEventListener('keydown', this.keydownTestCode);
       } catch (err) {}
     },
     scrollDown() {
@@ -457,7 +457,7 @@ export default {
           window.scrollBy({
             top: 95.55,
             left: 0,
-            behavior: "smooth",
+            behavior: 'smooth',
           });
         } catch (err) {}
       });
@@ -533,13 +533,13 @@ export default {
         !document.msFullscreenElement
       ) {
         if (element_dom.requestFullscreen) {
-          document.addEventListener("fullscreenchange", fn);
+          document.addEventListener('fullscreenchange', fn);
         } else if (element_dom.mozRequestFullScreen) {
-          document.addEventListener("mozfullscreenchange", fn);
+          document.addEventListener('mozfullscreenchange', fn);
         } else if (element_dom.webkitRequestFullscreen) {
-          document.addEventListener("webkitfullscreenchange", fn);
+          document.addEventListener('webkitfullscreenchange', fn);
         } else if (element_dom.msRequestFullscreen) {
-          document.addEventListener("msfullscreenchange", fn);
+          document.addEventListener('msfullscreenchange', fn);
         }
       }
     },
@@ -558,11 +558,11 @@ export default {
       }
       if (this.iscloudfile) {
         try {
-          this.$emit("upCodeFile", this.editor.getValue());
+          this.$emit('upCodeFile', this.editor.getValue());
         } catch (err) {}
         return;
       }
-      let problem_name = this.problem_data?.problemName ?? "";
+      let problem_name = this.problem_data?.problemName ?? '';
       if (this.timer_id) {
         clearTimeout(this.timer_id);
         this.timer_id = null;
@@ -571,7 +571,7 @@ export default {
         this.my_code = this.editor.getValue();
         try {
           window.localStorage.setItem(
-            "idecode" + problem_name + this.my_language,
+            'idecode' + problem_name + this.my_language,
             this.my_code
           );
         } catch (err) {}
@@ -581,7 +581,7 @@ export default {
         this.my_code = this.editor.getValue();
         try {
           window.localStorage.setItem(
-            "idecode" + problem_name + this.my_language,
+            'idecode' + problem_name + this.my_language,
             this.my_code
           );
         } catch (err) {}
@@ -599,7 +599,7 @@ export default {
         );
       try {
         !this.iscloudfile &&
-          window.localStorage.setItem("language", this.my_language);
+          window.localStorage.setItem('language', this.my_language);
       } catch (err) {}
       this.initcode();
       this.loadCodeTips(this.my_language);
@@ -610,7 +610,7 @@ export default {
           theme: this.usertheme,
         });
       try {
-        window.localStorage.setItem("theme", this.usertheme);
+        window.localStorage.setItem('theme', this.usertheme);
       } catch (err) {}
     },
     useAcCode() {
@@ -620,19 +620,19 @@ export default {
     },
     towrite() {
       this.$router.push({
-        path: "/write",
+        path: '/write',
         query: {
           problemName: urlencode(
             this.problem_data?.problemName +
-              "(" +
+              '(' +
               this.$SqsGlobal.language_map[this.my_language] +
-              ")",
-            "gbk"
+              ')',
+            'gbk'
           ),
-          problemId: urlencode(this.problem_data?.id, "gbk"),
-          problemContent: urlencode(this.problem_data?.problemContent, "gbk"),
-          code: urlencode(this.my_code, "gbk"),
-          language: urlencode(this.my_language, "gbk"),
+          problemId: urlencode(this.problem_data?.id, 'gbk'),
+          problemContent: urlencode(this.problem_data?.problemContent, 'gbk'),
+          code: urlencode(this.my_code, 'gbk'),
+          language: urlencode(this.my_language, 'gbk'),
         },
       });
     },
@@ -648,10 +648,10 @@ export default {
       this.iswrong = false;
       this.my_code = this.editor.getValue();
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Webcode/queryCode",
+        method: 'post',
+        url: '/Webcode/queryCode',
         portType: {
-          process: "8791",
+          process: '8791',
         },
         data: {
           code_id: code_id,
@@ -661,7 +661,7 @@ export default {
         this.istest = false;
         this.test_query_one_can_next = true;
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -703,10 +703,10 @@ export default {
       this.iswrong = false;
       this.my_code = this.editor.getValue();
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Webcode/runCode",
+        method: 'post',
+        url: '/Webcode/runCode',
         portType: {
-          process: "8791",
+          process: '8791',
         },
         data: {
           code: this.my_code,
@@ -721,7 +721,7 @@ export default {
         this.isup = false;
         this.istest = false;
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -741,7 +741,7 @@ export default {
         this.isup = false;
         this.istest = false;
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -757,10 +757,10 @@ export default {
       this.isac = false;
       this.iswrong = false;
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Ojjudge/queryCode",
+        method: 'post',
+        url: '/Ojjudge/queryCode',
         portType: {
-          process: "8791",
+          process: '8791',
         },
         data: {
           code_id: code_id,
@@ -769,7 +769,7 @@ export default {
         this.isup = false;
         this.istest = false;
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -793,11 +793,11 @@ export default {
         this.ac = res.result;
         this.isac = true;
         this.iswrong = false;
-        this.wrong = "";
+        this.wrong = '';
       } else {
         this.isac = false;
         this.iswrong = true;
-        this.ac = "";
+        this.ac = '';
         this.wrong = res.result;
       }
       this.isshow = true;
@@ -816,10 +816,10 @@ export default {
       this.istestres = false;
       this.my_code = this.editor.getValue();
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Ojjudge/runCode",
+        method: 'post',
+        url: '/Ojjudge/runCode',
         portType: {
-          process: "8790",
+          process: '8790',
         },
         data: {
           problem_id: this.problem_data?.id,
@@ -835,7 +835,7 @@ export default {
         this.isup = false;
         this.istest = false;
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -855,7 +855,7 @@ export default {
         this.isup = false;
         this.istest = false;
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -863,9 +863,9 @@ export default {
       }
     },
     reset() {
-      this.$alert("还原模板将覆盖当前代码！请谨慎操作！", "提示", {
-        confirmButtonText: "确定",
-        type: "warning",
+      this.$alert('还原模板将覆盖当前代码！请谨慎操作！', '提示', {
+        confirmButtonText: '确定',
+        type: 'warning',
       })
         .then(() => {
           try {
@@ -880,46 +880,46 @@ export default {
           this.istest = false;
           this.usetime = 0;
           this.usememory = 0;
-          this.local_testin = "";
-          this.ac = "";
-          this.wrong = "";
+          this.local_testin = '';
+          this.ac = '';
+          this.wrong = '';
           this.isac = false;
           this.isup = false;
-          if (this.my_language == "c") {
+          if (this.my_language == 'c') {
             this.my_code = this.$SqsGlobal.c;
             this.editor.setValue(this.$SqsGlobal.c);
-          } else if (this.my_language == "cpp") {
+          } else if (this.my_language == 'cpp') {
             this.my_code = this.$SqsGlobal.cpp;
             this.editor.setValue(this.$SqsGlobal.cpp);
-          } else if (this.my_language == "java") {
+          } else if (this.my_language == 'java') {
             this.my_code = this.$SqsGlobal.java;
             this.editor.setValue(this.$SqsGlobal.java);
-          } else if (this.my_language == "python") {
+          } else if (this.my_language == 'python') {
             this.my_code = this.$SqsGlobal.python;
             this.editor.setValue(this.$SqsGlobal.python);
-          } else if (this.my_language == "go") {
+          } else if (this.my_language == 'go') {
             this.my_code = this.$SqsGlobal.go;
             this.editor.setValue(this.$SqsGlobal.go);
-          } else if (this.my_language == "php") {
+          } else if (this.my_language == 'php') {
             this.my_code = this.$SqsGlobal.php;
             this.editor.setValue(this.$SqsGlobal.php);
-          } else if (this.my_language == "javascript") {
+          } else if (this.my_language == 'javascript') {
             this.my_code = this.$SqsGlobal.javascript;
             this.editor.setValue(this.$SqsGlobal.javascript);
-          } else if (this.my_language == "rust") {
+          } else if (this.my_language == 'rust') {
             this.my_code = this.$SqsGlobal.rust;
             this.editor.setValue(this.$SqsGlobal.rust);
-          } else if (this.my_language == "csharp") {
+          } else if (this.my_language == 'csharp') {
             this.my_code = this.$SqsGlobal.csharp;
             this.editor.setValue(this.$SqsGlobal.csharp);
-          } else if (this.my_language == "typescript") {
+          } else if (this.my_language == 'typescript') {
             this.my_code = this.$SqsGlobal.typescript;
             this.editor.setValue(this.$SqsGlobal.typescript);
-          } else if (this.my_language == "ruby") {
+          } else if (this.my_language == 'ruby') {
             this.my_code = this.$SqsGlobal.ruby;
             this.editor.setValue(this.$SqsGlobal.ruby);
           } else {
-            this.my_language = "cpp";
+            this.my_language = 'cpp';
             this.my_code = this.$SqsGlobal.cpp;
             this.editor.setValue(this.$SqsGlobal.cpp);
           }
@@ -932,10 +932,10 @@ export default {
         return;
       }
       if (!this.problem_data?.id) {
-        let problem_name = this.problem_data?.problemName ?? "";
+        let problem_name = this.problem_data?.problemName ?? '';
         try {
           this.my_code = window.localStorage.getItem(
-            "idecode" + problem_name + this.my_language
+            'idecode' + problem_name + this.my_language
           );
         } catch (err) {}
         if (!this.my_code) {
@@ -945,10 +945,10 @@ export default {
         return;
       }
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Oj/lookProblemMySolveCode",
+        method: 'post',
+        url: '/Oj/lookProblemMySolveCode',
         portType: {
-          process: "8795",
+          process: '8795',
         },
         data: {
           problem_id: this.problem_data?.id,
@@ -957,23 +957,23 @@ export default {
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
         });
       });
-      if (res?.code == 1 && res?.data != undefined && res?.data != "") {
+      if (res?.code == 1 && res?.data != undefined && res?.data != '') {
         this.is_has_ac_code = true;
         this.has_ac_code = res?.data;
       } else {
         this.is_has_ac_code = false;
-        this.has_ac_code = "";
-        let cache_code = "";
-        let problem_name = this.problem_data?.problemName ?? "";
+        this.has_ac_code = '';
+        let cache_code = '';
+        let problem_name = this.problem_data?.problemName ?? '';
         try {
           cache_code = window.localStorage.getItem(
-            "idecode" + problem_name + this.my_language
+            'idecode' + problem_name + this.my_language
           );
         } catch (err) {}
         if (!cache_code) {

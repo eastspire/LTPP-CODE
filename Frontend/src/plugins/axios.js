@@ -1,7 +1,7 @@
 /*
  * @Author: 18855190718 1491579574@qq.com
  * @Date: 2023-01-12 12:38:58
- * @LastEditors: wmzn-ltpp 1491579574@qq.com
+ * @LastEditors: ltpp-universe 1491579574@qq.com
  * @LastEditTime: 2023-12-30 19:13:03
  * @FilePath: \LTPP-CODE\Frontend\src\plugins\axios.js
  * @Description: Email:1491579574@qq.com
@@ -155,12 +155,12 @@ Plugin.install = function (Vue, options) {
     window.axios = _axios;
     Object.defineProperties(Vue.prototype, {
         axios: {
-            get() {
+            get () {
                 return _axios;
             }
         },
         $axios: {
-            get() {
+            get () {
                 return _axios;
             }
         },

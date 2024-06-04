@@ -1,8 +1,8 @@
 <?php
 /*
- * @Author: wmzn-ltpp 1491579574@qq.com
+ * @Author: ltpp-universe 1491579574@qq.com
  * @Date: 2023-08-07 18:43:59
- * @LastEditors: wmzn-ltpp 1491579574@qq.com
+ * @LastEditors: ltpp-universe 1491579574@qq.com
  * @LastEditTime: 2023-12-31 10:33:30
  * @FilePath: \LTPP-CODE\process\ContestRankCrontab.php
  * @Description: Email:1491579574@qq.com

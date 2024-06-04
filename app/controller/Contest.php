@@ -2,7 +2,7 @@
 /*
  * @Author: 18855190718 1491579574@qq.com
  * @Date: 2023-01-19 23:50:37
- * @LastEditors: wmzn-ltpp 1491579574@qq.com
+ * @LastEditors: ltpp-universe 1491579574@qq.com
  * @LastEditTime: 2024-01-09 08:14:52
  * @FilePath: \LTPP-CODE\app\controller\Contest.php
  * @Description: Email:1491579574@qq.com
@@ -1924,7 +1924,7 @@ class Contest
                 $one_page_limit = sizeof($percentage_list);
             }
             $chat_msg = '';
-            $res = '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><link rel="icon" href="https://ltpp.vip/LTPPlogo.png" type="image/x-icon"><title>LTPP ' . $contest_db->name . ' 第' . $page . '页 代码查重</title><style>' . $similarity_css . '</style></head><body>';
+            $res = '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><link rel="icon" href="https://ltpp.vip/logo.png" type="image/x-icon"><title>LTPP ' . $contest_db->name . ' 第' . $page . '页 代码查重</title><style>' . $similarity_css . '</style></head><body>';
             foreach ($percentage_list as $key => &$list) {
                 $res .= '<table><tr><th class="tips" colspan="3">代码相似度达到【 ' . $key * 100 . '% 】</th></tr>';
                 foreach ($list as &$value) {
@@ -1935,7 +1935,7 @@ class Contest
                         $now = date('Y-m-d H:i:s', time());
                         $chat_msg .= '<a href="' . $url . '" target="_blank"><strong>【' . $now . ' ' . $contest_db->name . ' 第' . $page . '页】查重结果（点击访问查重地址）</strong></a><br><br>';
                         ++$page;
-                        $res = '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><link rel="icon" href="https://ltpp.vip/LTPPlogo.png" type="image/x-icon"><title>LTPP ' . $contest_db->name . ' 第' . $page . '页 代码查重</title><style>' . $similarity_css . '</style></head><body>';
+                        $res = '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><link rel="icon" href="https://ltpp.vip/logo.png" type="image/x-icon"><title>LTPP ' . $contest_db->name . ' 第' . $page . '页 代码查重</title><style>' . $similarity_css . '</style></head><body>';
                         $res .= '<table><tr><th class="tips" colspan="3">代码相似度达到【 ' . $key * 100 . '% 】</th></tr>';
                     }
                     ++$idx;
@@ -2039,7 +2039,7 @@ class Contest
             $msg_css = Base::getCss('msg');
             // OI赛制HTML排名竞赛未结束不显示
             if ($contest_db->type == 'OI' && time() <= $endtime) {
-                return '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><link rel="icon" href="https://ltpp.vip/LTPPlogo.png" type="image/x-icon"><title>LTPP【' . $contest_db->name . '】竞赛排名</title><style>' . $msg_css . '</style><script>' . $js . '</script></head><body><h1>' . Base::$contest_rank_oi_not_end . '</h1></body></html>';
+                return '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><link rel="icon" href="https://ltpp.vip/logo.png" type="image/x-icon"><title>LTPP【' . $contest_db->name . '】竞赛排名</title><style>' . $msg_css . '</style><script>' . $js . '</script></head><body><h1>' . Base::$contest_rank_oi_not_end . '</h1></body></html>';
             }
             $html = Base::getContestRankHtml($contest_id);
             if (!$html) {
@@ -2048,7 +2048,7 @@ class Contest
                     return Base::notFoundPage();
                 }
                 // 非消息队列获取排名，排名不在缓存
-                return '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><link rel="icon" href="https://ltpp.vip/LTPPlogo.png" type="image/x-icon"><title>LTPP【' . $contest_db->name . '】竞赛排名</title><style>' . $msg_css . '</style><script>' . $js . '</script></head><body><h1>' . Base::$contest_no_rank . '</h1></body></html>';
+                return '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><link rel="icon" href="https://ltpp.vip/logo.png" type="image/x-icon"><title>LTPP【' . $contest_db->name . '】竞赛排名</title><style>' . $msg_css . '</style><script>' . $js . '</script></head><body><h1>' . Base::$contest_no_rank . '</h1></body></html>';
             }
         } catch (Exception $e) {
             Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
@@ -2147,7 +2147,7 @@ class Contest
                     $table_body = '<tr>' . $table_body . '</tr>';
                 }
             }
-            $html = '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><link rel="icon" href="https://ltpp.vip/LTPPlogo.png" type="image/x-icon"><title>LTPP【' . $contest_db->name . '】竞赛排名</title><style>' . $rank_css . '</style><script>' . $js . '</script></head><body><table class="CONTEST"><tr><th class="CONTEST-NAME" colspan="' . ($problems_len + 4) . '">LTPP【' . $contest_db->name . '】实时竞赛排名</th></tr>' . $table_title . $table_body . '</body></html>';
+            $html = '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><link rel="icon" href="https://ltpp.vip/logo.png" type="image/x-icon"><title>LTPP【' . $contest_db->name . '】竞赛排名</title><style>' . $rank_css . '</style><script>' . $js . '</script></head><body><table class="CONTEST"><tr><th class="CONTEST-NAME" colspan="' . ($problems_len + 4) . '">LTPP【' . $contest_db->name . '】实时竞赛排名</th></tr>' . $table_title . $table_body . '</body></html>';
         } catch (Exception $e) {
             Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
             return $html;

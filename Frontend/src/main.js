@@ -1,7 +1,7 @@
 /*
- * @Author: wmzn-ltpp 1491579574@qq.com
+ * @Author: ltpp-universe 1491579574@qq.com
  * @Date: 2023-08-07 18:43:57
- * @LastEditors: wmzn-ltpp 1491579574@qq.com
+ * @LastEditors: ltpp-universe 1491579574@qq.com
  * @LastEditTime: 2024-01-08 22:06:49
  * @FilePath: \LTPP-CODE\Frontend\src\main.js
  * @Description: Email:1491579574@qq.com
@@ -67,7 +67,7 @@ Vue.prototype.$EventBus = EventBus;
 
 // 拖拽
 Vue.directive('domDrag', {
-    bind(el) {
+    bind (el) {
         //el即为当前元素，添加可拖拽标识
         el.style.cursor = 'move'
         // 获取原有属性 ie dom.currentStyle 火狐谷歌 window.getComputedStyle(dom, null);
@@ -734,7 +734,7 @@ Vue.prototype.downloadUrlContent = async function (url, data, download_name) {
     return res;
 };
 
-Vue.prototype.sendNotification = function (title = '通知', body = '', icon = '/LTPPlogo.png') {
+Vue.prototype.sendNotification = function (title = '通知', body = '', icon = '/logo.png') {
     try {
         if (!this.$store.state.open_system_notice) {
             return;

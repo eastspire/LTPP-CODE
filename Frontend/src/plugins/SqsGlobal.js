@@ -1,7 +1,7 @@
 /*
  * @Author: 18855190718 1491579574@qq.com
  * @Date: 2023-08-07 18:43:57
- * @LastEditors: wmzn-ltpp 1491579574@qq.com
+ * @LastEditors: ltpp-universe 1491579574@qq.com
  * @LastEditTime: 2024-01-07 23:14:07
  * @FilePath: \LTPP-CODE\Frontend\src\plugins\SqsGlobal.js
  * @Description: Email:1491579574@qq.com
@@ -218,7 +218,7 @@ const question_list_data = {
     "time": loading_tips,
     "answer_num": 0,
     "writer": loading_tips,
-    "headimage": "/LTPPlogo.png"
+    "headimage": "/logo.png"
 };
 const monitor_list_data = {
     "id": "",
@@ -324,7 +324,7 @@ const user_list_data =
     lastlogin: loading_tips,
     sex: loading_tips,
     email: loading_tips,
-    headimage: '/LTPPlogo.png',
+    headimage: '/logo.png',
     fans: loading_tips,
     follow: loading_tips,
     online: loading_tips,

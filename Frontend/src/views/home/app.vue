@@ -59,7 +59,7 @@
               <div style="padding: 0rem !important">
                 <div>
                   <img
-                    onerror="/LTPPlogo.png"
+                    onerror="/logo.png"
                     v-if="temtable.image && reg.test(temtable.image)"
                     class="animate"
                     style="
@@ -210,9 +210,9 @@
 </template>
 
 <script>
-import urlencode from "../../../updateCompoents/urlencode";
+import urlencode from '../../../updateCompoents/urlencode';
 export default {
-  name: "app",
+  name: 'app',
   async activated() {
     this.show_dialog = false;
     this.onedata = this.$SqsGlobal.app_list_data;
@@ -243,25 +243,25 @@ export default {
       id &&
         id != this.$SqsGlobal.loading_tips &&
         this.$router.push({
-          path: "/userpage",
+          path: '/userpage',
           query: {
-            path: urlencode(id, "gbk"),
+            path: urlencode(id, 'gbk'),
           },
         });
     },
     async lookOneApp(id) {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/App/lookOneApp",
+        method: 'post',
+        url: '/App/lookOneApp',
         portType: {
-          process: "8792",
+          process: '8792',
         },
         data: {
           id: id,
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -272,7 +272,7 @@ export default {
         this.onedata = res.data;
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res.msg,
           duration: 1600,
           offset: 80,
@@ -306,19 +306,19 @@ export default {
     },
     tableRowClassName({ row, rowIndex }) {
       if (rowIndex === 1) {
-        return "warning-row";
+        return 'warning-row';
       } else if (rowIndex === 3) {
-        return "success-row";
+        return 'success-row';
       }
-      return "";
+      return '';
     },
     async keysearch() {
       this.lastkey = this.key;
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/App/allAppKeySearch",
+        method: 'post',
+        url: '/App/allAppKeySearch',
         portType: {
-          process: "8792",
+          process: '8792',
         },
         data: {
           key: this.key,
@@ -327,7 +327,7 @@ export default {
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -338,7 +338,7 @@ export default {
     },
     search() {
       this.initData();
-      if (this.key == "" || this.key == null || this.key == undefined) {
+      if (this.key == '' || this.key == null || this.key == undefined) {
         this.issearch = false;
         this.getlist();
         return;
@@ -349,10 +349,10 @@ export default {
 
     async getlist() {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/App/loadAllAppList",
+        method: 'post',
+        url: '/App/loadAllAppList',
         portType: {
-          process: "8792",
+          process: '8792',
         },
         data: {
           page: this.page,
@@ -360,7 +360,7 @@ export default {
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -373,10 +373,10 @@ export default {
     toOneApp() {
       try {
         this.$ajax({
-          method: "post",
-          url: "/App/addOpenTimes",
+          method: 'post',
+          url: '/App/addOpenTimes',
           portType: {
-            process: "8794",
+            process: '8794',
           },
           data: {
             id: this.onedata.id,
@@ -389,7 +389,7 @@ export default {
           })
           .catch((err) => {
             this.$msg({
-              type: "error",
+              type: 'error',
               message: t,
               duration: 1600,
               offset: 80,
@@ -407,18 +407,18 @@ export default {
     prop() {
       let data = {
         subfield: false, // 单双栏模式
-        defaultOpen: "preview", //edit： 默认展示编辑区域 ， preview： 默认展示预览区域
+        defaultOpen: 'preview', //edit： 默认展示编辑区域 ， preview： 默认展示预览区域
         editable: false,
         toolbarsFlag: false, //工具栏
         scrollStyle: true,
-        codeStyle: "atom-one-dark",
+        codeStyle: 'atom-one-dark',
         boxShadow: false,
         ishljs: true,
         tabSize: 4,
-        toolbarsBackground: "rgba(0,0,0,0)",
-        editorBackground: "rgba(0,0,0,0)",
-        previewBackground: "rgba(0,0,0,0)",
-        fontSize: "1.06rem",
+        toolbarsBackground: 'rgba(0,0,0,0)',
+        editorBackground: 'rgba(0,0,0,0)',
+        previewBackground: 'rgba(0,0,0,0)',
+        fontSize: '1.06rem',
         navigation: false,
       };
       return data;
@@ -433,17 +433,17 @@ export default {
       externalLink: {
         markdown_css: false,
         // 默认public文件夹下
-        hljs_js: () => "md/highlightjs/highlight.min.js",
-        hljs_css: (css) => "md/highlightjs/styles/" + css + ".min.css",
-        hljs_lang: (lang) => "md/highlightjs/languages/" + lang + ".min.js",
-        katex_css: () => "md/katex/katex.min.css",
-        katex_js: () => "md/katex/katex.min.js",
+        hljs_js: () => 'md/highlightjs/highlight.min.js',
+        hljs_css: (css) => 'md/highlightjs/styles/' + css + '.min.css',
+        hljs_lang: (lang) => 'md/highlightjs/languages/' + lang + '.min.js',
+        katex_css: () => 'md/katex/katex.min.css',
+        katex_js: () => 'md/katex/katex.min.js',
       },
       show_dialog: false,
       onedata: {},
       reg: /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\*\+,;=.]+$/,
       limit: 50,
-      lastkey: "",
+      lastkey: '',
       isseetip: true,
       issearch: false,
       /* context:  '',//输入的数据 */
@@ -469,7 +469,7 @@ export default {
         /* 1.4.2 */
         navigation: false, // 导航目录
       },
-      key: "",
+      key: '',
       tableData: [],
     };
   },

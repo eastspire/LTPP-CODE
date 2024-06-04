@@ -1,7 +1,7 @@
 <!--
  * @Author: 18855190718 1491579574@qq.com
  * @Date: 2023-03-17 09:42:16
- * @LastEditors: wmzn-ltpp 1491579574@qq.com
+ * @LastEditors: ltpp-universe 1491579574@qq.com
  * @LastEditTime: 2024-01-08 20:29:01
  * @FilePath: \LTPP-CODE\Frontend\src\views\back\myquestion.vue
  * @Description: Email:1491579574@qq.com
@@ -111,7 +111,7 @@
               <p style="font-size: 1rem; color: deeppink">
                 {{
                   !isNaN(parseFloat(tem.answer_num)) && isFinite(tem.answer_num)
-                    ? "累计回答：" + tem.answer_num + "次"
+                    ? '累计回答：' + tem.answer_num + '次'
                     : tem.answer_num
                 }}
               </p>
@@ -139,16 +139,16 @@
 </template>
 
 <script>
-import urlencode from "../../../updateCompoents/urlencode";
+import urlencode from '../../../updateCompoents/urlencode';
 const limit = 50;
 
 export default {
-  name: "myquestion",
+  name: 'myquestion',
   data() {
     return {
       isinit: false,
       lock: false,
-      key: "",
+      key: '',
       xss_options: this.$SqsGlobal.xss_options,
       stripIgnoreTagBody: this.$SqsGlobal.strip_ignore_tag_body,
       data_list: [],
@@ -179,11 +179,11 @@ export default {
       externalLink: {
         markdown_css: false,
         // 默认public文件夹下
-        hljs_js: () => "md/highlightjs/highlight.min.js",
-        hljs_css: (css) => "md/highlightjs/styles/" + css + ".min.css",
-        hljs_lang: (lang) => "md/highlightjs/languages/" + lang + ".min.js",
-        katex_css: () => "md/katex/katex.min.css",
-        katex_js: () => "md/katex/katex.min.js",
+        hljs_js: () => 'md/highlightjs/highlight.min.js',
+        hljs_css: (css) => 'md/highlightjs/styles/' + css + '.min.css',
+        hljs_lang: (lang) => 'md/highlightjs/languages/' + lang + '.min.js',
+        katex_css: () => 'md/katex/katex.min.css',
+        katex_js: () => 'md/katex/katex.min.js',
       },
     };
   },
@@ -191,19 +191,19 @@ export default {
     this.lock = false;
     this.initData();
     await this.getList();
-    window.addEventListener("scroll", this.addlist);
+    window.addEventListener('scroll', this.addlist);
   },
   activated() {
     this.lock = false;
-    window.removeEventListener("scroll", this.addlist);
+    window.removeEventListener('scroll', this.addlist);
   },
   destroyed() {
     this.lock = true;
-    window.removeEventListener("scroll", this.addlist);
+    window.removeEventListener('scroll', this.addlist);
   },
   deactivated() {
     this.lock = true;
-    window.removeEventListener("scroll", this.addlist);
+    window.removeEventListener('scroll', this.addlist);
   },
 
   methods: {
@@ -242,9 +242,9 @@ export default {
       id &&
         id != this.$SqsGlobal.loading_tips &&
         this.$router.push({
-          path: "/userpage",
+          path: '/userpage',
           query: {
-            path: urlencode(id, "gbk"),
+            path: urlencode(id, 'gbk'),
           },
         });
     },
@@ -252,9 +252,9 @@ export default {
       id &&
         id != this.$SqsGlobal.loading_tips &&
         this.$router.push({
-          path: "/onequestion",
+          path: '/onequestion',
           query: {
-            path: urlencode(id, "gbk"),
+            path: urlencode(id, 'gbk'),
           },
         });
     },
@@ -264,10 +264,10 @@ export default {
       }
       this.lock = true;
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Question/getMyQuestionList",
+        method: 'post',
+        url: '/Question/getMyQuestionList',
         portType: {
-          process: "8793",
+          process: '8793',
         },
         data: {
           question_id: this.data_list.length
@@ -279,7 +279,7 @@ export default {
           this.lock = false;
         }, 360);
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -294,8 +294,8 @@ export default {
         this.data_list.push(...res?.data);
         if (res?.data && !res?.data?.length) {
           this.$msg({
-            type: "success",
-            message: "没有更多啦！",
+            type: 'success',
+            message: '没有更多啦！',
             duration: 1600,
             offset: 80,
           });
@@ -313,10 +313,10 @@ export default {
       }
       this.lock = true;
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Question/searchMyQuestionList",
+        method: 'post',
+        url: '/Question/searchMyQuestionList',
         portType: {
-          process: "8792",
+          process: '8792',
         },
         data: {
           key: this.key,
@@ -329,7 +329,7 @@ export default {
           this.lock = false;
         }, 360);
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -344,8 +344,8 @@ export default {
         this.data_list.push(...res?.data);
         if (res?.data && !res?.data?.length) {
           this.$msg({
-            type: "success",
-            message: "没有更多啦！",
+            type: 'success',
+            message: '没有更多啦！',
             duration: 1600,
             offset: 80,
           });
@@ -361,18 +361,18 @@ export default {
     prop() {
       let data = {
         subfield: false, // 单双栏模式
-        defaultOpen: "preview", //edit： 默认展示编辑区域 ， preview： 默认展示预览区域
+        defaultOpen: 'preview', //edit： 默认展示编辑区域 ， preview： 默认展示预览区域
         editable: false,
         toolbarsFlag: false, //工具栏
         scrollStyle: true,
-        codeStyle: "atom-one-dark",
+        codeStyle: 'atom-one-dark',
         boxShadow: false,
         ishljs: true,
         tabSize: 4,
-        toolbarsBackground: "rgba(0,0,0,0)",
-        editorBackground: "rgba(0,0,0,0)",
-        previewBackground: "rgba(0,0,0,0)",
-        fontSize: "1.06rem",
+        toolbarsBackground: 'rgba(0,0,0,0)',
+        editorBackground: 'rgba(0,0,0,0)',
+        previewBackground: 'rgba(0,0,0,0)',
+        fontSize: '1.06rem',
         navigation: false,
       };
       return data;
@@ -381,5 +381,5 @@ export default {
 };
 </script>
 <style scoped>
-@import "../../../public/md/markdown/github-markdown.min.css";
+@import '../../../public/md/markdown/github-markdown.min.css';
 </style>
