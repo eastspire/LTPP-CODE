@@ -6,5 +6,7 @@ cd ./frontend
 git init
 git add -A
 git commit -m 'deploy'
-git remote add origin git@github.com:ltpp-universe/LTPP-FRONTEND.git
+git push -f git@github.com:ltpp-universe/LTPP-FRONTEND.git master:master
 rm -rf ../frontend
+echo "Press Enter to continue..."
+read -n 1
