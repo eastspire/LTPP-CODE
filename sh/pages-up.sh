@@ -3,6 +3,7 @@ set -e
 cd ./Frontend
 npm run build
 cd ./frontend
+cp ../../vercel.json ./
 git init
 git add -A
 git commit -m 'deploy'
