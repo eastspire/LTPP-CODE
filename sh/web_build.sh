@@ -11,6 +11,5 @@
 ###
 cd ./Frontend
 npm run build
-npm run build
 cd ../sh
 ./web_up.sh
