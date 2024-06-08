@@ -42,10 +42,10 @@ class Request implements Consumer
             if ($user_db) {
                 $user_name = $user_db->name;
             }
-            Robot::sendChatToOneUserMsg($user_id, '<h4>用户【' . $user_name . '】发起异步请求结果</h4><br><pre style="white-space:pre-wrap;word-wrap:break-word;">'
+            Robot::sendChatToOneUserMsg($user_id, '<h4>用户【' . $user_name . '】发起异步请求结果</h4><br><pre style="white-space:pre-wrap;word-wrap:break-word;font-size: 1.06rem;">'
                 . $res . '</pre>');
             if (!Base::judgeIsRoot($user_id)) {
-                Robot::sendChatToOneUserMsg(Base::getRootId(), '<h4>用户【' . $user_name . '】发起异步请求结果</h4><br><pre style="white-space:pre-wrap;word-wrap:break-word;">'
+                Robot::sendChatToOneUserMsg(Base::getRootId(), '<h4>用户【' . $user_name . '】发起异步请求结果</h4><br><pre style="white-space:pre-wrap;word-wrap:break-word;font-size: 1.06rem;">'
                     . $res . '</pre>');
             }
         } catch (Exception $e) {

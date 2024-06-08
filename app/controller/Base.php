@@ -394,6 +394,11 @@ class Base
     static $no_more_msg = '到底啦！没有更多了！';
 
     /**
+     * 游客用户名
+     */
+    static $no_login_user_name = '游客';
+
+    /**
      * 竞赛机器人比赛开始后多久开始做题（单位：秒）
      * @var int $robot_contest_start_after_begin_seconds
      */
@@ -1284,6 +1289,47 @@ class Base
     ];
 
     /**
+     * 检测URL域名部分是否以指定域名结尾
+     */
+    static public function isDomainEndsWith($url, $ending)
+    {
+        try {
+            // 匹配 URL 中的域名部分
+            $pattern = '/^(https?:\/\/)?([\w\d-]+(\.[\w\d-]+)*\.[\w\d]{2,})(\/.*)?$/i';
+            preg_match($pattern, $url, $matches);
+            // 如果匹配成功并且域名以 $ending 结尾，返回 true；否则返回 false
+            if ($matches && isset($matches[2])) {
+                $domain = $matches[2];
+                return preg_match('/' . preg_quote($ending, '/') . '$/', $domain);
+            }
+        } catch (Exception $e) {
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
+        }
+        return false;
+    }
+
+    /**
+     * 获取URL域名
+     */
+    static public function getDomainFromUrl($url)
+    {
+        try {
+            // 解析 URL
+            $parsedUrl = parse_url($url);
+            // 检查是否解析成功并且包含域名部分
+            if ($parsedUrl && isset($parsedUrl['host'])) {
+                // 返回域名部分
+                return $parsedUrl['host'];
+            }
+        } catch (Exception $e) {
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
+        }
+        // 解析失败或不包含域名部分时返回空字符串
+        return '';
+    }
+
+
+    /**
      * 鉴权
      * @param Request $request
      * @param callable $handler
@@ -1296,9 +1342,9 @@ class Base
             };
         }
         try {
-
             $is_logout = false;
             $func = $request->action;
+            $loc = $request->getRealIp(true);
             if (!$func) {
                 $func = '';
             }
@@ -1311,14 +1357,14 @@ class Base
             } catch (Exception $e) {
                 $is_logout = true;
             }
-            $controller =  $request->controller;
+            $controller = $request->controller;
             if (!$controller) {
                 $controller = '';
             }
             // 监控
             RedisQueue::send(Base::$redis_queue_monitor, [
-                'path' => $controller,
-                'function' => $func,
+                'path' => $controller ? $controller : $loc,
+                'function' => $func ? $func : $request->host(),
                 'user_uid' => $my_uid,
             ]);
             // 判断是否是文件资源
@@ -1333,21 +1379,19 @@ class Base
                 if (isset($header['Referer']) && $header['Referer']) {
                     $referer = $header['Referer'];
                 }
+                if (!$referer) {
+                    $referer = $request->fullUrl();
+                }
+                if (!$referer) {
+                    return Base::notFoundPage();
+                }
                 $linuxurl = Base::getSettingKeyData('GLOBlinuxurl');
                 $front_url = Base::getSettingKeyData('GLOBfronturl');
-                if (strpos($referer, $front_url) === 0) {
-                    // 来自LTPP前端，直接通过
-                    return $handler($request);
-                }
                 foreach (Base::$safe_referer_url as &$tem_safe_referer_url) {
                     if (strpos($referer, $tem_safe_referer_url) === 0) {
                         // 来自本地访问，直接通过
                         return $handler($request);
                     }
-                }
-                if ($referer && strpos($referer, $linuxurl) === false) {
-                    // 来自非LTPP前端和LTPP后端，直接拒绝
-                    return Base::notFoundPage();
                 }
                 foreach (Base::$file_can_visit_func as &$tem_file_can_visit_func) {
                     // 允许来自LTPP后端的URL访问白名单
@@ -1355,15 +1399,22 @@ class Base
                         return $handler($request);
                     }
                 }
-                // 来自LTPP后端非白名单URL访问
-                $file_can_not_visit_extion = Base::getFileCanNotVisitExtionList();
-                foreach ($file_can_not_visit_extion as &$tem_file_can_not_visit_extion) {
-                    // 不可访问类型，直接拒绝
-                    if ($file_extion === $tem_file_can_not_visit_extion) {
-                        return Base::notFoundPage();
+                if (Base::getDomainFromUrl($referer) == Base::getDomainFromUrl($linuxurl)) {
+                    // 来自LTPP后端非白名单URL访问
+                    $file_can_not_visit_extion = Base::getFileCanNotVisitExtionList();
+                    foreach ($file_can_not_visit_extion as &$tem_file_can_not_visit_extion) {
+                        // 不可访问类型，直接拒绝
+                        if ($file_extion === $tem_file_can_not_visit_extion) {
+                            return Base::notFoundPage();
+                        }
                     }
+                    return $handler($request);
                 }
-                return $handler($request);
+                if (Base::isDomainEndsWith($referer, Base::getDomainFromUrl($front_url))) {
+                    // 来自LTPP系列，直接通过
+                    return $handler($request);
+                }
+                return Base::notFoundPage();
             }
             //判断是否需要鉴权
             if (isset(Base::$safe_func[$func])) {
@@ -1404,7 +1455,6 @@ class Base
             $my_aid = Base::getIdByUid($my_uid);
             $redis0 = Redis::connection('db0');
             $redis14 = Redis::connection('db14');
-            $loc = $request->getRealIp(true);
             $onekey = $header['key'];
             // 判断单点登录
             if ($onekey != $redis14->get($my_aid . 'login')) {
@@ -4919,7 +4969,7 @@ class Base
         Robot::sendChatToOneUserMsg(
             Base::getRootId(),
             '<h4>LTPP自动分表完成【' . $now
-                . '】</h4><br><strong>信息</strong><br><pre style="white-space:pre-wrap;word-wrap:break-word;">'
+                . '】</h4><br><strong>信息</strong><br><pre style="white-space:pre-wrap;word-wrap:break-word;font-size: 1.06rem;">'
                 . $msg . '</pre>'
         );
     }
@@ -5073,12 +5123,13 @@ class Base
             }
             $now = date('Y-m-d H:i:s', time());
             $same_start = '<h4>LTPP运行出错【' . $now
-                . '】</h4><br><strong>报错信息</strong><br><pre style="white-space:pre-wrap;word-wrap:break-word;">'
+                . '】</h4><br><strong>报错信息</strong><br><pre style="white-space:pre-wrap;word-wrap:break-word;font-size: 1.06rem;">'
                 . $msg .
-                '</pre><br><strong>Trace信息</strong><br><pre style="white-space:pre-wrap;word-wrap:break-word;">';
+                '</pre><br><strong>Trace信息</strong><br><pre style="white-space:pre-wrap;word-wrap:break-word;font-size: 1.06rem;">';
             $same_end = '</pre>';
+            $notice_save_file_param = $same_start . $trace_str . $same_end;
             $msg = $same_start
-                . ($trace_str == Base::$default_trace_msg ? $trace_str : Base::noticeSaveFile($same_start . $trace_str . $same_end)) . $same_end;
+                . ($trace_str == Base::$default_trace_msg ? $trace_str : Base::noticeSaveFile($notice_save_file_param)) . $same_end;
             Robot::sendChatToOneUserMsgAndEmail(
                 Base::getRootId(),
                 $msg,

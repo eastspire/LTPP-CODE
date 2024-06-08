@@ -12,6 +12,7 @@
 
 namespace app\controller;
 
+use stdClass;
 use support\Request;
 use Tinywan\Jwt\JwtToken;
 use support\Db;
@@ -127,7 +128,9 @@ class Monitor
         foreach ($data as &$tem) {
             $user_data = Base::getUserData($tem->userid);
             if (!$user_data) {
-                continue;
+                $user_data = new stdClass();
+                $user_data->name = Base::$no_login_user_name;
+                $user_data->grade = 1;
             }
             $tem->name = $user_data->name;
             $tem->grade = $user_data->grade;
