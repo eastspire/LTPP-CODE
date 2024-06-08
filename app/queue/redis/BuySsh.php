@@ -140,11 +140,11 @@ class BuySsh implements Consumer
             if ($res === null) {
                 $msg = '购买失败！请重试！';
                 Robot::sendChatToOneUserMsg($my_aid, '<h4>' . $title . "</h4>\n\n" . $msg);
-                Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '<strong>【' . $now . '】</strong>用户<strong>【' . $my_data->name . '】</strong>购买LTPP-SSH失败' . "\n" . $msg);
+                Robot::sendChatToOneUserMsg(Base::getRootId(), '<strong>【' . $now . '】</strong>用户<strong>【' . $my_data->name . '】</strong>购买LTPP-SSH失败' . "\n" . $msg);
                 return;
             }
 
-            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '<strong>【' . $now . '】</strong>用户<strong>【' . $my_data->name . '】</strong>购买LTPP-SSH成功' . "\n" . json_encode($data));
+            Robot::sendChatToOneUserMsg(Base::getRootId(), '<strong>【' . $now . '】</strong>用户<strong>【' . $my_data->name . '】</strong>购买LTPP-SSH成功' . "\n" . json_encode($data));
 
             if (!$is_root) {
                 // 非 root 用户 扣钱

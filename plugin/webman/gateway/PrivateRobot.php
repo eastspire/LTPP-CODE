@@ -685,7 +685,7 @@ class PrivateRobot extends ChatBase
                     'Authorization:Bearer ' . $api_key
                 ];
                 $result = Base::postRequest($gpt_api_url, $headers, $data, true);
-                Robot::sendChatToOneUserMsgAndEmail(
+                Robot::sendChatToOneUserMsg(
                     Base::getRobotId(),
                     '<strong>' . $time . ' ' . $user_name
                         . ' 调用GPT详情</strong><br><strong>用户问题</strong><br>'

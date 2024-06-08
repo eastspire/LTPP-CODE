@@ -260,8 +260,8 @@ class DouYinCrontab
 
     public function onWorkerStart()
     {
-        // 每6秒钟执行一次
-        new Crontab('*/6 * * * * *', function () {
+        // 每秒钟执行一次
+        new Crontab('*/1 * * * * *', function () {
             try {
                 $this->run();
             } catch (Exception $e) {
