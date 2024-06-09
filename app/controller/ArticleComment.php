@@ -46,6 +46,7 @@ class ArticleComment
         if ($tem == '') {
             return \json(['code' => 0, 'msg' => '评论内容不能为空']);
         }
+        $text = Base::removeImgAlt($text);
         $user_db = Base::getUserData($my_aid);
         if (!$user_db || empty($user_db)) {
             return \json(['code' => 0, 'msg' => '用户不存在']);
@@ -136,6 +137,7 @@ class ArticleComment
         if (!$touser) {
             return \json(['code' => -1, 'msg' => '该用户已注销，无法回复该用户']);
         }
+        $text = Base::removeImgAlt($text);
         $data = [
             'articleid' => $article_id,
             'userid' => $my_aid,
@@ -280,6 +282,7 @@ class ArticleComment
                     $tt->touserheadimg = '';
                     $tt->userheadimg = Base::getUserHeadimage($tt->userid);
                     $tt->touserheadimg = Base::getUserHeadimage($tt->touserid);
+                    $tt->text = Base::removeImgAlt($tt->text);
                     $temary['touserarray'][] = get_object_vars($tt);
                 }
             }
@@ -337,5 +340,4 @@ class ArticleComment
         }
         return \json(['code' => -1, 'msg' => '删除失败']);
     }
-}
-;
+};

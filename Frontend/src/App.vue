@@ -7,12 +7,12 @@
 
 <script>
 window.onload = () => {
-  document.addEventListener("touchstart", function (event) {
+  document.addEventListener('touchstart', function (event) {
     if (event.touches.length > 1) {
       event.preventDefault();
     }
   });
-  document.addEventListener("gesturestart", function (event) {
+  document.addEventListener('gesturestart', function (event) {
     event.preventDefault();
   });
 };
@@ -41,17 +41,17 @@ try {
 } catch (err) {}
 
 export default {
-  name: "LTPP",
+  name: 'LTPP',
   data() {
     return {
-      version: "2.8.0",
+      version: '2.8.1',
       get_version_lock: false,
     };
   },
   beforeCreate() {
     this.initDevice();
-    let authorization = window.localStorage.getItem("authorization");
-    let key = window.localStorage.getItem("key");
+    let authorization = window.localStorage.getItem('authorization');
+    let key = window.localStorage.getItem('key');
     if (!authorization || !key) {
       this.logoutRemove();
       return;
@@ -60,15 +60,15 @@ export default {
   async mounted() {
     try {
       this.init();
-      let key = "time";
+      let key = 'time';
       const max_time = 86400;
       const last = window.localStorage.getItem(key);
       const now = new Date().getTime();
       if (!last || (parseInt(now) - parseInt(last)) / 1000 > max_time) {
         this.$notice({
-          title: "系统资源检查",
+          title: '系统资源检查',
           dangerouslyUseHTMLString: true,
-          message: "系统资源更新中",
+          message: '系统资源更新中',
           duration: 1600,
           offset: 80,
         });
@@ -94,46 +94,46 @@ export default {
   methods: {
     init() {
       this.$notice({
-        title: "系统资源检查",
+        title: '系统资源检查',
         dangerouslyUseHTMLString: true,
-        message: "系统资源检查完成",
+        message: '系统资源检查完成',
         duration: 1600,
         offset: 80,
       });
       let backend_network_url =
-        window.localStorage.getItem("backend_network_url") ||
+        window.localStorage.getItem('backend_network_url') ||
         this.$store.state.default_backend_network_url;
       if (backend_network_url) {
-        this.$store.commit("updateObj", {
+        this.$store.commit('updateObj', {
           backend_network_url: backend_network_url,
         });
       } else {
         try {
           window.localStorage.setItem(
-            "backend_network_url",
+            'backend_network_url',
             backend_network_url
           );
         } catch (err) {}
-        this.$store.commit("updateObj", {
+        this.$store.commit('updateObj', {
           backend_network_url: backend_network_url,
         });
       }
       setTimeout(() => {
         this.$notice({
-          title: "当前环境",
+          title: '当前环境',
           dangerouslyUseHTMLString: false,
           message:
             this.$store.state.backend_network_url ==
             this.$store.state.default_backend_network_url
-              ? "官方环境"
-              : "代理环境",
+              ? '官方环境'
+              : '代理环境',
           duration: 3600,
           offset: 80,
         });
       }, 1000);
     },
     updateSeverError(server_error = false) {
-      this.$store.commit("updateObj", { server_error: server_error });
+      this.$store.commit('updateObj', { server_error: server_error });
     },
     async getVersion() {
       if (this.get_version_lock) {
@@ -141,19 +141,19 @@ export default {
       }
       this.get_version_lock = true;
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Version/getVersion",
+        method: 'post',
+        url: '/Version/getVersion',
         portType: {
-          process: "8793",
+          process: '8793',
         },
       }).catch(() => {
         ++err_times;
         if (err_times > max_err_times) {
           this.updateSeverError(true);
           this.get_version_lock = false;
-          if (this.$route.path != "/maintenance") {
+          if (this.$route.path != '/maintenance') {
             this.$router.replace({
-              path: "/maintenance",
+              path: '/maintenance',
               replace: true,
             });
           }
@@ -164,18 +164,18 @@ export default {
       if (res?.code == 1) {
         err_times = 0;
         this.updateSeverError(false);
-        if (this.$route.path === "/maintenance") {
+        if (this.$route.path === '/maintenance') {
           this.$router.replace({
-            path: "/homelist",
+            path: '/homelist',
             replace: true,
           });
           return;
         }
         if (this.version < res.version) {
           this.$notice({
-            title: "发现新版本！",
+            title: '发现新版本！',
             dangerouslyUseHTMLString: true,
-            message: "系统自动更新中",
+            message: '系统自动更新中',
             duration: 1600,
             offset: 80,
           });
@@ -185,9 +185,9 @@ export default {
         }
       } else if (++err_times > max_err_times) {
         this.updateSeverError(true);
-        this.$route.path != "/maintenance" &&
+        this.$route.path != '/maintenance' &&
           this.$router.replace({
-            path: "/maintenance",
+            path: '/maintenance',
             replace: true,
           });
       }
@@ -288,19 +288,12 @@ export default {
 
 * {
   padding: 0;
-  /*清除元素的内边距*/
   margin: 0;
-  /*清除元素的外边距*/
   -webkit-touch-callout: none !important;
-  /* iOS Safari */
   -webkit-user-select: none !important;
-  /* Chrome/Safari/Opera */
   -khtml-user-select: none !important;
-  /* Konqueror */
   -moz-user-select: none !important;
-  /* Firefox */
   -ms-user-select: none !important;
-  /* Internet Explorer/Edge */
   user-select: none !important;
 }
 
@@ -459,6 +452,55 @@ pre {
     rgba(var(--ltpp-light-color), var(--ltpp-center-box-bk-opacity)) !important;
 }
 
+.relative {
+  position: relative;
+}
+
+.copy-button {
+  position: absolute;
+  right: 0.78rem;
+  top: 1.56rem;
+  transform: translateY(-50%);
+  border: 0px;
+  border-radius: 0.26rem;
+  padding: 0.16rem 0.36rem;
+  cursor: pointer;
+  font-size: 1rem;
+  display: none;
+  color: rgba(var(--ltpp-light-color), 1) !important;
+  background-color: rgba(var(--ltpp-main-bk-color), 1) !important;
+}
+
+.show-copy-button {
+  display: inline-block;
+}
+
+.fade-in {
+  animation: fadeIn 0.36s ease-in-out;
+}
+
+.fade-out {
+  animation: fadeOut 0.36s ease-in-out;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
 code.hljs {
   padding: 3px 5px;
 }
@@ -599,11 +641,12 @@ span.hljs-string {
   width: 50px !important;
 }
 
-.can-select {
-  -webkit-user-select: auto !important;
-  -moz-user-select: auto !important;
-  -ms-user-select: auto !important;
-  user-select: auto !important;
+.can-select,
+.can-select * {
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  -ms-user-select: text !important;
+  user-select: text !important;
 }
 
 .shadow {
@@ -1141,35 +1184,6 @@ p {
   background-color: var(--ltpp-main-color) !important;
   border-color: var(--ltpp-main-color) !important;
   resize: none !important;
-  -webkit-touch-callout: none !important;
-  /* iOS Safari */
-  -webkit-user-select: none !important;
-  /* Chrome/Safari/Opera */
-  -khtml-user-select: none !important;
-  /* Konqueror */
-  -moz-user-select: none !important;
-  /* Firefox */
-  -ms-user-select: none !important;
-  /* Internet Explorer/Edge */
-  user-select: none !important;
-  /* Non-prefixed version, currently not supported by any browser */
-}
-
-.el-loading-spinner,
-.el-loading-mask,
-.is-fullscreen {
-  -webkit-touch-callout: none !important;
-  /* iOS Safari */
-  -webkit-user-select: none !important;
-  /* Chrome/Safari/Opera */
-  -khtml-user-select: none !important;
-  /* Konqueror */
-  -moz-user-select: none !important;
-  /* Firefox */
-  -ms-user-select: none !important;
-  /* Internet Explorer/Edge */
-  user-select: none !important;
-  /* Non-prefixed version, currently not supported by any browser */
 }
 
 /*按钮悬浮*/
@@ -1211,21 +1225,9 @@ p {
   -ms-transition: all 0.3s ease !important;
   /* IE 9 */
   transition: all 0.3s ease !important;
-  -webkit-touch-callout: none !important;
-  /* iOS Safari */
-  -webkit-user-select: none !important;
-  /* Chrome/Safari/Opera */
-  -khtml-user-select: none !important;
-  /* Konqueror */
-  -moz-user-select: none !important;
-  /* Firefox */
-  -ms-user-select: none !important;
-  /* Internet Explorer/Edge */
-  user-select: none !important;
-  /* Non-prefixed version, currently not supported by any browser */
 }
 
-.el-tooltip__popper[x-placement^="top"] .popper__arrow:after {
+.el-tooltip__popper[x-placement^='top'] .popper__arrow:after {
   border-top-color: var(--ltpp-main-color) !important;
   -webkit-transition: all 0.3s ease !important;
   /* Safari and Chrome */
@@ -1236,21 +1238,9 @@ p {
   -ms-transition: all 0.3s ease !important;
   /* IE 9 */
   transition: all 0.3s ease !important;
-  -webkit-touch-callout: none !important;
-  /* iOS Safari */
-  -webkit-user-select: none !important;
-  /* Chrome/Safari/Opera */
-  -khtml-user-select: none !important;
-  /* Konqueror */
-  -moz-user-select: none !important;
-  /* Firefox */
-  -ms-user-select: none !important;
-  /* Internet Explorer/Edge */
-  user-select: none !important;
-  /* Non-prefixed version, currently not supported by any browser */
 }
 
-.el-tooltip__popper[x-placement^="right"] .popper__arrow:after {
+.el-tooltip__popper[x-placement^='right'] .popper__arrow:after {
   border-right-color: var(--ltpp-main-color) !important;
   -webkit-transition: all 0.3s ease !important;
   /* Safari and Chrome */
@@ -1261,21 +1251,9 @@ p {
   -ms-transition: all 0.3s ease !important;
   /* IE 9 */
   transition: all 0.3s ease !important;
-  -webkit-touch-callout: none !important;
-  /* iOS Safari */
-  -webkit-user-select: none !important;
-  /* Chrome/Safari/Opera */
-  -khtml-user-select: none !important;
-  /* Konqueror */
-  -moz-user-select: none !important;
-  /* Firefox */
-  -ms-user-select: none !important;
-  /* Internet Explorer/Edge */
-  user-select: none !important;
-  /* Non-prefixed version, currently not supported by any browser */
 }
 
-.el-tooltip__popper[x-placement^="bottom"] .popper__arrow:after {
+.el-tooltip__popper[x-placement^='bottom'] .popper__arrow:after {
   border-bottom-color: var(--ltpp-main-color) !important;
   -webkit-transition: all 0.3s ease !important;
   /* Safari and Chrome */
@@ -1286,21 +1264,9 @@ p {
   -ms-transition: all 0.3s ease !important;
   /* IE 9 */
   transition: all 0.3s ease !important;
-  -webkit-touch-callout: none !important;
-  /* iOS Safari */
-  -webkit-user-select: none !important;
-  /* Chrome/Safari/Opera */
-  -khtml-user-select: none !important;
-  /* Konqueror */
-  -moz-user-select: none !important;
-  /* Firefox */
-  -ms-user-select: none !important;
-  /* Internet Explorer/Edge */
-  user-select: none !important;
-  /* Non-prefixed version, currently not supported by any browser */
 }
 
-.el-tooltip__popper[x-placement^="left"] .popper__arrow:after {
+.el-tooltip__popper[x-placement^='left'] .popper__arrow:after {
   border-left-color: var(--ltpp-main-color) !important;
   -webkit-transition: all 0.3s ease !important;
   /* Safari and Chrome */
@@ -1311,33 +1277,15 @@ p {
   -ms-transition: all 0.3s ease !important;
   /* IE 9 */
   transition: all 0.3s ease !important;
-  -webkit-touch-callout: none !important;
-  /* iOS Safari */
-  -webkit-user-select: none !important;
-  /* Chrome/Safari/Opera */
-  -khtml-user-select: none !important;
-  /* Konqueror */
-  -moz-user-select: none !important;
-  /* Firefox */
-  -ms-user-select: none !important;
-  /* Internet Explorer/Edge */
-  user-select: none !important;
-  /* Non-prefixed version, currently not supported by any browser */
 }
 
 .no-select {
   -webkit-touch-callout: none !important;
-  /* iOS Safari */
   -webkit-user-select: none !important;
-  /* Chrome/Safari/Opera */
   -khtml-user-select: none !important;
-  /* Konqueror */
   -moz-user-select: none !important;
-  /* Firefox */
   -ms-user-select: none !important;
-  /* Internet Explorer/Edge */
   user-select: none !important;
-  /* Non-prefixed version, currently not supported by any browser */
 }
 
 /*markdown */
@@ -1508,34 +1456,9 @@ p {
   padding: 0rem 0.6rem !important;
 }
 
+.el-submenu__title,
+.el-notification,
 .el-menu-item {
-  -webkit-touch-callout: none !important;
-  /* iOS Safari */
-  -webkit-user-select: none !important;
-  /* Chrome/Safari/Opera */
-  -khtml-user-select: none !important;
-  /* Konqueror */
-  -moz-user-select: none !important;
-  /* Firefox */
-  -ms-user-select: none !important;
-  /* Internet Explorer/Edge */
-  user-select: none !important;
-  /* Non-prefixed version, currently not supported by any browser */
-}
-
-.el-submenu__title {
-  -webkit-touch-callout: none !important;
-  /* iOS Safari */
-  -webkit-user-select: none !important;
-  /* Chrome/Safari/Opera */
-  -khtml-user-select: none !important;
-  /* Konqueror */
-  -moz-user-select: none !important;
-  /* Firefox */
-  -ms-user-select: none !important;
-  /* Internet Explorer/Edge */
-  user-select: none !important;
-  /* Non-prefixed version, currently not supported by any browser */
 }
 
 .el-submenu__title:hover {
@@ -1611,21 +1534,6 @@ p {
   color: var(--ltpp-main-text-color) !important;
   background-color: transparent !important;
   border-width: 0rem !important;
-}
-
-.el-notification {
-  -webkit-touch-callout: none !important;
-  /* iOS Safari */
-  -webkit-user-select: none !important;
-  /* Chrome/Safari/Opera */
-  -khtml-user-select: none !important;
-  /* Konqueror */
-  -moz-user-select: none !important;
-  /* Firefox */
-  -ms-user-select: none !important;
-  /* Internet Explorer/Edge */
-  user-select: none !important;
-  /* Non-prefixed version, currently not supported by any browser */
 }
 
 .el-pager {

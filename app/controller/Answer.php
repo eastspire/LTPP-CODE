@@ -43,6 +43,7 @@ class Answer
         if ($tem == '') {
             return \json(['code' => 0, 'msg' => '回答不能为空']);
         }
+        $answer = Base::removeImgAlt($answer);
         $user_db = Base::getUserData($my_aid);
         if (!$user_db || empty($user_db)) {
             return \json(['code' => 0, 'msg' => '用户不存在']);
@@ -117,6 +118,7 @@ class Answer
         $question_uid = $request->post('question_id');
         $question_id = Base::getIdByUid($question_uid);
         $answer = $request->post('answer');
+        $answer = Base::removeImgAlt($answer);
         $mainanswer_uid = $request->post('mainanswer_id');
         $mainanswer_id = Base::getIdByUid($mainanswer_uid);
         $touser_uid = $request->post('touser_id');
@@ -304,6 +306,7 @@ class Answer
                         $tt->touserheadimg = '';
                         $tt->tousername = '';
                     }
+                    $tt->answer = Base::removeImgAlt($tt->answer);
                     $temary['touserarray'][] = get_object_vars($tt);
                 }
             }

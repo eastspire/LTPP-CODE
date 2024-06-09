@@ -18,6 +18,7 @@
             <div style="height: 2rem"></div>
             <div
               @dblclick="copyText(name, '标题', writer)"
+              class="can-select"
               style="
                 color: var(--ltpp-title-color);
                 border-width: 0rem;
@@ -55,7 +56,7 @@
             @dblclick="copyText(article, '文章内容', writer)"
           >
             <mavon-editor
-              class="md"
+              class="md can-select"
               :codeStyle="prop.codeStyle"
               :toolbars="toolbars"
               :value="article || '<br>'"
@@ -404,7 +405,7 @@
                       "
                     >
                       <mavon-editor
-                        class="md shadow"
+                        class="md shadow can-select"
                         ref="md2"
                         :ishljs="true"
                         :toolbars="toolbars"
@@ -562,7 +563,7 @@
                           "
                         >
                           <mavon-editor
-                            class="md shadow"
+                            class="md shadow can-select"
                             ref="md3"
                             :ishljs="true"
                             :toolbars="toolbars"
@@ -819,12 +820,12 @@
 </template>
 
 <script>
-import urlencode from "../../../updateCompoents/urlencode";
-import "../../../updateCompoents/mavon-editor/dist/markdown/github-markdown.min.css";
-import "../../../updateCompoents/mavon-editor/dist/css/index.css";
+import urlencode from '../../../updateCompoents/urlencode';
+import '../../../updateCompoents/mavon-editor/dist/markdown/github-markdown.min.css';
+import '../../../updateCompoents/mavon-editor/dist/css/index.css';
 
 export default {
-  name: "onearticle",
+  name: 'onearticle',
   async activated() {
     this.comment = [];
     this.issendfinish = true;
@@ -844,9 +845,9 @@ export default {
     this.loadfinish = false;
     this.page = 1;
     this.isseetip = true;
-    this.form.region = "url";
+    this.form.region = 'url';
     this.fronturl = await this.getFronturl();
-    this.article_id = urlencode.decode(this.$route.query.path, "gbk");
+    this.article_id = urlencode.decode(this.$route.query.path, 'gbk');
     this.islove = false;
     this.islock = false;
     await this.getmyid();
@@ -855,19 +856,19 @@ export default {
     this.$nextTick(() => {
       this.totop();
     });
-    window.addEventListener("scroll", this.addlist);
+    window.addEventListener('scroll', this.addlist);
   },
   deactivated() {
     this.comment = [];
     this.islock = true;
     this.isseetip = false;
-    window.removeEventListener("scroll", this.addlist);
+    window.removeEventListener('scroll', this.addlist);
   },
   destroyed() {
     this.comment = [];
     this.islock = true;
     this.isseetip = false;
-    window.removeEventListener("scroll", this.addlist);
+    window.removeEventListener('scroll', this.addlist);
   },
   data() {
     return {
@@ -881,36 +882,36 @@ export default {
       dialogFormVisible1: false, // 用于控制表单对话框的开启和关闭
       dialogFormVisible2: false, // 用于控制表单对话框的开启和关闭
       dialogVisible: false, // 用于控制错误提示对话框的开启和关闭
-      formLabelWidth: "5rem", // 设定表单对话框内表单是宽度
+      formLabelWidth: '5rem', // 设定表单对话框内表单是宽度
       form: {
         // 表单对话框内表单的数据
-        link: "",
-        region: "",
+        link: '',
+        region: '',
       },
       externalLink: {
         markdown_css: false,
         // 默认public文件夹下
-        hljs_js: () => "md/highlightjs/highlight.min.js",
-        hljs_css: (css) => "md/highlightjs/styles/" + css + ".min.css",
-        hljs_lang: (lang) => "md/highlightjs/languages/" + lang + ".min.js",
-        katex_css: () => "md/katex/katex.min.css",
-        katex_js: () => "md/katex/katex.min.js",
+        hljs_js: () => 'md/highlightjs/highlight.min.js',
+        hljs_css: (css) => 'md/highlightjs/styles/' + css + '.min.css',
+        hljs_lang: (lang) => 'md/highlightjs/languages/' + lang + '.min.js',
+        katex_css: () => 'md/katex/katex.min.css',
+        katex_js: () => 'md/katex/katex.min.js',
       },
-      tousercommenttext: "",
+      tousercommenttext: '',
       maincomment_id: 0,
       touserid: 0,
       istousercomment: false,
       is_can_edit: false,
-      name: "加载中",
-      writer: "加载中",
-      article: "加载中",
+      name: '加载中',
+      writer: '加载中',
+      article: '加载中',
       article_id: 0,
       problemid: 0,
-      image: "",
+      image: '',
       fabulous: 0,
       collection: 0,
-      lastchangetime: "加载中",
-      releasetime: "加载中",
+      lastchangetime: '加载中',
+      releasetime: '加载中',
       writerid: 0,
       total: 0,
       /* context:  */
@@ -939,7 +940,7 @@ export default {
         help: false,
       },
       comment: [],
-      commenttext: "",
+      commenttext: '',
       islove: false,
       myid: 0,
       loadfinish: false,
@@ -949,7 +950,7 @@ export default {
     async shareArticle() {
       try {
         const back_url = await this.getBackurl();
-        let url = back_url + "/Article/oneArticle?path=" + this.article_id;
+        let url = back_url + '/Article/oneArticle?path=' + this.article_id;
         this.copy(url);
       } catch (err) {}
     },
@@ -972,23 +973,23 @@ export default {
     btnExport() {
       const url = window.URL.createObjectURL(
         new Blob([this.article], {
-          type: "application/vnd.ms-excel,charset=utf-8",
+          type: 'application/vnd.ms-excel,charset=utf-8',
         })
       );
-      const link = document.createElement("a");
+      const link = document.createElement('a');
 
-      const fileName = this.name + ".md";
-      link.style.display = "none";
+      const fileName = this.name + '.md';
+      link.style.display = 'none';
       link.href = url;
-      link.setAttribute("download", fileName);
+      link.setAttribute('download', fileName);
 
       document.body.appendChild(link);
       link.click();
       URL.revokeObjectURL(link.href); // 释放URL对象
       document.body.removeChild(link);
       this.$msg({
-        type: "success",
-        message: "开始下载！",
+        type: 'success',
+        message: '开始下载！',
         duration: 800,
         offset: 80,
       });
@@ -998,32 +999,32 @@ export default {
       //加载修改文章
       this.article_id &&
         this.$router.push({
-          path: "/updateonearticle",
+          path: '/updateonearticle',
           query: {
-            path: urlencode(this.article_id, "gbk"),
+            path: urlencode(this.article_id, 'gbk'),
           },
         });
     },
     topropage() {
       this.problemid &&
         this.$router.push({
-          path: "/oneproblem",
+          path: '/oneproblem',
           query: {
-            path: urlencode(this.problemid, "gbk"),
-            contest: urlencode("", "gbk"),
+            path: urlencode(this.problemid, 'gbk'),
+            contest: urlencode('', 'gbk'),
           },
         });
     },
 
     async copyText(text, msgType, userName) {
-      let target = document.createElement("textarea"); //创建textarea节点
+      let target = document.createElement('textarea'); //创建textarea节点
       let url = window.location.href;
       if (
         this.fronturl != undefined &&
         this.fronturl &&
         this.fronturl != null
       ) {
-        let loc = url.indexOf("/onearticle");
+        let loc = url.indexOf('/onearticle');
         let oriurl = url;
         let len = oriurl.length;
         url = this.fronturl;
@@ -1031,77 +1032,77 @@ export default {
           url += oriurl[i];
         }
       }
-      target.setAttribute("id", "LTPPSQScopyText"); //添加id
-      if (msgType == "评论") {
+      target.setAttribute('id', 'LTPPSQScopyText'); //添加id
+      if (msgType == '评论') {
         target.value =
           text +
-          "\n\n————————————\n" +
-          "版权声明：本内容为LTPP用户「" +
+          '\n\n————————————\n' +
+          '版权声明：本内容为LTPP用户「' +
           userName +
-          "」的评论，著作权归该用户所有，商业转载请联系该用户获得授权，非商业转载请注明出处。\n" +
-          "原文链接：" +
+          '」的评论，著作权归该用户所有，商业转载请联系该用户获得授权，非商业转载请注明出处。\n' +
+          '原文链接：' +
           url; // 给textarea的value赋值
       } else {
         target.value =
           text +
-          "\n\n————————————\n" +
-          "版权声明：本文为LTPP作者「" +
+          '\n\n————————————\n' +
+          '版权声明：本文为LTPP作者「' +
           userName +
-          "」的文章，著作权归作者所有，商业转载请联系作者获得授权，非商业转载请注明出处。\n" +
-          "原文链接：" +
+          '」的文章，著作权归作者所有，商业转载请联系作者获得授权，非商业转载请注明出处。\n' +
+          '原文链接：' +
           url; // 给textarea的value赋值
       }
       document.body.appendChild(target); // 向页面插入textarea节点
       target.select(); // 选中input
       try {
-        await document.execCommand("Copy"); // 执行浏览器复制命令
+        await document.execCommand('Copy'); // 执行浏览器复制命令
         this.$msg({
-          type: "success",
-          message: "复制" + msgType + "成功",
+          type: 'success',
+          message: '复制' + msgType + '成功',
           duration: 800,
           offset: 80,
         });
       } catch {
         this.$msg({
-          type: "error",
-          message: "复制" + msgType + "失败",
+          type: 'error',
+          message: '复制' + msgType + '失败',
           duration: 800,
           offset: 80,
         });
       }
-      let deldom = document.getElementById("LTPPSQScopyText"); //根据id选择节点
+      let deldom = document.getElementById('LTPPSQScopyText'); //根据id选择节点
       deldom.parentNode.removeChild(deldom); //删除节点
     },
     videoLink1() {
       // 准备链接模板
-      let linkFrame = "";
-      if (this.form.region == "") {
-        this.form.region = "url";
+      let linkFrame = '';
+      if (this.form.region == '') {
+        this.form.region = 'url';
       }
       // 创建一个div盒子，为提取src做准备
-      let box = document.createElement("div");
+      let box = document.createElement('div');
       // 将原始链接插入到盒子中
 
       box.innerHTML = this.form.link;
       // 判断不同的视频原链接类型
-      if (this.form.region == "url") {
+      if (this.form.region == 'url') {
         let linkFrameStart = `<div align="center" width="100%" style="border-width:0rem"><video style="height:46vh; width: 100%" controls controlslist="nodownload"><source src="`;
         let linkFrameEnd = `" type="video/mp4" /></video></div>`;
 
         linkFrame = linkFrameStart + this.form.link + linkFrameEnd;
       } else if (
-        this.form.region == "iframe" &&
-        box.getElementsByTagName("iframe").length > 0
+        this.form.region == 'iframe' &&
+        box.getElementsByTagName('iframe').length > 0
       ) {
         let linkFrameStart = `<div align="center" width="100%" style="border-width:0rem"><iframe height="${
-          (window.innerHeight - 240) / 2 + "px"
+          (window.innerHeight - 240) / 2 + 'px'
         }" width="80%" src="`;
         let linkFrameEnd = `" allowfullscreen="true" scrolling="no" border="0" frameborder="no" framespacing="0" style="border-width: 0rem; min-height: 31.2rem;"></iframe></div>`;
 
         // 从iframe标签中提取src属性
         linkFrame =
           linkFrameStart +
-          box.getElementsByTagName("iframe")[0].getAttribute("src") +
+          box.getElementsByTagName('iframe')[0].getAttribute('src') +
           linkFrameEnd;
       } else {
         // 原始链接格式错误时弹出错误提示
@@ -1109,10 +1110,10 @@ export default {
         this.dialogVisible = true;
       }
       // 复原表单文本框内容
-      this.form.link = "";
+      this.form.link = '';
 
       // 获取文本域中当前光标起始位置、结束位置以及滚动条位置（滚动条位置我认为没有必要，如有需要可以自己取消注释）
-      let textarea = document.getElementsByClassName("auto-textarea-input")[0];
+      let textarea = document.getElementsByClassName('auto-textarea-input')[0];
       let posStart = textarea.selectionStart;
       let posEnd = textarea.selectionEnd;
       // let posScroll = document.getElementsByClassName("v-note-edit")[0].scrollTop;
@@ -1123,40 +1124,40 @@ export default {
         this.$refs.md1.d_value.length
       );
       // 拼接并替换文本域内容
-      this.$refs.md1.d_value = subStart + "\n" + linkFrame + "\n" + subEnd;
+      this.$refs.md1.d_value = subStart + '\n' + linkFrame + '\n' + subEnd;
       // 关闭对话框
       this.dialogFormVisible1 = false;
     },
     videoLink2() {
       // 准备链接模板
-      let linkFrame = "";
-      if (this.form.region == "") {
-        this.form.region = "url";
+      let linkFrame = '';
+      if (this.form.region == '') {
+        this.form.region = 'url';
       }
       // 创建一个div盒子，为提取src做准备
-      let box = document.createElement("div");
+      let box = document.createElement('div');
       // 将原始链接插入到盒子中
 
       box.innerHTML = this.form.link;
       // 判断不同的视频原链接类型
-      if (this.form.region == "url") {
+      if (this.form.region == 'url') {
         let linkFrameStart = `<div align="center" width="100%" style="border-width:0rem"><video style="height:46vh; width: 100%" controls controlslist="nodownload"><source src="`;
         let linkFrameEnd = `" type="video/mp4" /></video></div>`;
 
         linkFrame = linkFrameStart + this.form.link + linkFrameEnd;
       } else if (
-        this.form.region == "iframe" &&
-        box.getElementsByTagName("iframe").length > 0
+        this.form.region == 'iframe' &&
+        box.getElementsByTagName('iframe').length > 0
       ) {
         let linkFrameStart = `<div align="center" width="100%" style="border-width:0rem"><iframe height="${
-          (window.innerHeight - 240) / 2 + "px"
+          (window.innerHeight - 240) / 2 + 'px'
         }" width="80%" src="`;
         let linkFrameEnd = `" allowfullscreen="true" scrolling="no" border="0" frameborder="no" framespacing="0" style="border-width: 0rem; min-height: 31.2rem;"></iframe></div>`;
 
         // 从iframe标签中提取src属性
         linkFrame =
           linkFrameStart +
-          box.getElementsByTagName("iframe")[0].getAttribute("src") +
+          box.getElementsByTagName('iframe')[0].getAttribute('src') +
           linkFrameEnd;
       } else {
         // 原始链接格式错误时弹出错误提示
@@ -1164,10 +1165,10 @@ export default {
         this.dialogVisible = true;
       }
       // 复原表单文本框内容
-      this.form.link = "";
+      this.form.link = '';
 
       // 获取文本域中当前光标起始位置、结束位置以及滚动条位置（滚动条位置我认为没有必要，如有需要可以自己取消注释）
-      let textarea = document.getElementsByClassName("auto-textarea-input")[0];
+      let textarea = document.getElementsByClassName('auto-textarea-input')[0];
       let posStart = textarea.selectionStart;
       let posEnd = textarea.selectionEnd;
       // let posScroll = document.getElementsByClassName("v-note-edit")[0].scrollTop;
@@ -1178,7 +1179,7 @@ export default {
         this.$refs.md4.d_value.length
       );
       // 拼接并替换文本域内容
-      this.$refs.md4.d_value = subStart + "\n" + linkFrame + "\n" + subEnd;
+      this.$refs.md4.d_value = subStart + '\n' + linkFrame + '\n' + subEnd;
       // 关闭对话框
       this.dialogFormVisible2 = false;
     },
@@ -1189,9 +1190,9 @@ export default {
       id &&
         id != this.$SqsGlobal.loading_tips &&
         this.$router.push({
-          path: "/userpage",
+          path: '/userpage',
           query: {
-            path: urlencode(id, "gbk"),
+            path: urlencode(id, 'gbk'),
           },
         });
     },
@@ -1202,13 +1203,13 @@ export default {
     async $imgAdd1(pos, $file) {
       // 第一步.将图片上传到服务器.
       let formdata = new FormData();
-      formdata.append("file", $file);
+      formdata.append('file', $file);
       await this.$ajax({
-        url: "/File/saveImage",
-        method: "post",
+        url: '/File/saveImage',
+        method: 'post',
         data: formdata,
         headers: {
-          "Content-Type": "multipart/form-data",
+          'Content-Type': 'multipart/form-data',
         },
       })
         .then((res) => {
@@ -1218,7 +1219,7 @@ export default {
         })
         .catch((t) => {
           this.$msg({
-            type: "error",
+            type: 'error',
             message: t,
             duration: 1600,
             offset: 80,
@@ -1228,13 +1229,13 @@ export default {
     async $imgAdd4(pos, $file) {
       // 第一步.将图片上传到服务器.
       let formdata = new FormData();
-      formdata.append("file", $file);
+      formdata.append('file', $file);
       await this.$ajax({
-        url: "/File/saveImage",
-        method: "post",
+        url: '/File/saveImage',
+        method: 'post',
         data: formdata,
         headers: {
-          "Content-Type": "multipart/form-data",
+          'Content-Type': 'multipart/form-data',
         },
       })
         .then((res) => {
@@ -1244,7 +1245,7 @@ export default {
         })
         .catch((t) => {
           this.$msg({
-            type: "error",
+            type: 'error',
             message: t,
             duration: 1600,
             offset: 80,
@@ -1253,10 +1254,10 @@ export default {
     },
     async lookarticle() {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Article/loadOneArticle",
+        method: 'post',
+        url: '/Article/loadOneArticle',
         portType: {
-          process: "8792",
+          process: '8792',
         },
         data: {
           article_id: this.article_id,
@@ -1264,7 +1265,7 @@ export default {
       }).catch((t) => {
         this.loadfinish = true;
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -1273,23 +1274,23 @@ export default {
       });
       this.loadfinish = true;
       if (res.code == 1) {
-        this.name = res.data["name"];
-        this.article = res.data["article"];
-        this.fabulous = res.data["fabulous"];
-        this.collection = res.data["collection"];
-        this.image = res.data["image"];
-        this.writer = res.data["writer"];
-        this.lastchangetime = res.data["lastchangetime"];
-        this.releasetime = res.data["releasetime"];
-        this.writerid = res.data["writerid"];
-        this.problemid = res.data["problemid"];
+        this.name = res.data['name'];
+        this.article = res.data['article'];
+        this.fabulous = res.data['fabulous'];
+        this.collection = res.data['collection'];
+        this.image = res.data['image'];
+        this.writer = res.data['writer'];
+        this.lastchangetime = res.data['lastchangetime'];
+        this.releasetime = res.data['releasetime'];
+        this.writerid = res.data['writerid'];
+        this.problemid = res.data['problemid'];
         this.is_can_edit = res.edit;
         this.islove = res.love;
-        this.is_public = res.data["public"];
+        this.is_public = res.data['public'];
         this.isfabulous = res.fabulous;
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res.msg,
           duration: 1600,
           offset: 80,
@@ -1303,10 +1304,10 @@ export default {
       }
       this.islock = true;
       this.$ajax({
-        method: "post",
-        url: "/ArticleComment/loadComment",
+        method: 'post',
+        url: '/ArticleComment/loadComment',
         portType: {
-          process: "8798",
+          process: '8798',
         },
         data: {
           article_id: this.article_id,
@@ -1329,8 +1330,8 @@ export default {
             this.islock = false;
           } else {
             this.$msg({
-              type: "success",
-              message: "没有更多评论了！",
+              type: 'success',
+              message: '没有更多评论了！',
               duration: 800,
               offset: 80,
             });
@@ -1339,7 +1340,7 @@ export default {
         .catch((t) => {
           this.islock = false;
           this.$msg({
-            type: "error",
+            type: 'error',
             message: t,
             duration: 1600,
             offset: 80,
@@ -1349,10 +1350,10 @@ export default {
 
     async deletecomment(delcomment_id) {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/ArticleComment/deletecomment",
+        method: 'post',
+        url: '/ArticleComment/deletecomment',
         portType: {
-          process: "8798",
+          process: '8798',
         },
         data: {
           comment_id: delcomment_id,
@@ -1360,7 +1361,7 @@ export default {
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -1384,14 +1385,14 @@ export default {
           }
         }
         this.$msg({
-          type: "success",
+          type: 'success',
           message: res.msg,
           duration: 600,
           offset: 80,
         });
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res.msg,
           duration: 800,
           offset: 80,
@@ -1404,11 +1405,11 @@ export default {
         return;
       }
       let t1 = this.commenttext;
-      let value1 = t1.replace(/\s+/g, "");
-      if (value1 == "") {
+      let value1 = t1.replace(/\s+/g, '');
+      if (value1 == '') {
         this.$msg({
-          type: "error",
-          message: "评论不能为空",
+          type: 'error',
+          message: '评论不能为空',
           duration: 800,
           offset: 80,
         });
@@ -1416,10 +1417,10 @@ export default {
       }
       this.issendfinish = false;
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/ArticleComment/addComment",
+        method: 'post',
+        url: '/ArticleComment/addComment',
         portType: {
-          process: "8798",
+          process: '8798',
         },
         data: {
           article_id: this.article_id,
@@ -1428,7 +1429,7 @@ export default {
       }).catch((t) => {
         this.issendfinish = true;
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -1437,10 +1438,10 @@ export default {
       this.issendfinish = true;
       this.touserid = 0;
       if (res.code == 1) {
-        this.commenttext = "";
+        this.commenttext = '';
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res.msg,
           duration: 1800,
           offset: 80,
@@ -1455,11 +1456,11 @@ export default {
         return;
       }
       let t1 = this.tousercommenttext;
-      let value1 = t1.replace(/\s+/g, "");
-      if (value1 == "") {
+      let value1 = t1.replace(/\s+/g, '');
+      if (value1 == '') {
         this.$msg({
-          type: "error",
-          message: "评论不能为空",
+          type: 'error',
+          message: '评论不能为空',
           duration: 800,
           offset: 80,
         });
@@ -1467,10 +1468,10 @@ export default {
       }
       this.issendfinish = false;
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/ArticleComment/addToUserComment",
+        method: 'post',
+        url: '/ArticleComment/addToUserComment',
         portType: {
-          process: "8798",
+          process: '8798',
         },
         data: {
           article_id: this.article_id,
@@ -1481,7 +1482,7 @@ export default {
       }).catch((t) => {
         this.issendfinish = true;
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -1489,9 +1490,9 @@ export default {
       });
       this.issendfinish = true;
       if (res.code == 1) {
-        this.tousercommenttext = "";
+        this.tousercommenttext = '';
         this.$msg({
-          type: "success",
+          type: 'success',
           message: res.msg,
           duration: 600,
           offset: 80,
@@ -1501,7 +1502,7 @@ export default {
         await this.lookcomment();
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res.msg,
           duration: 800,
           offset: 80,
@@ -1511,17 +1512,17 @@ export default {
 
     async fabulousClick() {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Article/fabulousOneArticle",
+        method: 'post',
+        url: '/Article/fabulousOneArticle',
         portType: {
-          process: "8792",
+          process: '8792',
         },
         data: {
           article_id: this.article_id,
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -1531,14 +1532,14 @@ export default {
         ++this.fabulous;
         this.isfabulous = true;
         this.$msg({
-          type: "success",
+          type: 'success',
           message: res.msg,
           duration: 600,
           offset: 80,
         });
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res.msg,
           duration: 800,
           offset: 80,
@@ -1550,10 +1551,10 @@ export default {
       ++this.collection;
       this.islove = true;
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Article/collectionOneArticle",
+        method: 'post',
+        url: '/Article/collectionOneArticle',
         portType: {
-          process: "8792",
+          process: '8792',
         },
         data: {
           article_id: this.article_id,
@@ -1562,7 +1563,7 @@ export default {
         this.islove = false;
         --this.collection;
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -1570,7 +1571,7 @@ export default {
       });
       if (res.code == 1) {
         this.$msg({
-          type: "success",
+          type: 'success',
           message: res.msg,
           duration: 600,
           offset: 80,
@@ -1579,7 +1580,7 @@ export default {
         this.islove = false;
         --this.collection;
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res.msg,
           duration: 800,
           offset: 80,
@@ -1591,10 +1592,10 @@ export default {
       --this.collection;
       this.islove = false;
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Article/deleteLoveArticle",
+        method: 'post',
+        url: '/Article/deleteLoveArticle',
         portType: {
-          process: "8792",
+          process: '8792',
         },
         data: {
           article_id: this.article_id,
@@ -1603,7 +1604,7 @@ export default {
         this.islove = true;
         ++this.collection;
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -1611,7 +1612,7 @@ export default {
       });
       if (res.code == 1) {
         this.$msg({
-          type: "success",
+          type: 'success',
           message: res.msg,
           duration: 600,
           offset: 80,
@@ -1620,7 +1621,7 @@ export default {
         this.islove = true;
         ++this.collection;
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res.msg,
           duration: 800,
           offset: 80,
@@ -1633,18 +1634,18 @@ export default {
     prop() {
       let data = {
         subfield: false, // 单双栏模式
-        defaultOpen: "preview", //edit： 默认展示编辑区域 ， preview： 默认展示预览区域
+        defaultOpen: 'preview', //edit： 默认展示编辑区域 ， preview： 默认展示预览区域
         editable: false,
         toolbarsFlag: false, //工具栏
         scrollStyle: true,
-        codeStyle: "atom-one-dark",
+        codeStyle: 'atom-one-dark',
         boxShadow: false,
         ishljs: true,
         tabSize: 4,
-        toolbarsBackground: "rgba(0,0,0,0)",
-        editorBackground: "rgba(0,0,0,0)",
-        previewBackground: "rgba(0,0,0,0)",
-        fontSize: "1.06rem",
+        toolbarsBackground: 'rgba(0,0,0,0)',
+        editorBackground: 'rgba(0,0,0,0)',
+        previewBackground: 'rgba(0,0,0,0)',
+        fontSize: '1.06rem',
         navigation: false,
       };
       return data;
@@ -1652,8 +1653,8 @@ export default {
   },
 };
 </script>
-<style  lang="less" scoped>
-@import "../../../public/md/markdown/github-markdown.min.css";
+<style lang="less" scoped>
+@import '../../../public/md/markdown/github-markdown.min.css';
 /**
 鼠标放上，图片变大
 */

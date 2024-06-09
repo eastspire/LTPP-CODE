@@ -21,12 +21,6 @@ class PrivateChat extends PrivateRobot
     // 发送私聊
     static public function privateChat(&$client_id, &$message, &$db_my, &$db_user)
     {
-        if (mb_strlen($message->msg) > ChatBase::$send_txt_limit_length) {
-            $msg = "字数不能超过" . ChatBase::$send_txt_limit_length . "请修改后重试！";
-            ChatBase::sendToOneError($client_id, $msg);
-            return;
-        }
-
         $post_user_id = $db_my->id;
         $get_user_id = $message->user_id;
         $msg_id = 0;

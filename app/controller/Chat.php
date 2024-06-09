@@ -98,6 +98,9 @@ class Chat
                     ->limit($limit)
                     ->get();
             }
+            foreach ($data as &$tem) {
+                $tem->msg = Base::removeImgAlt($tem->msg);
+            }
             $this->getAllChatHeadimage($type, $data);
         } else if ($type == ChatBase::$type_group_chat_name) {
             // 群聊
@@ -128,6 +131,9 @@ class Chat
                     ->orderBy('id', 'desc')
                     ->limit($limit)
                     ->get();
+            }
+            foreach ($data as &$tem) {
+                $tem->msg = Base::removeImgAlt($tem->msg);
             }
             $this->getAllChatHeadimage($type, $data);
         } else {
@@ -251,6 +257,9 @@ class Chat
                         ->select('id', 'post_user_id', 'get_user_id', 'msg', 'time')
                         ->limit($limit)
                         ->get();
+                    foreach ($data as &$tem) {
+                        $tem->msg = Base::removeImgAlt($tem->msg);
+                    }
                     $this->getAllChatHeadimage($type, $data);
                     Base::dataToSafe($data, true);
                     return json([
@@ -325,6 +334,9 @@ class Chat
                         ->select('id', 'post_user_id', 'get_user_id', 'msg', 'time')
                         ->limit($limit)
                         ->get();
+                    foreach ($data as &$tem) {
+                        $tem->msg = Base::removeImgAlt($tem->msg);
+                    }
                     $this->getAllChatHeadimage($type, $data);
                     Base::dataToSafe($data, true);
                     return json([
@@ -354,6 +366,9 @@ class Chat
             }
         } else {
             return json(['code' => -1, 'msg' => Base::$param_error_msg]);
+        }
+        foreach ($data as &$tem) {
+            $tem->msg = Base::removeImgAlt($tem->msg);
         }
         $this->getAllChatHeadimage($type, $data);
         Base::dataToSafe($data, true);

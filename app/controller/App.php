@@ -285,7 +285,7 @@ class App
             'user_id' => $my_aid,
             'url' => $data['url'],
             'image' => $data['image'],
-            'content' => $data['content'],
+            'content' => Base::removeImgAlt($data['content']),
         ]);
         if ($resid) {
             return json(['code' => 1, 'msg' => '添加应用成功']);
@@ -326,7 +326,7 @@ class App
                 'user_id' => $my_aid,
                 'url' => $data['url'],
                 'image' => $data['image'],
-                'content' => $data['content'],
+                'content' => Base::removeImgAlt($data['content']),
             ]);
         Base::updateAppDataRedis($app_id);
         return json(['code' => 1, 'msg' => '应用更新成功']);

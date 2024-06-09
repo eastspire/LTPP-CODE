@@ -14,18 +14,12 @@ namespace plugin\webman\gateway;
 
 use Exception;
 use app\controller\Base;
-use app\controller\Robot;
 use GatewayWorker\Lib\Gateway;
 
 class GlobalNotice extends ChatBase
 {
     static public function globalNotice(&$client_id, &$message, &$db_my, &$db_user)
     {
-        if (mb_strlen($message->msg) > ChatBase::$send_txt_limit_length) {
-            $msg = "字数不能超过" . ChatBase::$send_txt_limit_length . "请修改后重试！";
-            ChatBase::sendToOneError($client_id, $msg);
-            return;
-        }
         $send_msg = '来自LTPP用户' . $db_my->name . '的提醒：' . "\n" . $message->msg;
         $now = date('Y-m-d H:i:s', time());
         try {

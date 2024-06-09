@@ -109,6 +109,12 @@ class Events extends ChatBase
         $my_aid = Gateway::getUidByClientId($client_id);
         $db_my = Base::getUserData($my_aid);
         if (ChatBase::judgeUserIsSafe($client_id, $message, $my_aid, $db_my)) {
+            if (mb_strlen($message->msg) > ChatBase::$send_txt_limit_length) {
+                $msg = "字数不能超过" . ChatBase::$send_txt_limit_length . "请修改后重试！";
+                ChatBase::sendToOneError($client_id, $msg);
+                return;
+            }
+            $message->msg = Base::removeImgAlt($message->msg);
             if (ChatBase::judgeIsChat($message)) {
                 // 向用户，群组发送聊天 或者 通知 相关
                 if (ChatBase::judgeIsPrivateChat($message, $redis16, $my_aid, $db_my)) {
@@ -127,7 +133,7 @@ class Events extends ChatBase
                     GlobalNotice::globalNotice($client_id, $message, $db_my, $db_user);
                 } else if (ChatBase::judgeIsClassChat($message)) {
                     // 课堂
-                    ClassMsg::classMsg($client_id, $message, $db_my, $db_user);
+                    ClassMsg::classMsg($client_id, $message, $db_my);
                 }
             } else if (ChatBase::judgeIsOperationGroup($message)) {
                 // 群聊相关操作

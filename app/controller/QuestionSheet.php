@@ -522,6 +522,7 @@ class QuestionSheet
         }
         $my_uid = JwtToken::getCurrentId();
         $my_aid = Base::getIdByUid($my_uid);
+        $data['content'] = Base::removeImgAlt($data['content']);
         $res_id = Base::insertToDb('question_sheet', [
             'name' => $data['name'] ?? '',
             'creator_id' => $my_aid,

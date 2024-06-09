@@ -45,34 +45,43 @@
                 onedata = temtable;
                 show_dialog = true;
               "
+              class="shadow ltpp-list-box"
               style="
                 cursor: pointer;
-                margin: 1rem;
-                width: 6rem;
-                height: 6rem;
-                background-color: rgba(
-                  var(--ltpp-main-bk-color),
-                  var(--ltpp-list-box-bk-opacity)
-                ) !important;
+                margin: 0.66rem;
+                padding: 0.66rem;
+                width: 8.8rem;
+                height: 8.8rem;
               "
             >
-              <div style="padding: 0rem !important">
-                <div>
-                  <img
-                    onerror="/logo.png"
-                    v-if="temtable.image && reg.test(temtable.image)"
-                    class="animate"
-                    style="
-                      width: 6rem;
-                      height: 6rem;
-                      object-fit: cover;
-                      overflow: hidden;
-                    "
-                    :title="temtable.name"
-                    alt=""
-                    :src="temtable.image"
-                  />
-                </div>
+              <div
+                style="
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                  flex-direction: column;
+                "
+              >
+                <img
+                  onerror="https://ltpp.vip/logo.png"
+                  v-if="temtable.image && reg.test(temtable.image)"
+                  class="animate"
+                  style="
+                    width: 6.6rem;
+                    height: 6.6rem;
+                    object-fit: cover;
+                    overflow: hidden;
+                  "
+                  :title="temtable.name"
+                  alt=""
+                  :src="temtable.image"
+                />
+                <div style="height: 0.66rem"></div>
+                <span
+                  class="my-span"
+                  style="font-size: 0.88rem; color: var(--ltpp-main-text-color)"
+                  >{{ temtable.name }}</span
+                >
               </div>
             </div>
             <div style="height: 1%"></div>

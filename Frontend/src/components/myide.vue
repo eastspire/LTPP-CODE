@@ -198,7 +198,7 @@
             }}
           </p>
           <div v-show="isshow">
-            <div v-show="iswrong" @dblclick="copy(wrong)">
+            <div v-show="iswrong" @dblclick="copy(wrong)" class="can-select">
               <div v-show="!istestres" style="color: #fa278e">
                 <pre>{{ wrong ? wrong : '\n' }}</pre>
               </div>

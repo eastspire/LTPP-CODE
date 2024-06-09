@@ -16,14 +16,9 @@ use GatewayWorker\Lib\Gateway;
 
 class ClassMsg extends ChatBase
 {
-    static public function classMsg(&$client_id, &$message, &$db_my, &$db_user)
+    static public function classMsg(&$client_id, &$message, &$db_my)
     {
         Gateway::joinGroup($client_id, ChatBase::$class_join_name);
-        if (mb_strlen($message->msg) > ChatBase::$send_txt_limit_length) {
-            $msg = "字数不能超过" . ChatBase::$send_txt_limit_length . "请修改后重试！";
-            ChatBase::sendToOneError($client_id, $msg);
-            return;
-        }
         try {
             Gateway::sendToGroup(ChatBase::$class_join_name, json_encode([
                 'msgtype' => 'class',

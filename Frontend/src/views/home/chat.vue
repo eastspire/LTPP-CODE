@@ -66,14 +66,14 @@
                     ? 'online-name'
                     : 'unonline-name'
                 }`"
-                >{{ tem.name && judgeIsString(tem.name) ? tem.name : "" }}
+                >{{ tem.name && judgeIsString(tem.name) ? tem.name : '' }}
               </span>
               <span class="num" v-show="tem.no_look_num > 0">
                 <span class="num-txt">
                   {{
                     tem.no_look_num > 99
-                      ? "99"
-                      : tem.no_look_num.toString().padStart(2, "0")
+                      ? '99'
+                      : tem.no_look_num.toString().padStart(2, '0')
                   }}
                 </span>
               </span>
@@ -101,7 +101,7 @@
               {{
                 now_user && now_user.name && judgeIsString(now_user.name)
                   ? now_user.name
-                  : ""
+                  : ''
               }}
             </span>
           </p>
@@ -155,7 +155,7 @@
                   }`"
                 >
                   <mavon-editor
-                    class="md shadow"
+                    class="md shadow can-select"
                     :value="tem.msg || '<br>'"
                     :subfield="prop.subfield"
                     :defaultOpen="prop.defaultOpen"
@@ -578,11 +578,11 @@
                   >{{
                     tem.name && judgeIsString(tem.name)
                       ? tem.grade == 2
-                        ? tem.name.substr(0, 11) + "（群主）"
+                        ? tem.name.substr(0, 11) + '（群主）'
                         : tem.grade == 1
-                        ? tem.name.substr(0, 11) + "（管理员）"
+                        ? tem.name.substr(0, 11) + '（管理员）'
                         : tem.name.substr(0, 11)
-                      : ""
+                      : ''
                   }}
                 </span>
               </div>
@@ -597,11 +597,11 @@
 </template>
 
 <script>
-import urlencode from "../../../updateCompoents/urlencode";
-import "../../../public/md/markdown/github-markdown.min.css";
-import "../../../public/md/css/index.css";
+import urlencode from '../../../updateCompoents/urlencode';
+import '../../../public/md/markdown/github-markdown.min.css';
+import '../../../public/md/css/index.css';
 export default {
-  name: "chat",
+  name: 'chat',
   data() {
     return {
       check_can_scroll_timer: null,
@@ -635,31 +635,31 @@ export default {
       },
       dialogFormVisible: false, // 用于控制表单对话框的开启和关闭
       dialogVisible: false, // 用于控制错误提示对话框的开启和关闭
-      formLabelWidth: "5rem", // 设定表单对话框内表单是宽度
+      formLabelWidth: '5rem', // 设定表单对话框内表单是宽度
       form: {
         // 表单对话框内表单的数据
-        link: "",
-        region: "",
+        link: '',
+        region: '',
       },
       reg: /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\*\+,;=.]+$/,
-      creat_group_chat_image: "",
-      drawer_size: "460px",
+      creat_group_chat_image: '',
+      drawer_size: '460px',
       isSeeChatUser: false,
       group_user_list: [],
       user_deep_color:
-        "background-color:rgba(var(--ltpp-light-color),var(--ltpp-center-box-bk-opacity));color:var(--ltpp-main-text-color);",
+        'background-color:rgba(var(--ltpp-light-color),var(--ltpp-center-box-bk-opacity));color:var(--ltpp-main-text-color);',
       user_no_deep_color:
-        "background-color:rgba(var(--ltpp-light-color),0.06);color:var(--ltpp-main-text-color);",
+        'background-color:rgba(var(--ltpp-light-color),0.06);color:var(--ltpp-main-text-color);',
       gitclass: [
-        "folder",
-        "music",
-        "video",
-        "code",
-        "pdf",
-        "compressed",
-        "photo",
-        "exe",
-        "txt",
+        'folder',
+        'music',
+        'video',
+        'code',
+        'pdf',
+        'compressed',
+        'photo',
+        'exe',
+        'txt',
       ],
       filelist: [],
       linuxurl: window?.location?.href,
@@ -668,20 +668,20 @@ export default {
       },
       isSeeChatFile: false,
       isSeeUpload: false,
-      last_dom_id: "",
+      last_dom_id: '',
       timer: null,
       willJoinGroupData: {},
-      my_join_group_code: "",
+      my_join_group_code: '',
       isSeeJoinGroupDia: false,
-      now_post_type: "",
+      now_post_type: '',
       msgtypeObj: {
-        private_chat: "private_chat",
-        group_chat: "group_chat",
-        create_group: "create_group",
-        join_group: "join_group",
-        delete_group: "delete_group",
-        exit_group: "exit_group",
-        connect_group: "connect_group",
+        private_chat: 'private_chat',
+        group_chat: 'group_chat',
+        create_group: 'create_group',
+        join_group: 'join_group',
+        delete_group: 'delete_group',
+        exit_group: 'exit_group',
+        connect_group: 'connect_group',
       },
       head: {},
       linuxurl: window?.location?.href,
@@ -689,12 +689,12 @@ export default {
       group_data: {},
       isSeeCreatGroup: false,
       timeout: null,
-      search_user: "",
+      search_user: '',
       isSeeLastBtn: false,
       url: window?.location?.href,
-      mymessage: "",
+      mymessage: '',
       now_user: {}, //当前窗口的用户个人信息
-      id: "",
+      id: '',
       user_list: [],
       chat_msg_list: [],
       xss_options: this.$SqsGlobal.xss_options,
@@ -702,22 +702,22 @@ export default {
       externalLink: {
         markdown_css: false,
         // 默认public文件夹下
-        hljs_js: () => "md/highlightjs/highlight.min.js",
-        hljs_css: (css) => "md/highlightjs/styles/" + css + ".min.css",
-        hljs_lang: (lang) => "md/highlightjs/languages/" + lang + ".min.js",
-        katex_css: () => "md/katex/katex.min.css",
-        katex_js: () => "md/katex/katex.min.js",
+        hljs_js: () => 'md/highlightjs/highlight.min.js',
+        hljs_css: (css) => 'md/highlightjs/styles/' + css + '.min.css',
+        hljs_lang: (lang) => 'md/highlightjs/languages/' + lang + '.min.js',
+        katex_css: () => 'md/katex/katex.min.css',
+        katex_js: () => 'md/katex/katex.min.js',
       },
     };
   },
   async created() {
     this.isSeeChatFile = false;
     this.isSeeUpload = false;
-    this.linuxurl = window.sessionStorage.getItem("linuxurl");
+    this.linuxurl = window.sessionStorage.getItem('linuxurl');
     if (!this.linuxurl) {
       await this.getlinuxurl();
     } else {
-      this.backurl = this.linuxurl + "/File/saveImage";
+      this.backurl = this.linuxurl + '/File/saveImage';
     }
     await this.loadCharset();
   },
@@ -725,12 +725,12 @@ export default {
     try {
       this.isSeeLastBtn = false;
       const param_name = urlencode.decode(
-        this.$route?.query?.path || "",
-        "gbk"
+        this.$route?.query?.path || '',
+        'gbk'
       );
       this.head = {
-        Authorization: "Bearer " + window.localStorage.getItem("authorization"),
-        Key: window.localStorage.getItem("key"),
+        Authorization: 'Bearer ' + window.localStorage.getItem('authorization'),
+        Key: window.localStorage.getItem('key'),
         Requestid: this.Base64Encode(new Date().getTime()),
       };
       this.requestid_timer = setInterval(() => {
@@ -751,8 +751,8 @@ export default {
     this.to_scroll_bottom(1);
   },
   async mounted() {
-    let authorization = window.localStorage.getItem("authorization");
-    let key = window.localStorage.getItem("key");
+    let authorization = window.localStorage.getItem('authorization');
+    let key = window.localStorage.getItem('key');
     if (authorization && key && this.$store.state.login) {
       this.setup();
     }
@@ -775,17 +775,17 @@ export default {
   methods: {
     async removeUserChat(user_id) {
       await this.$ajax({
-        method: "post",
-        url: "/Chat/removeUserChat",
+        method: 'post',
+        url: '/Chat/removeUserChat',
         portType: {
-          process: "8793",
+          process: '8793',
         },
         data: {
           user_id: user_id,
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -803,27 +803,27 @@ export default {
       }
       if (!is_private_chat) {
         this.$msg({
-          type: "warning",
-          message: "禁止从聊天列表中移除群聊",
+          type: 'warning',
+          message: '禁止从聊天列表中移除群聊',
           duration: 1600,
           offset: 80,
         });
         return;
       }
-      this.$confirm(`确定从聊天列表中移除用户${user_name}吗？`, "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
+      this.$confirm(`确定从聊天列表中移除用户${user_name}吗？`, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
       })
         .then(() => {
           this.removeUserChat(user_id);
         })
         .catch(() => {
           this.$msg({
-            type: "info",
+            type: 'info',
             duration: 1600,
             offset: 80,
-            message: "操作取消",
+            message: '操作取消',
           });
         });
     },
@@ -835,10 +835,10 @@ export default {
       this.chat_msg_list = [];
       this.isSeeLastBtn = false;
       this.passparam.user_id = tem.id;
-      if (this.now_user.type == "group_chat") {
-        this.now_post_type = "group_chat";
-      } else if (this.now_user.type == "private_chat") {
-        this.now_post_type = "private_chat";
+      if (this.now_user.type == 'group_chat') {
+        this.now_post_type = 'group_chat';
+      } else if (this.now_user.type == 'private_chat') {
+        this.now_post_type = 'private_chat';
       }
       this.passparam.user_id = this.now_user.id;
       this.clearNolookNum();
@@ -846,34 +846,34 @@ export default {
     },
     videoLink() {
       // 准备链接模板
-      let linkFrame = "";
-      if (this.form.region == "") {
-        this.form.region = "url";
+      let linkFrame = '';
+      if (this.form.region == '') {
+        this.form.region = 'url';
       }
       // 创建一个div盒子，为提取src做准备
-      let box = document.createElement("div");
+      let box = document.createElement('div');
       // 将原始链接插入到盒子中
 
       box.innerHTML = this.form.link;
       // 判断不同的视频原链接类型
-      if (this.form.region == "url") {
+      if (this.form.region == 'url') {
         let linkFrameStart = `<div align="center" width="100%" style="border-width:0rem"><video style="height:46vh; width: 100%" controls controlslist="nodownload"><source src="`;
         let linkFrameEnd = `" type="video/mp4" /></video></div>`;
 
         linkFrame = linkFrameStart + this.form.link + linkFrameEnd;
       } else if (
-        this.form.region == "iframe" &&
-        box.getElementsByTagName("iframe").length > 0
+        this.form.region == 'iframe' &&
+        box.getElementsByTagName('iframe').length > 0
       ) {
         let linkFrameStart = `<div align="center" width="100%" style="border-width:0rem"><iframe height="${
-          (window.innerHeight - 240) / 2 + "px"
+          (window.innerHeight - 240) / 2 + 'px'
         }" width="80%" src="`;
         let linkFrameEnd = `" allowfullscreen="true" scrolling="no" border="0" frameborder="no" framespacing="0" style="border-width: 0rem; min-height: 31.2rem;"></iframe></div>`;
 
         // 从iframe标签中提取src属性
         linkFrame =
           linkFrameStart +
-          box.getElementsByTagName("iframe")[0].getAttribute("src") +
+          box.getElementsByTagName('iframe')[0].getAttribute('src') +
           linkFrameEnd;
       } else {
         // 原始链接格式错误时弹出错误提示
@@ -881,10 +881,10 @@ export default {
         this.dialogVisible = true;
       }
       // 复原表单文本框内容
-      this.form.link = "";
+      this.form.link = '';
 
       // 获取文本域中当前光标起始位置、结束位置以及滚动条位置（滚动条位置我认为没有必要，如有需要可以自己取消注释）
-      let textarea = document.getElementsByClassName("auto-textarea-input")[0];
+      let textarea = document.getElementsByClassName('auto-textarea-input')[0];
       let posStart = textarea.selectionStart;
       let posEnd = textarea.selectionEnd;
       // let posScroll = document.getElementsByClassName("v-note-edit")[0].scrollTop;
@@ -895,7 +895,7 @@ export default {
         this.$refs.md.d_value.length
       );
       // 拼接并替换文本域内容
-      this.$refs.md.d_value = subStart + "\n" + linkFrame + "\n" + subEnd;
+      this.$refs.md.d_value = subStart + '\n' + linkFrame + '\n' + subEnd;
       // document.getElementsByClassName("v-note-edit")[0].scrollTop = posScroll;
 
       // 关闭对话框
@@ -903,22 +903,22 @@ export default {
     },
     // 绑定@imgAdd event
     async $imgAdd(pos, $file) {
-      this.imgAddMiddleware(pos, $file, "md");
+      this.imgAddMiddleware(pos, $file, 'md');
     },
     async getGroupUserList() {
       this.isSeeChatUser = true;
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Chat/getGroupUserList",
+        method: 'post',
+        url: '/Chat/getGroupUserList',
         portType: {
-          process: "8797",
+          process: '8797',
         },
         data: {
           group_id: this.now_user.id,
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -939,10 +939,10 @@ export default {
         }
       }
       this.$ajax({
-        method: "post",
-        url: "/Chat/clearNolookNum",
+        method: 'post',
+        url: '/Chat/clearNolookNum',
         portType: {
-          process: "8797",
+          process: '8797',
         },
         data: {
           user_id: this.now_user.id,
@@ -950,7 +950,7 @@ export default {
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -961,16 +961,16 @@ export default {
       id &&
         id != this.$SqsGlobal.loading_tips &&
         this.$router.push({
-          path: "/userpage",
+          path: '/userpage',
           query: {
-            path: urlencode(id, "gbk"),
+            path: urlencode(id, 'gbk'),
           },
         });
     },
     //下载单个文件
     async downloadonefile(file_name, file_path) {
       this.downloadUrlContent(
-        "/Chatfile/downloadFile",
+        '/Chatfile/downloadFile',
         { path: file_path },
         this.Base64Decode(file_name, this.char_set)
       );
@@ -981,12 +981,12 @@ export default {
         return;
       }
       let point_loc = str.length;
-      let first_base64_name = "";
-      let name = "";
-      let first_name = "";
-      let last_name = "";
+      let first_base64_name = '';
+      let name = '';
+      let first_name = '';
+      let last_name = '';
       for (let i = 0; i < str.length; ++i) {
-        if (str[i] == ".") {
+        if (str[i] == '.') {
           point_loc = i;
           break;
         }
@@ -1008,14 +1008,14 @@ export default {
     },
     async loadFileList() {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Chatfile/loadList",
+        method: 'post',
+        url: '/Chatfile/loadList',
         data: {
           user_id: this.passparam.user_id,
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -1028,18 +1028,18 @@ export default {
     async uploadFinish(response, file, file_list) {
       if (response && response.code && response.code == 1) {
         this.$msg({
-          type: "success",
+          type: 'success',
           message: response.msg,
           duration: 1600,
           offset: 80,
         });
         this.mymessage =
-          "我刚刚上传" + response.filename + "到云文件，快去看看吧。";
+          '我刚刚上传' + response.filename + '到云文件，快去看看吧。';
         this.postmessage();
-        this.mymessage = "";
+        this.mymessage = '';
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: response.msg,
           duration: 1600,
           offset: 80,
@@ -1048,7 +1048,7 @@ export default {
       this.deleteOneFileHistoryFromUpList(file, file_list);
     },
     judgeIsString(str) {
-      return typeof str == "string" && str.constructor == String;
+      return typeof str == 'string' && str.constructor == String;
     },
     uploadPhotoSuccess(response, file, file_list) {
       if (response?.url) {
@@ -1060,12 +1060,12 @@ export default {
     async getlinuxurl() {
       const res = await this.getBackurl();
       this.linuxurl = res;
-      this.backurl = this.linuxurl + "/File/saveImage";
+      this.backurl = this.linuxurl + '/File/saveImage';
     },
     // 滚动到顶部
     to_scroll_Top() {
       this.$nextTick(() => {
-        let scroll_dom = document.getElementById("chatDataScrollDiv");
+        let scroll_dom = document.getElementById('chatDataScrollDiv');
         if (scroll_dom && scroll_dom.scrollHeight) {
           let scroll_top = setInterval(() => {
             if (Math.floor(scroll_dom.scrollTop) <= 1) {
@@ -1079,7 +1079,7 @@ export default {
     },
     checkCanScroll() {
       this.check_can_scroll_timer = setInterval(() => {
-        let scroll_dom = document.getElementById("chatDataScrollDiv");
+        let scroll_dom = document.getElementById('chatDataScrollDiv');
         if (!scroll_dom) {
           return;
         }
@@ -1103,7 +1103,7 @@ export default {
     to_last_scroll() {
       this.$nextTick(() => {
         let sign_dom = null;
-        let scroll_dom = document.getElementById("chatDataScrollDiv");
+        let scroll_dom = document.getElementById('chatDataScrollDiv');
         for (let i = 0; i < scroll_dom.children[1].children.length; ++i) {
           if (scroll_dom.children[1].children[i].id === this.last_dom_id) {
             sign_dom = scroll_dom.children[1].children[i];
@@ -1122,7 +1122,7 @@ export default {
       }
       this.$nextTick(() => {
         setTimeout(() => {
-          let scroll_dom = document.getElementById("chatDataScrollDiv");
+          let scroll_dom = document.getElementById('chatDataScrollDiv');
           if (scroll_dom && scroll_dom.scrollHeight) {
             if (
               Math.floor(scroll_dom.scrollHeight - scroll_dom.scrollTop) -
@@ -1155,17 +1155,17 @@ export default {
     },
     async searchuser() {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Chat/ChatFindUser",
+        method: 'post',
+        url: '/Chat/ChatFindUser',
         portType: {
-          process: "8793",
+          process: '8793',
         },
         data: {
           key: this.search_user,
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -1175,14 +1175,14 @@ export default {
     },
     async getUserAndGroupList() {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Chat/getUserAndGroupList",
+        method: 'post',
+        url: '/Chat/getUserAndGroupList',
         portType: {
-          process: "8793",
+          process: '8793',
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -1195,10 +1195,10 @@ export default {
       if (!this.now_user.name && this.user_list?.length) {
         this.now_user = this.user_list[0];
       }
-      if (this.now_user.type == "group_chat") {
-        this.now_post_type = "group_chat";
-      } else if (this.now_user.type == "private_chat") {
-        this.now_post_type = "private_chat";
+      if (this.now_user.type == 'group_chat') {
+        this.now_post_type = 'group_chat';
+      } else if (this.now_user.type == 'private_chat') {
+        this.now_post_type = 'private_chat';
       }
       this.passparam.user_id = this.now_user.id;
       await this.getLatestChatData();
@@ -1219,17 +1219,17 @@ export default {
     },
     async judgeIsJoinGroup(group_id) {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Chat/judgeIsJoinGroup",
+        method: 'post',
+        url: '/Chat/judgeIsJoinGroup',
         portType: {
-          process: "8793",
+          process: '8793',
         },
         data: {
           group_id: group_id,
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -1243,7 +1243,7 @@ export default {
         return 0;
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -1254,12 +1254,12 @@ export default {
 
     async handleSelect(item) {
       if (this.judge_user_list_has_persion(item.id)) {
-        this.search_user = "";
+        this.search_user = '';
         await this.openUserChatWindow(item);
         return;
       }
       item.no_look_num = 0;
-      if (item.type == "group_chat") {
+      if (item.type == 'group_chat') {
         // 判断是否加群
         let code = await this.judgeIsJoinGroup(item.id);
         if (code == 0) {
@@ -1271,7 +1271,7 @@ export default {
       }
       this.user_list.push(item);
       await this.openUserChatWindow(item);
-      this.search_user = "";
+      this.search_user = '';
     },
 
     async openUserChatWindow(item) {
@@ -1304,8 +1304,8 @@ export default {
       try {
         if (!this.now_user.id || !this.now_user.type) {
           this.$msg({
-            type: "error",
-            message: "用户加载出错",
+            type: 'error',
+            message: '用户加载出错',
             duration: 1600,
             offset: 80,
           });
@@ -1313,12 +1313,12 @@ export default {
         }
         const copy_now_user_id = this.now_user.id;
         let cacheData = window.localStorage.getItem(
-          "Chat " + this.now_user.type + " " + this.now_user.id
+          'Chat ' + this.now_user.type + ' ' + this.now_user.id
         );
-        this.chat_msg_list = eval("(" + cacheData + ")");
+        this.chat_msg_list = eval('(' + cacheData + ')');
         if (
           this.chat_msg_list &&
-          typeof this.chat_msg_list == "object" &&
+          typeof this.chat_msg_list == 'object' &&
           this.chat_msg_list.length > 0
         ) {
           this.id = this.chat_msg_list[this.chat_msg_list.length - 1].id;
@@ -1328,10 +1328,10 @@ export default {
         }
         this.load_msg_list_finish = false;
         const { data: res } = await this.$ajax({
-          method: "post",
-          url: "/Chat/getLatestChatData",
+          method: 'post',
+          url: '/Chat/getLatestChatData',
           portType: {
-            process: "8793",
+            process: '8793',
           },
           data: {
             type: this.now_user.type,
@@ -1340,7 +1340,7 @@ export default {
           },
         }).catch((t) => {
           this.$msg({
-            type: "error",
+            type: 'error',
             message: t,
             duration: 1600,
             offset: 80,
@@ -1357,19 +1357,19 @@ export default {
             // 删除本地旧数据
             this.chat_msg_list = [];
             window.localStorage.removeItem(
-              "Chat " + this.now_user.type + " " + this.now_user.id
+              'Chat ' + this.now_user.type + ' ' + this.now_user.id
             );
           }
           // 添加新数据
           res.data = res?.data.reverse();
           this.chat_msg_list.push(...res?.data);
           window.localStorage.setItem(
-            "Chat " + this.now_user.type + " " + this.now_user.id,
+            'Chat ' + this.now_user.type + ' ' + this.now_user.id,
             JSON.stringify(res?.data)
           );
         } else {
           this.$msg({
-            type: "error",
+            type: 'error',
             message: res?.msg,
             duration: 1600,
             offset: 80,
@@ -1387,8 +1387,8 @@ export default {
       this.isSeeLastBtn = false;
       if (!this.now_user.id || !this.now_user.type) {
         this.$msg({
-          type: "error",
-          message: "用户加载出错",
+          type: 'error',
+          message: '用户加载出错',
           duration: 1600,
           offset: 80,
         });
@@ -1397,7 +1397,7 @@ export default {
 
       if (
         this.chat_msg_list &&
-        typeof this.chat_msg_list == "object" &&
+        typeof this.chat_msg_list == 'object' &&
         this.chat_msg_list.length > 0
       ) {
         this.id = this.chat_msg_list[0].id;
@@ -1407,24 +1407,24 @@ export default {
 
       if (!this.id) {
         this.$msg({
-          type: "success",
-          message: "没有更久远的历史记录啦",
+          type: 'success',
+          message: '没有更久远的历史记录啦',
           duration: 1600,
           offset: 80,
         });
         return;
       }
 
-      let tem_dom = document.getElementById("chatDataScrollDiv");
+      let tem_dom = document.getElementById('chatDataScrollDiv');
       if (tem_dom && tem_dom.children[1] && tem_dom.children[1].children[0]) {
         this.last_dom_id = tem_dom.children[1].children[0].id;
       }
 
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Chat/getHistoryChatData",
+        method: 'post',
+        url: '/Chat/getHistoryChatData',
         portType: {
-          process: "8793",
+          process: '8793',
         },
         data: {
           type: this.now_user.type,
@@ -1434,7 +1434,7 @@ export default {
       }).catch((t) => {
         is_init &&
           this.$msg({
-            type: "error",
+            type: 'error',
             message: t,
             duration: 1600,
             offset: 80,
@@ -1456,7 +1456,7 @@ export default {
         }
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -1475,20 +1475,20 @@ export default {
     },
     setup() {
       let temdata = {};
-      this.$EventBus.$on("chatGetMsg", async (e) => {
-        temdata = eval("(" + e.data + ")");
+      this.$EventBus.$on('chatGetMsg', async (e) => {
+        temdata = eval('(' + e.data + ')');
         if (
           temdata.msgtype &&
-          (temdata.msgtype == "private_chat" || temdata.msgtype == "group_chat")
+          (temdata.msgtype == 'private_chat' || temdata.msgtype == 'group_chat')
         ) {
           // 获取该用户的浏览器缓存列表
           let tem_chat_list = window.localStorage.getItem(
-            "Chat " + temdata.type + " " + temdata.post_user_id
+            'Chat ' + temdata.type + ' ' + temdata.post_user_id
           );
-          tem_chat_list = eval("(" + tem_chat_list + ")");
+          tem_chat_list = eval('(' + tem_chat_list + ')');
           // 消息发送者id
           let tem_id =
-            temdata.type == "group_chat"
+            temdata.type == 'group_chat'
               ? temdata.group_data.id
               : temdata.post_user_id;
           if (this.now_user.id != tem_id) {
@@ -1496,7 +1496,7 @@ export default {
               tem_chat_list.push(temdata);
               // 不是当前擦窗口的用户 且 该用户在本地 有缓存
               window.localStorage.setItem(
-                "Chat " + temdata.type + " " + tem_id,
+                'Chat ' + temdata.type + ' ' + tem_id,
                 JSON.stringify(tem_chat_list.slice(-50))
               );
             }
@@ -1509,12 +1509,12 @@ export default {
               this.addNoLookNum(tem_id);
             }
             this.chat_msg_list.push(temdata);
-            window.localStorage.setItem("Chat " + temdata.type + " " + tem_id);
+            window.localStorage.setItem('Chat ' + temdata.type + ' ' + tem_id);
           }
           // 判断用户是否在用户列表
           if (!this.judge_user_list_has_persion(tem_id)) {
             // 用户不在列表，加入列表
-            if (temdata.type == "private_chat") {
+            if (temdata.type == 'private_chat') {
               this.user_list.push({
                 type: temdata.type,
                 id: tem_id,
@@ -1522,7 +1522,7 @@ export default {
                 headimage: temdata.headimage,
                 no_look_num: 1,
               });
-            } else if (temdata.type == "group_chat") {
+            } else if (temdata.type == 'group_chat') {
               this.user_list.push({
                 type: temdata.type,
                 id: tem_id,
@@ -1537,13 +1537,13 @@ export default {
               this.addNoLookNum(tem_id);
             }
           }
-        } else if (temdata.msgtype && temdata.msgtype == "create_group") {
+        } else if (temdata.msgtype && temdata.msgtype == 'create_group') {
           // 新建群聊完成时的操作
           this.isSeeJoinGroupDia = false;
           this.willJoinGroupData = {};
           this.group_data = {};
-          this.creat_group_chat_image = "";
-          this.my_join_group_code = "";
+          this.creat_group_chat_image = '';
+          this.my_join_group_code = '';
           // 群聊加入列表
           if (this.judge_user_list_has_persion(temdata.group_data.id)) {
             // 存在列表就返回
@@ -1567,19 +1567,19 @@ export default {
             code: temdata.group_data.code,
             headimage: temdata.group_data.headimage,
           });
-        } else if (temdata.msgtype && temdata.msgtype == "error") {
+        } else if (temdata.msgtype && temdata.msgtype == 'error') {
           this.$notice({
-            title: "错误警告",
+            title: '错误警告',
             dangerouslyUseHTMLString: true,
             message: temdata.msg,
             duration: 3600,
             offset: 80,
           });
-        } else if (temdata.msgtype && temdata.msgtype == "success") {
-          if (temdata.operate && temdata.operate == "join_group") {
+        } else if (temdata.msgtype && temdata.msgtype == 'success') {
+          if (temdata.operate && temdata.operate == 'join_group') {
             this.isSeeJoinGroupDia = false;
             this.willJoinGroupData = {};
-            this.my_join_group_code = "";
+            this.my_join_group_code = '';
             this.openUserChatWindow({
               type: temdata.type,
               id: temdata.group_data.id,
@@ -1590,7 +1590,7 @@ export default {
             });
           }
           this.$notice({
-            title: "消息",
+            title: '消息',
             dangerouslyUseHTMLString: true,
             message: temdata.msg,
             duration: 3600,
@@ -1601,11 +1601,11 @@ export default {
     },
     judgePostMsg() {
       let t1 = this.mymessage;
-      let value1 = t1.replace(/\s+/g, "");
-      if (value1 == "") {
+      let value1 = t1.replace(/\s+/g, '');
+      if (value1 == '') {
         this.$msg({
-          type: "error",
-          message: "消息不能为空",
+          type: 'error',
+          message: '消息不能为空',
           duration: 1600,
           offset: 80,
         });
@@ -1613,8 +1613,8 @@ export default {
       }
       if (this.mymessage.length > 10000) {
         this.$msg({
-          type: "error",
-          message: "消息不能超过10000字",
+          type: 'error',
+          message: '消息不能超过10000字',
           duration: 1600,
           offset: 80,
         });
@@ -1626,15 +1626,15 @@ export default {
       let msgtype = this.now_post_type;
       if (!msgtype) {
         this.$msg({
-          type: "error",
-          message: "发送消息异常",
+          type: 'error',
+          message: '发送消息异常',
           duration: 1600,
           offset: 80,
         });
         return;
       }
       let msg = {};
-      if (msgtype == "private_chat" || msgtype == "group_chat") {
+      if (msgtype == 'private_chat' || msgtype == 'group_chat') {
         if (!this.judgePostMsg()) return;
         // 私聊 和 群聊
         msg = {
@@ -1643,13 +1643,13 @@ export default {
           user_name: this.now_user.name,
           msg: this.mymessage,
         };
-      } else if (msgtype == "create_group") {
+      } else if (msgtype == 'create_group') {
         // 新建群聊
         msg = {
           msgtype: this.msgtypeObj[msgtype],
           group_data: this.group_data,
         };
-      } else if (msgtype == "join_group") {
+      } else if (msgtype == 'join_group') {
         // 加入群聊
         msg = {
           msgtype: this.msgtypeObj[msgtype],
@@ -1658,31 +1658,31 @@ export default {
             code: this.my_join_group_code,
           },
         };
-      } else if (msgtype == "exit_group") {
+      } else if (msgtype == 'exit_group') {
         // 退出群聊
-      } else if (msgtype == "delete_group") {
+      } else if (msgtype == 'delete_group') {
         // 解散群聊
       }
-      this.$EventBus.$emit("chatSendMsg", msg);
-      this.mymessage = "";
+      this.$EventBus.$emit('chatSendMsg', msg);
+      this.mymessage = '';
     },
   },
   computed: {
     prop() {
       let data = {
         subfield: false, // 单双栏模式
-        defaultOpen: "preview", //edit： 默认展示编辑区域 ， preview： 默认展示预览区域
+        defaultOpen: 'preview', //edit： 默认展示编辑区域 ， preview： 默认展示预览区域
         editable: false,
         toolbarsFlag: false, //工具栏
         scrollStyle: true,
-        codeStyle: "atom-one-dark",
+        codeStyle: 'atom-one-dark',
         boxShadow: false,
         ishljs: true,
         tabSize: 4,
-        toolbarsBackground: "rgba(0,0,0,0)",
-        editorBackground: "rgba(0,0,0,0)",
-        previewBackground: "rgba(0,0,0,0)",
-        fontSize: "1rem",
+        toolbarsBackground: 'rgba(0,0,0,0)',
+        editorBackground: 'rgba(0,0,0,0)',
+        previewBackground: 'rgba(0,0,0,0)',
+        fontSize: '1rem',
         navigation: false,
       };
       return data;
@@ -1692,7 +1692,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import "../../../public/md/markdown/github-markdown.min.css";
+@import '../../../public/md/markdown/github-markdown.min.css';
 
 /deep/.md,
 /deep/.markdown-body {
@@ -1712,7 +1712,7 @@ export default {
 
 .folder {
   float: left;
-  background-image: url("../../assets/file.png");
+  background-image: url('../../assets/file.png');
   background-size: 80% auto;
   height: 2rem;
   width: 2rem;
@@ -1723,7 +1723,7 @@ export default {
 
 .code {
   float: left;
-  background-image: url("../../assets/code.png");
+  background-image: url('../../assets/code.png');
   background-size: 80% auto;
   height: 2rem;
   width: 2rem;
@@ -1734,7 +1734,7 @@ export default {
 
 .music {
   float: left;
-  background-image: url("../../assets/music.png");
+  background-image: url('../../assets/music.png');
   background-size: 80% auto;
   height: 2rem;
   width: 2rem;
@@ -1745,7 +1745,7 @@ export default {
 
 .video {
   float: left;
-  background-image: url("../../assets/video.png");
+  background-image: url('../../assets/video.png');
   background-size: 80% auto;
   height: 2rem;
   width: 2rem;
@@ -1756,7 +1756,7 @@ export default {
 
 .pdf {
   float: left;
-  background-image: url("../../assets/pdf.png");
+  background-image: url('../../assets/pdf.png');
   background-size: 80% auto;
   height: 2rem;
   width: 2rem;
@@ -1767,7 +1767,7 @@ export default {
 
 .compressed {
   float: left;
-  background-image: url("../../assets/zip.png");
+  background-image: url('../../assets/zip.png');
   background-size: 80% auto;
   height: 2rem;
   width: 2rem;
@@ -1778,7 +1778,7 @@ export default {
 
 .txt {
   float: left;
-  background-image: url("../../assets/txt.png");
+  background-image: url('../../assets/txt.png');
   background-size: 80% auto;
   height: 2rem;
   width: 2rem;
@@ -1789,7 +1789,7 @@ export default {
 
 .photo {
   float: left;
-  background-image: url("../../assets/photo.png");
+  background-image: url('../../assets/photo.png');
   background-size: 80% auto;
   height: 2rem;
   width: 2rem;
@@ -1800,7 +1800,7 @@ export default {
 
 .exe {
   float: left;
-  background-image: url("../../assets/exe.png");
+  background-image: url('../../assets/exe.png');
   background-size: 80% auto;
   height: 2rem;
   width: 2rem;

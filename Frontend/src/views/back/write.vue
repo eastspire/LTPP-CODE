@@ -222,28 +222,28 @@
 </template>
 
 <script>
-import urlencode from "../../../updateCompoents/urlencode";
-import "../../../public/md/markdown/github-markdown.min.css";
+import urlencode from '../../../updateCompoents/urlencode';
+import '../../../public/md/markdown/github-markdown.min.css';
 
 export default {
-  name: "write",
+  name: 'write',
   computed: {
     prop() {
       let data = {
         image_use_remote: true,
         subfield: false, // 单双栏模式
-        defaultOpen: "edit", //edit： 默认展示编辑区域 ， preview： 默认展示预览区域
+        defaultOpen: 'edit', //edit： 默认展示编辑区域 ， preview： 默认展示预览区域
         editable: true,
         toolbarsFlag: true, //工具栏
         scrollStyle: true,
-        codeStyle: "atom-one-dark",
+        codeStyle: 'atom-one-dark',
         boxShadow: false,
         ishljs: true,
         tabSize: 4,
-        toolbarsBackground: "rgba(0,0,0,0)",
-        editorBackground: "rgba(0,0,0,0)",
-        previewBackground: "rgba(0,0,0,0)",
-        fontSize: "1.06rem",
+        toolbarsBackground: 'rgba(0,0,0,0)',
+        editorBackground: 'rgba(0,0,0,0)',
+        previewBackground: 'rgba(0,0,0,0)',
+        fontSize: '1.06rem',
         navigation: false,
       };
       return data;
@@ -261,82 +261,82 @@ export default {
         this.$route.query.language
       ) {
         this.name =
-          urlencode.decode(this.$route.query.problemName, "gbk") + "题解博客";
-        this.problemid = urlencode.decode(this.$route.query.problemId, "gbk");
+          urlencode.decode(this.$route.query.problemName, 'gbk') + '题解博客';
+        this.problemid = urlencode.decode(this.$route.query.problemId, 'gbk');
         this.problemText =
-          urlencode.decode(this.$route.query.problemContent, "gbk") + "\n\n";
+          urlencode.decode(this.$route.query.problemContent, 'gbk') + '\n\n';
         this.article =
-          "#### 解题思路：\n> \n\n" +
-          "#### AC代码：\n```" +
-          urlencode.decode(this.$route.query.language ?? "cpp", "gbk") +
-          "\n" +
-          urlencode.decode(this.$route.query.code, "gbk") +
-          "\n```\n";
+          '#### 解题思路：\n> \n\n' +
+          '#### AC代码：\n```' +
+          urlencode.decode(this.$route.query.language ?? 'cpp', 'gbk') +
+          '\n' +
+          urlencode.decode(this.$route.query.code, 'gbk') +
+          '\n```\n';
       } else {
         this.problemid = -1;
-        let writeImage = window.localStorage.getItem("writeImage");
+        let writeImage = window.localStorage.getItem('writeImage');
         if (writeImage != undefined && writeImage && writeImage != null) {
           this.image = writeImage;
         }
-        let writeName = window.localStorage.getItem("writeName");
+        let writeName = window.localStorage.getItem('writeName');
         if (writeName != undefined && writeName && writeName != null) {
           this.name = writeName;
         }
-        let writePublic = window.localStorage.getItem("writePublic");
+        let writePublic = window.localStorage.getItem('writePublic');
         if (writePublic != undefined && writePublic && writePublic != null) {
           this.ispublic = Number(writePublic);
         }
-        let writeArticle = window.localStorage.getItem("writeArticle");
+        let writeArticle = window.localStorage.getItem('writeArticle');
         if (writeArticle != undefined && writeArticle && writeArticle != null) {
           this.article = writeArticle;
         }
       }
     }
-    this.form.region = "url";
+    this.form.region = 'url';
   },
   mounted() {
     // 切换页面时滚动条自动滚动到顶部
     window.scrollTo(0, 0);
   },
   updated() {
-    window.localStorage.setItem("writeImage", this.image);
-    window.localStorage.setItem("writeName", this.name);
-    window.localStorage.setItem("writePublic", this.ispublic);
+    window.localStorage.setItem('writeImage', this.image);
+    window.localStorage.setItem('writeName', this.name);
+    window.localStorage.setItem('writePublic', this.ispublic);
     window.localStorage.setItem(
-      "writeArticle",
+      'writeArticle',
       this.problemText + this.article
     );
   },
   data() {
     return {
       issendfinish: true,
-      problemText: "",
+      problemText: '',
       reg: /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\*\+,;=.]+$/,
       xss_options: this.$SqsGlobal.xss_options,
       stripIgnoreTagBody: this.$SqsGlobal.strip_ignore_tag_body,
       dialogFormVisible: false, // 用于控制表单对话框的开启和关闭
       dialogVisible: false, // 用于控制错误提示对话框的开启和关闭
-      formLabelWidth: "5rem", // 设定表单对话框内表单是宽度
+      formLabelWidth: '5rem', // 设定表单对话框内表单是宽度
       form: {
         // 表单对话框内表单的数据
-        link: "",
-        region: "",
+        link: '',
+        region: '',
       },
       externalLink: {
         markdown_css: false,
         // 默认public文件夹下
-        hljs_js: () => "md/highlightjs/highlight.min.js",
-        hljs_css: (css) => "md/highlightjs/styles/" + css + ".min.css",
-        hljs_lang: (lang) => "md/highlightjs/languages/" + lang + ".min.js",
-        katex_css: () => "md/katex/katex.min.css",
-        katex_js: () => "md/katex/katex.min.js",
+        hljs_js: () => 'md/highlightjs/highlight.min.js',
+        hljs_css: (css) => 'md/highlightjs/styles/' + css + '.min.css',
+        hljs_lang: (lang) => 'md/highlightjs/languages/' + lang + '.min.js',
+        katex_css: () => 'md/katex/katex.min.css',
+        katex_js: () => 'md/katex/katex.min.js',
       },
       ispublic: 1,
-      name: "",
+      name: '',
       problemid: -1,
       article: {},
-      article: "",
-      image: "",
+      article: '',
+      image: '',
       toolbars: {
         bold: true, // 粗体
         italic: true, // 斜体
@@ -366,34 +366,34 @@ export default {
   methods: {
     videoLink() {
       // 准备链接模板
-      let linkFrame = "";
-      if (this.form.region == "") {
-        this.form.region = "url";
+      let linkFrame = '';
+      if (this.form.region == '') {
+        this.form.region = 'url';
       }
       // 创建一个div盒子，为提取src做准备
-      let box = document.createElement("div");
+      let box = document.createElement('div');
       // 将原始链接插入到盒子中
 
       box.innerHTML = this.form.link;
       // 判断不同的视频原链接类型
-      if (this.form.region == "url") {
+      if (this.form.region == 'url') {
         let linkFrameStart = `<div align="center" width="100%" style="border-width:0rem"><video style="height:46vh; width: 100%" controls controlslist="nodownload"><source src="`;
         let linkFrameEnd = `" type="video/mp4" /></video></div>`;
 
         linkFrame = linkFrameStart + this.form.link + linkFrameEnd;
       } else if (
-        this.form.region == "iframe" &&
-        box.getElementsByTagName("iframe").length > 0
+        this.form.region == 'iframe' &&
+        box.getElementsByTagName('iframe').length > 0
       ) {
         let linkFrameStart = `<div align="center" width="100%" style="border-width:0rem"><iframe height="${
-          (window.innerHeight - 240) / 2 + "px"
+          (window.innerHeight - 240) / 2 + 'px'
         }" width="80%" src="`;
         let linkFrameEnd = `" allowfullscreen="true" scrolling="no" border="0" frameborder="no" framespacing="0" style="border-width: 0rem; min-height: 31.2rem;"></iframe></div>`;
 
         // 从iframe标签中提取src属性
         linkFrame =
           linkFrameStart +
-          box.getElementsByTagName("iframe")[0].getAttribute("src") +
+          box.getElementsByTagName('iframe')[0].getAttribute('src') +
           linkFrameEnd;
       } else {
         // 原始链接格式错误时弹出错误提示
@@ -401,10 +401,10 @@ export default {
         this.dialogVisible = true;
       }
       // 复原表单文本框内容
-      this.form.link = "";
+      this.form.link = '';
 
       // 获取文本域中当前光标起始位置、结束位置以及滚动条位置（滚动条位置我认为没有必要，如有需要可以自己取消注释）
-      let textarea = document.getElementsByClassName("auto-textarea-input")[0];
+      let textarea = document.getElementsByClassName('auto-textarea-input')[0];
       let posStart = textarea.selectionStart;
       let posEnd = textarea.selectionEnd;
       // let posScroll = document.getElementsByClassName("v-note-edit")[0].scrollTop;
@@ -415,14 +415,14 @@ export default {
         this.$refs.md.d_value.length
       );
       // 拼接并替换文本域内容
-      this.$refs.md.d_value = subStart + "\n" + linkFrame + "\n" + subEnd;
+      this.$refs.md.d_value = subStart + '\n' + linkFrame + '\n' + subEnd;
       // document.getElementsByClassName("v-note-edit")[0].scrollTop = posScroll;
       // 关闭对话框
       this.dialogFormVisible = false;
     },
     // 绑定@imgAdd event
     async $imgAdd(pos, $file) {
-      this.imgAddMiddleware(pos, $file, "md");
+      this.imgAddMiddleware(pos, $file, 'md');
     },
     async uparticle() {
       if (!this.issendfinish) {
@@ -430,26 +430,26 @@ export default {
       }
       let t1 = this.name;
       let t2 = this.article;
-      let value1 = t1.replace(/\s+/g, "");
-      let value2 = t2.replace(/\s+/g, "");
-      if (value1 == "" || value2 == "") {
+      let value1 = t1.replace(/\s+/g, '');
+      let value2 = t2.replace(/\s+/g, '');
+      if (value1 == '' || value2 == '') {
         this.$msg({
-          type: "error",
-          message: "提交不能为空",
+          type: 'error',
+          message: '提交不能为空',
           duration: 1600,
           offset: 80,
         });
         return;
       }
       if (!this.reg.test(this.image)) {
-        this.image = "";
+        this.image = '';
       }
       this.issendfinish = false;
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Article/writeOneArticle",
+        method: 'post',
+        url: '/Article/writeOneArticle',
         portType: {
-          process: "8792",
+          process: '8792',
         },
         data: {
           name: this.name,
@@ -461,7 +461,7 @@ export default {
       }).catch((t) => {
         this.issendfinish = true;
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -470,22 +470,22 @@ export default {
       this.issendfinish = true;
       if (res?.code == 1) {
         this.$msg({
-          type: "success",
+          type: 'success',
           message: res?.msg,
           duration: 1600,
           offset: 80,
         });
-        window.localStorage.removeItem("writePublic");
-        window.localStorage.removeItem("writeImage");
-        window.localStorage.removeItem("writeName");
-        window.localStorage.removeItem("writeArticle");
-        this.name = "";
-        this.article = "";
-        this.image = "";
-        this.problemText = "";
+        window.localStorage.removeItem('writePublic');
+        window.localStorage.removeItem('writeImage');
+        window.localStorage.removeItem('writeName');
+        window.localStorage.removeItem('writeArticle');
+        this.name = '';
+        this.article = '';
+        this.image = '';
+        this.problemText = '';
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -496,7 +496,7 @@ export default {
 };
 </script>
 <style scoped>
-@import "../../../public/md/markdown/github-markdown.min.css";
+@import '../../../public/md/markdown/github-markdown.min.css';
 img:hover {
   transform-origin: center center;
   transform: scale(1.1, 1.1);

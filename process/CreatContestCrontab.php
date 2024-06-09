@@ -113,6 +113,7 @@ class CreatContestCrontab
      */
     private function addContest($contest_title, $contest_content, $time_list, $user_list, $type)
     {
+        $contest_content = Base::removeImgAlt($contest_content);
         $res_id = Base::insertToDb('contest', [
             'name' => $contest_title,
             'content' => $contest_content,

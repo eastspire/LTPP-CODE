@@ -31,6 +31,7 @@ class Notice
             return json(['code' => -1, 'msg' => '权限不足']);
         }
         $tabledata = $request->post('tabledata');
+        $tabledata['content'] = Base::removeImgAlt($tabledata['content']);
         $data = [
             'content' => $tabledata['content'],
             'time' => date('Y-m-d h:i:s', time()),
@@ -87,6 +88,7 @@ class Notice
         }
         $tabledata = $request->post('tabledata');
         $tabledata['id'] = Base::getIdByUid($tabledata['id']);
+        $tabledata['content'] = Base::removeImgAlt($tabledata['content']);
         Db::table('notice')
             ->where('id', $tabledata['id'])
             ->where('isdel', 0)
@@ -150,6 +152,9 @@ class Notice
         $allnum = Db::table('notice')
             ->where('isdel', 0)
             ->count();
+        foreach ($info as &$tem) {
+            $tem->content = Base::removeImgAlt($tem->content);
+        }
         Base::dataToSafe($info);
         return json(['code' => 1, 'data' => $info, 'allnum' => $allnum, 'msg' => '获取到 ' . $allnum . ' 条公告']);
     }
@@ -206,6 +211,7 @@ class Notice
             ->where('isdel', 0)
             ->select(Notice::$notice_db_key)
             ->first();
+        $data->content = Base::removeImgAlt($data->content);
         if ($data) {
             return json(['code' => 1, 'data' => $data->content, 'msg' => '加载完成']);
         }

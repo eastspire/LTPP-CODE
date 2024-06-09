@@ -3578,6 +3578,7 @@ class Base
             if (!$db) {
                 return [];
             }
+            $db->content = Base::removeImgAlt($db->content);
             $redis21->setEx($key, Base::$redis_timeout, json_encode($db));
             return $db;
         } catch (Exception $e) {
@@ -3609,6 +3610,7 @@ class Base
             if (!$db) {
                 return [];
             }
+            $db->content = Base::removeImgAlt($db->content);
             $redis22->setEx($key, Base::$redis_timeout, json_encode($db));
             return $db;
         } catch (Exception $e) {
@@ -3683,9 +3685,10 @@ class Base
                 ->where('article_id', $article_id)
                 ->select('data')
                 ->first();
-            if ($data) {
-                $db->article = $data->data;
+            if (!$db) {
+                return [];
             }
+            $db->article = Base::removeImgAlt($data->data);
             $redis25->setEx($key, Base::$redis_timeout, json_encode($db));
             return $db;
         } catch (Exception $e) {
@@ -3718,6 +3721,7 @@ class Base
             if (!$db) {
                 return [];
             }
+            $db->problemContent = Base::removeImgAlt($db->problemContent);
             $redis26->setEx($key, Base::$redis_timeout, json_encode($db));
             return $db;
         } catch (Exception $e) {
@@ -3750,6 +3754,7 @@ class Base
             if (!$db) {
                 return [];
             }
+            $db->content = Base::removeImgAlt($db->content);
             $redis36->setEx($key, Base::$redis_timeout, json_encode($db));
             return $db;
         } catch (Exception $e) {
@@ -3828,6 +3833,7 @@ class Base
             if (!$db) {
                 return [];
             }
+            $db->mysay = Base::removeImgAlt($db->mysay);
             return $db;
         } catch (Exception $e) {
             Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
@@ -4816,6 +4822,33 @@ class Base
                 unset($user->email);
             }
         }
+    }
+
+    /**
+     * 去除图片的alt
+     */
+    static public function removeImgAlt($input)
+    {
+        try {
+            // 替换Markdown格式中的图片描述为![]，并清空链接文字
+            $pattern = '/!\[.*?\]\((.*?)\)/';
+            $replacement = '![]($1)';
+            $output = preg_replace($pattern, $replacement, $input);
+            if (!$output) return $input;
+            // 删除所有img标签中已有的alt属性（包括没有=的情况）
+            $pattern = '/(<img\b[^>]*?)\s*alt\s*=\s*(".*?"|\'.*?\'|[^\'"\s>]*)?/i';
+            $replacement = '$1';
+            $output = preg_replace($pattern, $replacement, $output);
+            // 为所有img标签添加空的alt属性
+            // 如果没有alt属性，则在img标签中追加空的alt属性
+            $pattern = '/(<img\b(?![^>]*\salt=)[^>]*?)(\/?>)/i';
+            $replacement = '$1 alt="" $2';
+            $output = preg_replace($pattern, $replacement, $output);
+            return $output;
+        } catch (Exception $e) {
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
+        }
+        return $input;
     }
 
     /**

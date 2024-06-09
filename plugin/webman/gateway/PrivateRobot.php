@@ -773,6 +773,10 @@ class PrivateRobot extends ChatBase
                 $reply = '清空tmp目录成功';
                 break;
             case '13':
+                if (!$reply) {
+                    $reply = '待发送消息为空！请重新发送！';
+                    return;
+                }
                 $all_user = Db::table('user')
                     ->where('isdel', 0)
                     ->select('id', 'email')

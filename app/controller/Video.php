@@ -566,6 +566,7 @@ class Video
                 foreach ($temdb as $tt) {
                     $tt->userheadimg = Base::getUserHeadimage($tt->userid);
                     $tt->touserheadimg = Base::getUserHeadimage($tt->touserid);
+                    $tt->text = Base::removeImgAlt($tt->text);
                     $temary['touserarray'][] = get_object_vars($tt);
                 }
             }
@@ -592,7 +593,7 @@ class Video
         if ($tem == '') {
             return \json(['code' => 0, 'msg' => '评论内容不能为空']);
         }
-
+        $comment = Base::removeImgAlt($comment);;
         $time = date('Y-m-d H:i:s', time());
         $video_uid = $request->post('video_id');
         $video_id = Base::getIdByUid($video_uid);

@@ -753,6 +753,7 @@ class Contest
         } else {
             return json(['code' => -1, 'msg' => '该账号不存在']);
         }
+        $data['content'] = Base::removeImgAlt($data['content']);
         //插入竞赛信息
         $res_id = Base::insertToDb('contest', $data);
         // 缓存竞赛

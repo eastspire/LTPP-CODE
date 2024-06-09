@@ -40,7 +40,6 @@ class Question
         'userid',
         'time',
         'answer_num',
-        'question'
     ];
 
     /**
@@ -95,6 +94,7 @@ class Question
                 ->get();
         }
         foreach ($db as &$t) {
+            $t->name = Base::removeImgAlt($t->name);
             $user = Base::getUserData($t->userid);
             if ($user && !empty($user)) {
                 $t->writer = $user->name;
@@ -120,6 +120,8 @@ class Question
         }
         $redis7->setEx($key, Question::$time_out, 1);
         $name = mb_substr($question_name, 0, 535);
+        $question_name = Base::removeImgAlt($question_name);
+        $name = Base::removeImgAlt($name);
         Db::table('question')
             ->insert([
                 'name' => $name,
@@ -167,6 +169,7 @@ class Question
         if ($db->userid == $my_aid || Base::judgeIsRoot($my_aid)) {
             $is_can_edit = true;
         }
+        $db->question = Base::removeImgAlt($db->question);
         Base::dataToSafe($db);
         return json(['code' => 1, 'data' => $db, 'is_can_edit' => $is_can_edit, 'msg' => '加载完成']);
     }

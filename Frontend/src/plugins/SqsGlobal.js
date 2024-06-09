@@ -9,45 +9,33 @@
  * Copyright (c) 2023 by SQS, All Rights Reserved. 
  */
 /* 全局变量 */
-import c_tips from './code/c';
-import cpp_tips from './code/cpp';
-import java_tips from './code/java';
-import go_tips from './code/golang';
-import javascript_tips from './code/javascript';
-import rust_tips from './code/rust';
-import php_tips from './code/php';
-import typescript_tips from './code/typescript';
-import ruby_tips from './code/ruby';
-import csharp_tips from './code/csharp';
-import python_tips from './code/python';
+let c_tips = window?.c_tips?.length > 0 ? window.c_tips : [''];
+let cpp_tips = window?.cpp_tips?.length > 0 ? window.cpp_tips : [''];
+let java_tips = window?.java_tips?.length > 0 ? window.java_tips : [''];
+let golang_tips = window?.golang_tips?.length > 0 ? window.golang_tips : [''];
+let javascript_tips = window?.javascript_tips?.length > 0 ? window.javascript_tips : [''];
+let rust_tips = window?.rust_tips?.length > 0 ? window.rust_tips : [''];
+let php_tips = window?.php_tips?.length > 0 ? window.php_tips : [''];
+let typescript_tips = window?.typescript_tips?.length > 0 ? window.typescript_tips : [''];
+let ruby_tips = window?.ruby_tips?.length > 0 ? window.ruby_tips : [''];
+let csharp_tips = window?.csharp_tips?.length > 0 ? window.csharp_tips : [''];
+let python_tips = window?.python_tips?.length > 0 ? window.python_tips : [''];
 
-const cpp = `#include<bits/stdc++.h>\n#pragma GCC optimize(2)\n#pragma GCC optimize(3)\n#define PF first\n#define PS second\n#define UM unordered_map\n#define US unordered_set\n#define MS mutiset\n#define F(i, start, end, offset) for(int i = start; i < end; i += offset)\n#define F_(i, start, end, offset) for(int i = start; i >= end; i-= offset)\n#define fastcpp ios::sync_with_stdio(false), cin.tie(0), cout.tie(0)\n#define random(a, b) (rand() % (b - a) + a)\nusing namespace std;\nusing LL = long long int;\nusing PII = pair<int, int>;\nusing STR = string;\n\nint main(){\n    fastcpp;\n    \n    \n    return 0;\n}`;
-const c = `#include<stdio.h>\n#pragma GCC optimize(2)\n#pragma GCC optimize(3)\n#define F(i, start, end, offset) for(int i = start; i < end; i += offset)\n#define F_(i, start, end, offset) for(int i = start; i >= end; i-= offset)\n#define random(a, b) (rand() % (b - a) + a)\ntypedef long long int LL;\n\nint main(){\n    \n    \n    return 0;\n}`;
-const java = `public class Main{\n    //请勿更改类名，否则运行失败!\n    public static void main(String[] args){\n        \n        \n    }\n}`;
-const python = `def main():\n    res = ''\n    \n    \n    return res\n\nprint(main())`;
-const go = `package main\n//请勿更改包名，否则运行失败!\nimport (\n    "fmt"\n    "bufio"\n    "os"\n    "strconv"\n    "strings"\n)\n\nfunc read() []int {\n    var arr = make([]int, 0);\n    inputs := bufio.NewScanner(os.Stdin)\n    for inputs.Scan() {\n        data := strings.Split(inputs.Text(), " ")\n        for i := range data {\n            val, _ := strconv.Atoi(data[i])\n            arr = append(arr, val)\n        }\n    }\n    return arr;\n}\n\nfunc print(arr []int){\n    for i := 0; i < len(arr); i++ {\n        fmt.Print(arr[i]," ")\n    }\n}\n\nfunc main(){\n    var arr = read()\n    \n    \n    print(arr)\n}`;
-const php = `<?php\n\n/**\n * 输入\n * @param [fn] function(cin_line = '', cin_all = []) 每行读取结束后的回调函数(cin_line => 读取的当前行, cin_all => 所有读入)\n * @param [$is_slpit] 是否需要对读入的字符串切割\n * @param [$split_char] 按照什么字符切割\n * @return array\n */\nfunction cin($fn = null, $is_slpit = true, $split_char = ' '){\n    $cin_all = [];\n    if(!$fn){\n        $fn = function(){};\n    }\n    while (!feof(STDIN)){\n        $cin_line = [];\n        $line = trim(fgets(STDIN));\n        if(empty($line)){\n            continue;\n        }\n        $cin_line = $is_slpit ? explode($split_char, $line) : $line;\n        $cin_all[] = $cin_line;\n        $fn($cin_line, $cin_all);\n    }\n    return $cin_all;\n}\n\n(function (){\n    $res = null;\n    $arr = cin(function($read_line = [], $out = []){\n        // 每行读取完成的回调函数\n        \n    }, true);\n    \n    var_dump($res);\n})();`;
-const javascript = `/**\n * 输入\n * @param [fn] Function(cin_line = '', cin_all = []) 每行读取结束后的回调函数(cin_line => 读取的当前行, cin_all => 所有读入)\n * @param [is_split] Boolean 是否需要对读入的字符串切割\n * @param [split_char] String 按照什么字符切割\n * @return void\n */\nasync function cinLine(fn = () => {}, is_split = true, split_char = ' '){\n    const cin_all = [];\n    const readline = require('readline');\n    const rl = readline.createInterface({\n        input: process.stdin,\n        output: process.stdout\n    });\n    return new Promise((resolve, reject) => {\n        try{\n            rl.on('line', function(line){\n                const cin_line = is_split ? line.split(split_char) : line;\n                cin_all.push(cin_line);\n                fn.call(this, cin_line, cin_all);\n            });\n            rl.on('close',() => {\n                resolve();\n            });\n        }catch(e){\n            reject(e);\n        }\n    });\n}\n\n(async() => {\n    let res = null;\n    \n    await cinLine((cin_line = '', cin_all = []) => {\n        // 每行读取完成的回调函数\n        \n    });\n\n    console.log(res);\n})();`;
-const rust = `#![allow(warnings)]\nuse std::io;\nuse std::error::Error;\nuse std::boxed::Box;\nuse std::convert::TryInto;\nuse std::cmp::Ordering;\nuse std::cmp::min;\nuse std::cmp::max;\n\nfn get_ans() -> i64 {\n    let mut res: i64 = 0;\n    \n    \n    return res;\n}\n\nfn main() -> Result<(), Box<dyn Error>> {\n    \n    \n    print!("{}", get_ans());\n    Ok(())\n}`;
-const typescript = `/**\n * 输入\n * @param [fn] Function(cin_line = '', cin_all = []) 每行读取结束后的回调函数(cin_line => 读取的当前行, cin_all => 所有读入)\n * @param [is_split] Boolean 是否需要对读入的字符串切割\n * @param [split_char] String 按照什么字符切割\n * @return void\n */\n// @ts-ignore\nasync function cinLine(fn = () => {}, is_split = true, split_char = ' '){\n    const cin_all = [];\n    // @ts-ignore\n    const readline = require('readline');\n    const rl = readline.createInterface({\n        // @ts-ignore\n        input: process.stdin,\n        // @ts-ignore\n        output: process.stdout\n    });\n    return new Promise<void>((resolve, reject) => {\n        try{\n            rl.on('line', function(line: string){\n                const cin_line = is_split ? line.split(split_char) : line;\n                cin_all.push(cin_line);\n                fn.call(this, cin_line, cin_all);\n            });\n            rl.on('close',() => {\n                resolve();\n            });\n        }catch(e){\n            reject(e);\n        }\n    });\n}\n\n(async() => {\n    let res = null;\n    \n    await cinLine((cin_line = '', cin_all = []) => {\n        // 每行读取完成的回调函数\n        \n    });\n\n    console.log(res);\n})();`;
-const ruby = `def main()\n    res = '';\n    input = gets.chomp\n    \n    \n    return res\nend\n\n\nputs main()`;
-const csharp = `using System;\n\nnamespace Main\n{\n    class Program\n    {\n        static void Main(string[] args)\n        {\n            string input = Console.ReadLine();\n            \n            \n            Console.WriteLine(input);\n        }\n    }\n}`;
+const cpp = cpp_tips[0] || '';
+const c = c_tips[0] || '';
+const java = java_tips[0] || '';
+const python = python_tips[0] || '';
+const go = golang_tips[0] || '';
+const php = php_tips[0] || '';
+const javascript = javascript_tips[0] || '';
+const rust = rust_tips[0] || '';
+const typescript = typescript_tips[0] || '';
+const ruby = ruby_tips[0] || '';
+const csharp = csharp_tips[0] || '';
 const websocket_connect_str = '@ltpp@';
 const loading_tips = '加载中';
 const code_light_css = '--mtk1:#7c4dff !important;--mtk5:#3dc9b0 !important;--mtk6:#fa278e !important;--mtk7:#437aed !important;--mtk8:#d365e5 !important;--mtk9:#437aed !important;--mtk14:#ff0000 !important;--mtk20:#3dc9b0 !important;--mtk22:#fa278e !important;--mtk23:#3dc9b0 !important;';
 const code_dark_css = '--mtk1:#21e016 !important;--mtk5:#3dc9b0 !important;--mtk6:#ff9070 !important;--mtk7:#ffdd00 !important;--mtk8:#fa278e !important;--mtk9:#ff9900 !important;--mtk14:#ff0000 !important;--mtk20:#3dc9b0 !important;--mtk22:#00d7ff !important;--mtk23:#00bdff !important;';
-
-c_tips.key.unshift(c);
-cpp_tips.key.unshift(cpp);
-rust_tips.key.unshift(rust);
-javascript_tips.key.unshift(javascript);
-typescript_tips.key.unshift(typescript);
-php_tips.key.unshift(php);
-go_tips.key.unshift(go);
-java_tips.key.unshift(java);
-csharp_tips.key.unshift(csharp);
-ruby_tips.key.unshift(ruby);
-python_tips.key.unshift(python);
 
 // 编辑器主题
 const themelist = [
@@ -102,17 +90,17 @@ const map_language = {
 };
 
 const language_tips = {
-    c: c_tips.key,
-    cpp: cpp_tips.key,
-    java: java_tips.key,
-    python: python_tips.key,
-    go: go_tips.key,
-    php: php_tips.key,
-    javascript: javascript_tips.key,
-    rust: rust_tips.key,
-    typescript: typescript_tips.key,
-    csharp: csharp_tips.key,
-    ruby: ruby_tips.key
+    c: c_tips,
+    cpp: cpp_tips,
+    java: java_tips,
+    python: python_tips,
+    go: golang_tips,
+    php: php_tips,
+    javascript: javascript_tips,
+    rust: rust_tips,
+    typescript: typescript_tips,
+    csharp: csharp_tips,
+    ruby: ruby_tips
 };
 
 const map_language_file = {
@@ -218,7 +206,7 @@ const question_list_data = {
     "time": loading_tips,
     "answer_num": 0,
     "writer": loading_tips,
-    "headimage": "/logo.png"
+    "headimage": "https://ltpp.vip/logo.png"
 };
 const monitor_list_data = {
     "id": "",
@@ -324,7 +312,7 @@ const user_list_data =
     lastlogin: loading_tips,
     sex: loading_tips,
     email: loading_tips,
-    headimage: '/logo.png',
+    headimage: 'https://ltpp.vip/logo.png',
     fans: loading_tips,
     follow: loading_tips,
     online: loading_tips,

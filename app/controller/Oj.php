@@ -616,6 +616,7 @@ class Oj
         }
         unset($data['id']);
         $data['createrid'] = $my_aid;
+        $data['problemContent'] = Base::removeImgAlt($data['problemContent']);
         $data['id'] = Base::insertToDb('oj', $data);
         if ($data['id']) {
             Base::dataToSafe($data);

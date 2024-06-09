@@ -587,15 +587,11 @@ class Article extends Image
      */
     public function randomOneArticle()
     {
-        $writerid = Base::getRobotId();
-        if (!$writerid) {
-            Base::sendErrorNotice('', '机器人账号不存在！');
-            $writerid = Base::getRobotId();
-        }
         $db = Db::table('article')
-            ->where('writerid', $writerid)
             ->where('public', 1)
             ->where('isdel', 0)
+            ->orderBy('id', 'desc')
+            ->limit(100)
             ->select('id')
             ->inRandomOrder()
             ->first();
@@ -670,7 +666,7 @@ class Article extends Image
             'releasetime' => $releasetime,
             'lastchangetime' => $lastchangetime,
             'name' => $request->post('name'),
-            'article' => Base::utfsubstr(strip_tags($request->post('article')), 0, Base::$home_one_article_max_length),
+            'article' => Base::utfsubstr(Base::removeImgAlt(strip_tags($request->post('article'))), 0, Base::$home_one_article_max_length),
             'public' => $is_public,
         ];
         $urlimage = $tabledata['image'];
@@ -682,7 +678,7 @@ class Article extends Image
         $article_id = Base::insertToDb('article', $tabledata);
         Base::insertToDb('article_data', [
             'article_id' => $article_id,
-            'data' => $request->post('article')
+            'data' => Base::removeImgAlt($request->post('article'))
         ]);
         Base::updateArticleDataRedis($article_id);
         return json(['code' => 1, 'msg' => '发布成功']);
