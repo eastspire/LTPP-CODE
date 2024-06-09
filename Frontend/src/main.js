@@ -65,58 +65,68 @@ Vue.prototype.$ajax = axios;
 Vue.prototype.$SqsGlobal = SqsGlobal;
 Vue.prototype.$EventBus = EventBus;
 
-// 创建MutationObserver实例
-const observer = new MutationObserver(mutationsList => {
-    // 遍历每个DOM变化
-    mutationsList.forEach(mutation => {
-        // 检查变化类型是否为子节点添加
-        if (mutation.type === 'childList') {
-            // 获取class开头为"lang-"的code标签
-            const codeTags = document.querySelectorAll('code[class^="lang-"]');
-            // 遍历这些code标签，为每个标签添加复制按钮
-            codeTags.forEach(codeTag => {
-                // 检查是否已经添加了复制按钮
-                if (!codeTag.querySelector('button.copy-button')) {
-                    const parent_dom = codeTag.parentNode.parentNode;
-                    parent_dom.classList.add('relative');
-                    // 创建复制按钮元素
-                    const copyButton = document.createElement('button');
-                    copyButton.textContent = '复制';
-                    // 添加按钮样式
-                    copyButton.className = 'copy-button';
-                    // 添加鼠标移入事件
-                    parent_dom.addEventListener("mouseenter", () => {
-                        copyButton.classList.remove('fade-out');
-                        copyButton.classList.add('show-copy-button', 'fade-in');
-                    });
-                    // 添加鼠标移出事件
-                    parent_dom.addEventListener("mouseleave", () => {
-                        copyButton.classList.remove('fade-in');
-                        copyButton.classList.add('fade-out');
-                        copyButton.addEventListener('animationend', () => {
-                            if (copyButton.classList.contains('show-copy-button') && !copyButton.classList.contains('fade-in')) {
-                                copyButton.classList.remove('show-copy-button');
+const listenDomChange = () => {
+    // 创建MutationObserver实例
+    const observer = new MutationObserver(mutationsList => {
+        // 遍历每个DOM变化
+        mutationsList.forEach(mutation => {
+            // 检查变化类型是否为子节点添加
+            if (mutation.type === 'childList') {
+                // 获取class开头为"lang-"的code标签
+                const codeTags = document.querySelectorAll('code[class^="lang-"]');
+                // 遍历这些code标签，为每个标签添加复制按钮
+                codeTags.forEach(codeTag => {
+                    // 检查是否已经添加了复制按钮
+                    if (!codeTag.querySelector('button.copy-button-has-language') && !codeTag.querySelector('button.copy-button-no-language')) {
+                        const has_language = !codeTag.classList.contains('lang-') && codeTag.parentNode.classList.contains('hljs');
+                        const parent_dom = has_language ? codeTag?.parentNode?.parentNode : codeTag?.parentNode;
+                        if (parent_dom) {
+                            parent_dom.classList.add('relative');
+                            // 创建复制按钮元素
+                            const copyButton = document.createElement('button');
+                            copyButton.textContent = '复制';
+                            // 添加按钮样式
+                            if (has_language) {
+                                copyButton.className = 'copy-button-has-language';
+                            } else {
+                                copyButton.className = 'copy-button-no-language';
                             }
-                        }, { once: true });
-                    });
-                    // 添加点击事件
-                    copyButton.addEventListener('click', () => {
-                        // 复制code标签内容
-                        copyButton.textContent = '';
-                        const contentToCopy = codeTag.textContent;
-                        copyButton.textContent = '复制';
-                        Vue.prototype.copy(contentToCopy);
-                    });
-                    // 将按钮添加到code标签中
-                    codeTag.appendChild(copyButton);
-                }
-            });
-        }
+                            // 添加鼠标移入事件
+                            parent_dom.addEventListener("mouseenter", () => {
+                                copyButton.classList.remove('fade-out');
+                                copyButton.classList.add('show-copy-button', 'fade-in');
+                            });
+                            // 添加鼠标移出事件
+                            parent_dom.addEventListener("mouseleave", () => {
+                                copyButton.classList.remove('fade-in');
+                                copyButton.classList.add('fade-out');
+                                copyButton.addEventListener('animationend', () => {
+                                    if (copyButton.classList.contains('show-copy-button') && !copyButton.classList.contains('fade-in')) {
+                                        copyButton.classList.remove('show-copy-button');
+                                    }
+                                }, { once: true });
+                            });
+                            // 添加点击事件
+                            copyButton.addEventListener('click', () => {
+                                // 复制code标签内容
+                                copyButton.textContent = '';
+                                const contentToCopy = codeTag.textContent;
+                                copyButton.textContent = '复制';
+                                Vue.prototype.copy(contentToCopy);
+                            });
+                            // 将按钮添加到code标签中
+                            codeTag.appendChild(copyButton);
+                        }
+                    }
+                });
+            }
+        });
     });
-});
+    // 监听body元素的子节点变化
+    observer.observe(document.body, { childList: true, subtree: true });
+}
 
-// 监听body元素的子节点变化
-observer.observe(document.body, { childList: true, subtree: true });
+listenDomChange();
 
 // 拖拽
 Vue.directive('domDrag', {

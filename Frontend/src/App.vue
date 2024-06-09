@@ -457,7 +457,7 @@ pre {
   position: relative;
 }
 
-.copy-button {
+.copy-button-has-language {
   position: absolute;
   right: 0.78rem;
   top: 1.56rem;
@@ -470,6 +470,11 @@ pre {
   display: none;
   color: rgba(var(--ltpp-light-color), 1) !important;
   background-color: rgba(var(--ltpp-main-bk-color), 1) !important;
+}
+
+.copy-button-no-language {
+  &:extend(.copy-button-has-language);
+  top: 1.5rem;
 }
 
 .show-copy-button {
