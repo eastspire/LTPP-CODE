@@ -442,14 +442,15 @@ pre {
 }
 
 .comment-pre {
-  min-height: 2.97201rem !important;
   white-space: pre-wrap !important;
   overflow-wrap: break-word !important;
   margin-right: 1rem !important;
   background-color: transparent !important;
   color: var(--ltpp-box-text-color);
+  padding: 0.36rem 1rem !important;
   border: 1px solid
     rgba(var(--ltpp-light-color), var(--ltpp-center-box-bk-opacity)) !important;
+  &:extend(.can-select);
 }
 
 .relative {
