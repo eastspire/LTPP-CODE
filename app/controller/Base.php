@@ -1577,6 +1577,7 @@ class Base
             $path = Base::$LTPP_public_path . '/404.html';
             if (file_exists($path)) {
                 $not_found = file_get_contents($path);
+                $not_found = gzencode($not_found, Base::$gzip_num);
                 $redis23->set($key, $not_found);
             } else {
                 $not_found = gzencode($not_found, Base::$gzip_num);
