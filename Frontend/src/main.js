@@ -986,17 +986,21 @@ Vue.prototype.captureScreen = function () {
 }
 
 Vue.prototype.videoScreen = async function (is_no_need_save = true) {
-    const ipc_renderer_send = window.bridge?.send;
-    const ipc_renderer_on = window.bridge?.on;
+    const ipc_renderer_send = window.bridge?.sendListen;
+    const ipc_renderer_on = window.bridge?.onListen;
+    const ipc_renderer_has = window.bridge?.hasListen;
+    const listen_name = 'get_video_recording';
     if (is_no_need_save) {
-        if (!ipc_renderer_on || !ipc_renderer_send) {
+        if (!ipc_renderer_on || !ipc_renderer_send || !ipc_renderer_has) {
             ipc.startVideoScreen.call(this);
             return;
         }
-        ipc_renderer_on('get_video_recording', (event, source) => {
-            ipc.startVideoScreen.call(this, source);
-        });
-        ipc_renderer_send('get_video_recording');
+        if (!ipc_renderer_has(listen_name)) {
+            ipc_renderer_on(listen_name, (event, source) => {
+                ipc.startVideoScreen.call(this, source);
+            });
+        }
+        ipc_renderer_send(listen_name);
         return;
     }
     ipc.stopVideoScreen.call(this);
