@@ -24,12 +24,9 @@ import "../public/md/markdown/github-markdown.min.css";
 /* m3u8视频流 */
 import "../updateCompoents/video.js/dist/video-js.css"
 import VueWorker from 'vue-worker';
+import ipc from './plugins/ipc.js';
 
 const reader = new FileReader();
-const video_chunks = [];
-let screen_stream = null;
-let media_recorder = null;
-
 Vue.config.errorHandler = () => { }
 
 try {
@@ -926,6 +923,12 @@ Vue.prototype.openUrlUseATag = function (url) {
 Vue.prototype.captureScreen = function () {
     // 确保浏览器支持HTML5的屏幕捕获API
     if (!navigator.mediaDevices.getDisplayMedia) {
+        this.$msg({
+            type: "warning",
+            message: '系统检测到当前环境不支持截屏！',
+            duration: 1600,
+            offset: 80,
+        });
         return;
     }
 
@@ -978,91 +981,25 @@ Vue.prototype.captureScreen = function () {
                     ctx.clearRect(0, 0, canvas.width, canvas.height);
                 };
             };
-        }, err => {
+        }, (err) => {
         });
 }
 
 Vue.prototype.videoScreen = async function (is_no_need_save = true) {
-    // 确保浏览器支持HTML5的屏幕捕获API
-    if (!navigator.mediaDevices.getDisplayMedia) {
-        return;
-    }
-    const video_screen_id = 'video_screen';
-    // 定义视频流的约束条件，请求屏幕共享
-    const constraints = {
-        video: {
-            width: { ideal: screen.width }, // 原始分辨率
-            height: { ideal: screen.height },
-            frameRate: { ideal: 240 }, // 帧率
-            cursor: 'always',// 确保捕获鼠标指针
-        },
-        audio: true // 需要音频
-    };
-    const video = document.getElementById(video_screen_id) || document.createElement('video');
-    const save_error_msg = (is_force_show = false) => {
-        if (is_force_show || !video_chunks || !video_chunks?.length) {
-            this.$msg({
-                type: "warning",
-                message: '系统检测到录屏内容为空！请开启录屏后重试！',
-                duration: 1600,
-                offset: 80,
-            });
-            return true;
-        }
-        return false;
-    };
-
-    const save = () => {
-        if (save_error_msg()) {
+    const ipc_renderer_send = window.bridge?.send;
+    const ipc_renderer_on = window.bridge?.on;
+    if (is_no_need_save) {
+        if (!ipc_renderer_on || !ipc_renderer_send) {
+            ipc.startVideoScreen.call(this);
             return;
         }
-        const blob = new Blob(video_chunks, { type: 'video/webm' });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-        link.href = url;
-        link.download = `ltpp-screen-recording-${timestamp}.webm`;
-        // 模拟点击下载
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url); // 释放URL对象
-        video_chunks.length = 0;
-    };
-
-    if (!is_no_need_save) {
-        try {
-            if (screen_stream) {
-                screen_stream?.getTracks()?.forEach(track => track?.stop());
-                const video_element = document.getElementById(video_screen_id);
-                if (video_element) {
-                    video_element.srcObject = null;
-                }
-                screen_stream = null;
-            } else {
-                save_error_msg();
-            }
-        } catch (err) { }
+        ipc_renderer_on('get_video_recording', (event, source) => {
+            ipc.startVideoScreen.call(this, source);
+        });
+        ipc_renderer_send('get_video_recording');
         return;
     }
-
-    video.srcObject = screen_stream = await navigator.mediaDevices.getDisplayMedia(constraints).catch(err => { });
-
-    video.onloadedmetadata = () => {
-        video.play(); // 播放视频流
-        const options = { mimeType: 'video/webm; codecs=vp9' };
-        media_recorder = new MediaRecorder(screen_stream, options);
-        media_recorder.ondataavailable = (e) => {
-            if (e.data.size > 0) {
-                video_chunks.push(e.data);
-            }
-        };
-        media_recorder.onstop = () => {
-            save();
-        };
-        media_recorder.start(); // 开始录制
-    };
-
+    ipc.stopVideoScreen.call(this);
 }
 
 // 访问外部数据
