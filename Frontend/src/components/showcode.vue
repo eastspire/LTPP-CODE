@@ -33,20 +33,20 @@
   </div>
 </template>
 <script>
-import { monaco } from "../plugins/monacoEditor";
+import { monaco } from '../plugins/monacoEditor';
 let contentWidth = 0;
 let contentHeight = 0;
 let last_max_width = 0;
 let timer = null;
 
 export default {
-  name: "ShowCode",
+  name: 'ShowCode',
   props: {
     language: {
-      default: "cpp",
+      default: 'cpp',
     },
     code: {
-      default: "加载中",
+      default: '加载中',
     },
   },
   created() {
@@ -63,27 +63,27 @@ export default {
         theme: this.usertheme,
         fontSize: 18,
         tabSize: 4,
-        accessibilityHelpUrl: "",
+        accessibilityHelpUrl: '',
         smoothScrolling: true,
         links: true,
         folding: true,
         mouseWheelZoom: true,
         cursorSmoothCaretAnimation: true,
         contextmenu: false,
-        cursorBlinking: "smooth",
+        cursorBlinking: 'smooth',
         cursorWidth: 2,
         automaticLayout: false,
         readOnly: true,
         scrollbar: {
           verticalScrollbarSize: 0,
-          vertical: "hidden", // 垂直滚动条根据内容溢出自动显示
+          vertical: 'hidden', // 垂直滚动条根据内容溢出自动显示
           horizontalSliderSize: 8,
-          horizontal: "auto", // 水平滚动条根据内容溢出自动显示
+          horizontal: 'auto', // 水平滚动条根据内容溢出自动显示
           alwaysConsumeMouseWheel: false, // 滚动
         },
         scrollBeyondLastLine: false, // 最后一行多出一个屏幕高度
-        wordWrap: "off", // 溢出换行
-        wrappingStrategy: "advanced",
+        wordWrap: 'off', // 溢出换行
+        wrappingStrategy: 'advanced',
         minimap: {
           enabled: false, // 关闭预览栏
         },
@@ -97,7 +97,7 @@ export default {
           return;
         }
         this.updateHeight();
-      }, 100);
+      }, 360);
     } catch (err) {}
     if (this.editor) {
       this.onExit();
@@ -112,9 +112,9 @@ export default {
   },
   data() {
     return {
-      my_ide_id: "",
+      my_ide_id: '',
       editor: null,
-      usertheme: window.localStorage.getItem("theme") ?? "vs-dark",
+      usertheme: window.localStorage.getItem('theme') ?? 'vs-dark',
     };
   },
   methods: {
@@ -167,13 +167,13 @@ export default {
         !document.msFullscreenElement
       ) {
         if (element_dom.requestFullscreen) {
-          document.addEventListener("fullscreenchange", fn);
+          document.addEventListener('fullscreenchange', fn);
         } else if (element_dom.mozRequestFullScreen) {
-          document.addEventListener("mozfullscreenchange", fn);
+          document.addEventListener('mozfullscreenchange', fn);
         } else if (element_dom.webkitRequestFullscreen) {
-          document.addEventListener("webkitfullscreenchange", fn);
+          document.addEventListener('webkitfullscreenchange', fn);
         } else if (element_dom.msRequestFullscreen) {
-          document.addEventListener("msfullscreenchange", fn);
+          document.addEventListener('msfullscreenchange', fn);
         }
       }
     },

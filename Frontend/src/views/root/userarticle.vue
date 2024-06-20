@@ -1,6 +1,4 @@
-/* 
-    用户博客管理
- */
+/* 用户博客管理 */
 <template>
   <div
     @contextmenu.prevent=""
@@ -131,9 +129,9 @@
 </template>
 
 <script>
-import urlencode from "../../../updateCompoents/urlencode";
+import urlencode from '../../../updateCompoents/urlencode';
 export default {
-  name: "userarticle",
+  name: 'userarticle',
   activated() {
     this.disabledscroll = false;
     this.istobottom = false;
@@ -142,9 +140,9 @@ export default {
     this.search();
     this.scrolltimer = setInterval(() => {
       this.disabledscroll = false;
-    }, 600);
+    }, 360);
 
-    window.addEventListener("scroll", this.addlist);
+    window.addEventListener('scroll', this.addlist);
   },
   mounted() {
     // 切换页面时滚动条自动滚动到顶部
@@ -154,13 +152,13 @@ export default {
     this.tableData = [];
     clearInterval(this.scrolltimer);
     this.scrolltimer = null;
-    window.removeEventListener("scroll", this.addlist);
+    window.removeEventListener('scroll', this.addlist);
   },
   destroyed() {
     this.tableData = [];
     clearInterval(this.scrolltimer);
     this.scrolltimer = null;
-    window.removeEventListener("scroll", this.addlist);
+    window.removeEventListener('scroll', this.addlist);
   },
   methods: {
     initData() {
@@ -190,24 +188,24 @@ export default {
         this.scrolllock = true;
 
         const { data: res } = await this.$ajax({
-          method: "post",
+          method: 'post',
           url: this.issearch
-            ? "/Article/allArticleKeySearch"
-            : "/Article/loadAllArticleList",
+            ? '/Article/allArticleKeySearch'
+            : '/Article/loadAllArticleList',
           portType: {
-            process: "8792",
+            process: '8792',
           },
           data: {
             article_id: this.tableData.length > 0 ? this.tableData[0].id : 0,
             limit: this.limit,
-            do: "up",
+            do: 'up',
             key: this.key,
           },
         }).catch((t) => {
           this.disabledscroll = false;
           this.scrolllock = false;
           this.$msg({
-            type: "error",
+            type: 'error',
             message: t,
             duration: 1600,
             offset: 80,
@@ -239,17 +237,17 @@ export default {
           ? this.tableData[this.tableData.length - 1].id
           : 0;
       const { data: res } = await this.$ajax({
-        method: "post",
+        method: 'post',
         url: this.issearch
-          ? "/Article/allArticleKeySearch"
-          : "/Article/loadAllArticleList",
+          ? '/Article/allArticleKeySearch'
+          : '/Article/loadAllArticleList',
         portType: {
-          process: "8792",
+          process: '8792',
         },
         data: {
           article_id: article_id,
           limit: this.limit,
-          do: "down",
+          do: 'down',
           key: this.key,
         },
       }).catch((t) => {
@@ -257,7 +255,7 @@ export default {
         this.disabledscroll = false;
         this.scrolllock = false;
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -266,8 +264,8 @@ export default {
       if (res?.data.length <= 0) {
         this.istobottom = true;
         this.$msg({
-          type: "success",
-          message: "没有更多了！",
+          type: 'success',
+          message: '没有更多了！',
           duration: 1600,
           offset: 80,
         });
@@ -297,19 +295,19 @@ export default {
       this.scrolllock = true;
       this.initData();
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Article/loadAllArticleList",
+        method: 'post',
+        url: '/Article/loadAllArticleList',
         portType: {
-          process: "8792",
+          process: '8792',
         },
         data: {
-          article_id: "",
+          article_id: '',
           limit: this.limit,
-          do: "down",
+          do: 'down',
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -325,9 +323,9 @@ export default {
       id &&
         id != this.$SqsGlobal.loading_tips &&
         this.$router.push({
-          path: "/updateonearticle",
+          path: '/updateonearticle',
           query: {
-            path: urlencode(id, "gbk"),
+            path: urlencode(id, 'gbk'),
           },
         });
     },
@@ -340,20 +338,20 @@ export default {
       this.scrolllock = true;
       this.initData();
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Article/allArticleKeySearch",
+        method: 'post',
+        url: '/Article/allArticleKeySearch',
         portType: {
-          process: "8792",
+          process: '8792',
         },
         data: {
           key: this.key,
-          article_id: "",
+          article_id: '',
           limit: this.limit,
-          do: "down",
+          do: 'down',
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -365,7 +363,7 @@ export default {
     },
     search() {
       this.scrolllock = false;
-      if (this.key == "" || this.key == null || this.key == undefined) {
+      if (this.key == '' || this.key == null || this.key == undefined) {
         this.issearch = false;
         this.initData();
         this.getlist();
@@ -382,9 +380,9 @@ export default {
       limit: 18,
       scrolltimer: null,
       disabledscroll: false,
-      lastkey: "",
+      lastkey: '',
       issearch: false,
-      key: "",
+      key: '',
       tableData: [],
     };
   },

@@ -258,9 +258,9 @@
 </template>
 
 <script>
-import urlencode from "../../../updateCompoents/urlencode";
+import urlencode from '../../../updateCompoents/urlencode';
 export default {
-  name: "user",
+  name: 'user',
   activated() {
     this.searchuser();
   },
@@ -273,9 +273,9 @@ export default {
   },
   data() {
     return {
-      lastkey: "",
+      lastkey: '',
       showone: false,
-      key: "",
+      key: '',
       issearch: false,
       tableData: [],
       userdata: [],
@@ -298,10 +298,10 @@ export default {
     async looklist() {
       this.initData();
       const { data: res } = await this.$ajax({
-        url: "/User/userList",
-        method: "post",
+        url: '/User/userList',
+        method: 'post',
         portType: {
-          process: "8793",
+          process: '8793',
         },
         data: {
           page: this.page,
@@ -309,7 +309,7 @@ export default {
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -322,7 +322,7 @@ export default {
       }
       if (!this.showone) {
         this.$msg({
-          type: "success",
+          type: 'success',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -362,10 +362,10 @@ export default {
       this.issearch = true;
       this.lastkey = this.key;
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/User/findUser",
+        method: 'post',
+        url: '/User/findUser',
         portType: {
-          process: "8793",
+          process: '8793',
         },
         data: {
           key: this.key,
@@ -374,7 +374,7 @@ export default {
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -387,7 +387,7 @@ export default {
       }
       if (!this.showone) {
         this.$msg({
-          type: "success",
+          type: 'success',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -398,17 +398,17 @@ export default {
 
     async passdata(id) {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/User/lookUserData",
+        method: 'post',
+        url: '/User/lookUserData',
         portType: {
-          process: "8793",
+          process: '8793',
         },
         data: {
           user_id: id,
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -419,17 +419,17 @@ export default {
 
     async followuser() {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/User/addFollow",
+        method: 'post',
+        url: '/User/addFollow',
         portType: {
-          process: "8793",
+          process: '8793',
         },
         data: {
           follow_id: this.userdata.id,
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -438,14 +438,14 @@ export default {
       if (res?.code == 1) {
         this.passdata(this.userdata.id);
         this.$msg({
-          type: "success",
+          type: 'success',
           message: res?.msg,
           duration: 600,
           offset: 80,
         });
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 800,
           offset: 80,
@@ -456,18 +456,18 @@ export default {
       id &&
         id != this.$SqsGlobal.loading_tips &&
         this.$router.push({
-          path: "/userpage",
+          path: '/userpage',
           query: {
-            path: urlencode(id, "gbk"),
+            path: urlencode(id, 'gbk'),
           },
         });
     },
     async loadimage() {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Image/getImage",
+        method: 'post',
+        url: '/Image/getImage',
         portType: {
-          process: "8793",
+          process: '8793',
         },
         data: {
           page: this.page,
@@ -475,7 +475,7 @@ export default {
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,

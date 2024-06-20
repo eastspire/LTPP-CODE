@@ -206,7 +206,7 @@ const question_list_data = {
     "time": loading_tips,
     "answer_num": 0,
     "writer": loading_tips,
-    "headimage": "https://ltpp.vip/logo.png"
+    "headimage": "/logo.png"
 };
 const monitor_list_data = {
     "id": "",
@@ -312,7 +312,7 @@ const user_list_data =
     lastlogin: loading_tips,
     sex: loading_tips,
     email: loading_tips,
-    headimage: 'https://ltpp.vip/logo.png',
+    headimage: '/logo.png',
     fans: loading_tips,
     follow: loading_tips,
     online: loading_tips,

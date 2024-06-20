@@ -15,8 +15,8 @@
             >
               {{
                 userdata.name == undefined
-                  ? "加载中"
-                  : "「 " + userdata.name + " 」的主页"
+                  ? '加载中'
+                  : '「 ' + userdata.name + ' 」的主页'
               }}
             </p>
             <div style="text-align: right; margin: 0.36rem 2rem">
@@ -68,7 +68,7 @@
                 style="font-size: 1.06rem; font-weight: bold"
                 >{{
                   userdata.name == undefined
-                    ? "加载中"
+                    ? '加载中'
                     : String(userdata.name).substr(0, 10)
                 }}</el-tag
               >
@@ -92,7 +92,7 @@
                 style="font-size: 1.06rem; font-weight: bold"
                 >{{
                   userdata.email == undefined
-                    ? "无"
+                    ? '无'
                     : String(userdata.email).substr(0, 20)
                 }}</el-tag
               >
@@ -114,7 +114,7 @@
                 effect="dark"
                 style="font-size: 1.06rem; font-weight: bold"
                 >{{
-                  userdata.name == undefined ? "未知" : userdata.sex
+                  userdata.name == undefined ? '未知' : userdata.sex
                 }}</el-tag
               >
             </div>
@@ -136,7 +136,7 @@
                 effect="dark"
                 type="danger"
                 style="font-size: 1.06rem; font-weight: bold"
-                >{{ userdata.name == undefined ? "未知" : "在线" }}</el-tag
+                >{{ userdata.name == undefined ? '未知' : '在线' }}</el-tag
               >
               <el-tag
                 class="pulse-enter-active"
@@ -144,7 +144,7 @@
                 effect="dark"
                 type="info"
                 style="font-size: 1.06rem; font-weight: bold"
-                >{{ userdata.name == undefined ? "未知" : "离线" }}</el-tag
+                >{{ userdata.name == undefined ? '未知' : '离线' }}</el-tag
               >
             </div>
 
@@ -165,7 +165,7 @@
                 type="warning"
                 style="font-size: 1.06rem; font-weight: bold"
                 >{{
-                  userdata.name == undefined ? "未知" : userdata.fans
+                  userdata.name == undefined ? '未知' : userdata.fans
                 }}</el-tag
               >
             </div>
@@ -187,7 +187,7 @@
                 type="warning"
                 style="font-size: 1.06rem; font-weight: bold"
                 >{{
-                  userdata.name == undefined ? "未知" : userdata.follow
+                  userdata.name == undefined ? '未知' : userdata.follow
                 }}</el-tag
               >
             </div>
@@ -209,7 +209,7 @@
                 type="danger"
                 style="font-size: 1.06rem; font-weight: bold"
                 >{{
-                  userdata.name == undefined ? "未知" : userdata.acnum
+                  userdata.name == undefined ? '未知' : userdata.acnum
                 }}</el-tag
               >
             </div>
@@ -230,7 +230,7 @@
                 effect="dark"
                 style="font-size: 1.06rem; font-weight: bold"
                 >{{
-                  userdata.name == undefined ? "未知" : userdata.registertime
+                  userdata.name == undefined ? '未知' : userdata.registertime
                 }}</el-tag
               >
             </div>
@@ -252,7 +252,7 @@
                 type="danger"
                 style="font-size: 1.06rem; font-weight: bold"
                 >{{
-                  userdata.name == undefined ? "未知" : userdata.lastlogin
+                  userdata.name == undefined ? '未知' : userdata.lastlogin
                 }}</el-tag
               >
             </div>
@@ -288,7 +288,7 @@
                 margin-bottom: 1rem;
               "
               >{{
-                tem.problemName == undefined ? "未知" : tem.problemName
+                tem.problemName == undefined ? '未知' : tem.problemName
               }}</el-tag
             >
           </div>
@@ -483,7 +483,7 @@
                         {{
                           temtable.article
                             .substr(0, 160)
-                            .replace($store.state.html_reg, "")
+                            .replace($store.state.html_reg, '')
                             .substr(0, 40)
                         }}[...]
                       </p>
@@ -542,12 +542,12 @@
 </template>
 
 <script>
-import urlencode from "../../../updateCompoents/urlencode";
-import "../../../public/md/markdown/github-markdown.min.css";
-import "../../../public/md/css/index.css";
+import urlencode from '../../../updateCompoents/urlencode';
+import '../../../public/md/markdown/github-markdown.min.css';
+import '../../../public/md/css/index.css';
 
 export default {
-  name: "userpage",
+  name: 'userpage',
   created() {
     this.isseetip = true;
     this.showfoot = false;
@@ -565,7 +565,7 @@ export default {
       this.$router.go(-1);
       return;
     }
-    this.userid = urlencode.decode(this.$route.query.path, "gbk");
+    this.userid = urlencode.decode(this.$route.query.path, 'gbk');
     this.userarticle = [];
     this.page = 1;
     this.lookuseraclist();
@@ -578,16 +578,16 @@ export default {
     this.judgefollow();
     this.lookdata();
     this.isseetip = true;
-    window.addEventListener("scroll", this.scrollBottom);
+    window.addEventListener('scroll', this.scrollBottom);
     this.timer = setInterval(() => {
       this.timeclock = false;
-    }, 600);
+    }, 360);
   },
   deactivated() {
     this.isseetip = false;
     clearInterval(this.timer);
     this.timer = null;
-    window.removeEventListener("scroll", this.scrollBottom);
+    window.removeEventListener('scroll', this.scrollBottom);
   },
   destroyed() {
     this.isseetip = false;
@@ -595,25 +595,25 @@ export default {
     this.page = 1;
     clearInterval(this.timer);
     this.timer = null;
-    window.addEventListener("scroll", this.scrollBottom);
+    window.addEventListener('scroll', this.scrollBottom);
   },
 
   computed: {
     prop() {
       let data = {
         subfield: false, // 单双栏模式
-        defaultOpen: "preview", //edit： 默认展示编辑区域 ， preview： 默认展示预览区域
+        defaultOpen: 'preview', //edit： 默认展示编辑区域 ， preview： 默认展示预览区域
         editable: false,
         toolbarsFlag: false, //工具栏
         scrollStyle: true,
-        codeStyle: "atom-one-dark",
+        codeStyle: 'atom-one-dark',
         boxShadow: false,
         ishljs: true,
         tabSize: 4,
-        toolbarsBackground: "rgba(0,0,0,0)",
-        editorBackground: "rgba(0,0,0,0)",
-        previewBackground: "rgba(0,0,0,0)",
-        fontSize: "1.06rem",
+        toolbarsBackground: 'rgba(0,0,0,0)',
+        editorBackground: 'rgba(0,0,0,0)',
+        previewBackground: 'rgba(0,0,0,0)',
+        fontSize: '1.06rem',
         navigation: false,
       };
       return data;
@@ -637,11 +637,11 @@ export default {
       externalLink: {
         markdown_css: false,
         // 默认public文件夹下
-        hljs_js: () => "md/highlightjs/highlight.min.js",
-        hljs_css: (css) => "md/highlightjs/styles/" + css + ".min.css",
-        hljs_lang: (lang) => "md/highlightjs/languages/" + lang + ".min.js",
-        katex_css: () => "md/katex/katex.min.css",
-        katex_js: () => "md/katex/katex.min.js",
+        hljs_js: () => 'md/highlightjs/highlight.min.js',
+        hljs_css: (css) => 'md/highlightjs/styles/' + css + '.min.css',
+        hljs_lang: (lang) => 'md/highlightjs/languages/' + lang + '.min.js',
+        katex_css: () => 'md/katex/katex.min.css',
+        katex_js: () => 'md/katex/katex.min.js',
       },
       /* context:  */
       toolbars: {
@@ -673,26 +673,26 @@ export default {
   methods: {
     toonepro(id) {
       this.$router.push({
-        path: "/oneproblem",
+        path: '/oneproblem',
         query: {
-          path: urlencode(id, "gbk"),
-          contest: urlencode("", "gbk"),
+          path: urlencode(id, 'gbk'),
+          contest: urlencode('', 'gbk'),
         },
       });
     },
     async lookuseraclist() {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/User/lookUserAcList",
+        method: 'post',
+        url: '/User/lookUserAcList',
         portType: {
-          process: "8793",
+          process: '8793',
         },
         data: {
           user_id: this.userid,
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -730,26 +730,26 @@ export default {
       id &&
         id != this.$SqsGlobal.loading_tips &&
         this.$router.push({
-          path: "/onearticle",
+          path: '/onearticle',
           query: {
-            path: urlencode(id, "gbk"),
+            path: urlencode(id, 'gbk'),
           },
         });
     },
     async deletefollowuser() {
       this.canclick = false;
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/User/deleteFollow",
+        method: 'post',
+        url: '/User/deleteFollow',
         portType: {
-          process: "8793",
+          process: '8793',
         },
         data: {
           delete_id: this.userid,
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -761,14 +761,14 @@ export default {
           this.userdata.follow = Math.max(0, --this.userdata.follow);
         }
         this.$msg({
-          type: "success",
+          type: 'success',
           message: res?.msg,
           duration: 600,
           offset: 80,
         });
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 800,
           offset: 80,
@@ -779,17 +779,17 @@ export default {
     },
     async addUserChat() {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Chat/addUserChat",
+        method: 'post',
+        url: '/Chat/addUserChat',
         portType: {
-          process: "8793",
+          process: '8793',
         },
         data: {
           user_id: this.userid,
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -799,14 +799,14 @@ export default {
         this.userid &&
           this.userid != this.$SqsGlobal.loading_tips &&
           this.$router.push({
-            path: "/chat",
+            path: '/chat',
             query: {
-              path: urlencode(this.userdata?.name, "gbk"),
+              path: urlencode(this.userdata?.name, 'gbk'),
             },
           });
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 800,
           offset: 80,
@@ -815,17 +815,17 @@ export default {
     },
     async lookdata() {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/User/lookUserData",
+        method: 'post',
+        url: '/User/lookUserData',
         portType: {
-          process: "8793",
+          process: '8793',
         },
         data: {
           user_id: this.userid,
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -834,8 +834,8 @@ export default {
       this.userdata = res?.data;
       if (res?.code != 1) {
         this.$msg({
-          type: "success",
-          message: "即将返回！",
+          type: 'success',
+          message: '即将返回！',
           duration: 1600,
           offset: 80,
         });
@@ -844,17 +844,17 @@ export default {
     },
     async judgefollow() {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/User/JudgeIsFollow",
+        method: 'post',
+        url: '/User/JudgeIsFollow',
         portType: {
-          process: "8793",
+          process: '8793',
         },
         data: {
           user_id: this.userid,
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -869,10 +869,10 @@ export default {
     },
     async lookarticle() {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Article/loadUserHomeArticle",
+        method: 'post',
+        url: '/Article/loadUserHomeArticle',
         portType: {
-          process: "8792",
+          process: '8792',
         },
         data: {
           user_id: this.userid,
@@ -883,7 +883,7 @@ export default {
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -900,17 +900,17 @@ export default {
     async followuser() {
       this.canclick = false;
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/User/addFollow",
+        method: 'post',
+        url: '/User/addFollow',
         portType: {
-          process: "8793",
+          process: '8793',
         },
         data: {
           follow_id: this.userid,
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -922,14 +922,14 @@ export default {
           this.userdata.follow = Math.max(0, ++this.userdata.follow);
         }
         this.$msg({
-          type: "success",
+          type: 'success',
           message: res?.msg,
           duration: 600,
           offset: 80,
         });
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 600,
           offset: 80,
@@ -942,9 +942,8 @@ export default {
 };
 </script>
 
-
-<style  lang="less" scoped>
-@import "../../../public/md/markdown/github-markdown.min.css";
+<style lang="less" scoped>
+@import '../../../public/md/markdown/github-markdown.min.css';
 
 .clear {
   clear: both;

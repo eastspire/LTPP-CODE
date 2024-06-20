@@ -1,6 +1,4 @@
-/* 
-在线课堂
- */
+/* 在线课堂 */
 <template>
   <div
     @contextmenu.prevent=""
@@ -95,17 +93,17 @@
 </template>
 
 <script>
-import DPlayer from "../../../updateCompoents/dplayer";
+import DPlayer from '../../../updateCompoents/dplayer';
 export default {
-  name: "classteach",
+  name: 'classteach',
   data() {
     return {
       timer: null,
       socketurl: window?.location?.href,
-      name: "",
+      name: '',
       finish: 0,
       isroot: false,
-      mymessage: "",
+      mymessage: '',
       messagedata: [],
       dplayer: null,
       classurl: window?.location?.href,
@@ -113,7 +111,7 @@ export default {
     };
   },
   async activated() {
-    this.classurl = window.sessionStorage.getItem("classurl");
+    this.classurl = window.sessionStorage.getItem('classurl');
     if (!this.classurl) {
       this.getclassurl();
     }
@@ -127,28 +125,28 @@ export default {
         /* 只挂载一次 */
         try {
           this.dplayer = new DPlayer({
-            container: document.getElementById("dplayer"),
+            container: document.getElementById('dplayer'),
             live: true, //是否直播
             autoplay: false, //是否自动播放
-            lang: "zh-cn", //设置中文
+            lang: 'zh-cn', //设置中文
             video: {
               url: this.classurl,
-              type: "hls", //这一步必须要写，播放直播流
+              type: 'hls', //这一步必须要写，播放直播流
             },
           });
         } catch (err) {}
         clearInterval(this.timer);
         this.timer = null;
       }
-    }, 500);
-    this.socketurl = window.sessionStorage.getItem("socketurl");
+    }, 360);
+    this.socketurl = window.sessionStorage.getItem('socketurl');
     await this.getname();
-    let authorization = window.localStorage.getItem("authorization");
-    let key = window.localStorage.getItem("key");
+    let authorization = window.localStorage.getItem('authorization');
+    let key = window.localStorage.getItem('key');
     if (authorization && key && this.$store.state.login) {
       this.websocket = new WebSocket(
         this.socketurl +
-          "?" +
+          '?' +
           authorization +
           this.$SqsGlobal.websocket_connect_str +
           key
@@ -171,14 +169,14 @@ export default {
   methods: {
     async getname() {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/User/getMyName",
+        method: 'post',
+        url: '/User/getMyName',
         portType: {
-          process: "8792",
+          process: '8792',
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -187,7 +185,7 @@ export default {
       if (res?.code == 1) {
         this.name = res.name;
       } else {
-        this.name = "未知用户";
+        this.name = '未知用户';
       }
     },
     setup() {
@@ -196,8 +194,8 @@ export default {
       //Listen for the connection open event then call the sendMessage function
       this.websocket.onopen = function (e) {
         func_this.$msg({
-          type: "success",
-          message: "您已进入课堂",
+          type: 'success',
+          message: '您已进入课堂',
           duration: 1600,
           offset: 80,
         });
@@ -205,8 +203,8 @@ export default {
       //Listen for the close connection event
       this.websocket.onclose = function (e) {
         func_this.$msg({
-          type: "success",
-          message: "您已退出课堂",
+          type: 'success',
+          message: '您已退出课堂',
           duration: 1600,
           offset: 80,
         });
@@ -214,56 +212,56 @@ export default {
       //Listen for connection errors
       this.websocket.onerror = function (e) {
         func_this.$msg({
-          type: "error",
-          message: "课堂聊天服务器连接错误",
+          type: 'error',
+          message: '课堂聊天服务器连接错误',
           duration: 1600,
           offset: 80,
         });
       };
       //Listen for new messages arriving at the client
       this.websocket.onmessage = function (e) {
-        temdata = eval("(" + e.data + ")");
-        if (temdata.msgtype && temdata.msgtype == "class") {
+        temdata = eval('(' + e.data + ')');
+        if (temdata.msgtype && temdata.msgtype == 'class') {
           func_this.messagedata.push(temdata);
         }
       };
     },
     postmessage() {
       let t1 = this.mymessage;
-      let value1 = t1.replace(/\s+/g, "");
-      if (value1 == "") {
+      let value1 = t1.replace(/\s+/g, '');
+      if (value1 == '') {
         this.$msg({
-          type: "error",
-          message: "评论不能为空",
+          type: 'error',
+          message: '评论不能为空',
           duration: 800,
           offset: 80,
         });
         return;
       }
       let msg = JSON.stringify({
-        msgtype: "class",
+        msgtype: 'class',
         msg: this.mymessage,
       });
       this.websocket.send(msg);
-      this.mymessage = "";
+      this.mymessage = '';
       this.$msg({
-        type: "success",
-        message: "发言成功",
+        type: 'success',
+        message: '发言成功',
         duration: 800,
         offset: 80,
       });
     },
     async getclassurl() {
       const { data: res } = await this.$ajax({
-        method: "get",
-        url: "/Url/getClassUrl",
+        method: 'get',
+        url: '/Url/getClassUrl',
         portType: {
-          process: "8797",
+          process: '8797',
         },
       }).catch((t) => {
         this.finish = 1;
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -272,10 +270,10 @@ export default {
       this.finish = 1;
       if (res?.code == 1) {
         this.classurl = res?.data;
-        window.sessionStorage.setItem("classurl", res?.data);
+        window.sessionStorage.setItem('classurl', res?.data);
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 800,
           offset: 80,

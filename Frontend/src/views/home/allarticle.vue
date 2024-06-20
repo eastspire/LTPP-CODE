@@ -1,7 +1,4 @@
-/*
-所有文章路由
-
-*/
+/* 所有文章路由 */
 
 <template>
   <div
@@ -59,6 +56,7 @@
                     <!-- img才生效图片裁剪适应，el-image不生效 -->
                     <img
                       v-if="temtable.image && reg.test(temtable.image)"
+                      onerror="/logo.png"
                       class="animate"
                       style="width: 100%; height: 100%; object-fit: cover"
                       title=""
@@ -116,7 +114,7 @@
                         <p
                           style="
                             font-size: 1rem;
-                            height: 2.5rem;
+                            height: 3.6rem;
                             overflow: hidden;
                             text-align: left;
                           "
@@ -124,7 +122,7 @@
                           {{
                             temtable.article
                               .substr(0, 160)
-                              .replace($store.state.html_reg, "")
+                              .replace($store.state.html_reg, '')
                               .substr(0, 40)
                           }}[...]
                         </p>
@@ -172,31 +170,31 @@
 </template>
 
 <script>
-import urlencode from "../../../updateCompoents/urlencode";
+import urlencode from '../../../updateCompoents/urlencode';
 export default {
-  name: "allarticle",
+  name: 'allarticle',
   async activated() {
     this.isseetip = true;
     this.istobottom = false;
     this.disabledscroll = false;
     this.scrolltimer = setInterval(() => {
       this.disabledscroll = false;
-    }, 600);
-    window.addEventListener("scroll", this.addlist);
+    }, 360);
+    window.addEventListener('scroll', this.addlist);
   },
   deactivated() {
     this.disabledscroll = true;
     this.isseetip = false;
     clearInterval(this.scrolltimer);
     this.scrolltimer = null;
-    window.removeEventListener("scroll", this.addlist);
+    window.removeEventListener('scroll', this.addlist);
   },
   destroyed() {
     this.disabledscroll = true;
     this.isseetip = false;
     clearInterval(this.scrolltimer);
     this.scrolltimer = null;
-    window.removeEventListener("scroll", this.addlist);
+    window.removeEventListener('scroll', this.addlist);
   },
   async created() {
     this.isseetip = true;
@@ -221,11 +219,11 @@ export default {
     },
     tableRowClassName({ row, rowIndex }) {
       if (rowIndex === 1) {
-        return "warning-row";
+        return 'warning-row';
       } else if (rowIndex === 3) {
-        return "success-row";
+        return 'success-row';
       }
-      return "";
+      return '';
     },
 
     async keysearch() {
@@ -235,20 +233,20 @@ export default {
       this.lastkey = this.key;
       this.scrolllock = true;
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Article/allArticleKeySearch",
+        method: 'post',
+        url: '/Article/allArticleKeySearch',
         portType: {
-          process: "8792",
+          process: '8792',
         },
         data: {
           key: this.key,
           article_id: 0,
           limit: this.limit,
-          do: "down",
+          do: 'down',
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -262,7 +260,7 @@ export default {
     search() {
       this.initData();
       this.scrolllock = false;
-      if (this.key == "" || this.key == null || this.key == undefined) {
+      if (this.key == '' || this.key == null || this.key == undefined) {
         this.issearch = false;
         this.getlist();
         return;
@@ -290,24 +288,24 @@ export default {
         this.scrolllock = true;
 
         const { data: res } = await this.$ajax({
-          method: "post",
+          method: 'post',
           url: this.issearch
-            ? "/Article/allArticleKeySearch"
-            : "/Article/loadAllArticleList",
+            ? '/Article/allArticleKeySearch'
+            : '/Article/loadAllArticleList',
           portType: {
-            process: "8792",
+            process: '8792',
           },
           data: {
             article_id: this.tableData.length > 0 ? this.tableData[0].id : 0,
             limit: this.limit,
-            do: "up",
+            do: 'up',
             key: this.key,
           },
         }).catch((t) => {
           this.disabledscroll = false;
           this.scrolllock = false;
           this.$msg({
-            type: "error",
+            type: 'error',
             message: t,
             duration: 1600,
             offset: 80,
@@ -336,12 +334,12 @@ export default {
       this.disabledscroll = true;
 
       const { data: res } = await this.$ajax({
-        method: "post",
+        method: 'post',
         url: this.issearch
-          ? "/Article/allArticleKeySearch"
-          : "/Article/loadAllArticleList",
+          ? '/Article/allArticleKeySearch'
+          : '/Article/loadAllArticleList',
         portType: {
-          process: "8792",
+          process: '8792',
         },
         data: {
           article_id:
@@ -349,14 +347,14 @@ export default {
               ? this.tableData[this.tableData.length - 1].id
               : 0,
           limit: this.limit,
-          do: "down",
+          do: 'down',
           key: this.key,
         },
       }).catch((t) => {
         this.disabledscroll = false;
         this.scrolllock = false;
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -365,8 +363,8 @@ export default {
       if (res?.data.length <= 0) {
         this.istobottom = true;
         this.$msg({
-          type: "success",
-          message: "没有更多了！",
+          type: 'success',
+          message: '没有更多了！',
           duration: 1600,
           offset: 80,
         });
@@ -395,21 +393,21 @@ export default {
       }
       this.scrolllock = true;
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Article/loadAllArticleList",
+        method: 'post',
+        url: '/Article/loadAllArticleList',
         portType: {
-          process: "8792",
+          process: '8792',
         },
         data: {
           article_id: 0,
           limit: this.limit,
-          do: "down",
+          do: 'down',
         },
       }).catch((t) => {
         this.disabledscroll = false;
         this.scrolllock = false;
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -422,9 +420,9 @@ export default {
       id &&
         id != this.$SqsGlobal.loading_tips &&
         this.$router.push({
-          path: "/onearticle",
+          path: '/onearticle',
           query: {
-            path: urlencode(id, "gbk"),
+            path: urlencode(id, 'gbk'),
           },
         });
     },
@@ -437,11 +435,11 @@ export default {
       limit: 18,
       scrolltimer: null,
       disabledscroll: false,
-      lastkey: "",
+      lastkey: '',
       isseetip: true,
       daymonth: new Date(),
       issearch: false,
-      key: "",
+      key: '',
       tableData: [],
     };
   },

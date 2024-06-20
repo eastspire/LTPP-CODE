@@ -63,7 +63,7 @@
                 "
               >
                 <img
-                  onerror="https://ltpp.vip/logo.png"
+                  onerror="/logo.png"
                   v-if="temtable.image && reg.test(temtable.image)"
                   class="animate"
                   style="

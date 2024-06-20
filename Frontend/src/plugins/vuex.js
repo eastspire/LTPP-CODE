@@ -81,7 +81,7 @@ timer = setTimeout(function () {
 }, 0);
 
 const mutations = {
-    updateObj(state, obj) {
+    updateObj (state, obj) {
         let key = Object.keys(obj)[0];
         let value = Object.values(obj)[0];
         if (key != 'default_backend_network_url') {
@@ -97,7 +97,7 @@ const mutations = {
             }
         }
     },
-    reset(state) {
+    reset (state) {
         for (const key in state) {
             if (Object.hasOwnProperty.call(state, key)) {
                 if (key != 'default_backend_network_url' &&

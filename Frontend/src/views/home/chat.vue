@@ -54,8 +54,15 @@
                 fit="cover"
                 style="height: 3.4rem; width: 3.4rem"
                 :src="tem.headimage"
-                lazy
               >
+                <div slot="error" class="image-slot">
+                  <img
+                    style="width: 100%; height: 100%; object-fit: cover"
+                    title=""
+                    alt=""
+                    src="/logo.png"
+                  />
+                </div>
               </el-image>
 
               <span

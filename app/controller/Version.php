@@ -20,7 +20,7 @@ class Version
      * 软件版本
      * @var string $version 软件版本
      */
-    static $version = '2.8.1';
+    static $version = '2.8.2';
 
     /**
      * 获取版本

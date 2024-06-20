@@ -44,7 +44,7 @@ export default {
   name: 'LTPP',
   data() {
     return {
-      version: '2.8.1',
+      version: '2.8.2',
       get_version_lock: false,
     };
   },
@@ -470,6 +470,7 @@ pre {
   display: none;
   color: rgba(var(--ltpp-light-color), 1) !important;
   background-color: rgba(var(--ltpp-main-bk-color), 1) !important;
+  &:extend(.no-select);
 }
 
 .copy-button-no-language {

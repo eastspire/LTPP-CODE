@@ -337,7 +337,7 @@ export default {
             return;
           }
           this.updateHeight();
-        }, 100);
+        }, 360);
       } catch (err) {}
     }
   },

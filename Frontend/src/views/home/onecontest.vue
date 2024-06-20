@@ -133,7 +133,7 @@
                       font-size: 1.06rem;
                       cursor: pointer;
                     "
-                    >P{{ index + 1 + "：" + tem.problemName }}</el-tag
+                    >P{{ index + 1 + '：' + tem.problemName }}</el-tag
                   >
                 </el-tooltip>
 
@@ -155,7 +155,7 @@
                       font-size: 1.06rem;
                       cursor: pointer;
                     "
-                    >P{{ index + 1 + "：" + tem.problemName }}</el-tag
+                    >P{{ index + 1 + '：' + tem.problemName }}</el-tag
                   >
                 </el-tooltip>
               </div>
@@ -462,14 +462,14 @@
                   >
                     {{
                       Math.floor(scope.row.totaltime / 3600) +
-                      ":" +
+                      ':' +
                       Math.floor(
                         Math.floor(
                           scope.row.totaltime -
                             Math.floor(scope.row.totaltime / 3600) * 3600
                         ) / 60
                       ) +
-                      ":" +
+                      ':' +
                       Math.floor(scope.row.totaltime % 60)
                     }}
                   </span>
@@ -493,7 +493,7 @@
                     class="my-span"
                     @click="toonepro(tempro.problemid)"
                     style="color: deeppink; cursor: pointer"
-                    >{{ "P" + (index + 1) }}</span
+                    >{{ 'P' + (index + 1) }}</span
                   >
                 </el-tooltip>
               </template>
@@ -511,8 +511,8 @@
                   >
                     {{
                       scope.row.res[index].waNum == 0
-                        ? "✔"
-                        : "-" + scope.row.res[index].waNum
+                        ? '✔'
+                        : '-' + scope.row.res[index].waNum
                     }}
                   </span>
                   <span
@@ -523,7 +523,7 @@
                       scope.row.res[index].waNum != 0
                     "
                   >
-                    {{ "-" + scope.row.res[index].waNum }}
+                    {{ '-' + scope.row.res[index].waNum }}
                   </span>
 
                   <br v-show="scope.row.res[index].firstAcTime != -1" />
@@ -646,15 +646,15 @@
                 >
                   距离竞赛开始还有：{{
                     Math.floor((begin - nowtime) / 1000 / 3600) +
-                    " 小时 " +
+                    ' 小时 ' +
                     Math.floor(
                       (Math.floor((begin - nowtime) / 1000) -
                         Math.floor((begin - nowtime) / 1000 / 3600) * 3600) /
                         60
                     ) +
-                    " 分钟 " +
+                    ' 分钟 ' +
                     (Math.floor((begin - nowtime) / 1000) % 60) +
-                    " 秒 "
+                    ' 秒 '
                   }}
                 </div>
                 <div
@@ -667,7 +667,7 @@
                 >
                   距离竞赛结束还有：{{
                     Math.floor((end - nowtime) / 1000 / 3600).toFixed(0) +
-                    " 小时 " +
+                    ' 小时 ' +
                     Math.floor(
                       (Math.floor(end - nowtime) / 1000 -
                         Math.floor(
@@ -675,9 +675,9 @@
                         )) /
                         60
                     ) +
-                    " 分钟 " +
+                    ' 分钟 ' +
                     (Math.floor((end - nowtime) / 1000) % 60) +
-                    " 秒 "
+                    ' 秒 '
                   }}
                 </div>
               </span>
@@ -841,14 +841,14 @@
 </template>
 
 <script>
-import echarts from "../../../public/static/echarts.min.js";
-import urlencode from "../../../updateCompoents/urlencode";
-import "../../../public/md/markdown/github-markdown.min.css";
-import ShowCode from "../../components/showcode.vue";
-import "../../../public/md/markdown/github-markdown.min.css";
+import echarts from '../../../public/static/echarts.min.js';
+import urlencode from '../../../updateCompoents/urlencode';
+import '../../../public/md/markdown/github-markdown.min.css';
+import ShowCode from '../../components/showcode.vue';
+import '../../../public/md/markdown/github-markdown.min.css';
 
 export default {
-  name: "onecontest",
+  name: 'onecontest',
   components: {
     ShowCode,
   },
@@ -862,7 +862,7 @@ export default {
     this.show_code_check_similarity = true;
     this.showone_join_msg = false;
     this.isseepassword = false;
-    this.password = "";
+    this.password = '';
     if (
       !(
         this.$route &&
@@ -878,7 +878,7 @@ export default {
     this.limit = 20;
     this.page = 1;
     this.isseetip = true;
-    this.contestid = urlencode.decode(this.$route.query.path, "gbk");
+    this.contestid = urlencode.decode(this.$route.query.path, 'gbk');
     this.isseecode = false;
     this.isacm = false;
     this.isoi = false;
@@ -947,7 +947,7 @@ export default {
   },
   data() {
     return {
-      password: "",
+      password: '',
       isseepassword: false,
       echarts_finish: false,
       rank_lock: false,
@@ -967,20 +967,20 @@ export default {
       isseetip: true,
       canclick: true,
       isseecode: false,
-      codelanguage: "cpp",
-      code: "",
+      codelanguage: 'cpp',
+      code: '',
       xss_options: this.$SqsGlobal.xss_options,
       stripIgnoreTagBody: this.$SqsGlobal.strip_ignore_tag_body,
       externalLink: {
         markdown_css: false,
         // 默认public文件夹下
-        hljs_js: () => "md/highlightjs/highlight.min.js",
-        hljs_css: (css) => "md/highlightjs/styles/" + css + ".min.css",
-        hljs_lang: (lang) => "md/highlightjs/languages/" + lang + ".min.js",
-        katex_css: () => "md/katex/katex.min.css",
-        katex_js: () => "md/katex/katex.min.js",
+        hljs_js: () => 'md/highlightjs/highlight.min.js',
+        hljs_css: (css) => 'md/highlightjs/styles/' + css + '.min.css',
+        hljs_lang: (lang) => 'md/highlightjs/languages/' + lang + '.min.js',
+        katex_css: () => 'md/katex/katex.min.css',
+        katex_js: () => 'md/katex/katex.min.js',
       },
-      type: "",
+      type: '',
       isacm: false,
       isoi: false,
       isioi: false,
@@ -989,16 +989,16 @@ export default {
       isshow: true,
       problemList: [],
       problemIndex: [],
-      contestid: "",
+      contestid: '',
       contestdata: {
         id: 0,
-        name: "加载中",
-        content: "加载中",
-        begin: "加载中",
-        end: "加载中",
-        creater: "加载中",
-        allpeople: "加载中",
-        type: "加载中",
+        name: '加载中',
+        content: '加载中',
+        begin: '加载中',
+        end: '加载中',
+        creater: '加载中',
+        allpeople: '加载中',
+        type: '加载中',
         createrid: 0,
       },
       /* context:  '',//输入的数据 */
@@ -1040,12 +1040,12 @@ export default {
   },
   methods: {
     async lookPublicContestRank() {
-      let cache = window.sessionStorage.getItem("linuxurl");
+      let cache = window.sessionStorage.getItem('linuxurl');
       if (!cache) {
         cache = await this.getBackurl();
       }
       let url =
-        cache + "/Contest/publicContestRank?contest_id=" + this.contestdata.id;
+        cache + '/Contest/publicContestRank?contest_id=' + this.contestdata.id;
       this.copy(url);
       window.open(url);
     },
@@ -1081,64 +1081,64 @@ export default {
       }
     },
     tableRowClassName({ row }) {
-      if (row.status === "正常运行" || row.status === "AC") {
-        return "success-row";
-      } else return "warning-row";
+      if (row.status === '正常运行' || row.status === 'AC') {
+        return 'success-row';
+      } else return 'warning-row';
     },
     cellStyle({ row, rowIndex }) {
       let styleRes = {
-        background: "rgba(var(--ltpp-light-color), 0.16) !important",
-        color: "chartreuse",
-        height: "50px",
-        padding: "0rem",
+        background: 'rgba(var(--ltpp-light-color), 0.16) !important',
+        color: 'chartreuse',
+        height: '50px',
+        padding: '0rem',
       };
       if (rowIndex % 2 != 0) {
         styleRes.background =
-          "rgba(var(--ltpp-main-bk-color), 0.06) !important";
+          'rgba(var(--ltpp-main-bk-color), 0.06) !important';
       }
       if (row.index < 4) {
-        styleRes.color = "red";
+        styleRes.color = 'red';
         return styleRes;
       } else {
-        styleRes.color = "chartreuse";
+        styleRes.color = 'chartreuse';
         return styleRes;
       }
     },
 
     changecodelanguage(language) {
-      if (language == "C") {
-        this.codelanguage = "c";
-      } else if (language == "C++") {
-        this.codelanguage = "cpp";
-      } else if (language == "Go") {
-        this.codelanguage = "go";
-      } else if (language == "Java") {
-        this.codelanguage = "java";
-      } else if (language == "PHP") {
-        this.codelanguage = "php";
-      } else if (language == "JavaScript") {
-        this.codelanguage = "javascript";
-      } else if (language == "Python3") {
-        this.codelanguage = "python";
-      } else if (language == "Rust") {
-        this.codelanguage = "rust";
-      } else if (language == "C#") {
-        this.codelanguage = "csharp";
-      } else if (language == "TypeScript") {
-        this.codelanguage = "typescript";
-      } else if (language == "Ruby") {
-        this.codelanguage = "ruby";
+      if (language == 'C') {
+        this.codelanguage = 'c';
+      } else if (language == 'C++') {
+        this.codelanguage = 'cpp';
+      } else if (language == 'Go') {
+        this.codelanguage = 'go';
+      } else if (language == 'Java') {
+        this.codelanguage = 'java';
+      } else if (language == 'PHP') {
+        this.codelanguage = 'php';
+      } else if (language == 'JavaScript') {
+        this.codelanguage = 'javascript';
+      } else if (language == 'Python3') {
+        this.codelanguage = 'python';
+      } else if (language == 'Rust') {
+        this.codelanguage = 'rust';
+      } else if (language == 'C#') {
+        this.codelanguage = 'csharp';
+      } else if (language == 'TypeScript') {
+        this.codelanguage = 'typescript';
+      } else if (language == 'Ruby') {
+        this.codelanguage = 'ruby';
       } else {
-        this.codelanguage = "cpp";
+        this.codelanguage = 'cpp';
       }
     },
 
     async lookcode(userid, problemid) {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Contest/lookCode",
+        method: 'post',
+        url: '/Contest/lookCode',
         portType: {
-          process: "8795",
+          process: '8795',
         },
         data: {
           user_id: userid,
@@ -1147,7 +1147,7 @@ export default {
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -1160,17 +1160,17 @@ export default {
     },
     async frontendJudgeIsMyContest() {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Contest/frontendJudgeIsMyContest",
+        method: 'post',
+        url: '/Contest/frontendJudgeIsMyContest',
         portType: {
-          process: "8795",
+          process: '8795',
         },
         data: {
           contest_id: this.contestid,
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -1182,41 +1182,41 @@ export default {
     },
     async getProblemMD() {
       this.downloadUrlContent(
-        "/Contest/getProblemMD",
+        '/Contest/getProblemMD',
         { contest_id: this.contestid },
-        this.contestdata.name + "（赛题）.md"
+        this.contestdata.name + '（赛题）.md'
       );
     },
     async getProblemSolveMD() {
       this.downloadUrlContent(
-        "/Contest/getProblemSolveMD",
+        '/Contest/getProblemSolveMD',
         { contest_id: this.contestid },
-        this.contestdata.name + "（题解）.md"
+        this.contestdata.name + '（题解）.md'
       );
     },
     touserpage(id) {
       id &&
         id != this.$SqsGlobal.loading_tips &&
         this.$router.push({
-          path: "/userpage",
+          path: '/userpage',
           query: {
-            path: urlencode(id, "gbk"),
+            path: urlencode(id, 'gbk'),
           },
         });
     },
     async codeCheckSimilarity() {
       this.show_code_check_similarity = false;
       this.$msg({
-        type: "success",
-        message: "开始查重，请耐心等待！",
+        type: 'success',
+        message: '开始查重，请耐心等待！',
         duration: 3600,
         offset: 80,
       });
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Contest/codeCheckSimilarity",
+        method: 'post',
+        url: '/Contest/codeCheckSimilarity',
         portType: {
-          process: "8797",
+          process: '8797',
         },
         data: {
           contest_id: this.contestid,
@@ -1224,7 +1224,7 @@ export default {
       }).catch((t) => {
         this.show_code_check_similarity = true;
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -1233,14 +1233,14 @@ export default {
       this.show_code_check_similarity = true;
       if (res?.code == 1) {
         this.$msg({
-          type: "success",
+          type: 'success',
           message: res?.msg,
           duration: 1600,
           offset: 80,
         });
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -1249,17 +1249,17 @@ export default {
     },
     async delrank() {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Contest/deleteRank",
+        method: 'post',
+        url: '/Contest/deleteRank',
         portType: {
-          process: "8797",
+          process: '8797',
         },
         data: {
           contest_id: this.contestid,
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -1267,7 +1267,7 @@ export default {
       });
       if (res?.code == 1) {
         this.$msg({
-          type: "success",
+          type: 'success',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -1289,7 +1289,7 @@ export default {
         this.updateEcharts();
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 800,
           offset: 80,
@@ -1303,10 +1303,10 @@ export default {
         }
         this.rank_lock = true;
         const { data: res } = await this.$ajax({
-          method: "post",
-          url: "/Contest/lookAcmExcelRank",
+          method: 'post',
+          url: '/Contest/lookAcmExcelRank',
           portType: {
-            process: "8789",
+            process: '8789',
           },
           data: {
             contest_id: this.contestid,
@@ -1316,7 +1316,7 @@ export default {
         }).catch((t) => {
           this.rank_lock = false;
           this.$msg({
-            type: "error",
+            type: 'error',
             message: t,
             duration: 1600,
             offset: 80,
@@ -1335,7 +1335,7 @@ export default {
           !this.showone_join_msg &&
             (this.showone_join_msg = true) &&
             this.$msg({
-              type: "error",
+              type: 'error',
               message: res?.msg,
               duration: 800,
               offset: 80,
@@ -1356,10 +1356,10 @@ export default {
         }
         this.rank_lock = true;
         const { data: res } = await this.$ajax({
-          method: "post",
-          url: "/Contest/lookOiExcelRank",
+          method: 'post',
+          url: '/Contest/lookOiExcelRank',
           portType: {
-            process: "8789",
+            process: '8789',
           },
           data: {
             contest_id: this.contestid,
@@ -1369,7 +1369,7 @@ export default {
         }).catch((t) => {
           this.rank_lock = false;
           this.$msg({
-            type: "error",
+            type: 'error',
             message: t,
             duration: 1600,
             offset: 80,
@@ -1390,7 +1390,7 @@ export default {
           !this.showone_join_msg &&
             (this.showone_join_msg = true) &&
             this.$msg({
-              type: "error",
+              type: 'error',
               message: res?.msg,
               duration: 800,
               offset: 80,
@@ -1403,10 +1403,10 @@ export default {
     },
     async judgeisjoin() {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Contest/judgeIsJoin",
+        method: 'post',
+        url: '/Contest/judgeIsJoin',
         portType: {
-          process: "8796",
+          process: '8796',
         },
         data: {
           contest_id: this.contestid,
@@ -1414,7 +1414,7 @@ export default {
       }).catch((t) => {
         this.isjoin = false;
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -1428,14 +1428,14 @@ export default {
       }
     },
     download() {
-      let canvas = document.getElementsByTagName("canvas");
+      let canvas = document.getElementsByTagName('canvas');
       if (canvas && canvas.length > 0) {
         // 创建标签
-        let oA = document.createElement("a");
+        let oA = document.createElement('a');
         // 设置下载名称
-        oA.download = this.contestdata.name + ".png";
+        oA.download = this.contestdata.name + '.png';
         // 设置地址以及文件类型
-        oA.href = canvas[0].toDataURL("image/png");
+        oA.href = canvas[0].toDataURL('image/png');
         document.body.appendChild(oA);
         // 触发下载事件
         oA.click();
@@ -1472,8 +1472,8 @@ export default {
         this.nowtime <= this.end
       ) {
         this.$msg({
-          type: "success",
-          message: "正在获取题目，请稍等！",
+          type: 'success',
+          message: '正在获取题目，请稍等！',
           duration: 1000,
           offset: 80,
         });
@@ -1481,15 +1481,15 @@ export default {
           await this.getproblemlist();
           if (this.isgetprolist) {
             this.$msg({
-              type: "success",
-              message: "题目加载完成！",
+              type: 'success',
+              message: '题目加载完成！',
               duration: 1000,
               offset: 80,
             });
           } else {
             this.$msg({
-              type: "error",
-              message: "题目获取失败，正在重试！",
+              type: 'error',
+              message: '题目获取失败，正在重试！',
               duration: 1600,
               offset: 80,
             });
@@ -1536,17 +1536,17 @@ export default {
         return;
       }
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Contest/getContestRank",
+        method: 'post',
+        url: '/Contest/getContestRank',
         portType: {
-          process: "8788",
+          process: '8788',
         },
         data: {
           contest_id: this.contestid,
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -1557,7 +1557,7 @@ export default {
       this.timedata = res.timedata;
       this.resrank = res?.data;
       this.echartsnum = this.userdata.length;
-      if (res?.code == 1 && this.type != "OI") {
+      if (res?.code == 1 && this.type != 'OI') {
         this.getrank();
       }
     },
@@ -1566,11 +1566,11 @@ export default {
         !this.isbegin ||
         this.contestdata.allpeople <= 0 ||
         this.contestdata.allpeople > 40 ||
-        this.type == "OI"
+        this.type == 'OI'
       ) {
         return;
       }
-      let echarts_dom = document.getElementById("rankchart");
+      let echarts_dom = document.getElementById('rankchart');
       if (!echarts_dom) {
         this.echarts_finish = false;
         return;
@@ -1578,39 +1578,39 @@ export default {
       let trank = [];
       for (let i = 0; i < this.echartsnum; ++i) {
         trank[i] = {
-          symbol: "none", //去点
+          symbol: 'none', //去点
           smooth: true, //平滑
-          smoothMonotone: "x", //x轴单调
+          smoothMonotone: 'x', //x轴单调
           name: this.userdata[i],
-          type: "line",
+          type: 'line',
           data: this.resrank[i],
         };
       }
       let myChart = echarts.init(echarts_dom);
       myChart.setOption({
         title: {
-          text: "", //表格题目
+          text: '', //表格题目
           textStyle: {
-            color: "#ffffff",
+            color: '#ffffff',
           },
         },
         tooltip: {
-          trigger: "axis",
+          trigger: 'axis',
           textStyle: {
-            color: "rgba(0,0,0,0.8)",
+            color: 'rgba(0,0,0,0.8)',
           },
         },
         legend: {
           data: this.userdata.length >= 20 ? [] : this.userdata,
-          icon: "roundRect", //icon为圆角矩形
+          icon: 'roundRect', //icon为圆角矩形
           textStyle: {
-            color: "#ffffff",
+            color: '#ffffff',
           },
         },
         grid: {
-          left: "3%",
-          right: "4%",
-          bottom: "3%",
+          left: '3%',
+          right: '4%',
+          bottom: '3%',
           containLabel: true,
         },
         toolbox: {
@@ -1618,20 +1618,20 @@ export default {
           feature: {
             saveAsImage: {
               show: true,
-              excludeComponents: ["toolbox"],
+              excludeComponents: ['toolbox'],
               pixelRatio: 2,
             },
           },
         },
         xAxis: {
-          type: "category",
+          type: 'category',
           boundaryGap: false,
           data: this.timedata,
           axisLabel: {
             //修改坐标系字体颜色
             show: true,
             textStyle: {
-              color: "#ffffff",
+              color: '#ffffff',
             },
           },
           splitLine: {
@@ -1639,12 +1639,12 @@ export default {
           },
         },
         yAxis: {
-          type: "value",
+          type: 'value',
           axisLabel: {
             //修改坐标系字体颜色
             show: true,
             textStyle: {
-              color: "#ffffff",
+              color: '#ffffff',
             },
           },
 
@@ -1652,27 +1652,27 @@ export default {
           splitLine: {
             show: true,
             lineStyle: {
-              color: "rgba(0,0,0,0.4)",
+              color: 'rgba(0,0,0,0.4)',
             },
           },
         },
         series: trank,
         tooltip: {
           // 鼠标悬浮提示框显示 X和Y 轴数据
-          trigger: "axis",
-          backgroundColor: "rgba(32, 33, 36,.7)",
-          borderColor: "rgba(32, 33, 36,0.20)",
+          trigger: 'axis',
+          backgroundColor: 'rgba(32, 33, 36,.7)',
+          borderColor: 'rgba(32, 33, 36,0.20)',
           borderWidth: 1,
           textStyle: {
             // 文字提示样式
-            color: "#fff",
-            fontSize: "14",
+            color: '#fff',
+            fontSize: '14',
           },
           axisPointer: {
             // 坐标轴虚线
-            type: "cross",
+            type: 'cross',
             label: {
-              backgroundColor: "#6a7985",
+              backgroundColor: '#6a7985',
             },
           },
           position: function (point, params, dom, rect, size) {
@@ -1714,26 +1714,26 @@ export default {
       id &&
         id != this.$SqsGlobal.loading_tips &&
         this.$router.push({
-          path: "/oneproblem",
+          path: '/oneproblem',
           query: {
-            path: urlencode(id, "gbk"),
-            contest: urlencode(this.contestid, "gbk"),
+            path: urlencode(id, 'gbk'),
+            contest: urlencode(this.contestid, 'gbk'),
           },
         });
     },
     async getproblemlist() {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Contest/lookContestProblem",
+        method: 'post',
+        url: '/Contest/lookContestProblem',
         portType: {
-          process: "8796",
+          process: '8796',
         },
         data: {
           contest_id: this.contestid,
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -1746,7 +1746,7 @@ export default {
         !this.showone_join_msg &&
           (this.showone_join_msg = true) &&
           this.$msg({
-            type: "error",
+            type: 'error',
             message: res?.msg,
             duration: 1600,
             offset: 80,
@@ -1756,17 +1756,17 @@ export default {
 
     async getdata() {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Contest/userLookContest",
+        method: 'post',
+        url: '/Contest/userLookContest',
         portType: {
-          process: "8796",
+          process: '8796',
         },
         data: {
           contest_id: this.contestid,
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -1776,27 +1776,27 @@ export default {
         this.contestdata = res?.data;
         this.type = res?.data?.type;
         /* 允许查看排名 */
-        if (this.type == "ACM") {
+        if (this.type == 'ACM') {
           this.lookacmrank();
           this.isshow = true;
           this.isacm = true;
           this.isoi = false;
           this.isioi = false;
           this.issqs = false;
-        } else if (this.type == "OI") {
+        } else if (this.type == 'OI') {
           this.isshow = false;
           this.isoi = true;
           this.isacm = false;
           this.isioi = false;
           this.issqs = false;
-        } else if (this.type == "IOI") {
+        } else if (this.type == 'IOI') {
           this.lookoirank();
           this.isshow = true;
           this.isioi = true;
           this.isoi = false;
           this.isacm = false;
           this.issqs = false;
-        } else if (this.type == "SQS") {
+        } else if (this.type == 'SQS') {
           this.lookacmrank();
           this.isshow = true;
           this.issqs = true;
@@ -1805,7 +1805,7 @@ export default {
           this.isacm = false;
         } else {
           this.$msg({
-            type: "error",
+            type: 'error',
             message: res?.msg,
             duration: 800,
             offset: 80,
@@ -1813,7 +1813,7 @@ export default {
         }
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -1825,10 +1825,10 @@ export default {
       this.canclick = false;
       this.isseepassword = false;
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Contest/joinContest",
+        method: 'post',
+        url: '/Contest/joinContest',
         portType: {
-          process: "8796",
+          process: '8796',
         },
         data: {
           contest_id: this.contestid,
@@ -1836,17 +1836,17 @@ export default {
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
         });
       });
       this.canclick = true;
-      this.password = "";
+      this.password = '';
       if (res?.code == 1) {
         this.$msg({
-          type: "success",
+          type: 'success',
           message: res?.msg,
           duration: 1000,
           offset: 80,
@@ -1894,7 +1894,7 @@ export default {
       } else {
         this.isjoin = false;
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1000,
           offset: 80,
@@ -1906,18 +1906,18 @@ export default {
     prop() {
       let data = {
         subfield: false, // 单双栏模式
-        defaultOpen: "preview", //edit： 默认展示编辑区域 ， preview： 默认展示预览区域
+        defaultOpen: 'preview', //edit： 默认展示编辑区域 ， preview： 默认展示预览区域
         editable: false,
         toolbarsFlag: false, //工具栏
         scrollStyle: true,
-        codeStyle: "atom-one-dark",
+        codeStyle: 'atom-one-dark',
         boxShadow: false,
         ishljs: true,
         tabSize: 4,
-        toolbarsBackground: "rgba(0,0,0,0)",
-        editorBackground: "rgba(0,0,0,0)",
-        previewBackground: "rgba(0,0,0,0)",
-        fontSize: "1.06rem",
+        toolbarsBackground: 'rgba(0,0,0,0)',
+        editorBackground: 'rgba(0,0,0,0)',
+        previewBackground: 'rgba(0,0,0,0)',
+        fontSize: '1.06rem',
         navigation: false,
       };
       return data;
@@ -1927,7 +1927,7 @@ export default {
 </script>
 
 <style scoped>
-@import "../../../public/md/markdown/github-markdown.min.css";
+@import '../../../public/md/markdown/github-markdown.min.css';
 
 .el-button {
   padding: 0.6rem 1rem !important;

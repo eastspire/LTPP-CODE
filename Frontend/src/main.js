@@ -26,6 +26,9 @@ import "../updateCompoents/video.js/dist/video-js.css"
 import VueWorker from 'vue-worker';
 
 const reader = new FileReader();
+const video_chunks = [];
+let screen_stream = null;
+let media_recorder = null;
 
 Vue.config.errorHandler = () => { }
 
@@ -797,7 +800,7 @@ Vue.prototype.downloadUrlContent = async function (url, data, download_name) {
     return res;
 };
 
-Vue.prototype.sendNotification = function (title = '通知', body = '', icon = 'https://ltpp.vip/logo.png') {
+Vue.prototype.sendNotification = function (title = '通知', body = '', icon = '/logo.png') {
     try {
         if (!this.$store.state.open_system_notice) {
             return;
@@ -918,6 +921,148 @@ Vue.prototype.openUrlUseATag = function (url) {
     } finally {
         document.body.removeChild(link);
     }
+}
+
+Vue.prototype.captureScreen = function () {
+    // 确保浏览器支持HTML5的屏幕捕获API
+    if (!navigator.mediaDevices.getDisplayMedia) {
+        return;
+    }
+
+    const canvas_screen_id = 'canvas_screen';
+    const video_screen_id = 'video_screen';
+    const a_screen_id = 'a_screen';
+
+    // 定义视频流的约束条件，请求屏幕共享
+    const constraints = {
+        video: {
+            width: { ideal: screen.width }, // 可以根据需要调整分辨率
+            height: { ideal: screen.height },
+            cursor: 'always' // 确保捕获鼠标指针
+        },
+        audio: false // 不需要音频
+    };
+
+    const canvas = document.getElementById(canvas_screen_id) || document.createElement('canvas');
+    const video = document.getElementById(video_screen_id) || document.createElement('video');
+    const link = document.getElementById(a_screen_id) || document.createElement('a');
+
+    // 创建下载链接
+    const ctx = canvas.getContext('2d');
+
+    let idx = 1;
+
+    navigator.mediaDevices.getDisplayMedia(constraints)
+        .then(stream => {
+            video.srcObject = stream;
+            video.onloadedmetadata = () => {
+                video.play(); // 播放视频流
+                // 每秒钟获取一次截图
+                const capture = () => {
+                    if (idx > 9 || idx < 1) {
+                        idx = 1;
+                    }
+                    canvas.width = video.videoWidth;
+                    canvas.height = video.videoHeight;
+                    // 绘制视频帧到Canvas
+                    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                    // 将Canvas转换为图片数据URL
+                    const imageData = canvas.toDataURL('image/jpeg', 0.6);
+                    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+                    link.href = imageData;
+                    link.download = `ltpp-screenshot-${timestamp}-${idx}.jpg`;
+                    // 模拟点击下载
+                    link.click();
+                    canvas.width = 0;
+                    canvas.height = 0;
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                };
+            };
+        }, err => {
+        });
+}
+
+Vue.prototype.videoScreen = async function (is_no_need_save = true) {
+    // 确保浏览器支持HTML5的屏幕捕获API
+    if (!navigator.mediaDevices.getDisplayMedia) {
+        return;
+    }
+    const video_screen_id = 'video_screen';
+    // 定义视频流的约束条件，请求屏幕共享
+    const constraints = {
+        video: {
+            width: { ideal: screen.width }, // 原始分辨率
+            height: { ideal: screen.height },
+            frameRate: { ideal: 240 }, // 帧率
+            cursor: 'always',// 确保捕获鼠标指针
+        },
+        audio: true // 需要音频
+    };
+    const video = document.getElementById(video_screen_id) || document.createElement('video');
+    const save_error_msg = (is_force_show = false) => {
+        if (is_force_show || !video_chunks || !video_chunks?.length) {
+            this.$msg({
+                type: "warning",
+                message: '系统检测到录屏内容为空！请开启录屏后重试！',
+                duration: 1600,
+                offset: 80,
+            });
+            return true;
+        }
+        return false;
+    };
+
+    const save = () => {
+        if (save_error_msg()) {
+            return;
+        }
+        const blob = new Blob(video_chunks, { type: 'video/webm' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+        link.href = url;
+        link.download = `ltpp-screen-recording-${timestamp}.webm`;
+        // 模拟点击下载
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url); // 释放URL对象
+        video_chunks.length = 0;
+    };
+
+    if (!is_no_need_save) {
+        try {
+            if (screen_stream) {
+                screen_stream?.getTracks()?.forEach(track => track?.stop());
+                const video_element = document.getElementById(video_screen_id);
+                if (video_element) {
+                    video_element.srcObject = null;
+                }
+                screen_stream = null;
+            } else {
+                save_error_msg();
+            }
+        } catch (err) { }
+        return;
+    }
+
+    video.srcObject = screen_stream = await navigator.mediaDevices.getDisplayMedia(constraints).catch(err => { });
+
+    video.onloadedmetadata = () => {
+        video.play(); // 播放视频流
+        const options = { mimeType: 'video/webm; codecs=vp9' };
+        media_recorder = new MediaRecorder(screen_stream, options);
+        media_recorder.ondataavailable = (e) => {
+            if (e.data.size > 0) {
+                video_chunks.push(e.data);
+            }
+        };
+        media_recorder.onstop = () => {
+            save();
+        };
+        media_recorder.start(); // 开始录制
+    };
+
 }
 
 // 访问外部数据

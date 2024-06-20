@@ -43,7 +43,9 @@
         reg.test($store.state.bkvideo) &&
         !video_load_error
       "
+      loop
       muted
+      @loadeddata="videoPlay"
       :src="$store.state.bkvideo"
       class="video-bk"
     ></video>
@@ -590,6 +592,24 @@
                   </template>
                 </el-menu-item>
               </el-submenu>
+              <el-menu-item index="" @click="videoScreen(true)">
+                <template slot="title">
+                  <i
+                    class="el-icon-video-camera-solid"
+                    style="font-size: 1.06rem"
+                    >开启录屏</i
+                  >
+                </template>
+              </el-menu-item>
+              <el-menu-item index="" @click="videoScreen(false)">
+                <template slot="title">
+                  <i
+                    class="el-icon-video-camera-solid"
+                    style="font-size: 1.06rem"
+                    >结束录屏</i
+                  >
+                </template>
+              </el-menu-item>
               <el-menu-item index="" @click="clearmusiclogin()">
                 <template slot="title">
                   <i class="el-icon-s-release" style="font-size: 1.06rem"
@@ -698,38 +718,13 @@ export default {
     }
   },
   async created() {
-    addEventListener('scroll', () => {
-      if (document.body.scrollHeight <= window.innerHeight) {
-        this.scroll_percent = 0;
-        return;
-      }
-      let body = document.body;
-      let html = document.documentElement;
-      let scrollTop = body.scrollTop || html.scrollTop;
-      let scrollHeight = body.scrollHeight || html.scrollHeight;
-      let clientHeight = html.clientHeight || window.innerHeight;
-      if (scrollHeight - clientHeight) {
-        const tp = Math.min(
-          100,
-          (scrollTop / (scrollHeight - clientHeight)) * 100
-        );
-        this.scroll_percent = tp ?? 0;
-      } else {
-        this.scroll_percent = 100;
-      }
-    });
-
+    addEventListener('scroll', this.scrollEvent);
+    setInterval(this.scrollEvent, 360);
     this.judgelogin();
     await this.getGrade();
     await this.loadSelfData();
-    setTimeout(() => {
-      this.$nextTick(async () => {
-        await this.videoPlay();
-        this.video_dom &&
-          this.video_dom.addEventListener('ended', this.videoEnd);
-      });
-    }, 0);
     this.$store.commit('updateObj', { my_id: this.getMyId() });
+    await this.getBackUrl();
     this.loadmynoticenum();
     this.isseenotice = false;
     this.getisusemusic();
@@ -738,7 +733,6 @@ export default {
       this.loadmynoticenum();
       this.sendheart();
     }, 60000);
-    await this.getBackUrl();
   },
   activated() {
     this.onRouteChanged();
@@ -820,6 +814,26 @@ export default {
   },
 
   methods: {
+    scrollEvent() {
+      if (document.body.scrollHeight <= window.innerHeight) {
+        this.scroll_percent = 0;
+        return;
+      }
+      let body = document.body;
+      let html = document.documentElement;
+      let scrollTop = body.scrollTop || html.scrollTop;
+      let scrollHeight = body.scrollHeight || html.scrollHeight;
+      let clientHeight = html.clientHeight || window.innerHeight;
+      if (scrollHeight - clientHeight) {
+        const tp = Math.min(
+          100,
+          (scrollTop / (scrollHeight - clientHeight)) * 100
+        );
+        this.scroll_percent = tp ?? 0;
+      } else {
+        this.scroll_percent = 100;
+      }
+    },
     videoLoadError() {
       this.video_load_error = true;
     },

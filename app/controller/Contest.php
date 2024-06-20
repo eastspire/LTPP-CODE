@@ -1899,11 +1899,11 @@ class Contest
                             $user_j_db->name = Base::$unknow_user_name;
                         }
                         $msg =
-                            '<tr><td>题目：【<span class="title">' . $problem_name[$t] . '</span>】</td><td>用户：【<a class="user" href="' .
+                            '<tr><td><span class="title">' . $problem_name[$t] . '</span></td><td>【<a class="user" href="' .
                             $user_code_url_1 . '" target="_blank">' .
-                            $user_i_db->name . '</a>】和用户：【<a class="user" href="' .
+                            $user_i_db->name . '</a>】和【<a class="user" href="' .
                             $user_code_url_2 . '" target="_blank">' .
-                            $user_j_db->name . '</a>】</td><td>代码相似度达到：<span class="duplication">' .
+                            $user_j_db->name . '</a>】</td><td>代码相似度：<span class="duplication">' .
                             $duplication * 100 . '%</span></td></div></tr>';
                         $loc = number_format(floor($duplication * 10) / 10, 1);
                         if (isset($percentage_list[$loc])) {

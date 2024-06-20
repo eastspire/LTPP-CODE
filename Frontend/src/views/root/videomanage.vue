@@ -74,14 +74,12 @@
                   <span
                     class="my-span"
                     @click="lookvideo(scope.row.url)"
-                    :style="`
+                    style="
                       font-weight: bold;
                       font-size: 1.06rem;
                       color: #409eff;
-                      cursor: ${
-                        reg.test(scope.row.url) ? 'pointer' : 'default'
-                      };
-                    `"
+                      cursor: pointer;
+                    "
                     type="success"
                   >
                     {{ scope.row.name.substr(0, 20) }}
@@ -348,27 +346,27 @@
 </template>
 
 <script>
-import urlencode from "../../../updateCompoents/urlencode";
+import urlencode from '../../../updateCompoents/urlencode';
 
 export default {
-  name: "videomanage",
+  name: 'videomanage',
   created() {
     this.issearch = false; //判断是否搜索，从而进行分页查找
   },
   async activated() {
     this.head = {
-      Authorization: "Bearer " + window.localStorage.getItem("authorization"),
-      Key: window.localStorage.getItem("key"),
+      Authorization: 'Bearer ' + window.localStorage.getItem('authorization'),
+      Key: window.localStorage.getItem('key'),
       Requestid: this.Base64Encode(new Date().getTime()),
     };
     this.requestid_timer = setInterval(() => {
       this.head.Requestid = this.Base64Encode(new Date().getTime());
     }, 1000);
-    const tem_bkvideourl = window.sessionStorage.getItem("linuxurl");
+    const tem_bkvideourl = window.sessionStorage.getItem('linuxurl');
     if (!tem_bkvideourl) {
       await this.getlinuxurl();
     } else {
-      this.bkvideourl = tem_bkvideourl + "/Video/uploadvideo";
+      this.bkvideourl = tem_bkvideourl + '/Video/uploadvideo';
     }
     this.page = 1;
     this.limit = 50;
@@ -382,12 +380,12 @@ export default {
     return {
       reg: /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\*\+,;=.]+$/,
       requestid_timer: null,
-      tag: "",
-      lastkey: "",
+      tag: '',
+      lastkey: '',
       bkvideourl: window?.location?.href,
       head: {
-        authorization: "Bearer " + window.localStorage.getItem("authorization"),
-        key: window.localStorage.getItem("key"),
+        authorization: 'Bearer ' + window.localStorage.getItem('authorization'),
+        key: window.localStorage.getItem('key'),
       },
       isupdate: false,
       isadd: false,
@@ -396,9 +394,9 @@ export default {
       total: 0,
       page: 1,
       limit: 50,
-      key: "",
+      key: '',
       id: 0,
-      name: "",
+      name: '',
       url: window?.location?.href,
     };
   },
@@ -414,9 +412,9 @@ export default {
     lookvideo(url) {
       if (this.reg.test(url)) {
         this.$router.push({
-          path: "/staticfile",
+          path: '/staticfile',
           query: {
-            path: urlencode(url, "gbk"),
+            path: urlencode(url, 'gbk'),
           },
         });
       } else {
@@ -425,18 +423,18 @@ export default {
     },
     cellStyle({ rowIndex }) {
       let styleRes = {
-        background: "rgba(var(--ltpp-light-color), 0.16) !important",
-        color: "chartreuse",
+        background: 'rgba(var(--ltpp-light-color), 0.16) !important',
+        color: 'chartreuse',
       };
       if (rowIndex % 2 != 0) {
         styleRes.background =
-          "rgba(var(--ltpp-main-bk-color), 0.06) !important";
+          'rgba(var(--ltpp-main-bk-color), 0.06) !important';
       }
       return styleRes;
     },
     async getlinuxurl() {
       const res = await this.getBackurl();
-      this.bkvideourl = res + "/Video/uploadVideo";
+      this.bkvideourl = res + '/Video/uploadVideo';
     },
     handleCurrentChange(val) {
       this.page = val;
@@ -459,14 +457,14 @@ export default {
     getupres(response, file, file_list) {
       if (response && response.code && response.code != 1) {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: response.msg,
           duration: 1600,
           offset: 80,
         });
       } else {
         this.$msg({
-          type: "success",
+          type: 'success',
           message: response.msg,
           duration: 1600,
           offset: 80,
@@ -479,10 +477,10 @@ export default {
     async getlist() {
       this.initData();
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Video/backLoadVideo",
+        method: 'post',
+        url: '/Video/backLoadVideo',
         portType: {
-          process: "8797",
+          process: '8797',
         },
         data: {
           page: this.page,
@@ -490,7 +488,7 @@ export default {
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -500,31 +498,31 @@ export default {
       this.videoList = res?.data;
     },
     async deleteallvideo() {
-      this.$confirm("确定清空全部视频吗？", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
+      this.$confirm('确定清空全部视频吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
       })
         .then(() => {
           this.$ajax({
-            method: "post",
-            url: "/Video/deleteAllVideo",
+            method: 'post',
+            url: '/Video/deleteAllVideo',
             portType: {
-              process: "8797",
+              process: '8797',
             },
           })
             .then((res) => {
               if (res?.data.code == 1) {
                 this.getlist();
                 this.$msg({
-                  type: "success",
+                  type: 'success',
                   message: res?.data.msg,
                   duration: 1600,
                   offset: 80,
                 });
               } else {
                 this.$msg({
-                  type: "error",
+                  type: 'error',
                   message: res?.data.msg,
                   duration: 1600,
                   offset: 80,
@@ -533,7 +531,7 @@ export default {
             })
             .catch((t) => {
               this.$msg({
-                type: "error",
+                type: 'error',
                 message: t,
                 duration: 1600,
                 offset: 80,
@@ -542,26 +540,26 @@ export default {
         })
         .catch(() => {
           this.$msg({
-            type: "info",
+            type: 'info',
             duration: 1600,
             offset: 80,
-            message: "取消清空",
+            message: '取消清空',
           });
         });
     },
     //删除
     async deleteid() {
-      this.$confirm("确定删除该视频吗？", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
+      this.$confirm('确定删除该视频吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
       })
         .then(() => {
           this.$ajax({
-            method: "post",
-            url: "/Video/deleteVideo",
+            method: 'post',
+            url: '/Video/deleteVideo',
             portType: {
-              process: "8797",
+              process: '8797',
             },
             data: {
               video_id: this.id,
@@ -571,14 +569,14 @@ export default {
               if (res?.data.code == 1) {
                 this.getlist();
                 this.$msg({
-                  type: "success",
+                  type: 'success',
                   message: res?.data.msg,
                   duration: 1600,
                   offset: 80,
                 });
               } else {
                 this.$msg({
-                  type: "error",
+                  type: 'error',
                   message: res?.data.msg,
                   duration: 1600,
                   offset: 80,
@@ -587,7 +585,7 @@ export default {
             })
             .catch((t) => {
               this.$msg({
-                type: "error",
+                type: 'error',
                 message: t,
                 duration: 1600,
                 offset: 80,
@@ -596,10 +594,10 @@ export default {
         })
         .catch(() => {
           this.$msg({
-            type: "info",
+            type: 'info',
             duration: 1600,
             offset: 80,
-            message: "取消删除",
+            message: '取消删除',
           });
         });
     },
@@ -608,10 +606,10 @@ export default {
       this.lastkey = this.key;
       this.initData();
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Video/backFindVideo",
+        method: 'post',
+        url: '/Video/backFindVideo',
         portType: {
-          process: "8797",
+          process: '8797',
         },
         data: {
           key: this.key,
@@ -620,7 +618,7 @@ export default {
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -631,7 +629,7 @@ export default {
     },
     //搜索预处理
     search() {
-      if (this.key == "" || this.key == null || this.key == undefined) {
+      if (this.key == '' || this.key == null || this.key == undefined) {
         this.issearch = false;
         this.getlist();
         return;
@@ -646,10 +644,10 @@ export default {
     //更新
     async updateid() {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Video/updateVideo",
+        method: 'post',
+        url: '/Video/updateVideo',
         portType: {
-          process: "8797",
+          process: '8797',
         },
         data: {
           tabledata: {
@@ -661,7 +659,7 @@ export default {
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -670,37 +668,37 @@ export default {
       if (res?.code == 1) {
         this.isadd = false;
         this.isupdate = false;
-        this.id = "";
-        this.name = "";
-        this.url = "";
-        this.tag = "";
+        this.id = '';
+        this.name = '';
+        this.url = '';
+        this.tag = '';
         this.$msg({
-          type: "success",
+          type: 'success',
           message: res?.msg,
           duration: 1600,
           offset: 80,
         });
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
         });
       }
-      this.id = "";
-      this.name = "";
-      this.url = "";
-      this.tag = "";
+      this.id = '';
+      this.name = '';
+      this.url = '';
+      this.tag = '';
       this.getlist();
     },
     //添加
     async addid() {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Video/addVideo",
+        method: 'post',
+        url: '/Video/addVideo',
         portType: {
-          process: "8797",
+          process: '8797',
         },
         data: {
           tabledata: {
@@ -711,7 +709,7 @@ export default {
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -720,28 +718,28 @@ export default {
       if (res?.code == 1) {
         this.isupdate = false;
         this.isadd = false;
-        this.id = "";
-        this.name = "";
-        this.url = "";
-        this.tag = "";
+        this.id = '';
+        this.name = '';
+        this.url = '';
+        this.tag = '';
         this.$msg({
-          type: "success",
+          type: 'success',
           message: res?.msg,
           duration: 1600,
           offset: 80,
         });
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
         });
       }
-      this.id = "";
-      this.name = "";
-      this.url = "";
-      this.tag = "";
+      this.id = '';
+      this.name = '';
+      this.url = '';
+      this.tag = '';
       this.getlist();
     },
   },
