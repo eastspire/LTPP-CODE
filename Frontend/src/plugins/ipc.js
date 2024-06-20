@@ -3,8 +3,10 @@ let screen_stream = null;
 let media_recorder = null;
 const width = window.screen.width;
 const height = window.screen.height;
+const frame_rate = 240;
+const video_bits_per_second = width * height * frame_rate;
 
-const showSaveError = function (is_force_show = false) {
+const showSaveErrorMsg = function (is_force_show = false) {
     if (is_force_show || !video_chunks || !video_chunks?.length) {
         this.$msg({
             type: "warning",
@@ -17,8 +19,17 @@ const showSaveError = function (is_force_show = false) {
     return false;
 };
 
+const showStartMsg = function () {
+    this.$msg({
+        type: "success",
+        message: '系统开始录屏！',
+        duration: 1600,
+        offset: 80,
+    });
+};
+
 const save = function () {
-    if (showSaveError.call(this)) {
+    if (showSaveErrorMsg.call(this)) {
         return;
     }
     const blob = new Blob(video_chunks, { type: 'video/webm' });
@@ -51,12 +62,20 @@ const startVideoScreen = async function (source = null) {
     // 定义视频流的约束条件，请求屏幕共享
     const constraints = {
         video: {
-            width: { ideal: width }, // 原始分辨率
-            height: { ideal: height },
-            frameRate: { ideal: 240 }, // 帧率
-            cursor: 'always',// 确保捕获鼠标指针
+            width: {
+                ideal: width
+            },
+            height: {
+                ideal: height
+            },
+            frameRate: {
+                ideal: frame_rate // 帧率
+            },
+            cursor: {
+                ideal: 'always' // 捕获鼠标指针
+            },
         },
-        audio: true // 需要音频
+        audio: false // 不需要音频
     };
     const video = document.getElementById(video_screen_id) || document.createElement('video');
 
@@ -66,14 +85,27 @@ const startVideoScreen = async function (source = null) {
             my_constraints.video.mandatory = {
                 chromeMediaSource: "desktop",
                 chromeMediaSourceId: source?.id,
-                width: window.screen.width,
-                height: window.screen.height
+                width: {
+                    ideal: width
+                },
+                height: {
+                    ideal: height
+                },
+                frameRate: {
+                    ideal: frame_rate // 帧率
+                },
+                cursor: {
+                    ideal: 'always' // 捕获鼠标指针
+                },
             };
             return await navigator.mediaDevices.getUserMedia(my_constraints);
         };
     }
+    const stream = await navigator.mediaDevices.getDisplayMedia(constraints);
+    stream.videoBitsPerSecond = video_bits_per_second;
+    video.srcObject = screen_stream = stream;
 
-    video.srcObject = screen_stream = await navigator.mediaDevices.getDisplayMedia(constraints);
+    showStartMsg.call(this);
 
     video.onloadedmetadata = () => {
         video.play(); // 播放视频流
@@ -100,7 +132,7 @@ const stopVideoScreen = function () {
         }
         screen_stream = null;
     } else {
-        showSaveError.call(this, true);
+        showSaveErrorMsg.call(this, true);
     }
 }
 
