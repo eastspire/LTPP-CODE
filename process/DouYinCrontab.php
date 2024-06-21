@@ -230,7 +230,9 @@ class DouYinCrontab
                                 $path_arr = $this->getSaveFilePath();
                                 $local_path = $path_arr[0];
                                 // 保存视频到本地
-                                $save_res = Base::saveNetworkFileToDb(Base::getRobotId(), $video_url, $local_path);
+                                $save_res = Base::saveNetworkFileToDb(Base::getRobotId(), $video_url, $local_path, false, [
+                                    'Referer:' . $video_url
+                                ]);
                                 if ($save_res) {
                                     // 替换视频地址为本地地址
                                     $video_url = $path_arr[1];
