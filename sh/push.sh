@@ -16,5 +16,6 @@ git push ltpp master;
 echo -e "\e[32mltpp push finish\e[0m";
 git push origin master;
 echo -e "\e[32morigin push finish\e[0m";
+./sh/update-pages-up.sh;
 echo "Press Enter to continue...";
 read -n 1;
