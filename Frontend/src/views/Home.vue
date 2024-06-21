@@ -724,7 +724,7 @@ export default {
     await this.getGrade();
     await this.loadSelfData();
     this.$store.commit('updateObj', { my_id: this.getMyId() });
-    await this.getBackUrl();
+    await this.getBackurl();
     this.loadmynoticenum();
     this.isseenotice = false;
     this.getisusemusic();

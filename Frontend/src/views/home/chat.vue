@@ -60,7 +60,7 @@
                     style="width: 100%; height: 100%; object-fit: cover"
                     title=""
                     alt=""
-                    src="/logo.png"
+                    :src="$SqsGlobal.logo_url"
                   />
                 </div>
               </el-image>

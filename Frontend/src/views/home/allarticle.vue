@@ -56,9 +56,9 @@
                     <!-- img才生效图片裁剪适应，el-image不生效 -->
                     <img
                       v-if="temtable.image && reg.test(temtable.image)"
-                      onerror="/logo.png"
+                      :onerror="$SqsGlobal.logo_url"
                       class="animate"
-                      style="width: 100%; height: 100%; object-fit: cover"
+                      style="width: auto; height: 100%; object-fit: cover"
                       title=""
                       alt=""
                       :src="temtable.image"

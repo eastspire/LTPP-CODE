@@ -8,6 +8,9 @@
  * QQ:1491579574
  * Copyright (c) 2023 by SQS, All Rights Reserved. 
  */
+
+const logo_url = '/logo.png';
+
 /* 全局变量 */
 let c_tips = window?.c_tips?.length > 0 ? window.c_tips : [''];
 let cpp_tips = window?.cpp_tips?.length > 0 ? window.cpp_tips : [''];
@@ -193,7 +196,7 @@ const app_list_data = {
     user_id: loading_tips,
     opentimes: "",
     url: loading_tips,
-    image: "",
+    image: logo_url,
     content: loading_tips,
     user_name: loading_tips,
     time: loading_tips
@@ -206,7 +209,7 @@ const question_list_data = {
     "time": loading_tips,
     "answer_num": 0,
     "writer": loading_tips,
-    "headimage": "/logo.png"
+    "headimage": logo_url
 };
 const monitor_list_data = {
     "id": "",
@@ -312,7 +315,7 @@ const user_list_data =
     lastlogin: loading_tips,
     sex: loading_tips,
     email: loading_tips,
-    headimage: '/logo.png',
+    headimage: logo_url,
     fans: loading_tips,
     follow: loading_tips,
     online: loading_tips,
@@ -618,6 +621,7 @@ const redirect_url_key = 'redirect_url';
 
 export default {
     root_name,
+    logo_url,
     no_support_file_tips,
     extion_map_number,
     strip_ignore_tag_body,

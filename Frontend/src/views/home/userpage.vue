@@ -33,7 +33,12 @@
           </div>
           <div
             v-show="userdata.name != undefined"
-            style="width: 26%; float: left; overflow: hidden"
+            style="
+              width: 26%;
+              float: left;
+              overflow: hidden;
+              text-align: center;
+            "
           >
             <img
               class="animate"
@@ -41,7 +46,7 @@
                 display: block;
                 width: 100%;
                 height: auto;
-                margin: 1rem 1rem;
+                object-fit: cover;
               "
               title=""
               alt=""
@@ -49,7 +54,7 @@
             />
           </div>
 
-          <div style="width: 60%; float: left; margin-left: 2.6rem">
+          <div style="width: 60%; float: left; margin-left: 1.68rem">
             <div style="float: left; margin: 1rem 1rem">
               <p
                 style="
@@ -628,7 +633,7 @@ export default {
       showfoot: false,
       userid: 0,
       page: 1,
-      userdata: [],
+      userdata: this.$SqsGlobal.user_list_data,
       userarticle: [],
       isfollow: false,
       timeclock: false,

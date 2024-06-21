@@ -83,11 +83,7 @@ class User
     {
         $my_uid = JwtToken::getCurrentId();
         $my_aid = Base::getIdByUid($my_uid);
-        $db = Db::table('user')
-            ->where('id', $my_aid)
-            ->where('isdel', 0)
-            ->select('name')
-            ->first();
+        $db = Base::getUserData($my_aid);
         if ($db) {
             return json(['code' => 1, 'name' => $db->name]);
         }
@@ -103,11 +99,7 @@ class User
     {
         $my_uid = JwtToken::getCurrentId();
         $my_aid = Base::getIdByUid($my_uid);
-        $db = Db::table('user')
-            ->where('id', $my_aid)
-            ->where('isdel', 0)
-            ->select('isusemusic')
-            ->first();
+        $db = Base::getUserData($my_aid);
         if (!$db) {
             return json(['code' => -1, 'data' => '用户不存在']);
         }
@@ -124,11 +116,7 @@ class User
     {
         $my_uid = JwtToken::getCurrentId();
         $my_aid = Base::getIdByUid($my_uid);
-        $db = Db::table('user')
-            ->where('id', $my_aid)
-            ->where('isdel', 0)
-            ->select('isusemusic')
-            ->first();
+        $db = Base::getUserData($my_aid);
         if (!$db) {
             return json(['code' => -1, 'msg' => '用户不存在']);
         }
@@ -667,11 +655,7 @@ class User
                 ->where('id', $follow_id)
                 ->where('isdel', 0)
                 ->increment('fans', 1);
-            $userdb = Db::table('user')
-                ->where('id', $my_aid)
-                ->where('isdel', 0)
-                ->select('name')
-                ->first();
+            $userdb = Base::getUserData($my_aid);
             Db::table('usernotice')
                 ->insert([
                     'userid' => $follow_id,
@@ -948,11 +932,7 @@ class User
             return \json(['code' => -1, 'msg' => '您没有权限修改！']);
         }
 
-        $db = Db::table('user')
-            ->where('id', $data['id'])
-            ->where('isdel', 0)
-            ->select('name')
-            ->first();
+        $db = Base::getUserData($data['id']);
         $user_is_root = Base::judgeIsRoot($data['id']);
 
         if ($user_is_root && $data['name'] != 'root') {
@@ -1016,11 +996,7 @@ class User
             //说明用户密码改了
             $data['password'] = Base::passwordEncryption($password);
         }
-        $UpdataBlogandCommentName = Db::table('user')
-            ->where('id', $data['id'])
-            ->where('isdel', 0)
-            ->select('name')
-            ->first();
+        $UpdataBlogandCommentName = Base::getUserData($data['id']);
         if (!$UpdataBlogandCommentName) {
             return \json(['code' => -1, 'msg' => '用户不存在']);
         }
@@ -1135,11 +1111,7 @@ class User
             return \json(['code' => -1, 'msg' => '用户名不能为空']);
         }
 
-        $db = Db::table('user')
-            ->where('id', $my_aid)
-            ->where('isdel', 0)
-            ->select('name')
-            ->first();
+        $db = Base::getUserData($my_aid);
 
         if ($data['sex'] != '男' && $data['sex'] != '女') {
             return \json(['code' => -1, 'msg' => '请选择给定的性别']);
@@ -1193,11 +1165,7 @@ class User
         } else {
             unset($data['password']);
         }
-        $UpdataBlogandCommentName = Db::table('user')
-            ->where('id', $my_aid)
-            ->where('isdel', 0)
-            ->select('name')
-            ->first();
+        $UpdataBlogandCommentName = Base::getUserData($my_aid);
         if (!$UpdataBlogandCommentName) {
             return \json(['code' => -1, 'msg' => '用户不存在']);
         }

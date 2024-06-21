@@ -51,6 +51,7 @@
                 margin: 0.66rem;
                 padding: 0.66rem;
                 width: 5.8rem;
+                height: 6.8rem;
               "
             >
               <div
@@ -62,8 +63,8 @@
                 "
               >
                 <img
-                  onerror="/logo.png"
-                  v-if="temtable.image && reg.test(temtable.image)"
+                  :onerror="$SqsGlobal.logo_url"
+                  v-if="temtable.image"
                   class="animate"
                   style="
                     width: 5.6rem;
