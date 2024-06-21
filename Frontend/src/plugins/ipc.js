@@ -5,6 +5,7 @@ const width = window.screen.width;
 const height = window.screen.height;
 const frame_rate = 240;
 const video_bits_per_second = width * height * frame_rate;
+const video_screen_id = 'video_screen';
 
 const showSaveErrorMsg = function (is_force_show = false) {
     if (is_force_show || !video_chunks || !video_chunks?.length) {
@@ -57,7 +58,6 @@ const startVideoScreen = async function (source = null) {
         });
         return;
     }
-    const video_screen_id = 'video_screen';
 
     // 定义视频流的约束条件，请求屏幕共享
     const constraints = {
@@ -78,7 +78,7 @@ const startVideoScreen = async function (source = null) {
         audio: false // 不需要音频
     };
     const video = document.getElementById(video_screen_id) || document.createElement('video');
-
+    video.setAttribute('id', video_screen_id);
     if (window.bridge && source) {
         navigator.mediaDevices.getDisplayMedia = async (my_constraints) => {
             my_constraints.video = {};
@@ -125,12 +125,14 @@ const startVideoScreen = async function (source = null) {
 
 const stopVideoScreen = function () {
     if (screen_stream) {
-        screen_stream?.getTracks()?.forEach(track => track?.stop());
+        try {
+            screen_stream?.getTracks()?.forEach((track) => track?.stop());
+        } catch (err) { }
+        screen_stream = null;
         const video_element = document.getElementById(video_screen_id);
         if (video_element) {
-            video_element.srcObject = null;
+            video.setAttribute('srcObject', null);
         }
-        screen_stream = null;
     } else {
         showSaveErrorMsg.call(this, true);
     }

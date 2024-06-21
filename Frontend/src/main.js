@@ -947,8 +947,11 @@ Vue.prototype.captureScreen = function () {
     };
 
     const canvas = document.getElementById(canvas_screen_id) || document.createElement('canvas');
+    canvas.setAttribute('id', canvas_screen_id);
     const video = document.getElementById(video_screen_id) || document.createElement('video');
+    video.setAttribute('id', video_screen_id);
     const link = document.getElementById(a_screen_id) || document.createElement('a');
+    link.setAttribute('id', a_screen_id);
 
     // 创建下载链接
     const ctx = canvas.getContext('2d');
