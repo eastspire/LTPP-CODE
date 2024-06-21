@@ -188,8 +188,7 @@ class CreatContestCrontab
 
     public function onWorkerStart()
     {
-        // 每天的0点执行，注意这里省略了秒位'00 0 * * *'
-        new Crontab('00 0 * * *', function () {
+        new Crontab('0 0 0 * * 5', function () {
             try {
                 foreach (Contest::$contest_type_list as &$type) {
                     $pro_list = $this->getProblemList();
