@@ -860,6 +860,13 @@ Vue.prototype.imgAddMiddleware = function (pos, $file, $ref_name) {
 // 更新图片保存方式配置
 Vue.prototype.changeImageSaveType = function () {
     store.commit("updateObj", { image_use_remote: !!!store.state.image_use_remote });
+    Vue.prototype.$msg({
+        type: "success",
+        message: `当前图片保存方式为${store.state.image_use_remote ? '静态资源' : 'Base64编码'}`,
+        duration: 3600,
+        offset: 80,
+    });
+    // 更新服务端用户配置
     axios({
         url: "/User/changeImageSaveType",
         method: "post",
@@ -1065,6 +1072,29 @@ Vue.prototype.fetchData = async function (url = '', func = () => { }) {
             offset: 80,
         });
     }
+}
+
+/**
+ * URL拼接参数
+ * @param {object} query_params
+ * @param {string} original_url
+ * @returns {string} res
+ */
+Vue.prototype.appendOrOverrideQueryParam = function (query_params, original_url = window.location.href) {
+    try {
+        let url = new URL(original_url);
+        let params = new URLSearchParams(url.search);
+        for (const [key, value] of Object.entries(query_params)) {
+            if (params.has(key)) {
+                params.set(key, value);
+            } else {
+                params.append(key, value);
+            }
+        }
+        url.search = params.toString();
+        return url.href;
+    } catch (err) { }
+    return original_url;
 }
 
 new Vue({

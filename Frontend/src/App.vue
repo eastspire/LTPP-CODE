@@ -1399,11 +1399,15 @@ p {
   /* 不换行，溢出隐藏 */
   white-space: nowrap !important;
   overflow: hidden !important;
+  overflow-wrap: break-word !important;
+  text-overflow: ellipsis !important;
 }
 
 .my-span-parent {
   width: 100%;
   overflow: hidden !important;
+  overflow-wrap: break-word !important;
+  text-overflow: ellipsis;
 }
 
 .el-pagination.is-background .el-pager li {

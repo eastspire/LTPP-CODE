@@ -72,7 +72,7 @@
                     : tem.online == 1
                     ? 'online-name'
                     : 'unonline-name'
-                }`"
+                } my-span`"
                 >{{ tem.name && judgeIsString(tem.name) ? tem.name : '' }}
               </span>
               <span class="num" v-show="tem.no_look_num > 0">
@@ -581,7 +581,7 @@
                 <span
                   :class="`${
                     tem.online == 1 ? 'online-name' : 'unonline-name'
-                  }`"
+                  } my-span`"
                   >{{
                     tem.name && judgeIsString(tem.name)
                       ? tem.grade == 2
@@ -1830,6 +1830,7 @@ export default {
   border: 2px solid
     rgba(var(--ltpp-light-color), var(--ltpp-center-box-bk-opacity));
   position: relative;
+  cursor: pointer;
 }
 
 .user .num {

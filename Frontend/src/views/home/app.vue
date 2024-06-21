@@ -50,8 +50,7 @@
                 cursor: pointer;
                 margin: 0.66rem;
                 padding: 0.66rem;
-                width: 8.8rem;
-                height: 8.8rem;
+                width: 5.8rem;
               "
             >
               <div
@@ -67,8 +66,8 @@
                   v-if="temtable.image && reg.test(temtable.image)"
                   class="animate"
                   style="
-                    width: 6.6rem;
-                    height: 6.6rem;
+                    width: 5.6rem;
+                    height: 5.6rem;
                     object-fit: cover;
                     overflow: hidden;
                   "
@@ -76,15 +75,20 @@
                   alt=""
                   :src="temtable.image"
                 />
-                <div style="height: 0.66rem"></div>
+                <div style="height: 0.36rem"></div>
                 <span
                   class="my-span"
-                  style="font-size: 0.88rem; color: var(--ltpp-main-text-color)"
+                  style="
+                    font-size: 0.86rem;
+                    width: 5.6rem;
+                    color: var(--ltpp-main-text-color);
+                    text-align: center;
+                  "
                   >{{ temtable.name }}</span
                 >
               </div>
             </div>
-            <div style="height: 1%"></div>
+            <div style="height: 0.36rem"></div>
           </div>
         </div>
       </div>
@@ -406,9 +410,24 @@ export default {
           });
       } catch (err) {}
       try {
-        this.onedata.url &&
-          this.onedata.url != this.$SqsGlobal.loading_tips &&
-          window.open(this.onedata.url);
+        if (
+          this.onedata.url &&
+          this.onedata.url != this.$SqsGlobal.loading_tips
+        ) {
+          const url = this.appendOrOverrideQueryParam({
+            [this.$SqsGlobal.redirect_url_key]: encodeURIComponent(
+              this.onedata.url
+            ),
+          });
+          window.open(url);
+        } else {
+          this.$msg({
+            type: 'error',
+            message: '应用地址错误！',
+            duration: 1600,
+            offset: 80,
+          });
+        }
       } catch (err) {}
     },
   },

@@ -614,6 +614,8 @@ const no_support_file_tips = "该资源暂不支持预览";
 
 const root_name = 'root';
 
+const redirect_url_key = 'redirect_url';
+
 export default {
     root_name,
     no_support_file_tips,
@@ -637,6 +639,7 @@ export default {
     csharp,
     ruby,
     typescript,
+    redirect_url_key,
     // 编辑器主题
     themelist,
     // 编辑器语言

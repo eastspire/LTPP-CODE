@@ -1201,56 +1201,10 @@ export default {
     },
 
     async $imgAdd1(pos, $file) {
-      // 第一步.将图片上传到服务器.
-      let formdata = new FormData();
-      formdata.append('file', $file);
-      await this.$ajax({
-        url: '/File/saveImage',
-        method: 'post',
-        data: formdata,
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      })
-        .then((res) => {
-          // 第二步.将返回的url替换到文本原位置![...](0) -> ![...](url)
-          // $vm.$img2Url 详情见本页末尾
-          this.$refs.md1.$img2Url(pos, res.data.url);
-        })
-        .catch((t) => {
-          this.$msg({
-            type: 'error',
-            message: t,
-            duration: 1600,
-            offset: 80,
-          });
-        });
+      this.imgAddMiddleware(pos, $file, 'md1');
     },
     async $imgAdd4(pos, $file) {
-      // 第一步.将图片上传到服务器.
-      let formdata = new FormData();
-      formdata.append('file', $file);
-      await this.$ajax({
-        url: '/File/saveImage',
-        method: 'post',
-        data: formdata,
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      })
-        .then((res) => {
-          // 第二步.将返回的url替换到文本原位置![...](0) -> ![...](url)
-          // $vm.$img2Url 详情见本页末尾
-          this.$refs.md4.$img2Url(pos, res.data.url);
-        })
-        .catch((t) => {
-          this.$msg({
-            type: 'error',
-            message: t,
-            duration: 1600,
-            offset: 80,
-          });
-        });
+      this.imgAddMiddleware(pos, $file, 'md4');
     },
     async lookarticle() {
       const { data: res } = await this.$ajax({
