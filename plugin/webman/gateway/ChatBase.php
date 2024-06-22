@@ -33,8 +33,8 @@ class ChatBase extends Robot
 {
     // 切勿修改以下所有变量
     static $send_txt_limit_length = 10000;
-    static $group_chat__first_name = 'group_chat';
-    static $private_chat__first_name = 'private_chat';
+    static $group_chat_first_name = 'group_chat';
+    static $private_chat_first_name = 'private_chat';
     static $class_join_name = 'ClassTeach';
     static $group_name_limit_length = 11;
     static $type_notice_chat_name = 'notice_chat'; //公告消息
@@ -90,7 +90,7 @@ class ChatBase extends Robot
     // 判断聊天相关功能是否合法
     static protected function judgeIsChat(&$message)
     {
-        return isset($message->msg) && strlen($message->msg) > 0;
+        return isset($message->msg) && mb_strlen($message->msg) > 0;
     }
 
     // 判断创建的群信息是否合法
@@ -202,7 +202,7 @@ class ChatBase extends Robot
     }
 
     // 判断是否 是 连接群聊
-    static protected function judgeIsConnectChat(&$message, &$redis16, &$my_uid, &$db_my)
+    static protected function judgeIsConnectChat(&$message)
     {
         return $message->msgtype == 'connect_group';
     }

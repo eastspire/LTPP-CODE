@@ -32,7 +32,7 @@ class GroupChat extends ChatBase
         $get_user_id = $db_my->id;
         $post_user_id = $message->user_id;
         // 即时通讯群聊名称
-        $to_group = ChatBase::$group_chat__first_name . $post_user_id;
+        $to_group = ChatBase::$group_chat_first_name . $post_user_id;
 
         $now = date('Y-m-d H:i:s', time());
         $msg = $message->msg;
@@ -117,7 +117,7 @@ class GroupChat extends ChatBase
         ]);
         $db = Base::getGroupData($group_id);
         // 加入socket 群组
-        $socket_group_name = ChatBase::$group_chat__first_name . $group_id;
+        $socket_group_name = ChatBase::$group_chat_first_name . $group_id;
         Base::dataToSafe($db, true);
         Gateway::joinGroup($client_id, $socket_group_name);
         Gateway::sendToGroup($socket_group_name, json_encode([
@@ -153,7 +153,7 @@ class GroupChat extends ChatBase
             return;
         }
         $now = date('Y-m-d H:i:s', time());
-        $socket_group_name = ChatBase::$group_chat__first_name . $group_id;
+        $socket_group_name = ChatBase::$group_chat_first_name . $group_id;
         $db = Base::getGroupData($group_id);
         Base::dataToSafe($db, true);
 
@@ -275,7 +275,7 @@ class GroupChat extends ChatBase
             ->get();
         foreach ($db as &$tem) {
             // 连接该群
-            $socket_group_name = ChatBase::$group_chat__first_name . $tem->group_id;
+            $socket_group_name = ChatBase::$group_chat_first_name . $tem->group_id;
             Gateway::joinGroup($client_id, $socket_group_name);
         }
         $msg = '您已上线！';
