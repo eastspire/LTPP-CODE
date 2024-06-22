@@ -44,7 +44,7 @@ export default {
   name: 'LTPP',
   data() {
     return {
-      version: '2.8.3',
+      version: '2.9.0',
       get_version_lock: false,
     };
   },

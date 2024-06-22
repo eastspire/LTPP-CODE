@@ -1,7 +1,4 @@
-/* 
-在线视频
-
- */
+/* 在线视频 */
 
 <template>
   <div
@@ -366,14 +363,14 @@
 </template>
 
 <script>
-import urlencode from "../../../updateCompoents/urlencode";
+import urlencode from '../../../updateCompoents/urlencode';
 export default {
-  name: "videocommunity",
+  name: 'videocommunity',
   async created() {
-    this.key = "";
+    this.key = '';
     this.showone = false;
     this.onevideo = {};
-    this.$store.commit("updateObj", { my_id: this.getMyId() });
+    this.$store.commit('updateObj', { my_id: this.getMyId() });
     await this.getlist();
     await this.IsFabulous();
     await this.IsLove();
@@ -383,19 +380,19 @@ export default {
     this.comment_load_all_finish = false;
     this.userComment = [];
     this.comment_load_all_finish = false;
-    this.video = document.getElementById("nowvideo");
-    this.video && this.video.addEventListener("ended", this.videoEnd);
+    this.video = document.getElementById('nowvideo');
+    this.video && this.video.addEventListener('ended', this.videoEnd);
   },
   deactivated() {
     this.isSeeComment = false;
     this.userComment = [];
     this.comment_load_all_finish = false;
-    this.video && this.video.removeEventListener("ended", this.videoEnd);
+    this.video && this.video.removeEventListener('ended', this.videoEnd);
   },
   data() {
     return {
-      reg: /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\*\+,;=.]+$/,
-      drawer_size: "460px",
+      reg: /^(https?:\/\/(([a-zA-Z0-9]+-?)+[a-zA-Z0-9]+\.)+[a-zA-Z]+)(:\d+)?(\/.*)?(\?.*)?(#.*)?$/,
+      drawer_size: '460px',
       comment_load_all_finish: false,
       isSeeComment: false,
       isfabulous: false,
@@ -403,12 +400,12 @@ export default {
       touserid: 0,
       mainid: 0,
       isseeDia: false,
-      mysay: "",
-      diamysay: "",
+      mysay: '',
+      diamysay: '',
       userComment: [],
       video: null,
       onevideo: {},
-      key: "",
+      key: '',
       showone: false,
     };
   },
@@ -431,9 +428,9 @@ export default {
       id &&
         id != this.$SqsGlobal.loading_tips &&
         this.$router.push({
-          path: "/userpage",
+          path: '/userpage',
           query: {
-            path: urlencode(id, "gbk"),
+            path: urlencode(id, 'gbk'),
           },
         });
     },
@@ -444,14 +441,14 @@ export default {
     },
     async IsFabulous() {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Video/judgeIsFabulous",
+        method: 'post',
+        url: '/Video/judgeIsFabulous',
         data: {
           video_id: this.onevideo?.id,
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -465,14 +462,14 @@ export default {
     },
     async IsLove() {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Video/judgeIsLove",
+        method: 'post',
+        url: '/Video/judgeIsLove',
         data: {
           video_id: this.onevideo?.id,
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -487,14 +484,14 @@ export default {
     // 收藏视频
     async LoveVideo() {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Video/loveVideo",
+        method: 'post',
+        url: '/Video/loveVideo',
         data: {
           video_id: this.onevideo?.id,
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -502,7 +499,7 @@ export default {
       });
       if (res?.code == 1) {
         this.$msg({
-          type: "success",
+          type: 'success',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -511,7 +508,7 @@ export default {
         this.onevideo.love = Math.max(this.onevideo?.love + 1, 0);
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -521,14 +518,14 @@ export default {
     // 点赞视频
     async FabulousVideo() {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Video/fabulousVideo",
+        method: 'post',
+        url: '/Video/fabulousVideo',
         data: {
           video_id: this.onevideo?.id,
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -536,7 +533,7 @@ export default {
       });
       if (res?.code == 1) {
         this.$msg({
-          type: "success",
+          type: 'success',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -545,7 +542,7 @@ export default {
         this.onevideo.fabulous = Math.max(this.onevideo?.fabulous + 1, 0);
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -555,14 +552,14 @@ export default {
     // 取消收藏
     async DelLoveVideo() {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Video/deleteLoveVideo",
+        method: 'post',
+        url: '/Video/deleteLoveVideo',
         data: {
           video_id: this.onevideo?.id,
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -570,7 +567,7 @@ export default {
       });
       if (res?.code == 1) {
         this.$msg({
-          type: "success",
+          type: 'success',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -579,7 +576,7 @@ export default {
         this.onevideo.love = Math.max(this.onevideo?.love - 1, 0);
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -589,14 +586,14 @@ export default {
     // 取消点赞
     async DelFabulousVideo() {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Video/deleteFabulousVideo",
+        method: 'post',
+        url: '/Video/deleteFabulousVideo',
         data: {
           video_id: this.onevideo?.id,
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -604,7 +601,7 @@ export default {
       });
       if (res?.code == 1) {
         this.$msg({
-          type: "success",
+          type: 'success',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -613,7 +610,7 @@ export default {
         this.onevideo.fabulous = Math.max(this.onevideo?.fabulous - 1, 0);
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -623,8 +620,8 @@ export default {
     // 发表评论
     async SendMyComment(id) {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Video/sendMyComment",
+        method: 'post',
+        url: '/Video/sendMyComment',
         data: {
           video_id: this.onevideo?.id,
           maincomment_id: id,
@@ -633,7 +630,7 @@ export default {
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -641,20 +638,20 @@ export default {
       });
       if (res?.code == 1) {
         this.$msg({
-          type: "success",
+          type: 'success',
           message: res?.msg,
           duration: 1600,
           offset: 80,
         });
         this.comment_load_all_finish = false;
         this.isseeDia = false;
-        this.mysay = "";
-        this.diamysay = "";
+        this.mysay = '';
+        this.diamysay = '';
         this.touserid = 0;
         this.userComment = [];
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -671,8 +668,8 @@ export default {
         return;
       }
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Video/loadUserComment",
+        method: 'post',
+        url: '/Video/loadUserComment',
         data: {
           comment_id:
             this.userComment?.length > 0
@@ -682,7 +679,7 @@ export default {
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -698,7 +695,7 @@ export default {
         }
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -707,15 +704,15 @@ export default {
     },
     async DeleteComment(id) {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Video/DeleteComment",
+        method: 'post',
+        url: '/Video/DeleteComment',
         data: {
           video_id: this.onevideo?.id,
           delete_id: id,
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -727,24 +724,24 @@ export default {
         this.loadUserComment();
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
         });
       }
     },
-    async getlist(up_do = "down") {
+    async getlist(up_do = 'down') {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Video/loadVideo",
+        method: 'post',
+        url: '/Video/loadVideo',
         data: {
           video_id: this.onevideo?.id,
           do: up_do,
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -755,7 +752,7 @@ export default {
       }
       if (res?.code != 1) {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -766,27 +763,27 @@ export default {
       this.comment_load_all_finish = false;
       this.userComment = [];
       if (this.key) {
-        await this.keysearch(isInc ? "down" : "up");
+        await this.keysearch(isInc ? 'down' : 'up');
       } else {
-        await this.getlist(isInc ? "down" : "up");
+        await this.getlist(isInc ? 'down' : 'up');
       }
       await this.IsFabulous();
       await this.IsLove();
       this.$nextTick(() => {
-        this.video = document.getElementById("nowvideo");
+        this.video = document.getElementById('nowvideo');
         this.video && this.videoPlay();
       });
     },
     async share() {
       let front_url = await this.getFronturl();
       let url =
-        front_url + "/onevideo?path=" + urlencode(this.onevideo?.id, "gbk");
+        front_url + '/onevideo?path=' + urlencode(this.onevideo?.id, 'gbk');
       this.copy(url);
     },
-    async keysearch(up_do = "down") {
+    async keysearch(up_do = 'down') {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Video/findvideo",
+        method: 'post',
+        url: '/Video/findvideo',
         data: {
           key: this.key,
           video_id: this.onevideo?.id,
@@ -794,7 +791,7 @@ export default {
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -805,16 +802,16 @@ export default {
       }
       if (res?.code != 1) {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
         });
       }
     },
-    async search(up_do = "down") {
-      this.onevideo.id = "";
-      if (this.key == "" || this.key == null || this.key == undefined) {
+    async search(up_do = 'down') {
+      this.onevideo.id = '';
+      if (this.key == '' || this.key == null || this.key == undefined) {
         await this.getlist(up_do);
         await this.IsFabulous();
         await this.IsLove();

@@ -12,9 +12,7 @@
 
 namespace app\controller;
 
-use Exception;
 use support\Db;
-use Webman\RedisQueue\Redis as RedisQueue;
 
 class Ssh
 {

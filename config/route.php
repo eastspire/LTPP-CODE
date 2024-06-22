@@ -17,8 +17,6 @@ use Webman\Route;
 use support\Request;
 use app\controller\Base;
 
-
-
 Route::any(Base::$LTPP_public_static_path . '/' . '[{path:.+}]', function (Request $request) {
     $path = '';
     $file_extion = '';
@@ -54,13 +52,14 @@ Route::any(Base::$LTPP_public_static_path . '/' . '[{path:.+}]', function (Reque
         }
         $is_open_gzip = Base::judgeIsOpenGzip($file_extion);
         $is_use_cache_control = Base::judgeIsOpenCacheControl($file_extion);
+        $data_len = strlen($file_data);
         $response_header = [
             'Content-Type' => Base::getContentType($file_extion),
-            'Accept-Ranges' => 'bytes',
-            'Content-Length' => strlen($file_data),
+            'Content-Length' => $data_len,
+            'Content-Range' => 'bytes 0-' . $data_len . '/' . $data_len,
             'File-Path' => $path,
             'File-Extion' => $file_extion,
-            'File-Content-Type' => Base::getContentType($file_extion)
+            'File-Content-Type' => Base::getContentType($file_extion),
         ];
         if ($is_open_gzip) {
             $response_header['Content-Encoding'] = 'gzip';
@@ -75,7 +74,6 @@ Route::any(Base::$LTPP_public_static_path . '/' . '[{path:.+}]', function (Reque
     }
     return Base::notFoundPage($path, $file_extion);
 });
-
 
 Route::fallback(function (Request $request) {
     $path = $request->path();

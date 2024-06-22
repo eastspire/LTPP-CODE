@@ -782,7 +782,7 @@ export default {
       last_notice_num: 0,
       video_load_error: false,
       timer: null,
-      reg: /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\*\+,;=.]+$/,
+      reg: /^(https?:\/\/(([a-zA-Z0-9]+-?)+[a-zA-Z0-9]+\.)+[a-zA-Z]+)(:\d+)?(\/.*)?(\?.*)?(#.*)?$/,
       socket_timer: null,
       activeIndex: '1',
       lookmusic: 0,

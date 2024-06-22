@@ -311,7 +311,7 @@ export default {
     return {
       issendfinish: true,
       problemText: '',
-      reg: /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\*\+,;=.]+$/,
+      reg: /^(https?:\/\/(([a-zA-Z0-9]+-?)+[a-zA-Z0-9]+\.)+[a-zA-Z]+)(:\d+)?(\/.*)?(\?.*)?(#.*)?$/,
       xss_options: this.$SqsGlobal.xss_options,
       stripIgnoreTagBody: this.$SqsGlobal.strip_ignore_tag_body,
       dialogFormVisible: false, // 用于控制表单对话框的开启和关闭

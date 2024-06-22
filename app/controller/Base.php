@@ -101,7 +101,7 @@ class Base
     /**
      * 通知文件扩展名
      */
-    static $notice_file_extension = 'md';
+    static $notice_file_extension = 'html';
 
     /**
      * 默认trace信息
@@ -1230,6 +1230,7 @@ class Base
         'loadCharset' => true,
         'oneArticle' => true,
         'lookContestProblemCode' => true,
+        'proxyRequest' => true,
     ];
 
     /**
@@ -5094,6 +5095,29 @@ class Base
     }
 
     /**
+     * 设置请求头，存在则替换
+     */
+    static public function setHeader(&$headers, $header)
+    {
+        list($name, $value) = explode(':', $header, 2);
+        $name = trim($name);
+        $value = trim($value);
+
+        $found = false;
+        foreach ($headers as &$existingHeader) {
+            if (stripos($existingHeader, $name) === 0) {
+                $existingHeader = "$name:$value";
+                $found = true;
+                break;
+            }
+        }
+
+        if (!$found) {
+            $headers[] = "$name:$value";
+        }
+    }
+
+    /**
      * DEBUG
      * @param * $trace trace
      */
@@ -5162,6 +5186,7 @@ class Base
                 '</pre><br><strong>Trace信息</strong><br><pre style="white-space:pre-wrap;word-wrap:break-word;font-size: 1.06rem;">';
             $same_end = '</pre>';
             $notice_save_file_param = $same_start . $trace_str . $same_end;
+            $notice_save_file_param = Base::strToHTML($notice_save_file_param);
             $msg = $same_start
                 . ($trace_str == Base::$default_trace_msg ? $trace_str : Base::noticeSaveFile($notice_save_file_param)) . $same_end;
             Robot::sendChatToOneUserMsgAndEmail(

@@ -25,8 +25,11 @@ class CrossDomain implements MiddlewareInterface
             'Access-Control-Allow-Credentials' => 'true',
             'Access-Control-Allow-Origin' => $request->header('Origin', '*'),
             'Access-Control-Allow-Methods' => 'GET, POST, PATCH',
-            'Access-Control-Allow-Headers' => 'Authorization,Requestid,Key,Content-Type,If-Match,If-Modified-Since,If-None-Match,If-Unmodified-Since,X-CSRF-TOKEN,X-Requested-With',
-            'Access-Control-Max-Age' => '88888888'
+            'Access-Control-Allow-Headers' => 'Authorization,Requestid,Key,Content-Type,Range,If-Match,If-Modified-Since,If-None-Match,If-Unmodified-Since,X-CSRF-TOKEN,X-Requested-With',
+            'Access-Control-Max-Age' => '88888888',
+            'Connection' => 'keep-alive',
+            'Access-Control-Expose-Headers' => 'Content-Length,Content-Range,content-type,expires,last-modified',
+            'Accept-Ranges' => 'bytes',
         ]);
         return $response;
     }

@@ -122,7 +122,7 @@
                             {{
                               temtable.article
                                 .substr(0, 160)
-                                .replace($store.state.html_reg, "")
+                                .replace($store.state.html_reg, '')
                                 .substr(0, 40)
                             }}[...]
                           </p>
@@ -174,9 +174,9 @@
 </template>
 
 <script>
-import urlencode from "../../../updateCompoents/urlencode";
+import urlencode from '../../../updateCompoents/urlencode';
 export default {
-  name: "oneproblemsolve",
+  name: 'oneproblemsolve',
   created() {
     this.isseetip = true;
     this.page = 1;
@@ -193,12 +193,12 @@ export default {
       this.$router.go(-1);
       return;
     }
-    this.problemid = urlencode.decode(this.$route.query.path, "gbk");
+    this.problemid = urlencode.decode(this.$route.query.path, 'gbk');
   },
   async activated() {
     this.isseetip = true;
     this.limit = 10;
-    window.addEventListener("scroll", this.scrollBottom);
+    window.addEventListener('scroll', this.scrollBottom);
     this.page = 1;
     this.isinit = false;
     this.initData();
@@ -213,19 +213,19 @@ export default {
     this.userarticle = [];
     this.disabledscroll = false;
     this.page = 1;
-    window.removeEventListener("scroll", this.scrollBottom);
+    window.removeEventListener('scroll', this.scrollBottom);
   },
   destroyed() {
     this.isseetip = false;
     this.isinit = false;
     this.userarticle = [];
     this.page = 1;
-    window.addEventListener("scroll", this.scrollBottom);
+    window.addEventListener('scroll', this.scrollBottom);
   },
   data() {
     return {
       isinit: false,
-      reg: /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\*\+,;=.]+$/,
+      reg: /^(https?:\/\/(([a-zA-Z0-9]+-?)+[a-zA-Z0-9]+\.)+[a-zA-Z]+)(:\d+)?(\/.*)?(\?.*)?(#.*)?$/,
       limit: 10,
       disabledscroll: false,
       isseetip: true,
@@ -269,10 +269,10 @@ export default {
         }
         this.page--;
         const { data: res } = await this.$ajax({
-          method: "post",
-          url: "/Article/problemSolveArticleList",
+          method: 'post',
+          url: '/Article/problemSolveArticleList',
           portType: {
-            process: "8792",
+            process: '8792',
           },
           data: {
             problem_id: this.problemid,
@@ -281,7 +281,7 @@ export default {
           },
         }).catch((t) => {
           this.$msg({
-            type: "error",
+            type: 'error',
             message: t,
             duration: 1600,
             offset: 80,
@@ -317,9 +317,9 @@ export default {
       id &&
         id != this.$SqsGlobal.loading_tips &&
         this.$router.push({
-          path: "/onearticle",
+          path: '/onearticle',
           query: {
-            path: urlencode(id, "gbk"),
+            path: urlencode(id, 'gbk'),
           },
         });
     },
@@ -330,10 +330,10 @@ export default {
       }
       this.disabledscroll = true;
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Article/problemSolveArticleList",
+        method: 'post',
+        url: '/Article/problemSolveArticleList',
         portType: {
-          process: "8792",
+          process: '8792',
         },
         data: {
           problem_id: this.problemid,
@@ -342,7 +342,7 @@ export default {
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -353,7 +353,7 @@ export default {
       });
       if (res?.code != 1) {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -365,16 +365,16 @@ export default {
         this.userarticle.length <= 0
       ) {
         this.$msg({
-          type: "success",
-          message: "暂无题解！即将返回！",
+          type: 'success',
+          message: '暂无题解！即将返回！',
           duration: 1600,
           offset: 80,
         });
         this.$router.go(-1);
       } else if (res?.data && res?.data.length <= 0) {
         this.$msg({
-          type: "success",
-          message: "没有更多内容啦！",
+          type: 'success',
+          message: '没有更多内容啦！',
           duration: 1600,
           offset: 80,
         });

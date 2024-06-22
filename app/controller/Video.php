@@ -19,7 +19,8 @@ class Video
         'url',
         'fabulous',
         'love',
-        'time'
+        'time',
+        'isdouyin'
     ];
 
     /**
@@ -37,6 +38,37 @@ class Video
         'time'
     ];
 
+    /**
+     * 改变视频地址
+     */
+    static protected function changeVideoUrl(&$db)
+    {
+        $base_url = Base::getSettingKeyData('GLOBlinuxurl');
+        $response_header = 'Connection:keep-alive&Content-Type:video/mp4';
+        if (is_array($db)) {
+            foreach ($db as &$tem) {
+                if (isset($tem->isdouyin)) {
+                    if (!$tem->isdouyin) {
+                        unset($tem->isdouyin);
+                        continue;
+                    }
+                    unset($tem->isdouyin);
+                }
+                $referer = 'Referer:' . $tem->url;
+                $tem->url = $base_url . Proxy::$path_method . '?' . Proxy::$source_url_key_name . '=' . urlencode($tem->url) .
+                    '&' . Proxy::$source_request_header_key_name . '=' . urlencode($referer) .
+                    '&' . Proxy::$source_response_header_key_name . '=' . urlencode($response_header);
+            }
+            return;
+        }
+        if (isset($db->isdouyin)) {
+            unset($db->isdouyin);
+        }
+        $referer = 'Referer:' . $db->url;
+        $db->url = $base_url . Proxy::$path_method . '?' . Proxy::$source_url_key_name . '=' . urlencode($db->url) .
+            '&' . Proxy::$source_request_header_key_name . '=' . urlencode($referer) .
+            '&' . Proxy::$source_response_header_key_name . '=' . urlencode($response_header);
+    }
 
     /**
      * 获取收藏或者点赞的视频
@@ -64,7 +96,6 @@ class Video
                 $tem_res = Db::table('video')
                     ->where('id', $tem->videoid)
                     ->where('isdel', 0)
-                    ->where('isdouyin', 0)
                     ->select(Video::$video_db_key)
                     ->first();
                 if (!$tem_res) {
@@ -89,7 +120,6 @@ class Video
                 $oneVideo = Db::table('video')
                     ->where('id', $tem->videoid)
                     ->where('isdel', 0)
-                    ->where('isdouyin', 0)
                     ->where('name', 'like', '%' . $key . '%')
                     ->orderBy('id', 'desc')
                     ->select(Video::$video_db_key)
@@ -103,6 +133,7 @@ class Video
                 }
             }
         }
+        Video::changeVideoUrl($res);
         return [$res, $allnum];
     }
 
@@ -275,7 +306,6 @@ class Video
                 $info = Db::table('video')
                     ->where('id', '<', $video_id)
                     ->where('name', 'like', '%' . $key . '%')
-                    ->where('isdouyin', 0)
                     ->where('isdel', 0)
                     ->select(Video::$video_db_key)
                     ->orderBy('id', 'desc')
@@ -284,7 +314,6 @@ class Video
                 $info = Db::table('video')
                     ->where('id', '>', $video_id)
                     ->where('name', 'like', '%' . $key . '%')
-                    ->where('isdouyin', 0)
                     ->where('isdel', 0)
                     ->select(Video::$video_db_key)
                     ->orderBy('id', 'asc')
@@ -293,12 +322,12 @@ class Video
         } else {
             $info = Db::table('video')
                 ->where('name', 'like', '%' . $key . '%')
-                ->where('isdouyin', 0)
                 ->where('isdel', 0)
                 ->select(Video::$video_db_key)
                 ->orderBy('id', 'desc')
                 ->first();
         }
+        Video::changeVideoUrl($info);
         Base::dataToSafe($info);
         if ($info) {
             return json(['code' => 1, 'data' => $info, 'msg' => '查找视频成功']);
@@ -337,7 +366,6 @@ class Video
             if ($isdown) {
                 $info = Db::table('video')
                     ->where('id',  '<', $video_id)
-                    ->where('isdouyin', 0)
                     ->where('isdel', 0)
                     ->select(Video::$video_db_key)
                     ->orderBy('id', 'desc')
@@ -345,7 +373,6 @@ class Video
             } else {
                 $info = Db::table('video')
                     ->where('id', '>', $video_id)
-                    ->where('isdouyin', 0)
                     ->where('isdel', 0)
                     ->select(Video::$video_db_key)
                     ->orderBy('id', 'asc')
@@ -353,12 +380,12 @@ class Video
             }
         } else {
             $info = Db::table('video')
-                ->where('isdouyin', 0)
                 ->where('isdel', 0)
                 ->select(Video::$video_db_key)
                 ->orderBy('id', 'desc')
                 ->first();
         }
+        Video::changeVideoUrl($info);
         Base::dataToSafe($info);
         if ($info) {
             return json(['code' => 1, 'data' => $info, 'msg' => '视频列表获取成功']);
@@ -407,6 +434,7 @@ class Video
                     ->where('isdel', 0);
             })
             ->count();
+        Video::changeVideoUrl($info);
         Base::dataToSafe($info);
         if ($info) {
             return json(['code' => 1, 'data' => $info, 'allnum' => $allnum, 'msg' => '查找视频成功']);
@@ -439,6 +467,7 @@ class Video
         $allnum = Db::table('video')
             ->where('isdel', 0)
             ->count();
+        Video::changeVideoUrl($info);
         Base::dataToSafe($info);
         if ($info) {
             return json(['code' => 1, 'data' => $info, 'allnum' => $allnum, 'msg' => '视频列表获取成功']);
@@ -677,12 +706,12 @@ class Video
         $videodb = Db::table('video')
             ->where('id', $video_id)
             ->where('isdel', 0)
-            ->where('isdouyin', 0)
             ->select(Video::$video_db_key)
             ->first();
         if (!$videodb) {
             return json(['code' => -1, 'data' => [], 'msg' => '视频不存在']);
         }
+        Video::changeVideoUrl($videodb);
         Base::dataToSafe($videodb);
         return json(['code' => 1, 'data' => $videodb, 'msg' => '视频加载完成']);
     }
@@ -931,6 +960,7 @@ class Video
         $db = Video::getVideoFromLoveOrFabulous('lovevideo', $my_aid, $page, $limit, $key);
         $res = $db[0];
         $allnum = $db[1];
+        Video::changeVideoUrl($res);
         Base::dataToSafe($res);
         if ($res) {
             return json(['code' => 1, 'data' => $res, 'allnum' => $allnum, 'msg' => '查找视频成功']);
@@ -952,6 +982,7 @@ class Video
         $db = Video::getVideoFromLoveOrFabulous('lovevideo', $my_aid, $page, $limit);
         $res = $db[0];
         $allnum = $db[1];
+        Video::changeVideoUrl($res);
         Base::dataToSafe($res);
         if ($res) {
             return json(['code' => 1, 'data' => $res, 'allnum' => $allnum, 'msg' => '视频加载成功']);
@@ -974,6 +1005,7 @@ class Video
         $db = Video::getVideoFromLoveOrFabulous('fabulousvideo', $my_aid, $page, $limit, $key);
         $res = $db[0];
         $allnum = $db[1];
+        Video::changeVideoUrl($res);
         Base::dataToSafe($res);
         if ($res) {
             return json(['code' => 1, 'data' => $res, 'allnum' => $allnum, 'msg' => '查找视频成功']);
@@ -995,6 +1027,7 @@ class Video
         $db = Video::getVideoFromLoveOrFabulous('fabulousvideo', $my_aid, $page, $limit);
         $res = $db[0];
         $allnum = $db[1];
+        Video::changeVideoUrl($res);
         Base::dataToSafe($res);
         if ($res) {
             return json(['code' => 1, 'data' => $res, 'allnum' => $allnum, 'msg' => '视频加载成功']);

@@ -14,7 +14,7 @@ class Photo
      * @param Request $request 请求
      * @return string $res json
      */
-    public function deleteAll(Request $request)
+    public function deleteAll()
     {
         $my_uid = JwtToken::getCurrentId();
         $my_aid = Base::getIdByUid($my_uid);
