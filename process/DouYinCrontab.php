@@ -4,16 +4,16 @@ namespace process;
 
 use Workerman\Crontab\Crontab;
 use app\controller\Base;
-use app\controller\Video;
 use Exception;
 use support\Db;
 
 class DouYinCrontab
 {
     /**
-     * 记录抖音最大视频毫秒数
+     * 记录抖音最大视频大小（单位：字节）
+     * 4MB
      */
-    static $max_video_duration_seconds = 16000;
+    static $max_video_size = 1048576 << 2;
 
     /**
      * 重命名
@@ -170,8 +170,8 @@ class DouYinCrontab
                         !isset($tem['video_tag']) ||
                         !isset($tem['statistics']['collect_count']) ||
                         !isset($tem['statistics']['digg_count']) ||
-                        !isset($tem['video']['duration']) ||
-                        $tem['video']['duration'] >= DouYinCrontab::$max_video_duration_seconds
+                        !isset($tem['video']['bit_rate'][0]['play_addr']['data_size']) ||
+                        $tem['video']['bit_rate'][0]['play_addr']['data_size'] >= DouYinCrontab::$max_video_size
                     ) {
                         continue;
                     }

@@ -40,9 +40,14 @@ class Video
 
     /**
      * 改变视频地址
+     * @param * $db
+     * @param bool $is_need_change_url
      */
-    static protected function changeVideoUrl(&$db)
+    static protected function changeVideoUrl(&$db, $is_need_change_url = true)
     {
+        if (!$db) {
+            return;
+        }
         $base_url = Base::getSettingKeyData('GLOBlinuxurl');
         $response_header = 'Connection:keep-alive&Content-Type:video/mp4';
         if (is_array($db)) {
@@ -54,6 +59,9 @@ class Video
                     }
                     unset($tem->isdouyin);
                 }
+                if (!$is_need_change_url || !isset($tem->url)) {
+                    continue;
+                }
                 $referer = 'Referer:' . $tem->url;
                 $tem->url = $base_url . Proxy::$path_method . '?' . Proxy::$source_url_key_name . '=' . urlencode($tem->url) .
                     '&' . Proxy::$source_request_header_key_name . '=' . urlencode($referer) .
@@ -62,7 +70,14 @@ class Video
             return;
         }
         if (isset($db->isdouyin)) {
+            if (!$db->isdouyin) {
+                unset($db->isdouyin);
+                return;
+            }
             unset($db->isdouyin);
+        }
+        if (!$is_need_change_url || !isset($db->url)) {
+            return;
         }
         $referer = 'Referer:' . $db->url;
         $db->url = $base_url . Proxy::$path_method . '?' . Proxy::$source_url_key_name . '=' . urlencode($db->url) .
@@ -434,7 +449,7 @@ class Video
                     ->where('isdel', 0);
             })
             ->count();
-        Video::changeVideoUrl($info);
+        Video::changeVideoUrl($info, false);
         Base::dataToSafe($info);
         if ($info) {
             return json(['code' => 1, 'data' => $info, 'allnum' => $allnum, 'msg' => '查找视频成功']);
@@ -467,7 +482,7 @@ class Video
         $allnum = Db::table('video')
             ->where('isdel', 0)
             ->count();
-        Video::changeVideoUrl($info);
+        Video::changeVideoUrl($info, false);
         Base::dataToSafe($info);
         if ($info) {
             return json(['code' => 1, 'data' => $info, 'allnum' => $allnum, 'msg' => '视频列表获取成功']);
