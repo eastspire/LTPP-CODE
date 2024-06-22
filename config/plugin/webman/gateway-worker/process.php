@@ -18,12 +18,12 @@ return [
     'gateway' => [
         'handler' => Gateway::class,
         'listen' => 'websocket://0.0.0.0:47272',
-        'count' => cpu_count() > 2 ? 2 : cpu_count(),
+        'count' => cpu_count() > 6 ? 6 : cpu_count(),
         'constructor' => [
             'config' => [
                 'lanIp' => '127.0.0.1',
-                'startPort' => 2300,
-                'pingInterval' => 16,
+                'startPort' => 40000,
+                'pingInterval' => 8,
                 'pingData' => '{"type":"ping"}',
                 'registerAddress' => '127.0.0.1:1236',
                 'onConnect' => function () {
@@ -33,7 +33,7 @@ return [
     ],
     'worker' => [
         'handler' => BusinessWorker::class,
-        'count' => cpu_count() > 4 ? 4 : cpu_count(),
+        'count' => cpu_count() > 8 ? 16 : cpu_count() * 2,
         'constructor' => [
             'config' => [
                 'eventHandler' => plugin\webman\gateway\Events::class,
