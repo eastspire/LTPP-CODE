@@ -134,6 +134,8 @@ class Events extends ChatBase
                 } else if (ChatBase::judgeIsClassChat($message)) {
                     // 课堂
                     ClassMsg::classMsg($client_id, $message, $db_my);
+                } else {
+                    ChatBase::sendToOneError($client_id, ChatBase::$send_fail_msg);
                 }
             } else if (ChatBase::judgeIsOperationGroup($message)) {
                 // 群聊相关操作
@@ -152,7 +154,11 @@ class Events extends ChatBase
                 } else if ($message->msgtype == 'exit_group') {
                     // 退出群聊
                     GroupChat::exitChat($client_id, $message, $db_my);
+                } else {
+                    ChatBase::sendToOneError($client_id, ChatBase::$send_fail_msg);
                 }
+            } else {
+                ChatBase::sendToOneError($client_id, ChatBase::$send_fail_msg);
             }
         }
     }

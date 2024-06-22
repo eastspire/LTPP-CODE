@@ -54,6 +54,8 @@ class ChatBase extends Robot
     static $heart_name = 'heart'; //心跳包名称
     static $group_user_num_limit = 600; //一个群聊用户数目上限
 
+    static $send_fail_msg = '消息发送失败！请重试！';
+
     // 客户端ID获取用户真实ID
     static protected function clientidToId(&$client_id)
     {
