@@ -299,13 +299,14 @@ class Goods
     {
         $file_data = Base::getStaticFileData($path);
         $file_extion = Base::getDbFileExtion($path);
+        $type = Base::getContentType($file_extion);
         return Response($file_data, 200, [
-            'Content-Type' => Base::getContentType($file_extion),
+            'Content-Type' => $type,
             'Accept-Ranges' => 'bytes',
             'Content-Length' => strlen($file_data),
             'File-Path' => $path,
             'File-Extion' => $file_extion,
-            'File-Content-Type' => Base::getContentType($file_extion),
+            'File-Content-Type' => $type,
         ]);
     }
 

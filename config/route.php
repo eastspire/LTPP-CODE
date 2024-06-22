@@ -53,17 +53,21 @@ Route::any(Base::$LTPP_public_static_path . '/' . '[{path:.+}]', function (Reque
         $is_open_gzip = Base::judgeIsOpenGzip($file_extion);
         $is_use_cache_control = Base::judgeIsOpenCacheControl($file_extion);
         $data_len = strlen($file_data);
+        $type = Base::getContentType($file_extion);
         $response_header = [
-            'Content-Type' => Base::getContentType($file_extion),
+            'Content-Type' => $type,
             'Content-Length' => $data_len,
             'Content-Range' => 'bytes 0-' . $data_len . '/' . $data_len,
             'File-Path' => $path,
             'File-Extion' => $file_extion,
-            'File-Content-Type' => Base::getContentType($file_extion),
+            'File-Content-Type' => $type,
         ];
         if ($is_open_gzip) {
             $response_header['Content-Encoding'] = 'gzip';
             $file_data = gzencode($file_data, Base::$gzip_num);
+            $data_len = strlen($file_data);
+            $response_header['Content-Length'] = $data_len;
+            $response_header['Content-Range'] = 'bytes 0-' . $data_len . '/' . $data_len;
         }
         if ($is_use_cache_control) {
             $response_header['Cache-Control'] = 'public,max-age=88888888';

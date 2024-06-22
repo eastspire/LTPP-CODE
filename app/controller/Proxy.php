@@ -89,9 +89,8 @@ class Proxy
             return Proxy::getResponse($file_data, $response_header);
         }
         $body = [];
-        Base::setHeader($request_header, 'Content-Type:application/json');
         foreach ($data as &$param) {
-            if (strpos($param, ':') === false) {
+            if (strpos($param, '=') === false) {
                 continue;
             }
             list($key, $value) = explode('=', $param);
@@ -104,7 +103,7 @@ class Proxy
             $body[$key] = $value;
         }
         // POST
-        $file_data = Base::postRequest($url, $request_header, $body, true);
+        $file_data = Base::postRequest($url, $request_header, $body, false);
         return Proxy::getResponse($file_data, $response_header);
     }
 }

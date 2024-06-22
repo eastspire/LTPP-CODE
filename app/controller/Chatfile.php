@@ -84,23 +84,24 @@ class Chatfile
         $file_data = Base::getStaticFileData($path);
         $file_extion = Base::getDbFileExtion($path);
         $path = Base::Base64Decode($path);
+        $type = Base::getContentType($file_extion);
         if (!$path) {
             return Response(Base::$param_error_msg, 404, [
-                'Content-Type' => Base::getContentType($file_extion),
+                'Content-Type' => $type,
                 'Accept-Ranges' => 'bytes',
                 'Content-Length' => strlen($file_data),
                 'File-Path' => $path,
                 'File-Extion' => $file_extion,
-                'File-Content-Type' => Base::getContentType($file_extion),
+                'File-Content-Type' => $type,
             ]);
         }
         return Response($file_data, 200, [
-            'Content-Type' => Base::getContentType($file_extion),
+            'Content-Type' => $type,
             'Accept-Ranges' => 'bytes',
             'Content-Length' => strlen($file_data),
             'File-Path' => $path,
             'File-Extion' => $file_extion,
-            'File-Content-Type' => Base::getContentType($file_extion),
+            'File-Content-Type' => $type,
         ]);
     }
 };

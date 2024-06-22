@@ -1604,11 +1604,12 @@ class Base
             }
         }
         $not_found = Base::notFoundData();
+        $type = Base::getContentType('html');
         return response($not_found, 404, [
-            'Content-Type' => Base::getContentType('html'),
+            'Content-Type' => $type,
             'Accept-Ranges' => 'bytes',
             'Content-Length' => strlen($not_found),
-            'File-Content-Type' => Base::getContentType($not_found),
+            'File-Content-Type' => $type,
             'Content-Encoding' => 'gzip',
             'File-Path' => $path,
             'File-Extion' => $file_extion,
@@ -1635,13 +1636,14 @@ class Base
         $highlight_css = Base::getCss('highlight');
         $highlight_js = Base::getJs('highlight');
         $markdown_it_js = Base::getJs('markdown-it');
-        $html = '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html;charset=utf-8"><link rel="icon" href="https://ltpp.vip/logo.png" type="image/x-icon"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="keywords" content="LTPP,开发,编程,计算机,学习,资源,OJ,LTPP在线开发平台"><meta name="description" content="LTPP（Learning teaching practice platform）在线开发平台是一个编程学习网站，该网站集文章学习、短视频、在线直播、代码训练、在线问答、在线聊天和在线商店于一体，专注于提升用户编程能力，做到“学”与“练”的统一。"><meta name="viewport" content="width=device-width,initial-scale=1.0"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"><base target="_blank" /><title>' . Base::$LTPP_name . '</title><style>' . $highlight_css . '</style><script>' . $highlight_js . '</script><script>' . $markdown_it_js . '</script></head><body><div id="loading-main"><div class=\'loading-body\'><span><span></span><span></span><span></span><span></span></span><div class=\'loading-base\'><span></span><div class=\'loading-face\'></div></div></div><div class=\'loading-longfazers\'><span></span><span></span><span></span><span></span></div><h1 class="loading-h1">LOADING</h1></div><div id="LTPP"></div><script>const md=window.markdownit({html:true,xhtmlOut:true,linkify:true,typographer:true,html_blocks:{allowed:\'all\'},allowedTags:[\'script\',\'style\']});const code=`' . $md . '`;const result=md.render(code);document.getElementById("LTPP").innerHTML=result;</script></body></html>';
+        $html = '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html;charset=utf-8"><link rel="icon" href="https://ltpp.vip/logo.png" type="image/x-icon"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="keywords" content="LTPP,开发,编程,计算机,学习,资源,OJ,LTPP在线开发平台"><meta name="description" content="LTPP（Learning teaching practice platform）在线开发平台是一个编程学习网站"><meta name="viewport" content="width=device-width,initial-scale=1.0"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"><base target="_blank" /><title>' . Base::$LTPP_name . '</title><style>' . $highlight_css . '</style><script>' . $highlight_js . '</script><script>' . $markdown_it_js . '</script></head><body><div id="loading-main"><div class=\'loading-body\'><span><span></span><span></span><span></span><span></span></span><div class=\'loading-base\'><span></span><div class=\'loading-face\'></div></div></div><div class=\'loading-longfazers\'><span></span><span></span><span></span><span></span></div><h1 class="loading-h1">LOADING</h1></div><div id="LTPP"></div><script>const md=window.markdownit({html:true,xhtmlOut:true,linkify:true,typographer:true,html_blocks:{allowed:\'all\'},allowedTags:[\'script\',\'style\']});const code=`' . $md . '`;const result=md.render(code);document.getElementById("LTPP").innerHTML=result;</script></body></html>';
         $html = gzencode($html, Base::$gzip_num);
+        $type = Base::getContentType('html');
         return response($html, 200, [
-            'Content-Type' => Base::getContentType('html'),
+            'Content-Type' => $type,
             'Accept-Ranges' => 'bytes',
             'Content-Length' => strlen($html),
-            'File-Content-Type' => Base::getContentType($html),
+            'File-Content-Type' => $type,
             'Content-Encoding' => 'gzip',
             'File-Path' => $path,
             'File-Extion' => $file_extion,
@@ -1672,7 +1674,7 @@ class Base
     }
 
     /**
-     * 字符串转html字符串
+     * 字符串转html字符串网页
      * @param string $str
      * @return string $html
      */
@@ -1686,17 +1688,37 @@ class Base
                 $file_extion = Base::getDbFileExtion($path);
             }
         }
-        $html = '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html;charset=utf-8"><link rel="icon" href="https://ltpp.vip/logo.png" type="image/x-icon"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="keywords" content="LTPP,开发,编程,计算机,学习,资源,OJ,LTPP在线开发平台"><meta name="description" content="LTPP（Learning teaching practice platform）在线开发平台是一个编程学习网站，该网站集文章学习、短视频、在线直播、代码训练、在线问答、在线聊天和在线商店于一体，专注于提升用户编程能力，做到“学”与“练”的统一。"><meta name="viewport" content="width=device-width,initial-scale=1.0"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"><base target="_blank" /><title>' . Base::$LTPP_name . '</title></head><body>' . $str . '</body></html>';
+        $html = '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html;charset=utf-8"><link rel="icon" href="https://ltpp.vip/logo.png" type="image/x-icon"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="keywords" content="LTPP,开发,编程,计算机,学习,资源,OJ,LTPP在线开发平台"><meta name="description" content="LTPP（Learning teaching practice platform）在线开发平台是一个编程学习网站"><meta name="viewport" content="width=device-width,initial-scale=1.0"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"><base target="_blank" /><title>' . Base::$LTPP_name . '</title></head><body>' . $str . '</body></html>';
         $html = gzencode($html, Base::$gzip_num);
+        $type = Base::getContentType('html');
         return response($html, 200, [
-            'Content-Type' => Base::getContentType('html'),
+            'Content-Type' => $type,
             'Accept-Ranges' => 'bytes',
             'Content-Length' => strlen($html),
-            'File-Content-Type' => Base::getContentType($html),
+            'File-Content-Type' => $type,
             'Content-Encoding' => 'gzip',
             'File-Path' => $path,
             'File-Extion' => $file_extion,
         ]);
+    }
+
+    /**
+     * 字符串转html字符串
+     * @param string $str
+     * @return string $html
+     */
+    static public function strToHTMLSTR($str = '', $path = '', $file_extion = '')
+    {
+        if (!$path) {
+            $file_extion = '';
+            $path = '';
+        } else {
+            if (!$file_extion) {
+                $file_extion = Base::getDbFileExtion($path);
+            }
+        }
+        $html = '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html;charset=utf-8"><link rel="icon" href="https://ltpp.vip/logo.png" type="image/x-icon"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="keywords" content="LTPP,开发,编程,计算机,学习,资源,OJ,LTPP在线开发平台"><meta name="description" content="LTPP（Learning teaching practice platform）在线开发平台是一个编程学习网站"><meta name="viewport" content="width=device-width,initial-scale=1.0"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"><base target="_blank" /><title>' . Base::$LTPP_name . '</title></head><body>' . $str . '</body></html>';
+        return $html;
     }
 
     /**
@@ -5186,7 +5208,7 @@ class Base
                 '</pre><br><strong>Trace信息</strong><br><pre style="white-space:pre-wrap;word-wrap:break-word;font-size: 1.06rem;">';
             $same_end = '</pre>';
             $notice_save_file_param = $same_start . $trace_str . $same_end;
-            $notice_save_file_param = Base::strToHTML($notice_save_file_param);
+            $notice_save_file_param = Base::strToHTMLSTR($notice_save_file_param);
             $msg = $same_start
                 . ($trace_str == Base::$default_trace_msg ? $trace_str : Base::noticeSaveFile($notice_save_file_param)) . $same_end;
             Robot::sendChatToOneUserMsgAndEmail(
