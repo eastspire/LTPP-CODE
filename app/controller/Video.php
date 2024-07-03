@@ -362,6 +362,7 @@ class Video
         $do = $request->post('do');
         $limit = 3;
         $data = Base::getDataByLimit('video', $video_id, $limit, Video::$video_db_key, $do);
+        Video::changeVideoUrl($data);
         Base::dataToSafe($data);
         return json(['code' => 1, 'data' => $data, 'msg' => '视频列表获取成功']);
     }
