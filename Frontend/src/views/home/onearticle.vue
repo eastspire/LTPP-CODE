@@ -17,7 +17,6 @@
           <div>
             <div style="height: 2rem"></div>
             <div
-              @dblclick="copyText(name, '标题', writer)"
               class="can-select"
               style="
                 color: var(--ltpp-title-color);
@@ -51,10 +50,7 @@
               去 挑 战 此 题 ->
             </el-button>
           </div>
-          <div
-            class="markdown-body"
-            @dblclick="copyText(article, '文章内容', writer)"
-          >
+          <div class="markdown-body">
             <mavon-editor
               class="md can-select"
               :codeStyle="prop.codeStyle"
@@ -398,12 +394,7 @@
                       >（评论时间：{{ temcomment.time }}）</el-button
                     >
                     <div style="clear: both; height: 0.56rem"></div>
-                    <div
-                      class="markdown-body"
-                      @dblclick="
-                        copyText(temcomment.text, '评论', temcomment.username)
-                      "
-                    >
+                    <div class="markdown-body">
                       <mavon-editor
                         class="md shadow can-select"
                         ref="md2"
@@ -552,16 +543,7 @@
                           >（评论时间：{{ temtousercomment.time }}）
                         </el-button>
                         <div style="clear: both; height: 0.56rem"></div>
-                        <div
-                          class="markdown-body"
-                          @dblclick="
-                            copyText(
-                              temtousercomment.text,
-                              '评论',
-                              temtousercomment.username
-                            )
-                          "
-                        >
+                        <div class="markdown-body">
                           <mavon-editor
                             class="md shadow can-select"
                             ref="md3"
@@ -823,6 +805,7 @@
 import urlencode from '../../../updateCompoents/urlencode';
 import '../../../updateCompoents/mavon-editor/dist/markdown/github-markdown.min.css';
 import '../../../updateCompoents/mavon-editor/dist/css/index.css';
+let copy_lock = false;
 
 export default {
   name: 'onearticle',
@@ -857,18 +840,21 @@ export default {
       this.totop();
     });
     window.addEventListener('scroll', this.addlist);
+    window.addEventListener('copy', this.copyText);
   },
   deactivated() {
     this.comment = [];
     this.islock = true;
     this.isseetip = false;
     window.removeEventListener('scroll', this.addlist);
+    window.removeEventListener('copy', this.copyText);
   },
   destroyed() {
     this.comment = [];
     this.islock = true;
     this.isseetip = false;
     window.removeEventListener('scroll', this.addlist);
+    window.removeEventListener('copy', this.copyText);
   },
   data() {
     return {
@@ -1016,8 +1002,23 @@ export default {
         });
     },
 
-    async copyText(text, msgType, userName) {
-      let target = document.createElement('textarea'); //创建textarea节点
+    async copyText(e) {
+      if (copy_lock) {
+        return;
+      }
+      let clipboardData = e.clipboardData || window.clipboardData;
+      // 如果 未复制或者未剪切，直接 return
+      if (!clipboardData) {
+        return;
+      }
+      const text = window.getSelection().toString();
+      if (!text) {
+        return;
+      }
+      copy_lock = true;
+      e.preventDefault();
+      const msgType = '内容';
+      const userName = this.writer;
       let url = window.location.href;
       if (
         this.fronturl != undefined &&
@@ -1032,30 +1033,22 @@ export default {
           url += oriurl[i];
         }
       }
-      target.setAttribute('id', 'LTPPSQScopyText'); //添加id
-      if (msgType == '评论') {
-        target.value =
-          text +
-          '\n\n————————————\n' +
-          '版权声明：本内容为LTPP用户「' +
-          userName +
-          '」的评论，著作权归该用户所有，商业转载请联系该用户获得授权，非商业转载请注明出处。\n' +
-          '原文链接：' +
-          url; // 给textarea的value赋值
-      } else {
-        target.value =
-          text +
-          '\n\n————————————\n' +
-          '版权声明：本文为LTPP作者「' +
-          userName +
-          '」的文章，著作权归作者所有，商业转载请联系作者获得授权，非商业转载请注明出处。\n' +
-          '原文链接：' +
-          url; // 给textarea的value赋值
-      }
-      document.body.appendChild(target); // 向页面插入textarea节点
-      target.select(); // 选中input
+
+      const value = text;
+
+      // const value =
+      //   text +
+      //   '\n\n————————————\n' +
+      //   '版权声明：内容来自LTPP作者「' +
+      //   userName +
+      //   '」的文章或者文章的评论「' +
+      //   this.name +
+      //   '」，著作权归作者所有，商业转载请联系作者获得授权，非商业转载请注明出处。\n' +
+      //   '原文链接：' +
+      //   url;
+
       try {
-        await document.execCommand('Copy'); // 执行浏览器复制命令
+        clipboardData.setData('text/plain', value.trim());
         this.$msg({
           type: 'success',
           message: '复制' + msgType + '成功',
@@ -1070,8 +1063,9 @@ export default {
           offset: 80,
         });
       }
-      let deldom = document.getElementById('LTPPSQScopyText'); //根据id选择节点
-      deldom.parentNode.removeChild(deldom); //删除节点
+      setTimeout(() => {
+        copy_lock = false;
+      }, 0);
     },
     videoLink1() {
       // 准备链接模板

@@ -52,7 +52,7 @@
 
     <el-container>
       <div class="HomeMain">
-        <div class="no-select shadow">
+        <div class="no-select shadow" v-if="$store.state.login">
           <el-menu
             :default-active="$route.path"
             :popper-append-to-body="true"
@@ -233,7 +233,7 @@
           <div
             :style="`height: ${$store.state.default_margin_top_bottom}rem`"
           ></div>
-          <div v-if="$store.state.login">
+          <div>
             <transition name="fadeIn">
               <keep-alive :max="Infinity">
                 <router-view
@@ -248,7 +248,7 @@
             :style="`height: ${$store.state.default_margin_top_bottom}rem`"
           ></div>
         </div>
-        <div class="no-select">
+        <div class="no-select shadow" v-if="$store.state.login">
           <el-menu
             :default-active="$route.path"
             :popper-append-to-body="true"
@@ -1380,10 +1380,17 @@ export default {
       });
     },
     clearmusiclogin() {
+      const is_use_music = this.lookmusic;
       this.lookmusic = 0;
       window.localStorage.removeItem('cookie');
       this.$nextTick(() => {
-        this.lookmusic = 1;
+        this.lookmusic = is_use_music;
+        this.$msg({
+          type: 'success',
+          message: '音乐注销成功',
+          duration: 1600,
+          offset: 80,
+        });
       });
     },
   },

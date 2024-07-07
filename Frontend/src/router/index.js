@@ -87,6 +87,7 @@ const routes = [{
     meta: {
         title: '信息公告',
         keepAlive: true,
+        need_login: true,
         index: 2,
     }
 },
@@ -98,6 +99,7 @@ const routes = [{
     meta: {
         title: '首页',
         keepAlive: true,
+        need_login: true,
         index: 1,
     },
     children: [
@@ -109,6 +111,7 @@ const routes = [{
             meta: {
                 title: '应用管理',
                 keepAlive: true,
+                need_login: true,
                 index: 2,
 
             }
@@ -121,6 +124,7 @@ const routes = [{
             meta: {
                 title: '我的应用',
                 keepAlive: true,
+                need_login: true,
                 index: 2,
 
             }
@@ -133,6 +137,7 @@ const routes = [{
             meta: {
                 title: '应用市场',
                 keepAlive: true,
+                need_login: true,
                 index: 2,
 
             }
@@ -145,6 +150,7 @@ const routes = [{
             meta: {
                 title: '更新问题',
                 keepAlive: true,
+                need_login: true,
                 index: 2,
 
             }
@@ -157,6 +163,7 @@ const routes = [{
             meta: {
                 title: '我加入的题单',
                 keepAlive: true,
+                need_login: true,
                 index: 2,
 
             }
@@ -169,6 +176,7 @@ const routes = [{
             meta: {
                 title: '创建题单',
                 keepAlive: true,
+                need_login: true,
                 index: 2,
 
             }
@@ -181,6 +189,7 @@ const routes = [{
             meta: {
                 title: '更新题单',
                 keepAlive: true,
+                need_login: true,
                 index: 2,
 
             }
@@ -193,6 +202,7 @@ const routes = [{
             meta: {
                 title: '我的题单管理',
                 keepAlive: true,
+                need_login: true,
                 index: 2,
             }
         },
@@ -204,6 +214,7 @@ const routes = [{
             meta: {
                 title: '题单管理',
                 keepAlive: true,
+                need_login: true,
                 index: 2,
             }
         },
@@ -215,6 +226,7 @@ const routes = [{
             meta: {
                 title: '服务器管理',
                 keepAlive: true,
+                need_login: true,
                 index: 2,
             }
         },
@@ -226,6 +238,7 @@ const routes = [{
             meta: {
                 title: '我的商品',
                 keepAlive: true,
+                need_login: true,
                 index: 2,
 
             }
@@ -238,6 +251,7 @@ const routes = [{
             meta: {
                 title: '云服务器管理',
                 keepAlive: true,
+                need_login: true,
                 index: 2,
 
             }
@@ -250,6 +264,7 @@ const routes = [{
             meta: {
                 title: '问题详情',
                 keepAlive: true,
+                need_login: true,
                 index: 2,
 
             }
@@ -262,6 +277,7 @@ const routes = [{
             meta: {
                 title: '商品',
                 keepAlive: true,
+                need_login: true,
                 index: 2,
 
             }
@@ -274,6 +290,7 @@ const routes = [{
             meta: {
                 title: '题单系统',
                 keepAlive: true,
+                need_login: true,
                 index: 2,
             }
         },
@@ -285,6 +302,7 @@ const routes = [{
             meta: {
                 title: '题单详情',
                 keepAlive: true,
+                need_login: true,
                 index: 2,
             }
         },
@@ -296,6 +314,7 @@ const routes = [{
             meta: {
                 title: '问答圈提问',
                 keepAlive: true,
+                need_login: true,
                 index: 2,
 
             }
@@ -308,6 +327,7 @@ const routes = [{
             meta: {
                 title: '问答管理',
                 keepAlive: true,
+                need_login: true,
                 index: 2,
 
             }
@@ -320,6 +340,7 @@ const routes = [{
             meta: {
                 title: '问答圈',
                 keepAlive: true,
+                need_login: true,
                 index: 2,
 
             }
@@ -332,6 +353,7 @@ const routes = [{
             meta: {
                 title: '问答圈管理',
                 keepAlive: true,
+                need_login: true,
                 index: 2,
 
             }
@@ -344,6 +366,7 @@ const routes = [{
             meta: {
                 title: '聊天',
                 keepAlive: true,
+                need_login: true,
                 index: 2,
 
             }
@@ -356,6 +379,7 @@ const routes = [{
             meta: {
                 title: '视频',
                 keepAlive: true,
+                need_login: true,
                 index: 2,
 
             }
@@ -368,6 +392,7 @@ const routes = [{
             meta: {
                 title: '信息公告',
                 keepAlive: true,
+                need_login: true,
                 index: 2,
 
             }
@@ -380,6 +405,7 @@ const routes = [{
             meta: {
                 title: '收藏的视频',
                 keepAlive: true,
+                need_login: true,
                 index: 2,
 
             }
@@ -392,6 +418,7 @@ const routes = [{
             meta: {
                 title: '点赞的视频',
                 keepAlive: true,
+                need_login: true,
                 index: 2,
 
             }
@@ -404,6 +431,7 @@ const routes = [{
             meta: {
                 title: '题目提交历史',
                 keepAlive: true,
+                need_login: true,
                 index: 2,
 
             }
@@ -416,6 +444,7 @@ const routes = [{
             meta: {
                 title: '题解社区',
                 keepAlive: true,
+                need_login: true,
                 index: 2,
 
             }
@@ -428,6 +457,7 @@ const routes = [{
             meta: {
                 title: '文件详情',
                 keepAlive: true,
+                need_login: true,
                 index: 2,
 
             }
@@ -440,6 +470,7 @@ const routes = [{
             meta: {
                 title: '消息通知',
                 keepAlive: true,
+                need_login: true,
                 index: 2,
             }
         },
@@ -451,6 +482,7 @@ const routes = [{
             meta: {
                 title: '短句管理',
                 keepAlive: true,
+                need_login: true,
                 index: 2,
             }
         },
@@ -462,6 +494,7 @@ const routes = [{
             meta: {
                 title: '首页侧边栏图片管理',
                 keepAlive: true,
+                need_login: true,
                 index: 2,
 
             }
@@ -474,6 +507,7 @@ const routes = [{
             meta: {
                 title: '设置',
                 keepAlive: true,
+                need_login: true,
                 index: 2,
 
             }
@@ -486,6 +520,7 @@ const routes = [{
             meta: {
                 title: '视频管理',
                 keepAlive: true,
+                need_login: true,
                 index: 2,
 
             }
@@ -498,6 +533,7 @@ const routes = [{
             meta: {
                 title: '监控管理',
                 keepAlive: true,
+                need_login: true,
                 index: 2,
             }
         },
@@ -509,6 +545,7 @@ const routes = [{
             meta: {
                 title: '云盘',
                 keepAlive: true,
+                need_login: true,
                 index: 2,
 
             }
@@ -520,6 +557,7 @@ const routes = [{
             meta: {
                 title: '竞赛详情',
                 keepAlive: true,
+                need_login: true,
                 index: 2,
 
             }
@@ -532,6 +570,7 @@ const routes = [{
             meta: {
                 title: '竞赛列表',
                 keepAlive: true,
+                need_login: true,
                 index: 2,
 
             }
@@ -544,6 +583,7 @@ const routes = [{
             meta: {
                 title: '我的竞赛',
                 keepAlive: true,
+                need_login: true,
                 index: 2,
 
             }
@@ -556,6 +596,7 @@ const routes = [{
             meta: {
                 title: '更新竞赛',
                 keepAlive: true,
+                need_login: true,
                 index: 2,
 
             }
@@ -568,6 +609,7 @@ const routes = [{
             meta: {
                 title: '添加竞赛',
                 keepAlive: true,
+                need_login: true,
                 index: 2,
 
             }
@@ -580,6 +622,7 @@ const routes = [{
             meta: {
                 title: '竞赛管理',
                 keepAlive: true,
+                need_login: true,
                 index: 2,
 
             }
@@ -592,6 +635,7 @@ const routes = [{
             meta: {
                 title: '题目详情',
                 keepAlive: true,
+                need_login: true,
                 index: 2,
 
             }
@@ -604,6 +648,7 @@ const routes = [{
             meta: {
                 title: '题目管理',
                 keepAlive: true,
+                need_login: true,
                 index: 2,
 
             }
@@ -616,6 +661,7 @@ const routes = [{
             meta: {
                 title: '程序在线评测系统',
                 keepAlive: true,
+                need_login: true,
                 index: 2,
 
             }
@@ -628,6 +674,7 @@ const routes = [{
             meta: {
                 title: '在线编辑器',
                 keepAlive: true,
+                need_login: true,
                 index: 2,
 
             }
@@ -640,6 +687,7 @@ const routes = [{
             meta: {
                 title: '每日一题',
                 keepAlive: true,
+                need_login: true,
                 index: 2,
 
             }
@@ -652,6 +700,7 @@ const routes = [{
             meta: {
                 title: '用户主页',
                 keepAlive: true,
+                need_login: true,
                 index: 2,
 
             }
@@ -664,6 +713,7 @@ const routes = [{
             meta: {
                 title: '用户中心',
                 keepAlive: true,
+                need_login: true,
                 index: 2,
 
             }
@@ -676,6 +726,7 @@ const routes = [{
             meta: {
                 title: '关注',
                 keepAlive: true,
+                need_login: true,
                 index: 2,
 
             }
@@ -688,6 +739,7 @@ const routes = [{
             meta: {
                 title: '用户管理',
                 keepAlive: true,
+                need_login: true,
                 index: 2,
 
 
@@ -701,6 +753,7 @@ const routes = [{
             meta: {
                 title: '商品管理',
                 keepAlive: true,
+                need_login: true,
                 index: 2,
 
 
@@ -714,6 +767,7 @@ const routes = [{
             meta: {
                 title: '公告管理',
                 keepAlive: true,
+                need_login: true,
                 index: 2,
 
             }
@@ -726,6 +780,7 @@ const routes = [{
             meta: {
                 title: '文章更新',
                 keepAlive: true,
+                need_login: true,
                 index: 2,
 
             }
@@ -738,6 +793,7 @@ const routes = [{
             meta: {
                 title: '题目编辑',
                 keepAlive: true,
+                need_login: true,
                 index: 2,
 
             }
@@ -750,6 +806,7 @@ const routes = [{
             meta: {
                 title: '文章详情',
                 keepAlive: true,
+                need_login: true,
                 index: 2,
 
             }
@@ -762,6 +819,7 @@ const routes = [{
             meta: {
                 title: '用户文章',
                 keepAlive: true,
+                need_login: true,
                 index: 2,
 
             }
@@ -774,6 +832,7 @@ const routes = [{
             meta: {
                 title: '文章广场',
                 keepAlive: true,
+                need_login: true,
                 index: 2,
 
             }
@@ -786,6 +845,7 @@ const routes = [{
             meta: {
                 title: '在线课堂',
                 keepAlive: true,
+                need_login: true,
                 index: 2,
 
             }
@@ -798,6 +858,7 @@ const routes = [{
             meta: {
                 title: '随机文章',
                 keepAlive: true,
+                need_login: true,
                 index: 2,
 
             }
@@ -810,6 +871,7 @@ const routes = [{
             meta: {
                 title: '音乐广场',
                 keepAlive: true,
+                need_login: true,
                 index: 2,
 
             }
@@ -822,6 +884,7 @@ const routes = [{
             meta: {
                 title: '短视频',
                 keepAlive: true,
+                need_login: true,
                 index: 2,
 
             }
@@ -834,6 +897,7 @@ const routes = [{
             meta: {
                 title: '我的提交记录',
                 keepAlive: true,
+                need_login: true,
                 index: 2,
 
             }
@@ -846,6 +910,7 @@ const routes = [{
             meta: {
                 title: '全站提交记录',
                 keepAlive: true,
+                need_login: true,
                 index: 2,
 
             }
@@ -858,6 +923,7 @@ const routes = [{
             meta: {
                 title: '全站积分排名',
                 keepAlive: true,
+                need_login: true,
                 index: 2,
 
             }
@@ -870,6 +936,7 @@ const routes = [{
             meta: {
                 title: '收藏的文章',
                 keepAlive: true,
+                need_login: true,
                 index: 2,
 
             }
@@ -882,6 +949,7 @@ const routes = [{
             meta: {
                 title: '我的文章管理',
                 keepAlive: true,
+                need_login: true,
                 index: 2,
 
             }
@@ -894,6 +962,7 @@ const routes = [{
             meta: {
                 title: '发布文章',
                 keepAlive: true,
+                need_login: true,
                 index: 2,
 
             }
@@ -906,6 +975,7 @@ const routes = [{
             meta: {
                 title: '个人信息更新',
                 keepAlive: true,
+                need_login: true,
                 index: 2,
 
             }
@@ -919,6 +989,7 @@ const routes = [{
             meta: {
                 title: '粉丝列表',
                 keepAlive: true,
+                need_login: true,
                 index: 2,
 
             }
@@ -934,6 +1005,7 @@ const routes = [{
     meta: {
         title: '登录',
         keepAlive: true,
+        need_login: true,
         index: 1,
 
     }
@@ -946,6 +1018,7 @@ const routes = [{
     meta: {
         title: '注册',
         keepAlive: true,
+        need_login: true,
         index: 1,
     }
 },
@@ -957,6 +1030,7 @@ const routes = [{
     meta: {
         title: '系统维护',
         keepAlive: true,
+        need_login: true,
         index: 1,
     }
 }
