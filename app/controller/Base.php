@@ -5485,6 +5485,9 @@ class Base
     static public function getDbFileExtion($path)
     {
         $file_extion = '';
+        if (!$path) {
+            return $file_extion;
+        }
         try {
             $len = strlen($path);
             $begin_point = false;

@@ -244,9 +244,9 @@ class Cloudfile
     public function downloadFile(Request $request)
     {
         $path = $request->post('path');
+        $path = Base::Base64Decode($path);
         $file_data = Base::getStaticFileData($path);
         $file_extion = Base::getDbFileExtion($path);
-        $path = Base::Base64Decode($path);
         $type = Base::getContentType($file_extion);
         if (!$path) {
             return Response(Base::$param_error_msg, 404, [
