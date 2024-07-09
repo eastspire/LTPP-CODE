@@ -833,14 +833,14 @@ export default {
     this.article_id = urlencode.decode(this.$route.query.path, 'gbk');
     this.islove = false;
     this.islock = false;
-    await this.getmyid();
-    await this.lookarticle();
-    await this.lookcomment();
+    this.getmyid();
+    this.lookarticle();
+    window.addEventListener('copy', this.copyText);
+    this.lookcomment();
     this.$nextTick(() => {
       this.totop();
     });
     window.addEventListener('scroll', this.addlist);
-    window.addEventListener('copy', this.copyText);
   },
   deactivated() {
     this.comment = [];
