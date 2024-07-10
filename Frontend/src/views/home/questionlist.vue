@@ -14,7 +14,7 @@
     class="no-select"
     style="margin-left: auto; margin-right: auto"
   >
-    <div class="shadow ltpp-list-box" style="border-width: 0rem">
+    <div class="shadow" style="border-width: 0rem">
       <div class="ltpp-list-box">
         <div class="search shadow">
           <el-input
@@ -42,7 +42,7 @@
           </el-input>
         </div>
       </div>
-      <div>
+      <div class="ltpp-list-box">
         <div
           v-for="(tem, index) in data_list"
           :key="index"
@@ -133,7 +133,7 @@
           </div>
         </div>
       </div>
-      <div style="height: 1rem"></div>
+      <div style="height: 1rem" v-show="data_list.length"></div>
     </div>
   </div>
 </template>

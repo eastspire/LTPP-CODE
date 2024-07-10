@@ -41,7 +41,6 @@
       </div>
       <div style="color: azure; height: auto; width: 100%">
         <div :style="`min-height:${$store.state.no_scroll_height * 0.82}vh;`">
-          <div style="height: 0.8rem"></div>
           <div>
             <el-table
               :data="questionsheetlist"
@@ -180,9 +179,9 @@
 </template>
 
 <script>
-import urlencode from "../../../updateCompoents/urlencode/lib/urlencode";
+import urlencode from '../../../updateCompoents/urlencode/lib/urlencode';
 export default {
-  name: "myquestionsheetmanage",
+  name: 'myquestionsheetmanage',
   activated() {
     this.isseetip = true;
     this.search();
@@ -203,20 +202,20 @@ export default {
   },
   data() {
     return {
-      lastkey: "",
+      lastkey: '',
       isseetip: true,
       issearch: false,
       questionsheetlist: [],
       total: 0,
       page: 1,
       limit: 50,
-      key: "",
+      key: '',
     };
   },
   methods: {
     toadd() {
       this.$router.push({
-        path: "/addquestionsheet",
+        path: '/addquestionsheet',
       });
     },
     initData() {
@@ -236,15 +235,15 @@ export default {
      */
     cellStyle({ row, rowIndex }) {
       let styleRes = {
-        background: "rgba(var(--ltpp-light-color), 0.16) !important",
-        height: "3.6rem !important",
-        color: "chartreuse",
+        background: 'rgba(var(--ltpp-light-color), 0.16) !important',
+        height: '3.6rem !important',
+        color: 'chartreuse',
       };
       if (rowIndex % 2 != 0) {
         styleRes.background =
-          "rgba(var(--ltpp-main-bk-color), 0.06) !important";
+          'rgba(var(--ltpp-main-bk-color), 0.06) !important';
       }
-      styleRes.color = "#409EFF";
+      styleRes.color = '#409EFF';
       return styleRes;
     },
     handleCurrentChange(val) {
@@ -270,17 +269,17 @@ export default {
       if (!id || id == this.$SqsGlobal.loading_tips) {
         return;
       }
-      this.$confirm("确定删除该题单吗？", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
+      this.$confirm('确定删除该题单吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
       })
         .then(() => {
           this.$ajax({
-            method: "post",
-            url: "/QuestionSheet/deleteOneQuestionSheet",
+            method: 'post',
+            url: '/QuestionSheet/deleteOneQuestionSheet',
             portType: {
-              process: "8796",
+              process: '8796',
             },
             data: {
               question_sheet_id: id,
@@ -290,14 +289,14 @@ export default {
               if (res?.data.code == 1) {
                 this.search();
                 this.$msg({
-                  type: "success",
+                  type: 'success',
                   message: res?.data.msg,
                   duration: 1600,
                   offset: 80,
                 });
               } else {
                 this.$msg({
-                  type: "error",
+                  type: 'error',
                   message: res?.data.msg,
                   duration: 1600,
                   offset: 80,
@@ -307,7 +306,7 @@ export default {
             })
             .catch((t) => {
               this.$msg({
-                type: "error",
+                type: 'error',
                 message: t,
                 duration: 1600,
                 offset: 80,
@@ -316,10 +315,10 @@ export default {
         })
         .catch(() => {
           this.$msg({
-            type: "info",
+            type: 'info',
             duration: 1600,
             offset: 80,
-            message: "取消删除",
+            message: '取消删除',
           });
         });
     },
@@ -327,9 +326,9 @@ export default {
       id &&
         id != this.$SqsGlobal.loading_tips &&
         this.$router.push({
-          path: "/updatequestionsheet",
+          path: '/updatequestionsheet',
           query: {
-            path: urlencode(id, "gbk"),
+            path: urlencode(id, 'gbk'),
           },
         });
     },
@@ -337,10 +336,10 @@ export default {
     async getlist() {
       this.initData();
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/QuestionSheet/lookMyQuestionSheetList",
+        method: 'post',
+        url: '/QuestionSheet/lookMyQuestionSheetList',
         portType: {
-          process: "8796",
+          process: '8796',
         },
         data: {
           page: this.page,
@@ -348,7 +347,7 @@ export default {
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -362,10 +361,10 @@ export default {
       this.lastkey = this.key;
       this.initData();
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/QuestionSheet/searchMyQuestionSheetList",
+        method: 'post',
+        url: '/QuestionSheet/searchMyQuestionSheetList',
         portType: {
-          process: "8796",
+          process: '8796',
         },
         data: {
           key: this.key,
@@ -374,7 +373,7 @@ export default {
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -385,7 +384,7 @@ export default {
     },
     //搜索预处理
     search() {
-      if (this.key == "" || this.key == null || this.key == undefined) {
+      if (this.key == '' || this.key == null || this.key == undefined) {
         this.issearch = false;
         this.getlist();
         return;
