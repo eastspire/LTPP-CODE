@@ -211,12 +211,12 @@
   </div>
 </template>
 <script>
-import urlencode from "../../../updateCompoents/urlencode";
-import "../../../public/md/markdown/github-markdown.min.css";
-import Myide from "../../components/myide.vue";
+import urlencode from '../../../updateCompoents/urlencode';
+import '../../../public/md/markdown/github-markdown.min.css';
+import Myide from '../../components/myide.vue';
 
 export default {
-  name: "oneproblem",
+  name: 'oneproblem',
   components: {
     Myide,
   },
@@ -233,13 +233,10 @@ export default {
       this.$router.go(-1);
       return;
     }
-    this.id = urlencode.decode(this.$route.query.path, "gbk"); //问题id
-    this.contestid = urlencode.decode(this.$route.query.contest, "gbk"); //竞赛id
+    this.id = urlencode.decode(this.$route.query.path, 'gbk'); //问题id
+    this.contestid = urlencode.decode(this.$route.query.contest, 'gbk'); //竞赛id
     this.getproblem(this.id);
     this.show_ide = true;
-    this.$nextTick(() => {
-      this.totop();
-    });
   },
   deactivated() {
     this.show_ide = false;
@@ -248,18 +245,18 @@ export default {
     prop() {
       let data = {
         subfield: false, // 单双栏模式
-        defaultOpen: "preview", //edit： 默认展示编辑区域 ， preview： 默认展示预览区域
+        defaultOpen: 'preview', //edit： 默认展示编辑区域 ， preview： 默认展示预览区域
         editable: false,
         toolbarsFlag: false, //工具栏
         scrollStyle: true,
-        codeStyle: "atom-one-dark",
+        codeStyle: 'atom-one-dark',
         boxShadow: false,
         ishljs: true,
         tabSize: 4,
-        toolbarsBackground: "rgba(0,0,0,0)",
-        editorBackground: "rgba(0,0,0,0)",
-        previewBackground: "rgba(0,0,0,0)",
-        fontSize: "1.06rem",
+        toolbarsBackground: 'rgba(0,0,0,0)',
+        editorBackground: 'rgba(0,0,0,0)',
+        previewBackground: 'rgba(0,0,0,0)',
+        fontSize: '1.06rem',
         navigation: false,
       };
       return data;
@@ -267,34 +264,34 @@ export default {
   },
   data() {
     return {
-      testin: "",
+      testin: '',
       show_ide: true,
       xss_options: this.$SqsGlobal.xss_options,
       stripIgnoreTagBody: this.$SqsGlobal.strip_ignore_tag_body,
       externalLink: {
         markdown_css: false,
         // 默认public文件夹下
-        hljs_js: () => "md/highlightjs/highlight.min.js",
-        hljs_css: (css) => "md/highlightjs/styles/" + css + ".min.css",
-        hljs_lang: (lang) => "md/highlightjs/languages/" + lang + ".min.js",
-        katex_css: () => "md/katex/katex.min.css",
-        katex_js: () => "md/katex/katex.min.js",
+        hljs_js: () => 'md/highlightjs/highlight.min.js',
+        hljs_css: (css) => 'md/highlightjs/styles/' + css + '.min.css',
+        hljs_lang: (lang) => 'md/highlightjs/languages/' + lang + '.min.js',
+        katex_css: () => 'md/katex/katex.min.css',
+        katex_js: () => 'md/katex/katex.min.js',
       },
-      type: "算法",
+      type: '算法',
       contestid: -1,
       id: -1,
       tableData: {
         id: 0,
-        problemName: "加载中",
-        problemLabe: "加载中",
-        problemContent: "加载中",
-        problemCinTest: "加载中",
-        problemCoutTest: "加载中",
-        ACNum: "加载中",
-        ALLSubmitNum: "加载中",
-        Time: "加载中",
-        Memory: "加载中",
-        problemFrom: "加载中",
+        problemName: '加载中',
+        problemLabe: '加载中',
+        problemContent: '加载中',
+        problemCinTest: '加载中',
+        problemCoutTest: '加载中',
+        ACNum: '加载中',
+        ALLSubmitNum: '加载中',
+        Time: '加载中',
+        Memory: '加载中',
+        problemFrom: '加载中',
         ACpoint: 1,
         public: 1,
       },
@@ -322,8 +319,8 @@ export default {
         navigation: false, // 导航目录
         help: false,
       },
-      userlanguage: "C++",
-      userthemelanguage: "cpp",
+      userlanguage: 'C++',
+      userthemelanguage: 'cpp',
     };
   },
   methods: {
@@ -341,20 +338,20 @@ export default {
     tooneproblemsolve() {
       this.id &&
         this.$router.push({
-          path: "/oneproblemsolve",
+          path: '/oneproblemsolve',
           query: {
-            path: urlencode(this.id, "gbk"),
-            contestid: urlencode(this.contestid, "gbk"),
+            path: urlencode(this.id, 'gbk'),
+            contestid: urlencode(this.contestid, 'gbk'),
           },
         });
     },
     tooneprocode() {
       this.id &&
         this.$router.push({
-          path: "/problemcode",
+          path: '/problemcode',
           query: {
-            path: urlencode(this.id, "gbk"),
-            contestid: urlencode(this.contestid, "gbk"),
+            path: urlencode(this.id, 'gbk'),
+            contestid: urlencode(this.contestid, 'gbk'),
           },
         });
     },
@@ -362,10 +359,10 @@ export default {
     //获取题目内容
     async getproblem(id) {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Oj/lookOneProblem",
+        method: 'post',
+        url: '/Oj/lookOneProblem',
         portType: {
-          process: "8794",
+          process: '8794',
         },
         data: {
           problem_id: id,
@@ -373,20 +370,29 @@ export default {
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
         });
+        this.$nextTick(() => {
+          this.totop();
+        });
       });
       if (res?.code == 1) {
         this.tableData = res?.data;
+        this.$nextTick(() => {
+          this.totop();
+        });
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
+        });
+        this.$nextTick(() => {
+          this.totop();
         });
         this.$router.go(-1);
       }
@@ -395,5 +401,5 @@ export default {
 };
 </script>
 <style scoped>
-@import "../../../public/md/markdown/github-markdown.min.css";
+@import '../../../public/md/markdown/github-markdown.min.css';
 </style>

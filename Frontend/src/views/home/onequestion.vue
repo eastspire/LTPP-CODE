@@ -775,9 +775,6 @@ export default {
     this.getmyid();
     await this.lookquestion();
     await this.lookanswer();
-    this.$nextTick(() => {
-      this.totop();
-    });
     window.addEventListener('scroll', this.addlist);
   },
 
@@ -1119,6 +1116,9 @@ export default {
           duration: 1600,
           offset: 80,
         });
+        this.$nextTick(() => {
+          this.totop();
+        });
         return;
       });
       this.loadfinish = true;
@@ -1126,12 +1126,18 @@ export default {
         this.data = res?.data;
         this.islove = res?.data.islove;
         this.is_can_edit = res.is_can_edit;
+        this.$nextTick(() => {
+          this.totop();
+        });
       } else {
         this.$msg({
           type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
+        });
+        this.$nextTick(() => {
+          this.totop();
         });
         this.$router.go(-1);
       }

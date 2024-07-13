@@ -156,7 +156,6 @@
                 >
                 <div style="clear: both; height: 0.4rem"></div>
                 <div
-                  @dblclick="copy(tem.msg)"
                   :style="`display: flex; justify-content:${
                     tem.name == $store.state.my_name ? 'end' : 'start'
                   }`"

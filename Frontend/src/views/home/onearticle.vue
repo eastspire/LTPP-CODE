@@ -32,6 +32,66 @@
               {{ this.name }}
             </div>
           </div>
+          <div style="margin-left: 1.38rem">
+            <div style="float: left" class="no-select">
+              <p style="margin: 0.36rem 0.88rem 0rem 0rem">
+                <el-tag
+                  size="small"
+                  class="pulse-enter-active"
+                  effect="dark"
+                  type="danger"
+                  style="cursor: pointer; font-size: 1.06rem; font-weight: bold"
+                  @click="touserpage(writerid)"
+                  >发布者：{{ writer }}
+                </el-tag>
+              </p>
+            </div>
+            <div style="float: left" class="no-select">
+              <p style="margin: 0.36rem 0.88rem 0rem 0rem">
+                <el-tag
+                  size="small"
+                  effect="dark"
+                  type="success"
+                  style="font-size: 1.06rem; font-weight: bold"
+                  >发布于：{{ releasetime }}
+                </el-tag>
+              </p>
+            </div>
+            <div style="float: left" class="no-select">
+              <p style="margin: 0.36rem 0.88rem 0rem 0rem">
+                <el-tag
+                  size="small"
+                  effect="dark"
+                  type="success"
+                  style="font-size: 1.06rem; font-weight: bold"
+                  >最后一次修改：{{ lastchangetime }}
+                </el-tag>
+              </p>
+            </div>
+            <div style="float: left" class="no-select">
+              <p style="margin: 0.36rem 0.88rem 0rem 0rem">
+                <el-tag
+                  size="small"
+                  effect="dark"
+                  type="success"
+                  style="font-size: 1.06rem; font-weight: bold"
+                  >点赞数：{{ fabulous }}
+                </el-tag>
+              </p>
+            </div>
+            <div style="float: left" class="no-select">
+              <p style="margin: 0.36rem 0.88rem 0rem 0rem">
+                <el-tag
+                  size="small"
+                  effect="dark"
+                  type="success"
+                  style="font-size: 1.06rem; font-weight: bold"
+                  >收藏数：{{ collection }}
+                </el-tag>
+              </p>
+            </div>
+          </div>
+          <div style="clear: both"></div>
           <div
             style="text-align: right"
             v-show="problemid != '' && problemid != 0"
@@ -72,67 +132,7 @@
             >
             </mavon-editor>
           </div>
-          <div>
-            <div style="float: left" class="no-select">
-              <p style="margin: 1rem 1rem 0.5rem 1rem">
-                <el-tag
-                  size="small"
-                  class="pulse-enter-active"
-                  effect="dark"
-                  type="danger"
-                  style="cursor: pointer; font-size: 1.06rem; font-weight: bold"
-                  @click="touserpage(writerid)"
-                  >发布者：{{ writer }}
-                </el-tag>
-              </p>
-            </div>
-            <div style="float: left" class="no-select">
-              <p style="margin: 1rem 1rem 0.5rem 1rem">
-                <el-tag
-                  size="small"
-                  effect="dark"
-                  type="success"
-                  style="font-size: 1.06rem; font-weight: bold"
-                  >发布于：{{ releasetime }}
-                </el-tag>
-              </p>
-            </div>
-            <div style="float: left" class="no-select">
-              <p style="margin: 1rem 1rem 0.5rem 1rem">
-                <el-tag
-                  size="small"
-                  effect="dark"
-                  type="success"
-                  style="font-size: 1.06rem; font-weight: bold"
-                  >最后一次修改：{{ lastchangetime }}
-                </el-tag>
-              </p>
-            </div>
-            <div style="float: left" class="no-select">
-              <p style="margin: 1rem 1rem 0.5rem 1rem">
-                <el-tag
-                  size="small"
-                  effect="dark"
-                  type="success"
-                  style="font-size: 1.06rem; font-weight: bold"
-                  >点赞数：{{ fabulous }}
-                </el-tag>
-              </p>
-            </div>
-            <div style="float: left" class="no-select">
-              <p style="margin: 1rem 1rem 0.5rem 1rem">
-                <el-tag
-                  size="small"
-                  effect="dark"
-                  type="success"
-                  style="font-size: 1.06rem; font-weight: bold"
-                  >收藏数：{{ collection }}
-                </el-tag>
-              </p>
-            </div>
-          </div>
-          <div style="clear: both"></div>
-          <div style="height: 1rem"></div>
+
           <!-- 发表评论 -->
           <div class="no-select">
             <div class="markdown-body">
@@ -806,10 +806,12 @@ import urlencode from '../../../updateCompoents/urlencode';
 import '../../../updateCompoents/mavon-editor/dist/markdown/github-markdown.min.css';
 import '../../../updateCompoents/mavon-editor/dist/css/index.css';
 let copy_lock = false;
+let is_first = true;
 
 export default {
   name: 'onearticle',
   async activated() {
+    is_first = true;
     this.comment = [];
     this.issendfinish = true;
     if (
@@ -837,9 +839,6 @@ export default {
     this.lookarticle();
     window.addEventListener('copy', this.copyText);
     this.lookcomment();
-    this.$nextTick(() => {
-      this.totop();
-    });
     window.addEventListener('scroll', this.addlist);
   },
   deactivated() {
@@ -1218,6 +1217,9 @@ export default {
           duration: 1600,
           offset: 80,
         });
+        this.$nextTick(() => {
+          this.totop();
+        });
         return;
       });
       this.loadfinish = true;
@@ -1236,6 +1238,9 @@ export default {
         this.islove = res.love;
         this.is_public = res.data['public'];
         this.isfabulous = res.fabulous;
+        this.$nextTick(() => {
+          this.totop();
+        });
       } else {
         this.$msg({
           type: 'error',
@@ -1277,12 +1282,14 @@ export default {
             });
             this.islock = false;
           } else {
-            this.$msg({
-              type: 'success',
-              message: '没有更多评论了！',
-              duration: 800,
-              offset: 80,
-            });
+            !is_first &&
+              this.$msg({
+                type: 'success',
+                message: '没有更多评论了！',
+                duration: 800,
+                offset: 80,
+              });
+            is_first = false;
           }
         })
         .catch((t) => {

@@ -889,9 +889,7 @@ export default {
     this.timer = setInterval(() => {
       this.gettime();
     }, 1000);
-    this.$nextTick(() => {
-      this.totop();
-    });
+
     this.judgeisjoin();
     this.getproblemlist();
     this.frontendJudgeIsMyContest();
@@ -1771,6 +1769,9 @@ export default {
           duration: 1600,
           offset: 80,
         });
+        this.$nextTick(() => {
+          this.totop();
+        });
       });
       if (res?.code == 1) {
         this.contestdata = res?.data;
@@ -1811,12 +1812,18 @@ export default {
             offset: 80,
           });
         }
+        this.$nextTick(() => {
+          this.totop();
+        });
       } else {
         this.$msg({
           type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
+        });
+        this.$nextTick(() => {
+          this.totop();
         });
         this.$router.go(-1);
       }
