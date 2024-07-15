@@ -45,10 +45,7 @@
         </div>
         <div style="height: 1rem"></div>
         <div style="margin-left: 1.6rem; margin-right: 1.6rem">
-          <div
-            class="markdown-body"
-            @dblclick="copyText(data['question'], '问题内容', data['writer'])"
-          >
+          <div class="markdown-body">
             <mavon-editor
               class="md can-select"
               :codeStyle="prop.codeStyle"
@@ -324,12 +321,7 @@
                       >（回答时间：{{ temanswer.time }}）</el-button
                     >
                     <div style="clear: both; height: 0.6rem"></div>
-                    <div
-                      class="markdown-body"
-                      @dblclick="
-                        copyText(temanswer.answer, '回答', temanswer.username)
-                      "
-                    >
+                    <div class="markdown-body">
                       <mavon-editor
                         class="md shadow can-select"
                         ref="md2"
@@ -478,16 +470,7 @@
                           >（回答时间：{{ temtouseranswer.time }}）
                         </el-button>
                         <div style="clear: both; height: 0.6rem"></div>
-                        <div
-                          class="markdown-body"
-                          @dblclick="
-                            copyText(
-                              temtouseranswer.answer,
-                              '回答',
-                              temtouseranswer.username
-                            )
-                          "
-                        >
+                        <div class="markdown-body">
                           <mavon-editor
                             class="md shadow can-select"
                             ref="md3"
@@ -773,6 +756,7 @@ export default {
     this.islove = false;
     this.islock = false;
     this.getmyid();
+    window.addEventListener('copy', this.copyText);
     await this.lookquestion();
     await this.lookanswer();
     window.addEventListener('scroll', this.addlist);
@@ -783,6 +767,7 @@ export default {
     this.data = {};
     this.answer = [];
     window.removeEventListener('scroll', this.addlist);
+    window.removeEventListener('copy', this.copyText);
   },
 
   destroyed() {
@@ -790,6 +775,7 @@ export default {
     this.data = {};
     this.answer = [];
     window.removeEventListener('scroll', this.addlist);
+    window.removeEventListener('copy', this.copyText);
   },
 
   data() {
@@ -906,64 +892,6 @@ export default {
             path: urlencode(this.question_id, 'gbk'),
           },
         });
-    },
-
-    async copyText(text, msgType, userName) {
-      let target = document.createElement('textarea'); //创建textarea节点
-      let url = window.location.href;
-      if (
-        this.fronturl != undefined &&
-        this.fronturl &&
-        this.fronturl != null
-      ) {
-        let loc = url.indexOf('/onequestion');
-        let oriurl = url;
-        let len = oriurl.length;
-        url = this.fronturl;
-        for (let i = loc; i < len; ++i) {
-          url += oriurl[i];
-        }
-      }
-      target.setAttribute('id', 'LTPPSQScopyText'); //添加id
-      if (msgType == '回答') {
-        target.value =
-          text +
-          '\n\n————————————\n' +
-          '版权声明：本内容为LTPP用户「' +
-          userName +
-          '」的回答，著作权归该用户所有，商业转载请联系该用户获得授权，非商业转载请注明出处。\n' +
-          '原文链接：' +
-          url; // 给textarea的value赋值
-      } else {
-        target.value =
-          text +
-          '\n\n————————————\n' +
-          '版权声明：本文为LTPP用户「' +
-          userName +
-          '」的问题，著作权归作者所有，商业转载请联系作者获得授权，非商业转载请注明出处。\n' +
-          '原文链接：' +
-          url; // 给textarea的value赋值
-      }
-      document.body.appendChild(target); // 向页面插入textarea节点
-      target.select(); // 选中input
-      try {
-        await document.execCommand('Copy'); // 执行浏览器复制命令
-        this.$msg({
-          type: 'success',
-          message: '复制' + msgType + '成功',
-          duration: 800,
-          offset: 80,
-        });
-      } catch {
-        this.$msg({
-          type: 'error',
-          message: '复制' + msgType + '失败',
-          duration: 800,
-          offset: 80,
-        });
-      }
-      let deldom = document.getElementById('LTPPSQScopyText'); //根据id选择节点
-      deldom.parentNode.removeChild(deldom); //删除节点
     },
     videoLink1() {
       // 准备链接模板

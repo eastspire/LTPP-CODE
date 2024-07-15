@@ -284,20 +284,6 @@
                   >
                 </template></el-menu-item
               >
-              <el-menu-item index="/myquestion"
-                ><template slot="title">
-                  <i class="el-icon-s-ticket" style="font-size: 1.06rem"
-                    >问答管理</i
-                  >
-                </template></el-menu-item
-              >
-              <el-menu-item index="/mygoods"
-                ><template slot="title">
-                  <i class="el-icon-s-ticket" style="font-size: 1.06rem"
-                    >我的商品</i
-                  >
-                </template></el-menu-item
-              >
             </el-submenu>
             <el-menu-item index="/mynotice">
               <i class="el-icon-message-solid"></i>
@@ -307,6 +293,13 @@
               <template slot="title">
                 <i class="el-icon-s-flag" style="font-size: 1.06rem"></i>
               </template>
+              <el-menu-item index="/myquestion"
+                ><template slot="title">
+                  <i class="el-icon-s-ticket" style="font-size: 1.06rem"
+                    >问答管理</i
+                  >
+                </template></el-menu-item
+              >
               <el-menu-item index="/myjoincontest">
                 <template slot="title">
                   <i class="el-icon-s-flag" style="font-size: 1.06rem"
@@ -314,6 +307,13 @@
                   >
                 </template>
               </el-menu-item>
+              <el-menu-item index="/mygoods"
+                ><template slot="title">
+                  <i class="el-icon-s-ticket" style="font-size: 1.06rem"
+                    >我的商品</i
+                  >
+                </template></el-menu-item
+              >
               <el-menu-item index="/myjoinquestionsheet">
                 <template slot="title">
                   <i class="el-icon-s-order" style="font-size: 1.06rem"
@@ -321,17 +321,17 @@
                   >
                 </template>
               </el-menu-item>
-              <el-menu-item index="/myappmamage">
-                <template slot="title">
-                  <i class="el-icon-monitor" style="font-size: 1.06rem"
-                    >我的应用</i
-                  >
-                </template>
-              </el-menu-item>
               <el-menu-item index="/myquestionsheetmanage">
                 <template slot="title">
                   <i class="el-icon-s-management" style="font-size: 1.06rem"
                     >题单管理</i
+                  >
+                </template>
+              </el-menu-item>
+              <el-menu-item index="/myappmamage">
+                <template slot="title">
+                  <i class="el-icon-monitor" style="font-size: 1.06rem"
+                    >我的应用</i
                   >
                 </template>
               </el-menu-item>

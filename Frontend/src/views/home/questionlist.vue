@@ -23,8 +23,6 @@
             v-model.lazy="key"
             @keyup.enter.native="
               isinit = false;
-              initData();
-              lock = false;
               search();
             "
           >
@@ -33,8 +31,6 @@
               icon="el-icon-search"
               @click="
                 isinit = false;
-                initData();
-                lock = false;
                 search();
               "
               >搜索</el-button
@@ -133,7 +129,6 @@
           </div>
         </div>
       </div>
-      <div style="height: 1rem" v-show="data_list.length"></div>
     </div>
   </div>
 </template>
@@ -189,7 +184,6 @@ export default {
   },
   created() {
     this.lock = false;
-    this.initData();
     this.getList();
   },
   activated() {
@@ -261,6 +255,9 @@ export default {
         return;
       }
       this.lock = true;
+      if (!this.isinit) {
+        this.initData();
+      }
       const { data: res } = await this.$ajax({
         method: 'post',
         url: '/Question/getList',
@@ -287,7 +284,7 @@ export default {
       });
       if (res?.code == 1) {
         if (!this.isinit) {
-          this.data_list = res?.data;
+          this.data_list = [];
         }
         this.data_list.push(...res?.data);
         if (res?.data && !res?.data?.length) {
@@ -309,6 +306,9 @@ export default {
         return;
       }
       this.lock = true;
+      if (!this.isinit) {
+        this.initData();
+      }
       const { data: res } = await this.$ajax({
         method: 'post',
         url: '/Question/searchList',
@@ -336,7 +336,7 @@ export default {
       });
       if (res?.code == 1) {
         if (!this.isinit) {
-          this.data_list = res?.data;
+          this.data_list = [];
         }
         this.data_list.push(...res?.data);
         if (res?.data && !res?.data?.length) {

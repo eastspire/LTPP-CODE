@@ -28,6 +28,7 @@ import ipc from './plugins/ipc.js';
 
 const reader = new FileReader();
 Vue.config.errorHandler = () => { }
+let copy_lock = false;
 
 try {
     const is_dev = window?.location?.href?.indexOf('http://localhost') !== -1 || window?.location?.href?.indexOf('http://127.0.0.1') !== -1;
@@ -1096,6 +1097,44 @@ Vue.prototype.appendOrOverrideQueryParam = function (query_params, original_url 
     } catch (err) { }
     return original_url;
 }
+
+
+
+Vue.prototype.copyText = async (e) => {
+    if (copy_lock) {
+        return;
+    }
+    let clipboardData = e.clipboardData || window.clipboardData;
+    // 如果 未复制或者未剪切，直接 return
+    if (!clipboardData) {
+        return;
+    }
+    const text = window.getSelection().toString();
+    if (!text) {
+        return;
+    }
+    copy_lock = true;
+    e.preventDefault();
+    try {
+        clipboardData.setData('text/plain', text.trim());
+        Vue.prototype.$msg({
+            type: 'success',
+            message: '复制成功',
+            duration: 800,
+            offset: 80,
+        });
+    } catch {
+        Vue.prototype.$msg({
+            type: 'error',
+            message: '复制失败',
+            duration: 800,
+            offset: 80,
+        });
+    }
+    setTimeout(() => {
+        copy_lock = false;
+    }, 0);
+};
 
 new Vue({
     router,
