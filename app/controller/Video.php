@@ -49,7 +49,7 @@ class Video
             return;
         }
         $base_url = Base::getSettingKeyData('GLOBlinuxurl');
-        $response_header = 'Connection:keep-alive&Content-Type:video/mp4';
+        $response_header = 'Connection=keep-alive&Content-Type=video/mp4';
 
         foreach ($db as $key => &$tem) {
             if (is_object($tem)) {
@@ -63,7 +63,7 @@ class Video
                 if (!$is_need_change_url || !isset($tem->url)) {
                     continue;
                 }
-                $referer = 'Referer:' . $tem->url;
+                $referer = 'Referer=' . $tem->url;
                 $tem->url = $base_url . Proxy::$path_method . '?' . Proxy::$source_url_key_name . '=' . urlencode($tem->url) .
                     '&' . Proxy::$source_request_header_key_name . '=' . urlencode($referer) .
                     '&' . Proxy::$source_response_header_key_name . '=' . urlencode($response_header);
@@ -78,7 +78,7 @@ class Video
                 if (!$is_need_change_url || !isset($db->url)) {
                     return;
                 }
-                $referer = 'Referer:' . $db->url;
+                $referer = 'Referer=' . $db->url;
                 $db->url = $base_url . Proxy::$path_method . '?' . Proxy::$source_url_key_name . '=' . urlencode($db->url) .
                     '&' . Proxy::$source_request_header_key_name . '=' . urlencode($referer) .
                     '&' . Proxy::$source_response_header_key_name . '=' . urlencode($response_header);

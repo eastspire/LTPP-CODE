@@ -55,7 +55,7 @@ class Proxy
             // 去除空格
             $tem = str_replace(' ', '', $tem);
             // :分割
-            list($key, $value) = explode(':', $tem);
+            list($key, $value) = explode('=', $tem);
             if (!$key) {
                 $key = '';
             }
@@ -77,8 +77,8 @@ class Proxy
         $request_header = urldecode($request->get(Proxy::$source_request_header_key_name, ''));
         // 响应头使用编码后的&字符串分割
         $tem_response_header = urldecode($request->get(Proxy::$source_response_header_key_name, ''));
-        $tem_response_header = explode('&', $tem_response_header);
-        $response_header = Proxy::parseSplitParam($tem_response_header);
+        $response_header = explode('&', $tem_response_header);
+        $response_header = Proxy::parseSplitParam($response_header);
         // 数据使用编码后的&字符串分割
         $data = urldecode($request->get(Proxy::$source_data_key_name, ''));
         // 是否是GET
