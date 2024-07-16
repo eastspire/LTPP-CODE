@@ -14,22 +14,22 @@ class Proxy
     /**
      * 参数source_url名称
      */
-    static $source_url_key_name = 'ltpp_source_url';
+    static $source_url_key_name = 'url';
 
     /**
      * 参数source_request_header名称
      */
-    static $source_request_header_key_name = 'ltpp_source_request_header';
+    static $source_request_header_key_name = 'request_header';
 
     /**
      * 参数source_response_header名称
      */
-    static $source_response_header_key_name = 'ltpp_source_response_header';
+    static $source_response_header_key_name = 'response_header';
 
     /**
      * 参数source_data名称
      */
-    static $source_data_key_name = 'ltpp_source_data';
+    static $source_data_key_name = 'data';
 
     /**
      * 获取响应结果
@@ -43,19 +43,13 @@ class Proxy
     }
 
     /**
-     * 加载代理抖音视频
+     * 解析分割参数
      */
-    public function proxyRequest(Request $request)
+    static protected function parseSplitParam(&$data)
     {
-        $url = urldecode($request->get(Proxy::$source_url_key_name, ''));
-        // 请求头使用编码后的&字符串分割
-        $request_header = urldecode($request->get(Proxy::$source_request_header_key_name, ''));
-        // 响应头使用编码后的&字符串分割
-        $tem_response_header = urldecode($request->get(Proxy::$source_response_header_key_name, ''));
-        $tem_response_header = explode('&', $tem_response_header);
-        $response_header = [];
-        foreach ($tem_response_header as &$tem) {
-            if (strpos($tem, ':') === false) {
+        $res = [];
+        foreach ($data as &$tem) {
+            if (strpos($tem, '=') === false) {
                 continue;
             }
             // 去除空格
@@ -68,14 +62,35 @@ class Proxy
             if (!$value) {
                 $value = '';
             }
-            $response_header[$key] = $value;
+            $res[$key] = $value;
         }
+        return $res;
+    }
+
+    /**
+     * 加载代理抖音视频
+     */
+    public function proxyRequest(Request $request)
+    {
+        $url = urldecode($request->get(Proxy::$source_url_key_name, ''));
+        // 请求头使用编码后的&字符串分割
+        $request_header = urldecode($request->get(Proxy::$source_request_header_key_name, ''));
+        // 响应头使用编码后的&字符串分割
+        $tem_response_header = urldecode($request->get(Proxy::$source_response_header_key_name, ''));
+        $tem_response_header = explode('&', $tem_response_header);
+        $response_header = Proxy::parseSplitParam($tem_response_header);
         // 数据使用编码后的&字符串分割
         $data = urldecode($request->get(Proxy::$source_data_key_name, ''));
         // 是否是GET
         $is_get = !!!$data;
         // 根据解码后的&分割数据
         $request_header = explode('&', $request_header);
+        foreach ($request_header as &$header) {
+            $pos = strpos($header, '=');
+            if ($pos !== false) {
+                $header = substr_replace($header, ':', $pos, 1);
+            }
+        }
         // 根据解码后的&分割数据
         $data = explode('&', $data);
         $file_data = Base::notFoundPage();
@@ -88,20 +103,7 @@ class Proxy
             }
             return Proxy::getResponse($file_data, $response_header);
         }
-        $body = [];
-        foreach ($data as &$param) {
-            if (strpos($param, '=') === false) {
-                continue;
-            }
-            list($key, $value) = explode('=', $param);
-            if (!$key) {
-                $key = '';
-            }
-            if (!$value) {
-                $value = '';
-            }
-            $body[$key] = $value;
-        }
+        $body = Proxy::parseSplitParam($data);
         // POST
         $file_data = Base::postRequest($url, $request_header, $body, false);
         return Proxy::getResponse($file_data, $response_header);
