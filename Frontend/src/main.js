@@ -280,8 +280,8 @@ Vue.prototype.copy = async function (text) {
             navigator.clipboard.writeText(text).then(() => {
                 this.$msg({
                     type: "success",
-                    message: "已复制到剪贴板",
-                    duration: 3600,
+                    message: "复制成功",
+                    duration: 888,
                     offset: 80,
                 });
             }).catch(err => {
@@ -294,8 +294,8 @@ Vue.prototype.copy = async function (text) {
                     document.execCommand("Copy");
                     this.$msg({
                         type: "success",
-                        message: "已复制到剪贴板",
-                        duration: 3600,
+                        message: "复制成功",
+                        duration: 888,
                         offset: 80,
                     });
                     let deldom = document.getElementById("LTPPSQScopyTextID");
@@ -304,7 +304,7 @@ Vue.prototype.copy = async function (text) {
                     this.$msg({
                         type: "error",
                         message: "复制失败",
-                        duration: 1800,
+                        duration: 888,
                         offset: 80,
                     });
                 }
@@ -318,8 +318,8 @@ Vue.prototype.copy = async function (text) {
             document.execCommand("Copy");
             this.$msg({
                 type: "success",
-                message: "已复制到剪贴板",
-                duration: 3600,
+                message: "复制成功",
+                duration: 888,
                 offset: 80,
             });
             let deldom = document.getElementById("LTPPSQScopyTextID");
@@ -329,7 +329,7 @@ Vue.prototype.copy = async function (text) {
         this.$msg({
             type: "error",
             message: "复制失败",
-            duration: 1800,
+            duration: 888,
             offset: 80,
         });
     }
@@ -1115,22 +1115,8 @@ Vue.prototype.copyText = async (e) => {
     }
     copy_lock = true;
     e.preventDefault();
-    try {
-        clipboardData.setData('text/plain', text.trim());
-        Vue.prototype.$msg({
-            type: 'success',
-            message: '复制成功',
-            duration: 800,
-            offset: 80,
-        });
-    } catch {
-        Vue.prototype.$msg({
-            type: 'error',
-            message: '复制失败',
-            duration: 800,
-            offset: 80,
-        });
-    }
+    Vue.prototype.copy(text.trim());
+
     setTimeout(() => {
         copy_lock = false;
     }, 0);
