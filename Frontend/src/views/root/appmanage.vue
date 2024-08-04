@@ -29,7 +29,7 @@
                 lookOneApp(temtable.id);
                 updateclick = true;
               "
-              class="pulse-enter-active shadow ltpp-list-box"
+              class="pulse-enter-active shadow ltpp-list-box appear"
               style="
                 border-width: 0rem;
                 height: 8rem;

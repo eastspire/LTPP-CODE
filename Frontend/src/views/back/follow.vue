@@ -1,8 +1,4 @@
-/* 
-
-用户关注
-
- */
+/* 用户关注 */
 
 <template>
   <div @contextmenu.prevent="" style="margin-left: auto; margin-right: auto">
@@ -31,7 +27,7 @@
               ? (dialogFormVisible = true)
               : (dialogFormVisible = false);
           "
-          class="pulse-enter-active shadow ltpp-list-box"
+          class="pulse-enter-active shadow ltpp-list-box appear"
           style="
             border-width: 0rem;
             height: 8rem;
@@ -384,9 +380,9 @@
 </template>
 
 <script>
-import urlencode from "../../../updateCompoents/urlencode";
+import urlencode from '../../../updateCompoents/urlencode';
 export default {
-  name: "follow",
+  name: 'follow',
   async activated() {
     this.search();
   },
@@ -409,29 +405,29 @@ export default {
       id &&
         id != this.$SqsGlobal.loading_tips &&
         this.$router.push({
-          path: "/userpage",
+          path: '/userpage',
           query: {
-            path: urlencode(id, "gbk"),
+            path: urlencode(id, 'gbk'),
           },
         });
     },
     tableRowClassName({ row, rowIndex }) {
       if (rowIndex === 1) {
-        return "warning-row";
+        return 'warning-row';
       } else if (rowIndex === 3) {
-        return "success-row";
+        return 'success-row';
       }
-      return "";
+      return '';
     },
 
     async keysearch() {
       this.lastkey = this.key;
       this.initData();
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/User/searchFollow",
+        method: 'post',
+        url: '/User/searchFollow',
         portType: {
-          process: "8793",
+          process: '8793',
         },
         data: {
           key: this.key,
@@ -440,7 +436,7 @@ export default {
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -451,7 +447,7 @@ export default {
 
       if (!this.showone) {
         this.$msg({
-          type: "success",
+          type: 'success',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -487,35 +483,35 @@ export default {
         return;
       }
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/User/lookUserData",
+        method: 'post',
+        url: '/User/lookUserData',
         portType: {
-          process: "8793",
+          process: '8793',
         },
         data: {
           user_id: id,
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
         });
       });
       this.followid = id;
-      this.name = res?.data["name"];
-      this.sex = res?.data["sex"];
-      this.email = res?.data["email"];
+      this.name = res?.data['name'];
+      this.sex = res?.data['sex'];
+      this.email = res?.data['email'];
     },
 
     async getlist() {
       this.initData();
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/User/loadFollow",
+        method: 'post',
+        url: '/User/loadFollow',
         portType: {
-          process: "8793",
+          process: '8793',
         },
         data: {
           page: this.page,
@@ -523,7 +519,7 @@ export default {
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -534,7 +530,7 @@ export default {
 
       if (!this.showone) {
         this.$msg({
-          type: "success",
+          type: 'success',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -545,17 +541,17 @@ export default {
 
     async deleteuser() {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/User/deleteFollow",
+        method: 'post',
+        url: '/User/deleteFollow',
         portType: {
-          process: "8793",
+          process: '8793',
         },
         data: {
           delete_id: this.followid,
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -564,14 +560,14 @@ export default {
 
       if (res?.code == 1) {
         this.$msg({
-          type: "success",
+          type: 'success',
           message: res?.msg,
           duration: 1600,
           offset: 80,
         });
       } else
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -582,19 +578,19 @@ export default {
 
   data() {
     return {
-      lastkey: "",
+      lastkey: '',
       showone: false,
-      followid: "",
-      name: "",
-      sex: "",
-      email: "",
+      followid: '',
+      name: '',
+      sex: '',
+      email: '',
       dialogTableVisible: false,
       dialogFormVisible: false,
       deletesure: false,
       total: 0,
       limit: 50,
       page: 1,
-      key: "",
+      key: '',
 
       tableData: [],
     };

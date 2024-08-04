@@ -5,9 +5,9 @@
 </template>
 
 <script>
-import questionlistVue from "../home/questionlist.vue";
+import questionlistVue from '../home/questionlist.vue';
 export default {
-  name: "questionlistmanage",
+  name: 'questionlistmanage',
   components: {
     questionlistVue,
   },

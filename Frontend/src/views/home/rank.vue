@@ -127,9 +127,9 @@
 </template>
 
 <script>
-import urlencode from "../../../updateCompoents/urlencode";
+import urlencode from '../../../updateCompoents/urlencode';
 export default {
-  name: "rank",
+  name: 'rank',
   deactivated() {
     this.isseetip = false;
   },
@@ -169,19 +169,19 @@ export default {
     },
     cellStyle({ row, rowIndex }) {
       let styleRes = {
-        background: "rgba(var(--ltpp-light-color), 0.16) !important",
-        height: "3.6rem !important",
-        color: "chartreuse",
+        background: 'rgba(var(--ltpp-light-color), 0.16) !important',
+        height: '3.6rem !important',
+        color: 'chartreuse',
       };
       if (rowIndex % 2 != 0) {
         styleRes.background =
-          "rgba(var(--ltpp-main-bk-color), 0.06) !important";
+          'rgba(var(--ltpp-main-bk-color), 0.06) !important';
       }
       if (row.index <= 3) {
-        styleRes.color = "red";
+        styleRes.color = 'red';
         return styleRes;
       } else {
-        styleRes.color = "chartreuse";
+        styleRes.color = 'chartreuse';
         return styleRes;
       }
     },
@@ -189,24 +189,24 @@ export default {
       id &&
         id != this.$SqsGlobal.loading_tips &&
         this.$router.push({
-          path: "/userpage",
+          path: '/userpage',
           query: {
-            path: urlencode(id, "gbk"),
+            path: urlencode(id, 'gbk'),
           },
         });
     },
     async getlist() {
       this.initData();
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Scorerank/getRankList",
+        method: 'post',
+        url: '/Scorerank/getRankList',
         data: {
           page: this.page,
           limit: this.limit,
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,

@@ -34,9 +34,9 @@
 </template>
 
 <script>
-import myfooter from "../components/myfooter.vue";
+import myfooter from '../components/myfooter.vue';
 export default {
-  name: "maintenance",
+  name: 'maintenance',
   components: {
     myfooter: myfooter,
   },
@@ -124,7 +124,7 @@ export default {
 
 h1 {
   position: absolute;
-  font-family: "Open Sans";
+  font-family: 'Open Sans';
   font-weight: 600;
   font-size: 12px;
   text-transform: uppercase;
@@ -160,7 +160,7 @@ h1 {
   border-bottom: 6px solid transparent;
 }
 .base span:before {
-  content: "";
+  content: '';
   height: 22px;
   width: 22px;
   border-radius: 50%;
@@ -170,7 +170,7 @@ h1 {
   top: -16px;
 }
 .base span:after {
-  content: "";
+  content: '';
   position: absolute;
   width: 0;
   height: 0;
@@ -192,7 +192,7 @@ h1 {
   top: -15px;
 }
 .face:after {
-  content: "";
+  content: '';
   height: 12px;
   width: 12px;
   background: #000;

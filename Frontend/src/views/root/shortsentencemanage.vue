@@ -310,14 +310,14 @@
 
 <script>
 export default {
-  name: "shortsentencemanage",
+  name: 'shortsentencemanage',
   async activated() {
     this.isseetip = true;
     this.page = 1;
     this.blogpagesize = 50;
     this.id = 0;
-    this.hitokoto = "";
-    this.from = "";
+    this.hitokoto = '';
+    this.from = '';
     this.search();
   },
   deactivated() {
@@ -329,7 +329,7 @@ export default {
 
   data() {
     return {
-      lastkey: "",
+      lastkey: '',
       isseetip: true,
       isupdate: false,
       isadd: false,
@@ -337,10 +337,10 @@ export default {
       total: 0,
       page: 1,
       blogpagesize: 50,
-      key: "",
+      key: '',
       id: 0,
-      hitokoto: "",
-      from: "",
+      hitokoto: '',
+      from: '',
     };
   },
   methods: {
@@ -363,13 +363,13 @@ export default {
     },
     cellStyle({ rowIndex }) {
       let styleRes = {
-        background: "rgba(var(--ltpp-light-color), 0.16) !important",
-        height: "3.6rem !important",
-        color: "chartreuse",
+        background: 'rgba(var(--ltpp-light-color), 0.16) !important',
+        height: '3.6rem !important',
+        color: 'chartreuse',
       };
       if (rowIndex % 2 != 0) {
         styleRes.background =
-          "rgba(var(--ltpp-main-bk-color), 0.06) !important";
+          'rgba(var(--ltpp-main-bk-color), 0.06) !important';
       }
       return styleRes;
     },
@@ -377,10 +377,10 @@ export default {
     async getlist() {
       this.initData();
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Shortsentence/loadAllShortSentence",
+        method: 'post',
+        url: '/Shortsentence/loadAllShortSentence',
         portType: {
-          process: "8797",
+          process: '8797',
         },
         data: {
           page: this.page,
@@ -388,7 +388,7 @@ export default {
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -399,7 +399,7 @@ export default {
 
       if (res?.code != 1) {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -411,17 +411,17 @@ export default {
       if (!this.id) {
         return;
       }
-      this.$confirm("确定删除该短句吗？", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
+      this.$confirm('确定删除该短句吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
       })
         .then(() => {
           this.$ajax({
-            method: "post",
-            url: "/Shortsentence/deleteShortSentence",
+            method: 'post',
+            url: '/Shortsentence/deleteShortSentence',
             portType: {
-              process: "8797",
+              process: '8797',
             },
             data: {
               delete_id: this.id,
@@ -430,14 +430,14 @@ export default {
             .then((res) => {
               if (res?.data.code == 1) {
                 this.$msg({
-                  type: "success",
+                  type: 'success',
                   message: res?.data.msg,
                   duration: 1600,
                   offset: 80,
                 });
               } else {
                 this.$msg({
-                  type: "error",
+                  type: 'error',
                   message: res?.data.msg,
                   duration: 1600,
                   offset: 80,
@@ -447,7 +447,7 @@ export default {
             })
             .catch((t) => {
               this.$msg({
-                type: "error",
+                type: 'error',
                 message: t,
                 duration: 1600,
                 offset: 80,
@@ -456,10 +456,10 @@ export default {
         })
         .catch(() => {
           this.$msg({
-            type: "info",
+            type: 'info',
             duration: 1600,
             offset: 80,
-            message: "取消删除",
+            message: '取消删除',
           });
         });
     },
@@ -468,10 +468,10 @@ export default {
       this.lastkey = this.key;
       this.initData();
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Shortsentence/findShortSentenceList",
+        method: 'post',
+        url: '/Shortsentence/findShortSentenceList',
         portType: {
-          process: "8797",
+          process: '8797',
         },
         data: {
           key: this.key,
@@ -480,7 +480,7 @@ export default {
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -491,7 +491,7 @@ export default {
 
       if (res?.code != 1) {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -513,10 +513,10 @@ export default {
     //更新
     async updateid() {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Shortsentence/updateShortSentence",
+        method: 'post',
+        url: '/Shortsentence/updateShortSentence',
         portType: {
-          process: "8797",
+          process: '8797',
         },
         data: {
           tabledata: {
@@ -527,7 +527,7 @@ export default {
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -535,30 +535,30 @@ export default {
       });
       if (res?.code == 1) {
         this.$msg({
-          type: "success",
+          type: 'success',
           message: res?.msg,
           duration: 1600,
           offset: 80,
         });
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
         });
       }
-      this.id = "";
-      this.hitokoto = "";
+      this.id = '';
+      this.hitokoto = '';
       this.search();
     },
     //添加
     async addid() {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Shortsentence/addShortSentence",
+        method: 'post',
+        url: '/Shortsentence/addShortSentence',
         portType: {
-          process: "8797",
+          process: '8797',
         },
         data: {
           tabledata: {
@@ -568,7 +568,7 @@ export default {
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -576,21 +576,21 @@ export default {
       });
       if (res?.code == 1) {
         this.$msg({
-          type: "success",
+          type: 'success',
           message: res?.msg,
           duration: 1600,
           offset: 80,
         });
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
         });
       }
       this.id = 0;
-      this.hitokoto = "";
+      this.hitokoto = '';
       this.search();
     },
   },

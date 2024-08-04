@@ -1,7 +1,4 @@
-/* 
-  个人文章管理
-
- */
+/* 个人文章管理 */
 
 <template>
   <div
@@ -31,7 +28,7 @@
           <div v-for="temtable in tableData" :key="temtable.index">
             <div
               @click="toload(temtable.id)"
-              class="pulse-enter-active shadow ltpp-list-box"
+              class="pulse-enter-active shadow ltpp-list-box appear"
               style="
                 border-width: 0rem;
                 height: 8rem;
@@ -162,10 +159,10 @@
 </template>
 
 <script>
-import urlencode from "../../../updateCompoents/urlencode";
+import urlencode from '../../../updateCompoents/urlencode';
 
 export default {
-  name: "myarticlemanage",
+  name: 'myarticlemanage',
   activated() {
     this.isseetip = true;
     this.search();
@@ -215,10 +212,10 @@ export default {
     async getlist() {
       this.initData();
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Article/loadMyArticleList",
+        method: 'post',
+        url: '/Article/loadMyArticleList',
         portType: {
-          process: "8792",
+          process: '8792',
         },
         data: {
           page: this.page,
@@ -226,7 +223,7 @@ export default {
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -242,9 +239,9 @@ export default {
       id &&
         id != this.$SqsGlobal.loading_tips &&
         this.$router.push({
-          path: "/onearticle",
+          path: '/onearticle',
           query: {
-            path: urlencode(id, "gbk"),
+            path: urlencode(id, 'gbk'),
           },
         });
     },
@@ -254,10 +251,10 @@ export default {
       this.lastkey = this.key;
       this.initData();
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Article/myArticleKeySearch",
+        method: 'post',
+        url: '/Article/myArticleKeySearch',
         portType: {
-          process: "8792",
+          process: '8792',
         },
         data: {
           key: this.key,
@@ -266,7 +263,7 @@ export default {
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -277,7 +274,7 @@ export default {
 
       if (!this.showone) {
         this.$msg({
-          type: "success",
+          type: 'success',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -286,7 +283,7 @@ export default {
       }
     },
     search() {
-      if (this.key == "" || this.key == null || this.key == undefined) {
+      if (this.key == '' || this.key == null || this.key == undefined) {
         this.issearch = true;
         this.getlist();
         return;
@@ -302,23 +299,22 @@ export default {
 
   data() {
     return {
-      lastkey: "",
+      lastkey: '',
       isseetip: true,
       ispublic: 1,
-      name: "",
+      name: '',
       issearch: false,
       showone: false,
       total: 0,
       limit: 50,
       page: 1,
-      key: "",
+      key: '',
       //文章数据
       tableData: [],
     };
   },
 };
 </script>
-
 
 <style scoped>
 .up {

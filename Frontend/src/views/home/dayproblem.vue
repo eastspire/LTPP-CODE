@@ -170,9 +170,9 @@
 </template>
 
 <script>
-import urlencode from "../../../updateCompoents/urlencode";
+import urlencode from '../../../updateCompoents/urlencode';
 export default {
-  name: "dayproblem",
+  name: 'dayproblem',
   activated() {
     this.isseetip = true;
     this.getlist();
@@ -218,31 +218,31 @@ export default {
      */
     cellStyle({ row, rowIndex }) {
       let styleRes = {
-        background: "rgba(var(--ltpp-light-color), 0.16) !important",
-        height: "3.6rem !important",
-        color: "chartreuse",
+        background: 'rgba(var(--ltpp-light-color), 0.16) !important',
+        height: '3.6rem !important',
+        color: 'chartreuse',
       };
       if (rowIndex % 2 != 0) {
         styleRes.background =
-          "rgba(var(--ltpp-main-bk-color), 0.06) !important";
+          'rgba(var(--ltpp-main-bk-color), 0.06) !important';
       }
       if (row.hassolve == 0) {
         /* 未通过*/
-        styleRes.color = "red";
+        styleRes.color = 'red';
         return styleRes;
       } else {
         /* 通过*/
-        styleRes.color = "chartreuse";
+        styleRes.color = 'chartreuse';
         return styleRes;
       }
     },
     async getlist() {
       this.initData();
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Dayproblem/getDayproblemList",
+        method: 'post',
+        url: '/Dayproblem/getDayproblemList',
         portType: {
-          process: "8794",
+          process: '8794',
         },
         data: {
           page: this.page,
@@ -250,7 +250,7 @@ export default {
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -274,10 +274,10 @@ export default {
       id &&
         id != this.$SqsGlobal.loading_tips &&
         this.$router.push({
-          path: "/oneproblem",
+          path: '/oneproblem',
           query: {
-            path: urlencode(id, "gbk"),
-            contest: urlencode("", "gbk"),
+            path: urlencode(id, 'gbk'),
+            contest: urlencode('', 'gbk'),
           },
         });
     },
@@ -285,7 +285,7 @@ export default {
 };
 </script>
 
-<style  scoped>
+<style scoped>
 .oneday {
   background-color: antiquewhite;
 }

@@ -385,9 +385,9 @@
 </template>
 
 <script>
-import urlencode from "../../../updateCompoents/urlencode";
+import urlencode from '../../../updateCompoents/urlencode';
 export default {
-  name: "mylinuxmanage",
+  name: 'mylinuxmanage',
   activated() {
     this.isseedialog = false;
     this.now_linux = {};
@@ -412,14 +412,14 @@ export default {
     return {
       now_linux: {},
       isseedialog: false,
-      lastkey: "",
+      lastkey: '',
       isseetip: true,
       issearch: false,
       linux_list: [],
       total: 0,
       page: 1,
       limit: 50,
-      key: "",
+      key: '',
     };
   },
   methods: {
@@ -427,9 +427,9 @@ export default {
       id &&
         id != this.$SqsGlobal.loading_tips &&
         this.$router.push({
-          path: "/userpage",
+          path: '/userpage',
           query: {
-            path: urlencode(id, "gbk"),
+            path: urlencode(id, 'gbk'),
           },
         });
     },
@@ -453,26 +453,26 @@ export default {
       let endtime = Date.parse(row.end);
       let now = Date.parse(new Date());
       let styleRes = {
-        background: "rgba(var(--ltpp-light-color), 0.16) !important",
-        height: "3.6rem !important",
-        color: "chartreuse",
+        background: 'rgba(var(--ltpp-light-color), 0.16) !important',
+        height: '3.6rem !important',
+        color: 'chartreuse',
       };
       if (rowIndex % 2 != 0) {
         styleRes.background =
-          "rgba(var(--ltpp-main-bk-color), 0.06) !important";
+          'rgba(var(--ltpp-main-bk-color), 0.06) !important';
       }
       // 状态列字体颜色
       if (endtime <= now) {
         /* 服务器结束 */
-        styleRes.color = "chartreuse";
+        styleRes.color = 'chartreuse';
         return styleRes;
       } else if (begintime <= now && now <= endtime) {
         /* 服务器进行中 */
-        styleRes.color = "red";
+        styleRes.color = 'red';
         return styleRes;
       } else {
         /* 服务器未开始 */
-        styleRes.color = "#409EFF";
+        styleRes.color = '#409EFF';
         return styleRes;
       }
     },
@@ -501,17 +501,17 @@ export default {
         return;
       }
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Linux/creatImage",
+        method: 'post',
+        url: '/Linux/creatImage',
         portType: {
-          process: "8796",
+          process: '8796',
         },
         data: {
           name: name,
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -519,14 +519,14 @@ export default {
       });
       if (res?.code == 1) {
         this.$msg({
-          type: "success",
+          type: 'success',
           message: res?.msg,
           duration: 1600,
           offset: 80,
         });
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -538,20 +538,20 @@ export default {
       if (!name || name == this.$SqsGlobal.loading_tips) {
         return;
       }
-      this.$confirm("确定制作快照吗（此操作会覆盖旧的快照）？", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
+      this.$confirm('确定制作快照吗（此操作会覆盖旧的快照）？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
       })
         .then(() => {
           this.creatImage(name);
         })
         .catch(() => {
           this.$msg({
-            type: "info",
+            type: 'info',
             duration: 1600,
             offset: 80,
-            message: "取消制作快照",
+            message: '取消制作快照',
           });
         });
     },
@@ -561,17 +561,17 @@ export default {
         return;
       }
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Linux/backLastImage",
+        method: 'post',
+        url: '/Linux/backLastImage',
         portType: {
-          process: "8796",
+          process: '8796',
         },
         data: {
           name: name,
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -579,14 +579,14 @@ export default {
       });
       if (res?.code == 1) {
         this.$msg({
-          type: "success",
+          type: 'success',
           message: res?.msg,
           duration: 1600,
           offset: 80,
         });
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -599,12 +599,12 @@ export default {
         return;
       }
       this.$confirm(
-        "确定回滚到最新的快照吗（此操作会覆盖当前数据）？",
-        "提示",
+        '确定回滚到最新的快照吗（此操作会覆盖当前数据）？',
+        '提示',
         {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
         }
       )
         .then(() => {
@@ -612,10 +612,10 @@ export default {
         })
         .catch(() => {
           this.$msg({
-            type: "info",
+            type: 'info',
             duration: 1600,
             offset: 80,
-            message: "取消回滚快照",
+            message: '取消回滚快照',
           });
         });
     },
@@ -625,17 +625,17 @@ export default {
         return;
       }
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Linux/resetImage",
+        method: 'post',
+        url: '/Linux/resetImage',
         portType: {
-          process: "8796",
+          process: '8796',
         },
         data: {
           name: name,
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -643,14 +643,14 @@ export default {
       });
       if (res?.code == 1) {
         this.$msg({
-          type: "success",
+          type: 'success',
           message: res?.msg,
           duration: 1600,
           offset: 80,
         });
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -662,20 +662,20 @@ export default {
       if (!name || name == this.$SqsGlobal.loading_tips) {
         return;
       }
-      this.$confirm("确定重置快照吗（此操作会恢复出厂设置）？", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
+      this.$confirm('确定重置快照吗（此操作会恢复出厂设置）？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
       })
         .then(() => {
           this.resetImage(name);
         })
         .catch(() => {
           this.$msg({
-            type: "info",
+            type: 'info',
             duration: 1600,
             offset: 80,
-            message: "取消重置快照",
+            message: '取消重置快照',
           });
         });
     },
@@ -684,17 +684,17 @@ export default {
         return;
       }
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Linux/shutdown",
+        method: 'post',
+        url: '/Linux/shutdown',
         portType: {
-          process: "8796",
+          process: '8796',
         },
         data: {
           name: name,
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -702,14 +702,14 @@ export default {
       });
       if (res?.code == 1) {
         this.$msg({
-          type: "success",
+          type: 'success',
           message: res?.msg,
           duration: 1600,
           offset: 80,
         });
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -721,17 +721,17 @@ export default {
         return;
       }
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Linux/poweron",
+        method: 'post',
+        url: '/Linux/poweron',
         portType: {
-          process: "8796",
+          process: '8796',
         },
         data: {
           name: name,
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -739,14 +739,14 @@ export default {
       });
       if (res?.code == 1) {
         this.$msg({
-          type: "success",
+          type: 'success',
           message: res?.msg,
           duration: 1600,
           offset: 80,
         });
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -758,17 +758,17 @@ export default {
         return;
       }
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Linux/reboot",
+        method: 'post',
+        url: '/Linux/reboot',
         portType: {
-          process: "8796",
+          process: '8796',
         },
         data: {
           name: name,
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -776,14 +776,14 @@ export default {
       });
       if (res?.code == 1) {
         this.$msg({
-          type: "success",
+          type: 'success',
           message: res?.msg,
           duration: 1600,
           offset: 80,
         });
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -795,17 +795,17 @@ export default {
         return;
       }
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Linux/delete",
+        method: 'post',
+        url: '/Linux/delete',
         portType: {
-          process: "8796",
+          process: '8796',
         },
         data: {
           name: name,
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -813,14 +813,14 @@ export default {
       });
       if (res?.code == 1) {
         this.$msg({
-          type: "success",
+          type: 'success',
           message: res?.msg,
           duration: 1600,
           offset: 80,
         });
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -832,10 +832,10 @@ export default {
     async getlist() {
       this.initData();
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Linux/getMyList",
+        method: 'post',
+        url: '/Linux/getMyList',
         portType: {
-          process: "8796",
+          process: '8796',
         },
         data: {
           page: this.page,
@@ -843,7 +843,7 @@ export default {
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -857,10 +857,10 @@ export default {
       this.lastkey = this.key;
       this.initData();
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Linux/searchMyList",
+        method: 'post',
+        url: '/Linux/searchMyList',
         portType: {
-          process: "8796",
+          process: '8796',
         },
         data: {
           key: this.key,
@@ -869,7 +869,7 @@ export default {
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -880,7 +880,7 @@ export default {
     },
     //搜索预处理
     search() {
-      if (this.key == "" || this.key == null || this.key == undefined) {
+      if (this.key == '' || this.key == null || this.key == undefined) {
         this.issearch = false;
         this.getlist();
         return;

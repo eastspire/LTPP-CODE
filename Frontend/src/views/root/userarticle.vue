@@ -24,7 +24,7 @@
       <div v-for="temtable in tableData" :key="temtable.index">
         <div
           @click="passid(temtable.id)"
-          class="pulse-enter-active ltpp-list-box"
+          class="pulse-enter-active ltpp-list-box appear"
           style="border-width: 0rem; height: 8rem; overflow: hidden"
         >
           <div>

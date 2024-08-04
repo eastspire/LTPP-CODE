@@ -115,7 +115,7 @@
                       font-size: 1.06rem;
                       cursor: pointer;
                     "
-                    >P{{ index + 1 + "：" + tem.problemName }}</el-tag
+                    >P{{ index + 1 + '：' + tem.problemName }}</el-tag
                   >
                 </el-tooltip>
               </div>
@@ -230,17 +230,17 @@
 </template>
 
 <script>
-import urlencode from "../../../updateCompoents/urlencode";
-import "../../../public/md/markdown/github-markdown.min.css";
-import "../../../public/md/markdown/github-markdown.min.css";
+import urlencode from '../../../updateCompoents/urlencode';
+import '../../../public/md/markdown/github-markdown.min.css';
+import '../../../public/md/markdown/github-markdown.min.css';
 
 export default {
-  name: "onequestionsheet",
+  name: 'onequestionsheet',
   async activated() {
     this.isseetip = true;
     this.showone_join_msg = false;
     this.isseepassword = false;
-    this.password = "";
+    this.password = '';
     if (
       !(
         this.$route &&
@@ -254,7 +254,7 @@ export default {
       return;
     }
     this.isseetip = true;
-    this.question_sheet_id = urlencode.decode(this.$route.query.path, "gbk");
+    this.question_sheet_id = urlencode.decode(this.$route.query.path, 'gbk');
     this.getdata();
     this.judgeisjoin();
   },
@@ -268,7 +268,7 @@ export default {
   },
   data() {
     return {
-      password: "",
+      password: '',
       isseepassword: false,
       showone_join_msg: false,
       isHidePagenum: true,
@@ -279,23 +279,23 @@ export default {
       externalLink: {
         markdown_css: false,
         // 默认public文件夹下
-        hljs_js: () => "md/highlightjs/highlight.min.js",
-        hljs_css: (css) => "md/highlightjs/styles/" + css + ".min.css",
-        hljs_lang: (lang) => "md/highlightjs/languages/" + lang + ".min.js",
-        katex_css: () => "md/katex/katex.min.css",
-        katex_js: () => "md/katex/katex.min.js",
+        hljs_js: () => 'md/highlightjs/highlight.min.js',
+        hljs_css: (css) => 'md/highlightjs/styles/' + css + '.min.css',
+        hljs_lang: (lang) => 'md/highlightjs/languages/' + lang + '.min.js',
+        katex_css: () => 'md/katex/katex.min.css',
+        katex_js: () => 'md/katex/katex.min.js',
       },
       isjoin: false,
       problemList: [],
-      question_sheet_id: "",
+      question_sheet_id: '',
       question_sheet_data: {
-        id: "",
+        id: '',
         name: this.$SqsGlobal.loading_tips,
         time: this.$SqsGlobal.loading_tips,
         people_num: this.$SqsGlobal.loading_tips,
         creator_name: this.$SqsGlobal.loading_tips,
         password: true,
-        creator_id: "",
+        creator_id: '',
       },
       /* context:  '',//输入的数据 */
       toolbars: {
@@ -329,18 +329,18 @@ export default {
       id &&
         id != this.$SqsGlobal.loading_tips &&
         this.$router.push({
-          path: "/userpage",
+          path: '/userpage',
           query: {
-            path: urlencode(id, "gbk"),
+            path: urlencode(id, 'gbk'),
           },
         });
     },
     async judgeisjoin() {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/QuestionSheet/judgeIsJoinOneQuestionSheet",
+        method: 'post',
+        url: '/QuestionSheet/judgeIsJoinOneQuestionSheet',
         portType: {
-          process: "8796",
+          process: '8796',
         },
         data: {
           question_sheet_id: this.question_sheet_id,
@@ -348,7 +348,7 @@ export default {
       }).catch((t) => {
         this.isjoin = false;
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -375,26 +375,26 @@ export default {
       id &&
         id != this.$SqsGlobal.loading_tips &&
         this.$router.push({
-          path: "/oneproblem",
+          path: '/oneproblem',
           query: {
-            path: urlencode(id, "gbk"),
-            contest: urlencode("", "gbk"),
+            path: urlencode(id, 'gbk'),
+            contest: urlencode('', 'gbk'),
           },
         });
     },
     async getproblemlist() {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/QuestionSheet/lookOneQuestionSheetProblemList",
+        method: 'post',
+        url: '/QuestionSheet/lookOneQuestionSheetProblemList',
         portType: {
-          process: "8796",
+          process: '8796',
         },
         data: {
           question_sheet_id: this.question_sheet_id,
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -406,7 +406,7 @@ export default {
         !this.showone_join_msg &&
           (this.showone_join_msg = true) &&
           this.$msg({
-            type: "error",
+            type: 'error',
             message: res?.msg,
             duration: 1600,
             offset: 80,
@@ -415,17 +415,17 @@ export default {
     },
     async getdata() {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/QuestionSheet/lookOneQuestionSheetData",
+        method: 'post',
+        url: '/QuestionSheet/lookOneQuestionSheetData',
         portType: {
-          process: "8796",
+          process: '8796',
         },
         data: {
           question_sheet_id: this.question_sheet_id,
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -439,7 +439,7 @@ export default {
         });
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -451,10 +451,10 @@ export default {
       this.canclick = false;
       this.isseepassword = false;
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/QuestionSheet/joinOneQuestionSheet",
+        method: 'post',
+        url: '/QuestionSheet/joinOneQuestionSheet',
         portType: {
-          process: "8796",
+          process: '8796',
         },
         data: {
           question_sheet_id: this.question_sheet_id,
@@ -462,17 +462,17 @@ export default {
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
         });
       });
       this.canclick = true;
-      this.password = "";
+      this.password = '';
       if (res?.code == 1) {
         this.$msg({
-          type: "success",
+          type: 'success',
           message: res?.msg,
           duration: 1000,
           offset: 80,
@@ -484,7 +484,7 @@ export default {
       } else {
         this.isjoin = false;
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1000,
           offset: 80,
@@ -496,18 +496,18 @@ export default {
     prop() {
       let data = {
         subfield: false, // 单双栏模式
-        defaultOpen: "preview", //edit： 默认展示编辑区域 ， preview： 默认展示预览区域
+        defaultOpen: 'preview', //edit： 默认展示编辑区域 ， preview： 默认展示预览区域
         editable: false,
         toolbarsFlag: false, //工具栏
         scrollStyle: true,
-        codeStyle: "atom-one-dark",
+        codeStyle: 'atom-one-dark',
         boxShadow: false,
         ishljs: true,
         tabSize: 4,
-        toolbarsBackground: "rgba(0,0,0,0)",
-        editorBackground: "rgba(0,0,0,0)",
-        previewBackground: "rgba(0,0,0,0)",
-        fontSize: "1.06rem",
+        toolbarsBackground: 'rgba(0,0,0,0)',
+        editorBackground: 'rgba(0,0,0,0)',
+        previewBackground: 'rgba(0,0,0,0)',
+        fontSize: '1.06rem',
         navigation: false,
       };
       return data;
@@ -517,7 +517,7 @@ export default {
 </script>
 
 <style scoped>
-@import "../../../public/md/markdown/github-markdown.min.css";
+@import '../../../public/md/markdown/github-markdown.min.css';
 
 .el-button {
   padding: 0.6rem 1rem !important;

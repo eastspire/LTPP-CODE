@@ -37,7 +37,7 @@
           :style="`min-height:${$store.state.no_scroll_height * 0.74}vh;`"
         >
           <div v-for="tem in noticeList" :key="tem.index">
-            <div @dblclick="toPage(tem)">
+            <div @dblclick="toPage(tem)" class="appear">
               <el-alert
                 style="cursor: pointer; margin-top: 0.66rem"
                 @close="deletemynotice(tem.id)"
@@ -84,10 +84,10 @@
 </template>
 
 <script>
-import urlencode from "../../../updateCompoents/urlencode";
+import urlencode from '../../../updateCompoents/urlencode';
 
 export default {
-  name: "mynotice",
+  name: 'mynotice',
   created() {
     this.page = 1;
     this.limit = 50;
@@ -108,14 +108,14 @@ export default {
   methods: {
     async clearall() {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Mynotice/deleteAllMyNotice",
+        method: 'post',
+        url: '/Mynotice/deleteAllMyNotice',
         portType: {
-          process: "8793",
+          process: '8793',
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -123,14 +123,14 @@ export default {
       });
       if (res?.code == 1) {
         this.$msg({
-          type: "success",
+          type: 'success',
           message: res?.msg,
           duration: 1600,
           offset: 80,
         });
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -140,17 +140,17 @@ export default {
     },
     async deletemynotice(id) {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Mynotice/deleteMyNotice",
+        method: 'post',
+        url: '/Mynotice/deleteMyNotice',
         portType: {
-          process: "8793",
+          process: '8793',
         },
         data: {
           delete_id: id,
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -158,14 +158,14 @@ export default {
       });
       if (res?.code == 1) {
         this.$msg({
-          type: "success",
+          type: 'success',
           message: res?.msg,
           duration: 1600,
           offset: 80,
         });
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -176,30 +176,30 @@ export default {
     toPage(data) {
       if (data.articleid && data.articleid != 0) {
         this.$router.push({
-          path: "/onearticle",
+          path: '/onearticle',
           query: {
-            path: urlencode(data.articleid, "gbk"),
+            path: urlencode(data.articleid, 'gbk'),
           },
         });
       } else if (data.questionid && data.questionid != 0) {
         this.$router.push({
-          path: "/onequestion",
+          path: '/onequestion',
           query: {
-            path: urlencode(data.questionid, "gbk"),
+            path: urlencode(data.questionid, 'gbk'),
           },
         });
       } else if (data.videoid && data.videoid != 0) {
         this.$router.push({
-          path: "/onevideo",
+          path: '/onevideo',
           query: {
-            path: urlencode(data.videoid, "gbk"),
+            path: urlencode(data.videoid, 'gbk'),
           },
         });
       } else if (data.fanuserid && data.fanuserid != 0) {
         this.$router.push({
-          path: "/userpage",
+          path: '/userpage',
           query: {
-            path: urlencode(data.fanuserid, "gbk"),
+            path: urlencode(data.fanuserid, 'gbk'),
           },
         });
       }
@@ -218,10 +218,10 @@ export default {
     //获取通知列表
     async getlist() {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Mynotice/loadMyNotice",
+        method: 'post',
+        url: '/Mynotice/loadMyNotice',
         portType: {
-          process: "8793",
+          process: '8793',
         },
         data: {
           page: this.page,
@@ -229,7 +229,7 @@ export default {
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -240,7 +240,7 @@ export default {
 
       if (res?.code != 1) {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,

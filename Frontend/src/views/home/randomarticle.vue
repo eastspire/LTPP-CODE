@@ -1,6 +1,4 @@
-/* 
-随机文章
- */
+/* 随机文章 */
 
 <template>
   <div
@@ -83,26 +81,26 @@
 </template>
 
 <script>
-import "../../../public/md/markdown/github-markdown.min.css";
-import "../../../public/md/css/index.css";
+import '../../../public/md/markdown/github-markdown.min.css';
+import '../../../public/md/css/index.css';
 export default {
-  name: "randomarticle",
+  name: 'randomarticle',
   computed: {
     prop() {
       let data = {
         subfield: false, // 单双栏模式
-        defaultOpen: "preview", //edit： 默认展示编辑区域 ， preview： 默认展示预览区域
+        defaultOpen: 'preview', //edit： 默认展示编辑区域 ， preview： 默认展示预览区域
         editable: false,
         toolbarsFlag: false, //工具栏
         scrollStyle: true,
-        codeStyle: "atom-one-dark",
+        codeStyle: 'atom-one-dark',
         boxShadow: false,
         ishljs: true,
         tabSize: 4,
-        toolbarsBackground: "rgba(0,0,0,0)",
-        editorBackground: "rgba(0,0,0,0)",
-        previewBackground: "rgba(0,0,0,0)",
-        fontSize: "1.06rem",
+        toolbarsBackground: 'rgba(0,0,0,0)',
+        editorBackground: 'rgba(0,0,0,0)',
+        previewBackground: 'rgba(0,0,0,0)',
+        fontSize: '1.06rem',
         navigation: false,
       };
       return data;
@@ -116,11 +114,11 @@ export default {
     async getlist() {
       //获取文章
       const { data: res } = await this.$ajax
-        .post("/Article/randomOneArticle")
+        .post('/Article/randomOneArticle')
         .catch((t) => {
           this.loadfinish = true;
           this.$msg({
-            type: "error",
+            type: 'error',
             message: t,
             duration: 1600,
             offset: 80,
@@ -138,15 +136,15 @@ export default {
       externalLink: {
         markdown_css: false,
         // 默认public文件夹下
-        hljs_js: () => "md/highlightjs/highlight.min.js",
-        hljs_css: (css) => "md/highlightjs/styles/" + css + ".min.css",
-        hljs_lang: (lang) => "md/highlightjs/languages/" + lang + ".min.js",
-        katex_css: () => "md/katex/katex.min.css",
-        katex_js: () => "md/katex/katex.min.js",
+        hljs_js: () => 'md/highlightjs/highlight.min.js',
+        hljs_css: (css) => 'md/highlightjs/styles/' + css + '.min.css',
+        hljs_lang: (lang) => 'md/highlightjs/languages/' + lang + '.min.js',
+        katex_css: () => 'md/katex/katex.min.css',
+        katex_js: () => 'md/katex/katex.min.js',
       },
       loadfinish: false,
-      context: " ", //输入的数据
-      image: "",
+      context: ' ', //输入的数据
+      image: '',
       toolbars: {
         bold: true, // 粗体
         italic: true, // 斜体
@@ -172,16 +170,16 @@ export default {
         help: false,
       },
       tableData: {
-        articlename: "",
-        article: "",
-        image: "",
+        articlename: '',
+        article: '',
+        image: '',
       },
     };
   },
 };
 </script>
 <style scoped>
-@import "../../../public/md/markdown/github-markdown.min.css";
+@import '../../../public/md/markdown/github-markdown.min.css';
 /**
 鼠标放上，图片变大
 */

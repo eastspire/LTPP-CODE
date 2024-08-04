@@ -1492,14 +1492,14 @@
 
 <script>
 export default {
-  name: "setting",
+  name: 'setting',
 
   async activated() {
-    this.userbeginnum = "";
-    this.userendnum = "";
+    this.userbeginnum = '';
+    this.userendnum = '';
     this.isseeinstallres = false;
     await this.getsettinglist();
-    this.ip = "";
+    this.ip = '';
     this.showadd = false;
     this.page = 1;
     this.issearch = false; //判断是否搜索，从而进行分页查找
@@ -1512,41 +1512,41 @@ export default {
   data() {
     return {
       isadd: false,
-      userbeginnum: "",
-      userendnum: "",
+      userbeginnum: '',
+      userendnum: '',
       isseeinstallres: false,
-      installres: "",
+      installres: '',
       resdata: {
         canregister: 1,
         canlogin: 1,
         useemail: 1,
         classurl: window?.location?.href,
-        smtp: "",
-        smtpkey: "",
+        smtp: '',
+        smtpkey: '',
         GLOBlinuxurl: window?.location?.href,
-        GLOBipfrequency: "",
-        GLOBipblack: "",
-        GLOBiplimit: "",
+        GLOBipfrequency: '',
+        GLOBipblack: '',
+        GLOBiplimit: '',
       },
       iplist: [],
-      keyip: "",
+      keyip: '',
       limit: 10,
       total: 0,
       page: 1,
       issearch: false,
-      ip: "",
-      username: "",
+      ip: '',
+      username: '',
       showadd: false,
       showlinux: false,
-      linuxdata: "加载中！",
+      linuxdata: '加载中！',
     };
   },
   methods: {
     async largeadduser() {
       if (this.isadd) {
         this.$msg({
-          type: "error",
-          message: "正在生成中，请稍等！",
+          type: 'error',
+          message: '正在生成中，请稍等！',
           duration: 1600,
           offset: 80,
         });
@@ -1554,10 +1554,10 @@ export default {
       }
       this.isadd = true;
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Setting/largeAddUser",
+        method: 'post',
+        url: '/Setting/largeAddUser',
         portType: {
-          process: "8797",
+          process: '8797',
         },
         data: {
           userbeginnum: this.userbeginnum,
@@ -1565,7 +1565,7 @@ export default {
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -1574,14 +1574,14 @@ export default {
       this.isadd = false;
       if (res?.code == 1) {
         this.$msg({
-          type: "success",
+          type: 'success',
           message: res?.msg,
           duration: 1600,
           offset: 80,
         });
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -1590,23 +1590,23 @@ export default {
     },
     cellStyle({ row, rowIndex }) {
       let styleRes = {
-        background: "rgba(var(--ltpp-light-color), 0.16) !important",
-        height: "3.6rem !important",
-        color: "chartreuse",
+        background: 'rgba(var(--ltpp-light-color), 0.16) !important',
+        height: '3.6rem !important',
+        color: 'chartreuse',
       };
 
       return styleRes;
     },
     async installJudgeSever() {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Setting/installJudgeSever",
+        method: 'post',
+        url: '/Setting/installJudgeSever',
         portType: {
-          process: "8797",
+          process: '8797',
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -1614,14 +1614,14 @@ export default {
       });
       if (res?.code == 1) {
         this.$msg({
-          type: "success",
+          type: 'success',
           message: res?.msg,
           duration: 1600,
           offset: 80,
         });
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -1630,23 +1630,23 @@ export default {
     },
     async updatesetting() {
       this.$msg({
-        type: "success",
-        message: "开始更新设置，请耐心等待更新完成",
+        type: 'success',
+        message: '开始更新设置，请耐心等待更新完成',
         duration: 1600,
         offset: 80,
       });
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Setting/updateSetting",
+        method: 'post',
+        url: '/Setting/updateSetting',
         portType: {
-          process: "8797",
+          process: '8797',
         },
         data: {
           data: this.resdata,
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -1654,15 +1654,15 @@ export default {
       });
       if (res?.code == 1) {
         this.$msg({
-          type: "success",
+          type: 'success',
           message: res?.msg,
           duration: 1600,
           offset: 80,
         });
-        sessionStorage.removeItem("musicbkurl");
+        sessionStorage.removeItem('musicbkurl');
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -1672,20 +1672,20 @@ export default {
     },
     async updateimage() {
       this.$msg({
-        type: "success",
-        message: "开始更新",
+        type: 'success',
+        message: '开始更新',
         duration: 1600,
         offset: 80,
       });
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Setting/updateImage",
+        method: 'post',
+        url: '/Setting/updateImage',
         portType: {
-          process: "8797",
+          process: '8797',
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -1693,14 +1693,14 @@ export default {
       });
       if (res?.code == 1) {
         this.$msg({
-          type: "success",
+          type: 'success',
           message: res?.msg,
           duration: 1600,
           offset: 80,
         });
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -1709,14 +1709,14 @@ export default {
     },
     async delredis() {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Setting/deleteRedis",
+        method: 'post',
+        url: '/Setting/deleteRedis',
         portType: {
-          process: "8797",
+          process: '8797',
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -1724,14 +1724,14 @@ export default {
       });
       if (res?.code == 1) {
         this.$msg({
-          type: "success",
+          type: 'success',
           message: res?.msg,
           duration: 1600,
           offset: 80,
         });
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -1740,14 +1740,14 @@ export default {
     },
     async deleteSomeRedis() {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Setting/deleteSomeRedis",
+        method: 'post',
+        url: '/Setting/deleteSomeRedis',
         portType: {
-          process: "8797",
+          process: '8797',
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -1755,14 +1755,14 @@ export default {
       });
       if (res?.code == 1) {
         this.$msg({
-          type: "success",
+          type: 'success',
           message: res?.msg,
           duration: 1600,
           offset: 80,
         });
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -1771,14 +1771,14 @@ export default {
     },
     async delredisaidip() {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Setting/deleteRedisIdIp",
+        method: 'post',
+        url: '/Setting/deleteRedisIdIp',
         portType: {
-          process: "8797",
+          process: '8797',
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -1786,14 +1786,14 @@ export default {
       });
       if (res?.code == 1) {
         this.$msg({
-          type: "success",
+          type: 'success',
           message: res?.msg,
           duration: 1600,
           offset: 80,
         });
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -1803,28 +1803,28 @@ export default {
 
     async lookbase() {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Setting/linuxData",
+        method: 'post',
+        url: '/Setting/linuxData',
         portType: {
-          process: "8797",
+          process: '8797',
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
         });
       });
-      this.linuxdata = res?.data ?? "";
+      this.linuxdata = res?.data ?? '';
     },
 
     async lookiplist() {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Setting/getIpBlackList",
+        method: 'post',
+        url: '/Setting/getIpBlackList',
         portType: {
-          process: "8797",
+          process: '8797',
         },
         data: {
           page: this.page,
@@ -1832,7 +1832,7 @@ export default {
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -1843,7 +1843,7 @@ export default {
         this.total = res.allnum;
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -1852,17 +1852,17 @@ export default {
     },
     async addBlackUser() {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Setting/addBlackUser",
+        method: 'post',
+        url: '/Setting/addBlackUser',
         portType: {
-          process: "8797",
+          process: '8797',
         },
         data: {
           user_name: this.username,
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -1871,14 +1871,14 @@ export default {
       if (res?.code == 1) {
         showadd = false;
         this.$msg({
-          type: "success",
+          type: 'success',
           message: res?.msg,
           duration: 1600,
           offset: 80,
         });
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -1888,17 +1888,17 @@ export default {
     },
     async deleteip(id) {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Setting/deleteBlack",
+        method: 'post',
+        url: '/Setting/deleteBlack',
         portType: {
-          process: "8797",
+          process: '8797',
         },
         data: {
           delete_id: id,
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -1906,14 +1906,14 @@ export default {
       });
       if (res?.code == 1) {
         this.$msg({
-          type: "success",
+          type: 'success',
           message: res?.msg,
           duration: 1600,
           offset: 80,
         });
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -1924,14 +1924,14 @@ export default {
 
     async getsettinglist() {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Setting/getSettingList",
+        method: 'post',
+        url: '/Setting/getSettingList',
         portType: {
-          process: "8797",
+          process: '8797',
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -1941,7 +1941,7 @@ export default {
         this.resdata = res?.data;
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -1969,10 +1969,10 @@ export default {
     //搜索
     async keysearch() {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Setting/searchIp",
+        method: 'post',
+        url: '/Setting/searchIp',
         portType: {
-          process: "8797",
+          process: '8797',
         },
         data: {
           ip: this.keyip,
@@ -1981,7 +1981,7 @@ export default {
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -1994,7 +1994,7 @@ export default {
     search() {
       this.iplist = [];
       this.page = 1;
-      if (this.keyip == "" || this.keyip == null || this.keyip == undefined) {
+      if (this.keyip == '' || this.keyip == null || this.keyip == undefined) {
         this.issearch = false;
         this.lookiplist();
         return;

@@ -102,23 +102,23 @@
 </template>
 
 <script>
-import urlencode from "../../../updateCompoents/urlencode";
+import urlencode from '../../../updateCompoents/urlencode';
 export default {
-  name: "photomanage",
+  name: 'photomanage',
   async activated() {
     this.head = {
-      Authorization: "Bearer " + window.localStorage.getItem("authorization"),
-      Key: window.localStorage.getItem("key"),
+      Authorization: 'Bearer ' + window.localStorage.getItem('authorization'),
+      Key: window.localStorage.getItem('key'),
       Requestid: this.Base64Encode(new Date().getTime()),
     };
     this.requestid_timer = setInterval(() => {
       this.head.Requestid = this.Base64Encode(new Date().getTime());
     }, 1000);
-    this.linuxurl = window.sessionStorage.getItem("linuxurl");
+    this.linuxurl = window.sessionStorage.getItem('linuxurl');
     if (!this.linuxurl) {
       await this.getlinuxurl();
     } else {
-      this.backurl = this.linuxurl + "/Photo/addphoto";
+      this.backurl = this.linuxurl + '/Photo/addphoto';
     }
     this.photo_list = [];
     await this.getlist();
@@ -135,60 +135,60 @@ export default {
       head: {},
       photo_list: [],
       backurl: window?.location?.href,
-      photo_path: "",
+      photo_path: '',
     };
   },
   methods: {
     lookimg(name) {
       name &&
         this.$router.push({
-          path: "/staticfile",
+          path: '/staticfile',
           query: {
-            path: urlencode(this.linuxurl + name, "gbk"),
+            path: urlencode(this.linuxurl + name, 'gbk'),
           },
         });
     },
     cellStyle({ rowIndex }) {
       let styleRes = {
-        background: "rgba(var(--ltpp-light-color), 0.16) !important",
-        color: "chartreuse",
+        background: 'rgba(var(--ltpp-light-color), 0.16) !important',
+        color: 'chartreuse',
       };
       if (rowIndex % 2 != 0) {
         styleRes.background =
-          "rgba(var(--ltpp-main-bk-color), 0.06) !important";
+          'rgba(var(--ltpp-main-bk-color), 0.06) !important';
       }
       return styleRes;
     },
     async getlinuxurl() {
       const res = await this.getBackurl();
-      this.backurl = res + "/Photo/addphoto";
+      this.backurl = res + '/Photo/addphoto';
     },
     async deleteall() {
-      this.$confirm("确定清空全部图片吗？", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
+      this.$confirm('确定清空全部图片吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
       })
         .then(() => {
           this.$ajax({
-            method: "post",
-            url: "/Photo/deleteAll",
+            method: 'post',
+            url: '/Photo/deleteAll',
             portType: {
-              process: "8797",
+              process: '8797',
             },
           })
             .then((res) => {
               if (res?.data.code == 1) {
                 this.getlist();
                 this.$msg({
-                  type: "success",
+                  type: 'success',
                   message: res?.data.msg,
                   duration: 1600,
                   offset: 80,
                 });
               } else {
                 this.$msg({
-                  type: "error",
+                  type: 'error',
                   message: res?.data.msg,
                   duration: 1600,
                   offset: 80,
@@ -197,7 +197,7 @@ export default {
             })
             .catch((t) => {
               this.$msg({
-                type: "error",
+                type: 'error',
                 message: t,
                 duration: 1600,
                 offset: 80,
@@ -206,24 +206,24 @@ export default {
         })
         .catch(() => {
           this.$msg({
-            type: "info",
+            type: 'info',
             duration: 1600,
             offset: 80,
-            message: "取消清空",
+            message: '取消清空',
           });
         });
     },
     upSuccess(response, file, file_list) {
       if (response && response.code && response.code != 1) {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: response.msg,
           duration: 1600,
           offset: 80,
         });
       } else {
         this.$msg({
-          type: "success",
+          type: 'success',
           message: response.msg,
           duration: 1600,
           offset: 80,
@@ -235,14 +235,14 @@ export default {
     //获取图片列表
     async getlist() {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Photo/loadPhoto",
+        method: 'post',
+        url: '/Photo/loadPhoto',
         portType: {
-          process: "8797",
+          process: '8797',
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -251,7 +251,7 @@ export default {
       this.photo_list = res?.data;
       if (res?.code != 1) {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -263,17 +263,17 @@ export default {
       if (!this.photo_path) {
         return;
       }
-      this.$confirm("确定删除该图片吗？", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
+      this.$confirm('确定删除该图片吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
       })
         .then(() => {
           this.$ajax({
-            method: "post",
-            url: "/Photo/deletePhoto",
+            method: 'post',
+            url: '/Photo/deletePhoto',
             portType: {
-              process: "8797",
+              process: '8797',
             },
             data: {
               path: this.photo_path,
@@ -283,14 +283,14 @@ export default {
               if (res?.data.code == 1) {
                 this.getlist();
                 this.$msg({
-                  type: "success",
+                  type: 'success',
                   message: res?.data.msg,
                   duration: 1600,
                   offset: 80,
                 });
               } else {
                 this.$msg({
-                  type: "error",
+                  type: 'error',
                   message: res?.data.msg,
                   duration: 1600,
                   offset: 80,
@@ -299,7 +299,7 @@ export default {
             })
             .catch((t) => {
               this.$msg({
-                type: "error",
+                type: 'error',
                 message: t,
                 duration: 1600,
                 offset: 80,
@@ -308,10 +308,10 @@ export default {
         })
         .catch(() => {
           this.$msg({
-            type: "info",
+            type: 'info',
             duration: 1600,
             offset: 80,
-            message: "取消删除",
+            message: '取消删除',
           });
         });
     },

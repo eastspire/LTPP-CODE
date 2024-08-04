@@ -162,9 +162,9 @@
 </template>
 
 <script>
-import urlencode from "../../../updateCompoents/urlencode";
+import urlencode from '../../../updateCompoents/urlencode';
 export default {
-  name: "contest",
+  name: 'contest',
   activated() {
     this.isseetip = true;
     this.search();
@@ -185,14 +185,14 @@ export default {
   },
   data() {
     return {
-      lastkey: "",
+      lastkey: '',
       isseetip: true,
       issearch: false,
       contestlist: [],
       total: 0,
       page: 1,
       limit: 50,
-      key: "",
+      key: '',
     };
   },
   methods: {
@@ -216,26 +216,26 @@ export default {
       let endtime = Date.parse(row.end);
       let now = Date.parse(new Date());
       let styleRes = {
-        background: "rgba(var(--ltpp-light-color), 0.16) !important",
-        height: "3.6rem !important",
-        color: "chartreuse",
+        background: 'rgba(var(--ltpp-light-color), 0.16) !important',
+        height: '3.6rem !important',
+        color: 'chartreuse',
       };
       if (rowIndex % 2 != 0) {
         styleRes.background =
-          "rgba(var(--ltpp-main-bk-color), 0.06) !important";
+          'rgba(var(--ltpp-main-bk-color), 0.06) !important';
       }
       // 状态列字体颜色
       if (endtime <= now) {
         /* 竞赛结束 */
-        styleRes.color = "chartreuse";
+        styleRes.color = 'chartreuse';
         return styleRes;
       } else if (begintime <= now && now <= endtime) {
         /* 竞赛进行中 */
-        styleRes.color = "red";
+        styleRes.color = 'red';
         return styleRes;
       } else {
         /* 竞赛未开始 */
-        styleRes.color = "#409EFF";
+        styleRes.color = '#409EFF';
         return styleRes;
       }
     },
@@ -262,9 +262,9 @@ export default {
       id &&
         id != this.$SqsGlobal.loading_tips &&
         this.$router.push({
-          path: "/onecontest",
+          path: '/onecontest',
           query: {
-            path: urlencode(id, "gbk"),
+            path: urlencode(id, 'gbk'),
           },
         });
     },
@@ -272,10 +272,10 @@ export default {
     async getlist() {
       this.initData();
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Contest/getContestList",
+        method: 'post',
+        url: '/Contest/getContestList',
         portType: {
-          process: "8796",
+          process: '8796',
         },
         data: {
           page: this.page,
@@ -283,7 +283,7 @@ export default {
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -297,10 +297,10 @@ export default {
       this.lastkey = this.key;
       this.initData();
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Contest/searchContest",
+        method: 'post',
+        url: '/Contest/searchContest',
         portType: {
-          process: "8796",
+          process: '8796',
         },
         data: {
           key: this.key,
@@ -309,7 +309,7 @@ export default {
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -320,7 +320,7 @@ export default {
     },
     //搜索预处理
     search() {
-      if (this.key == "" || this.key == null || this.key == undefined) {
+      if (this.key == '' || this.key == null || this.key == undefined) {
         this.issearch = false;
         this.getlist();
         return;

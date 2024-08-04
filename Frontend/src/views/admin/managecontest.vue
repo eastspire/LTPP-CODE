@@ -176,9 +176,9 @@
 </template>
 
 <script>
-import urlencode from "../../../updateCompoents/urlencode";
+import urlencode from '../../../updateCompoents/urlencode';
 export default {
-  name: "managecontest",
+  name: 'managecontest',
   async activated() {
     this.isseetip = true;
     this.search();
@@ -196,14 +196,14 @@ export default {
   },
   data() {
     return {
-      lastkey: "",
+      lastkey: '',
       isseetip: true,
       iscreat: false,
       contestlist: [],
       total: 0,
       page: 1,
       limit: 50,
-      key: "",
+      key: '',
     };
   },
   methods: {
@@ -227,32 +227,32 @@ export default {
       let endtime = Date.parse(row.end);
       let now = Date.parse(new Date());
       let styleRes = {
-        background: "rgba(var(--ltpp-light-color), 0.16) !important",
-        height: "3.6rem !important",
-        color: "chartreuse",
+        background: 'rgba(var(--ltpp-light-color), 0.16) !important',
+        height: '3.6rem !important',
+        color: 'chartreuse',
       };
       if (rowIndex % 2 != 0) {
         styleRes.background =
-          "rgba(var(--ltpp-main-bk-color), 0.06) !important";
+          'rgba(var(--ltpp-main-bk-color), 0.06) !important';
       }
       // 状态列字体颜色
       if (endtime <= now) {
         /* 竞赛结束 */
-        styleRes.color = "chartreuse";
+        styleRes.color = 'chartreuse';
         return styleRes;
       } else if (begintime <= now && now <= endtime) {
         /* 竞赛进行中 */
-        styleRes.color = "red";
+        styleRes.color = 'red';
         return styleRes;
       } else {
         /* 竞赛未开始 */
-        styleRes.color = "#409EFF";
+        styleRes.color = '#409EFF';
         return styleRes;
       }
     },
     toadd() {
       this.$router.push({
-        path: "/addcontest",
+        path: '/addcontest',
       });
     },
 
@@ -270,9 +270,9 @@ export default {
       id &&
         id != this.$SqsGlobal.loading_tips &&
         this.$router.push({
-          path: "/updatacontest",
+          path: '/updatacontest',
           query: {
-            path: urlencode(id, "gbk"),
+            path: urlencode(id, 'gbk'),
           },
         });
     },
@@ -280,10 +280,10 @@ export default {
     async getlist() {
       this.initData();
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Contest/backGetContestList",
+        method: 'post',
+        url: '/Contest/backGetContestList',
         portType: {
-          process: "8796",
+          process: '8796',
         },
         data: {
           page: this.page,
@@ -291,7 +291,7 @@ export default {
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -305,10 +305,10 @@ export default {
       this.lastkey = this.key;
       this.initData();
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Contest/backSearchContest",
+        method: 'post',
+        url: '/Contest/backSearchContest',
         portType: {
-          process: "8796",
+          process: '8796',
         },
         data: {
           key: this.key,
@@ -317,7 +317,7 @@ export default {
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -342,17 +342,17 @@ export default {
       if (!id || id == this.$SqsGlobal.loading_tips) {
         return;
       }
-      this.$confirm("确定删除该竞赛吗？", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
+      this.$confirm('确定删除该竞赛吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
       })
         .then(() => {
           this.$ajax({
-            method: "post",
-            url: "/Contest/deleteContest",
+            method: 'post',
+            url: '/Contest/deleteContest',
             portType: {
-              process: "8796",
+              process: '8796',
             },
             data: {
               delete_id: id,
@@ -362,14 +362,14 @@ export default {
               if (res?.data.code == 1) {
                 this.search();
                 this.$msg({
-                  type: "success",
+                  type: 'success',
                   message: res?.data.msg,
                   duration: 1600,
                   offset: 80,
                 });
               } else {
                 this.$msg({
-                  type: "error",
+                  type: 'error',
                   message: res?.data.msg,
                   duration: 1600,
                   offset: 80,
@@ -379,7 +379,7 @@ export default {
             })
             .catch((t) => {
               this.$msg({
-                type: "error",
+                type: 'error',
                 message: t,
                 duration: 1600,
                 offset: 80,
@@ -388,10 +388,10 @@ export default {
         })
         .catch(() => {
           this.$msg({
-            type: "info",
+            type: 'info',
             duration: 1600,
             offset: 80,
-            message: "取消删除",
+            message: '取消删除',
           });
         });
     },

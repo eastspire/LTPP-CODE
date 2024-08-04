@@ -45,7 +45,7 @@
                 onedata = temtable;
                 show_dialog = true;
               "
-              class="shadow ltpp-list-box"
+              class="shadow ltpp-list-box appear"
               style="
                 cursor: pointer;
                 margin: 0.66rem;

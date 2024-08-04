@@ -1,7 +1,4 @@
-/* 
-登录
-
- */
+/* 登录 */
 <template>
   <div @contextmenu.prevent="" class="big-div">
     <div class="divlogin">
@@ -82,42 +79,42 @@
   </div>
 </template>
 <script>
-import myfooter from "../components/myfooter.vue";
+import myfooter from '../components/myfooter.vue';
 export default {
-  name: "login",
+  name: 'login',
   components: {
     myfooter: myfooter,
   },
   data() {
     return {
       isup: false,
-      email: "",
+      email: '',
       dialog: false,
       LoginForm: {
-        name: "",
-        password: "",
+        name: '',
+        password: '',
       },
     };
   },
   methods: {
     register() {
-      this.$route.path != "/register" &&
+      this.$route.path != '/register' &&
         this.$router.replace({
-          path: "/register",
+          path: '/register',
           replace: true,
         });
     },
 
     trueOnline() {
       this.$ajax({
-        method: "get",
-        url: "/User/trueOnline",
+        method: 'get',
+        url: '/User/trueOnline',
         portType: {
-          process: "8793",
+          process: '8793',
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -131,10 +128,10 @@ export default {
       this.isup = true;
 
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Login/judgeLogin",
+        method: 'post',
+        url: '/Login/judgeLogin',
         portType: {
-          process: "8799",
+          process: '8799',
         },
         data: {
           name: this.LoginForm.name,
@@ -143,7 +140,7 @@ export default {
       }).catch((t) => {
         this.isup = false;
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -152,7 +149,7 @@ export default {
       if (res?.code == -1) {
         setTimeout(() => {
           this.$msg({
-            type: "error",
+            type: 'error',
             message: res?.msg,
             duration: 2000,
             offset: 80,
@@ -161,27 +158,27 @@ export default {
         }, 360);
         return;
       } else if (res?.code == 1 || res?.code == 2 || res?.code == 3) {
-        window.localStorage.setItem("authorization", res.authorization);
-        window.localStorage.setItem("key", res.key);
-        this.$store.commit("updateObj", { login: true });
-        this.$store.commit("updateObj", { root: res?.code == 3 });
-        this.$store.commit("updateObj", { admin: res?.code == 2 });
+        window.localStorage.setItem('authorization', res.authorization);
+        window.localStorage.setItem('key', res.key);
+        this.$store.commit('updateObj', { login: true });
+        this.$store.commit('updateObj', { root: res?.code == 3 });
+        this.$store.commit('updateObj', { admin: res?.code == 2 });
         this.trueOnline();
         this.$msg({
-          type: "success",
+          type: 'success',
           message: res?.msg,
           duration: 2600,
           offset: 80,
         });
-        this.$route.path != "/homelist" &&
+        this.$route.path != '/homelist' &&
           this.$router.replace({
-            path: "/homelist",
+            path: '/homelist',
             replace: true,
           });
       } else {
         setTimeout(() => {
           this.$msg({
-            type: "error",
+            type: 'error',
             message: res?.msg,
             duration: 2000,
             offset: 80,
@@ -193,8 +190,8 @@ export default {
       this.isup = false;
     },
     resetForm() {
-      this.LoginForm.name = "";
-      this.LoginForm.password = "";
+      this.LoginForm.name = '';
+      this.LoginForm.password = '';
     },
     async sendPassword() {
       if (this.isup) {
@@ -202,10 +199,10 @@ export default {
       }
       this.isup = true;
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Verification/sendPassword",
+        method: 'post',
+        url: '/Verification/sendPassword',
         portType: {
-          process: "8799",
+          process: '8799',
         },
         data: {
           name: this.LoginForm.name,
@@ -214,7 +211,7 @@ export default {
       }).catch((t) => {
         this.isup = false;
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -223,7 +220,7 @@ export default {
       if (res?.code == 1) {
         setTimeout(() => {
           this.$msg({
-            type: "success",
+            type: 'success',
             message: res?.msg,
             duration: 1600,
             offset: 80,
@@ -235,7 +232,7 @@ export default {
       } else {
         setTimeout(() => {
           this.$msg({
-            type: "error",
+            type: 'error',
             message: res?.msg,
             duration: 1600,
             offset: 80,
@@ -306,7 +303,7 @@ export default {
 }
 
 big-div::after {
-  content: "";
+  content: '';
   display: block;
   position: fixed;
   width: 100%;

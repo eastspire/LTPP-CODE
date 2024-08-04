@@ -147,9 +147,9 @@
 </template>
 
 <script>
-import urlencode from "../../../updateCompoents/urlencode";
+import urlencode from '../../../updateCompoents/urlencode';
 export default {
-  name: "contest",
+  name: 'contest',
   activated() {
     this.isseetip = true;
     this.search();
@@ -170,14 +170,14 @@ export default {
   },
   data() {
     return {
-      lastkey: "",
+      lastkey: '',
       isseetip: true,
       issearch: false,
       questionsheetlist: [],
       total: 0,
       page: 1,
       limit: 50,
-      key: "",
+      key: '',
     };
   },
   methods: {
@@ -198,15 +198,15 @@ export default {
      */
     cellStyle({ row, rowIndex }) {
       let styleRes = {
-        background: "rgba(var(--ltpp-light-color), 0.16) !important",
-        height: "3.6rem !important",
-        color: "chartreuse",
+        background: 'rgba(var(--ltpp-light-color), 0.16) !important',
+        height: '3.6rem !important',
+        color: 'chartreuse',
       };
       if (rowIndex % 2 != 0) {
         styleRes.background =
-          "rgba(var(--ltpp-main-bk-color), 0.06) !important";
+          'rgba(var(--ltpp-main-bk-color), 0.06) !important';
       }
-      styleRes.color = "#409EFF";
+      styleRes.color = '#409EFF';
       return styleRes;
     },
     handleCurrentChange(val) {
@@ -231,9 +231,9 @@ export default {
       id &&
         id != this.$SqsGlobal.loading_tips &&
         this.$router.push({
-          path: "/onequestionsheet",
+          path: '/onequestionsheet',
           query: {
-            path: urlencode(id, "gbk"),
+            path: urlencode(id, 'gbk'),
           },
         });
     },
@@ -241,10 +241,10 @@ export default {
     async getlist() {
       this.initData();
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/QuestionSheet/lookAllQuestionSheetList",
+        method: 'post',
+        url: '/QuestionSheet/lookAllQuestionSheetList',
         portType: {
-          process: "8796",
+          process: '8796',
         },
         data: {
           page: this.page,
@@ -252,7 +252,7 @@ export default {
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -266,10 +266,10 @@ export default {
       this.lastkey = this.key;
       this.initData();
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/QuestionSheet/searchAllQuestionSheetList",
+        method: 'post',
+        url: '/QuestionSheet/searchAllQuestionSheetList',
         portType: {
-          process: "8796",
+          process: '8796',
         },
         data: {
           key: this.key,
@@ -278,7 +278,7 @@ export default {
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -289,7 +289,7 @@ export default {
     },
     //搜索预处理
     search() {
-      if (this.key == "" || this.key == null || this.key == undefined) {
+      if (this.key == '' || this.key == null || this.key == undefined) {
         this.issearch = false;
         this.getlist();
         return;

@@ -28,7 +28,7 @@
     <div :style="`min-height:${$store.state.no_scroll_height * 0.82}vh;`">
       <div v-for="temtable in tableData" :key="temtable.index">
         <div
-          class="pulse-enter-active shadow ltpp-list-box"
+          class="pulse-enter-active shadow ltpp-list-box appear"
           @click="touserpage(temtable.id)"
           style="border-width: 0rem; height: 8rem; overflow: hidden"
         >

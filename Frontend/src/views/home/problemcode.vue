@@ -213,11 +213,11 @@
   </div>
 </template>
 <script>
-import ShowCode from "../../components/showcode.vue";
-import urlencode from "../../../updateCompoents/urlencode";
+import ShowCode from '../../components/showcode.vue';
+import urlencode from '../../../updateCompoents/urlencode';
 
 export default {
-  name: "problemcode",
+  name: 'problemcode',
   components: {
     ShowCode,
   },
@@ -249,7 +249,7 @@ export default {
       this.$router.go(-1);
       return;
     }
-    this.problemid = urlencode.decode(this.$route.query.path, "gbk");
+    this.problemid = urlencode.decode(this.$route.query.path, 'gbk');
     this.page = 1;
     this.limit = 50;
     this.total = 0;
@@ -258,18 +258,18 @@ export default {
 
   data() {
     return {
-      lastkey: "",
+      lastkey: '',
       isseetip: true,
       issearch: false,
       problemid: 0,
       tableData: [],
-      key: "",
-      code: "",
+      key: '',
+      code: '',
       page: 1,
       limit: 50,
       total: 0,
       isseecode: false,
-      codelanguage: "cpp",
+      codelanguage: 'cpp',
     };
   },
   methods: {
@@ -285,61 +285,61 @@ export default {
       id &&
         id != this.$SqsGlobal.loading_tips &&
         this.$router.push({
-          path: "/userpage",
+          path: '/userpage',
           query: {
             path: id,
           },
         });
     },
     changecodelanguage(language) {
-      if (language == "C") {
-        this.codelanguage = "c";
-      } else if (language == "C++") {
-        this.codelanguage = "cpp";
-      } else if (language == "Go") {
-        this.codelanguage = "go";
-      } else if (language == "Java") {
-        this.codelanguage = "java";
-      } else if (language == "PHP") {
-        this.codelanguage = "php";
-      } else if (language == "JavaScript") {
-        this.codelanguage = "javascript";
-      } else if (language == "Python3") {
-        this.codelanguage = "python";
-      } else if (language == "Rust") {
-        this.codelanguage = "rust";
-      } else if (language == "C#") {
-        this.codelanguage = "csharp";
-      } else if (language == "TypeScript") {
-        this.codelanguage = "typescript";
-      } else if (language == "Ruby") {
-        this.codelanguage = "ruby";
+      if (language == 'C') {
+        this.codelanguage = 'c';
+      } else if (language == 'C++') {
+        this.codelanguage = 'cpp';
+      } else if (language == 'Go') {
+        this.codelanguage = 'go';
+      } else if (language == 'Java') {
+        this.codelanguage = 'java';
+      } else if (language == 'PHP') {
+        this.codelanguage = 'php';
+      } else if (language == 'JavaScript') {
+        this.codelanguage = 'javascript';
+      } else if (language == 'Python3') {
+        this.codelanguage = 'python';
+      } else if (language == 'Rust') {
+        this.codelanguage = 'rust';
+      } else if (language == 'C#') {
+        this.codelanguage = 'csharp';
+      } else if (language == 'TypeScript') {
+        this.codelanguage = 'typescript';
+      } else if (language == 'Ruby') {
+        this.codelanguage = 'ruby';
       } else {
-        this.codelanguage = "cpp";
+        this.codelanguage = 'cpp';
       }
     },
     cellStyle({ row, rowIndex }) {
       let styleRes = {
-        background: "rgba(var(--ltpp-light-color), 0.16) !important",
-        height: "3.6rem !important",
-        color: "chartreuse",
+        background: 'rgba(var(--ltpp-light-color), 0.16) !important',
+        height: '3.6rem !important',
+        color: 'chartreuse',
       };
       if (rowIndex % 2 != 0) {
         styleRes.background =
-          "rgba(var(--ltpp-main-bk-color), 0.06) !important";
+          'rgba(var(--ltpp-main-bk-color), 0.06) !important';
       }
-      if (row.status === "AC" || row.status === "正常运行") {
-        styleRes.color = "chartreuse";
+      if (row.status === 'AC' || row.status === '正常运行') {
+        styleRes.color = 'chartreuse';
         return styleRes;
       } else {
-        styleRes.color = "red";
+        styleRes.color = 'red';
         return styleRes;
       }
     },
     tableRowClassName({ row, rowIndex }) {
-      if (row.status === "正常运行" || row.status === "AC") {
-        return "success-row";
-      } else return "warning-row";
+      if (row.status === '正常运行' || row.status === 'AC') {
+        return 'success-row';
+      } else return 'warning-row';
     },
 
     //搜索
@@ -347,10 +347,10 @@ export default {
       this.initData();
       this.lastkey = this.key;
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Codehistory/searchOneProblemCodeList",
+        method: 'post',
+        url: '/Codehistory/searchOneProblemCodeList',
         portType: {
-          process: "8795",
+          process: '8795',
         },
         data: {
           problem_id: this.problemid,
@@ -360,7 +360,7 @@ export default {
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -371,7 +371,7 @@ export default {
     },
     //搜索预处理
     async search() {
-      if (this.key == "" || this.key == null || this.key == undefined) {
+      if (this.key == '' || this.key == null || this.key == undefined) {
         this.issearch = false;
         await this.getlist();
         return;
@@ -383,12 +383,12 @@ export default {
       this.keysearch();
     },
     async lookcode(id) {
-      this.code = "加载中";
+      this.code = '加载中';
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Codehistory/lookOneCode",
+        method: 'post',
+        url: '/Codehistory/lookOneCode',
         portType: {
-          process: "8795",
+          process: '8795',
         },
         data: {
           code_id: id,
@@ -396,7 +396,7 @@ export default {
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -414,10 +414,10 @@ export default {
     async getlist() {
       this.initData();
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Codehistory/getOneProblemCodelist",
+        method: 'post',
+        url: '/Codehistory/getOneProblemCodelist',
         portType: {
-          process: "8795",
+          process: '8795',
         },
         data: {
           problem_id: this.problemid,
@@ -426,7 +426,7 @@ export default {
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -436,8 +436,8 @@ export default {
       this.total = res.total;
       if (res.total == 0) {
         this.$msg({
-          type: "success",
-          message: "暂时没有该题目的提交记录，即将返回！",
+          type: 'success',
+          message: '暂时没有该题目的提交记录，即将返回！',
           duration: 1600,
           offset: 80,
         });

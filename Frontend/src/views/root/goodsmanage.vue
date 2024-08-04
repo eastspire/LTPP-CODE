@@ -173,7 +173,7 @@
                       {{
                         !isNaN(parseFloat(scope.row.times)) &&
                         isFinite(scope.row.times)
-                          ? scope.row.times + "次"
+                          ? scope.row.times + '次'
                           : scope.row.times
                       }}
                     </span>
@@ -534,7 +534,7 @@
 
 <script>
 export default {
-  name: "goodsmanage",
+  name: 'goodsmanage',
   async created() {
     this.goodsList = [];
     this.issearch = false; //判断是否搜索，从而进行分页查找
@@ -545,8 +545,8 @@ export default {
   },
   activated() {
     this.head = {
-      Authorization: "Bearer " + window.localStorage.getItem("authorization"),
-      Key: window.localStorage.getItem("key"),
+      Authorization: 'Bearer ' + window.localStorage.getItem('authorization'),
+      Key: window.localStorage.getItem('key'),
       Requestid: this.Base64Encode(new Date().getTime()),
     };
     this.requestid_timer = setInterval(() => {
@@ -577,17 +577,17 @@ export default {
       see_add_dialog: false,
       see_update_dialog: false,
       see_more_add_dialog: false,
-      lastkey: "",
+      lastkey: '',
       issearch: false,
       goodsList: [],
       goodsId: 0,
-      goodsLabe: "", //商品标签
-      goodsName: "",
+      goodsLabe: '', //商品标签
+      goodsName: '',
       goodsAc: 0,
       limit: 50,
       total: 0,
       page: 1,
-      key: "",
+      key: '',
       goods_data: {},
     };
   },
@@ -606,14 +606,14 @@ export default {
       this.goods_data = [];
       if (response.code == 1) {
         this.$msg({
-          type: "success",
+          type: 'success',
           message: response.msg,
           duration: 1600,
           offset: 80,
         });
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: response.msg,
           duration: 1600,
           offset: 80,
@@ -625,8 +625,8 @@ export default {
     async getlinuxurl() {
       const res = await this.getBackurl();
       this.linuxurl = res;
-      this.save_file_url = res + "/Goods/uploadFile";
-      this.save_more_file_url = res + "/Goods/uploadMoreFile";
+      this.save_file_url = res + '/Goods/uploadFile';
+      this.save_more_file_url = res + '/Goods/uploadMoreFile';
     },
 
     // 表体字体颜色设置
@@ -638,19 +638,19 @@ export default {
      */
     cellStyle({ row, rowIndex }) {
       let styleRes = {
-        background: "rgba(var(--ltpp-light-color), 0.16) !important",
-        height: "3.6rem !important",
-        color: "chartreuse",
+        background: 'rgba(var(--ltpp-light-color), 0.16) !important',
+        height: '3.6rem !important',
+        color: 'chartreuse',
       };
       if (rowIndex % 2 != 0) {
         styleRes.background =
-          "rgba(var(--ltpp-main-bk-color), 0.06) !important";
+          'rgba(var(--ltpp-main-bk-color), 0.06) !important';
       }
       if (row.has_buy) {
-        styleRes.color = "chartreuse";
+        styleRes.color = 'chartreuse';
         return styleRes;
       } else {
-        styleRes.color = "var(--ltpp-main-text-color)";
+        styleRes.color = 'var(--ltpp-main-text-color)';
         return styleRes;
       }
     },
@@ -675,17 +675,17 @@ export default {
     },
     async downloadGoods() {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Goods/judgeCanBuy",
+        method: 'post',
+        url: '/Goods/judgeCanBuy',
         portType: {
-          process: "8797",
+          process: '8797',
         },
         data: {
           id: this.goods_data.id,
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -694,7 +694,7 @@ export default {
       });
       if (res?.code == 1) {
         this.$notice({
-          title: "通知",
+          title: '通知',
           dangerouslyUseHTMLString: true,
           message: res?.msg,
           duration: 3600,
@@ -702,7 +702,7 @@ export default {
         });
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -710,17 +710,17 @@ export default {
         return;
       }
       this.$msg({
-        type: "success",
-        message: "开始下载",
+        type: 'success',
+        message: '开始下载',
         duration: 1600,
         offset: 80,
       });
       await this.$ajax({
-        method: "post",
-        url: "/Goods/downloadOne",
-        responseType: "blob",
+        method: 'post',
+        url: '/Goods/downloadOne',
+        responseType: 'blob',
         headers: {
-          "Content-Type": "application/json; application/octet-stream;",
+          'Content-Type': 'application/json; application/octet-stream;',
         },
         data: {
           id: this.goods_data.id,
@@ -731,29 +731,29 @@ export default {
           this.see_more_add_dialog = false;
           this.see_update_dialog = false;
           this.$msg({
-            type: "success",
-            message: "下载完成",
+            type: 'success',
+            message: '下载完成',
             duration: 1600,
             offset: 80,
           });
-          let Name = "";
-          if (this.goods_data.name.indexOf("." + this.goods_data.type) != -1) {
+          let Name = '';
+          if (this.goods_data.name.indexOf('.' + this.goods_data.type) != -1) {
             Name = this.goods_data.name;
           } else {
-            Name = this.goods_data.name + "." + this.goods_data.type;
+            Name = this.goods_data.name + '.' + this.goods_data.type;
           }
           if (window.navigator && window.navigator.msSaveOrOpenBlob) {
             const blob = new Blob([res?.data], {
-              type: "application/octet-stream;application/zip",
+              type: 'application/octet-stream;application/zip',
             });
             window.navigator.msSaveOrOpenBlob(blob, Name);
           } else {
             /* 火狐谷歌的文件下载方式 */
             const blob = new Blob([res?.data], {
-              type: "application/octet-stream;application/zip",
+              type: 'application/octet-stream;application/zip',
             });
             let url = window.URL.createObjectURL(blob);
-            const link = document.createElement("a"); // 创建a标签
+            const link = document.createElement('a'); // 创建a标签
             link.href = url;
             link.download = Name; // 重命名文件
             link.click();
@@ -767,7 +767,7 @@ export default {
         })
         .catch((t) => {
           this.$msg({
-            type: "error",
+            type: 'error',
             message: t,
             duration: 1600,
             offset: 80,
@@ -778,10 +778,10 @@ export default {
     async getlist() {
       this.initData();
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Goods/getList",
+        method: 'post',
+        url: '/Goods/getList',
         portType: {
-          process: "8794",
+          process: '8794',
         },
         data: {
           page: this.page,
@@ -789,7 +789,7 @@ export default {
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -800,7 +800,7 @@ export default {
         this.goodsList = res?.data;
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -814,17 +814,17 @@ export default {
       this.goods_data = [];
       this.passparam.id = id;
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Goods/lookOne",
+        method: 'post',
+        url: '/Goods/lookOne',
         portType: {
-          process: "8794",
+          process: '8794',
         },
         data: {
           id: id,
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -835,7 +835,7 @@ export default {
         this.see_update_dialog = true;
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -845,10 +845,10 @@ export default {
 
     async addGoods() {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Goods/saveFileToDb",
+        method: 'post',
+        url: '/Goods/saveFileToDb',
         portType: {
-          process: "8794",
+          process: '8794',
         },
         data: {
           goods: {
@@ -859,7 +859,7 @@ export default {
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -870,7 +870,7 @@ export default {
         this.passparam.id = res?.data;
         this.see_update_dialog = false;
         this.$msg({
-          type: "success",
+          type: 'success',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -882,7 +882,7 @@ export default {
         }
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -892,17 +892,17 @@ export default {
 
     async updateGoods() {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Goods/updateOne",
+        method: 'post',
+        url: '/Goods/updateOne',
         portType: {
-          process: "8794",
+          process: '8794',
         },
         data: {
           goods: this.goods_data,
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -912,7 +912,7 @@ export default {
         this.goods_data = [];
         this.see_update_dialog = false;
         this.$msg({
-          type: "success",
+          type: 'success',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -924,7 +924,7 @@ export default {
         }
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -936,10 +936,10 @@ export default {
       this.lastkey = this.key;
       this.initData();
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Goods/keySearch",
+        method: 'post',
+        url: '/Goods/keySearch',
         portType: {
-          process: "8794",
+          process: '8794',
         },
         data: {
           key: this.key,
@@ -948,7 +948,7 @@ export default {
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -959,7 +959,7 @@ export default {
         this.total = res.allnum;
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -968,7 +968,7 @@ export default {
     },
     //搜索预处理
     search() {
-      if (this.key == "" || this.key == null || this.key == undefined) {
+      if (this.key == '' || this.key == null || this.key == undefined) {
         this.issearch = false;
         this.getlist();
         return;

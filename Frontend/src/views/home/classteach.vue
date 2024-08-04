@@ -66,6 +66,7 @@
                 v-for="temcomment in messagedata"
                 :key="temcomment.index"
                 style="margin: 1rem"
+                class="appear"
               >
                 <p
                   type="text"

@@ -1,8 +1,4 @@
-/* 
-
-注册
-
- */
+/* 注册 */
 
 <template>
   <div @contextmenu.prevent="" class="big-div">
@@ -82,9 +78,9 @@
 </template>
 
 <script>
-import myfooter from "../components/myfooter.vue";
+import myfooter from '../components/myfooter.vue';
 export default {
-  name: "register",
+  name: 'register',
   components: {
     myfooter: myfooter,
   },
@@ -97,15 +93,15 @@ export default {
   data() {
     return {
       isup: false,
-      footmeddage: "",
+      footmeddage: '',
       RegisterForm: {
-        name: "",
-        password: "",
-        value: "",
-        email: "",
-        code: "", //验证码
+        name: '',
+        password: '',
+        value: '',
+        email: '',
+        code: '', //验证码
       },
-      value: "男",
+      value: '男',
     };
   },
 
@@ -113,12 +109,12 @@ export default {
     getDate() {
       let date = new Date();
       let year = date.getFullYear();
-      this.footmeddage = "©2021 - " + year + " LTPP版权所有";
+      this.footmeddage = '©2021 - ' + year + ' LTPP版权所有';
     },
     login() {
-      this.$route.path != "/login" &&
+      this.$route.path != '/login' &&
         this.$router.replace({
-          path: "/login",
+          path: '/login',
           replace: true,
         });
     },
@@ -129,10 +125,10 @@ export default {
       }
       this.isup = true;
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Register/judgeRegister",
+        method: 'post',
+        url: '/Register/judgeRegister',
         portType: {
-          process: "8800",
+          process: '8800',
         },
         data: {
           name: this.RegisterForm.name,
@@ -144,7 +140,7 @@ export default {
       }).catch((t) => {
         this.isup = false;
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -155,8 +151,8 @@ export default {
       if (res?.code == 500) {
         this.isup = false;
         this.$msg({
-          type: "error",
-          message: "注册失败",
+          type: 'error',
+          message: '注册失败',
           duration: 2000,
           offset: 80,
         });
@@ -165,7 +161,7 @@ export default {
       if (res?.code == 1) {
         setTimeout(() => {
           this.$msg({
-            type: "success",
+            type: 'success',
             message: res?.msg,
             duration: 1600,
             offset: 80,
@@ -176,7 +172,7 @@ export default {
       } else {
         setTimeout(() => {
           this.$msg({
-            type: "error",
+            type: 'error',
             message: res?.msg,
             duration: 1600,
             offset: 80,
@@ -191,11 +187,11 @@ export default {
         return;
       }
       this.isup = true;
-      if (this.RegisterForm.email == "" || this.RegisterForm.name == "") {
+      if (this.RegisterForm.email == '' || this.RegisterForm.name == '') {
         setTimeout(() => {
           this.$msg({
-            type: "error",
-            message: "用户名和邮箱不能为空",
+            type: 'error',
+            message: '用户名和邮箱不能为空',
             duration: 2000,
             offset: 80,
           });
@@ -203,11 +199,11 @@ export default {
         }, 360);
         return;
       }
-      if (this.RegisterForm.name == "root") {
+      if (this.RegisterForm.name == 'root') {
         setTimeout(() => {
           this.$msg({
-            type: "error",
-            message: "禁止注册root账号",
+            type: 'error',
+            message: '禁止注册root账号',
             duration: 2000,
             offset: 80,
           });
@@ -217,10 +213,10 @@ export default {
       }
 
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Verification/send",
+        method: 'post',
+        url: '/Verification/send',
         portType: {
-          process: "8800",
+          process: '8800',
         },
         data: {
           name: this.RegisterForm.name,
@@ -229,7 +225,7 @@ export default {
       }).catch((t) => {
         this.isup = false;
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -240,8 +236,8 @@ export default {
       if (res?.code == 500) {
         setTimeout(() => {
           this.$msg({
-            type: "error",
-            message: "邮箱不存在",
+            type: 'error',
+            message: '邮箱不存在',
             duration: 1600,
             offset: 80,
           });
@@ -251,7 +247,7 @@ export default {
       } else if (res?.code == 1) {
         setTimeout(() => {
           this.$msg({
-            type: "success",
+            type: 'success',
             message: res?.msg,
             duration: 1600,
             offset: 80,
@@ -261,7 +257,7 @@ export default {
       } else if (res?.code == 0) {
         setTimeout(() => {
           this.$notice({
-            title: "消息",
+            title: '消息',
             dangerouslyUseHTMLString: true,
             message: res?.msg,
             duration: 0,
@@ -272,7 +268,7 @@ export default {
       } else {
         setTimeout(() => {
           this.$msg({
-            type: "error",
+            type: 'error',
             message: res?.msg,
             duration: 1600,
             offset: 80,
@@ -341,7 +337,7 @@ export default {
   animation: 6s move linear infinite;
 }
 big-div::after {
-  content: "";
+  content: '';
   display: block;
   position: fixed;
   width: 100%;

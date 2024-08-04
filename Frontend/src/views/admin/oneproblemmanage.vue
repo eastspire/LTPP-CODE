@@ -303,7 +303,7 @@
             "
             class="el-icon-s-promotion pulse-enter-active"
             type="text"
-            >{{ tableData.id ? "更新题目" : "添加题目" }}
+            >{{ tableData.id ? '更新题目' : '添加题目' }}
           </el-button>
           <el-button
             style="margin: 0rem 2rem 0rem 0rem; font-size: 1.06rem; color: aqua"
@@ -381,22 +381,22 @@
   </div>
 </template>
 <script>
-import urlencode from "../../../updateCompoents/urlencode";
-import "../../../public/md/markdown/github-markdown.min.css";
-import Myide from "../../components/myide.vue";
+import urlencode from '../../../updateCompoents/urlencode';
+import '../../../public/md/markdown/github-markdown.min.css';
+import Myide from '../../components/myide.vue';
 
 export default {
-  name: "oneproblemmanage",
+  name: 'oneproblemmanage',
   components: {
     Myide,
   },
   activated() {
-    this.code = "";
+    this.code = '';
     if (
       !(
         this.$route &&
         this.$route.query &&
-        (this.$route.query.path || this.$route.query.path == "") &&
+        (this.$route.query.path || this.$route.query.path == '') &&
         this.$route.query.path != undefined &&
         this.$route.query.path != null
       )
@@ -406,58 +406,58 @@ export default {
     }
     this.show_ide = true;
     this.tableData = {
-      id: "",
-      code: "",
-      think: "",
-      problemName: "",
-      problemContent: "",
-      problemCinTest: "",
-      problemCoutTest: "",
+      id: '',
+      code: '',
+      think: '',
+      problemName: '',
+      problemContent: '',
+      problemCinTest: '',
+      problemCoutTest: '',
       Time: 1000,
       Memory: 128,
-      problemFrom: "LTPP",
-      problemLabe: "算法",
+      problemFrom: 'LTPP',
+      problemLabe: '算法',
       public: 1,
     };
 
     this.head = {
-      Authorization: "Bearer " + window.localStorage.getItem("authorization"),
-      Key: window.localStorage.getItem("key"),
+      Authorization: 'Bearer ' + window.localStorage.getItem('authorization'),
+      Key: window.localStorage.getItem('key'),
       Requestid: this.Base64Encode(new Date().getTime()),
     };
     this.requestid_timer = setInterval(() => {
       this.head.Requestid = this.Base64Encode(new Date().getTime());
     }, 1000);
-    const tem_linuxbkurl = window.sessionStorage.getItem("linuxurl");
+    const tem_linuxbkurl = window.sessionStorage.getItem('linuxurl');
     if (!tem_linuxbkurl) {
       this.getlinuxbkurl();
     } else {
-      this.linuxbkurl = tem_linuxbkurl + "/Testupload/savetest";
+      this.linuxbkurl = tem_linuxbkurl + '/Testupload/savetest';
     }
 
-    this.tableData.id = urlencode.decode(this.$route.query.path, "gbk"); //问题id
-    this.contestid = urlencode.decode(this.$route.query.contestid, "gbk"); //竞赛id
+    this.tableData.id = urlencode.decode(this.$route.query.path, 'gbk'); //问题id
+    this.contestid = urlencode.decode(this.$route.query.contestid, 'gbk'); //竞赛id
 
     this.passparam = {
       id: this.tableData.id,
     };
-    this.code = "";
+    this.code = '';
 
-    if (this.tableData.id && this.tableData.id != "") {
+    if (this.tableData.id && this.tableData.id != '') {
       //更新题目
       this.getproblem(this.tableData.id);
     } else {
       //添加题目
       this.tableData.problemContent = `<h4>题目内容</h4>\n<pre>\n\n</pre>\n\n<h4>输入说明</h4>\n<pre>\n\n</pre>\n\n<h4>输出说明</h4>\n<pre>\n\n</pre>\n\n<h5>输入样例1</h5>\n<blockquote>\n\n</blockquote>\n\n<h5>输出样例1</h5>\n<blockquote>\n\n</blockquote>\n\n<h4>提示</h4>\n<pre>\n\n</pre>\n`;
-      this.tableData.problemName = "";
-      this.tableData.problemCinTest = "";
-      this.tableData.problemCoutTest = "";
-      this.tableData.problemFrom = "LTPP";
-      this.tableData.Time = "1000";
-      this.tableData.Memory = "128";
-      this.tableData.public = "0";
+      this.tableData.problemName = '';
+      this.tableData.problemCinTest = '';
+      this.tableData.problemCoutTest = '';
+      this.tableData.problemFrom = 'LTPP';
+      this.tableData.Time = '1000';
+      this.tableData.Memory = '128';
+      this.tableData.public = '0';
     }
-    this.form.region = "url";
+    this.form.region = 'url';
     this.$nextTick(() => {
       this.totop();
     });
@@ -466,18 +466,18 @@ export default {
     prop() {
       let data = {
         subfield: false, // 单双栏模式
-        defaultOpen: "edit", //edit： 默认展示编辑区域 ， preview： 默认展示预览区域
+        defaultOpen: 'edit', //edit： 默认展示编辑区域 ， preview： 默认展示预览区域
         editable: true,
         toolbarsFlag: true, //工具栏
         scrollStyle: true,
-        codeStyle: "atom-one-dark",
+        codeStyle: 'atom-one-dark',
         boxShadow: false,
         ishljs: true,
         tabSize: 4,
-        toolbarsBackground: "rgba(0,0,0,0)",
-        editorBackground: "rgba(0,0,0,0)",
-        previewBackground: "rgba(0,0,0,0)",
-        fontSize: "1.06rem",
+        toolbarsBackground: 'rgba(0,0,0,0)',
+        editorBackground: 'rgba(0,0,0,0)',
+        previewBackground: 'rgba(0,0,0,0)',
+        fontSize: '1.06rem',
         navigation: false,
       };
       return data;
@@ -493,45 +493,45 @@ export default {
       requestid_timer: null,
       issendfinish: true,
       show_ide: true,
-      testin: "",
+      testin: '',
       is_download: false,
       xss_options: this.$SqsGlobal.xss_options,
       stripIgnoreTagBody: this.$SqsGlobal.strip_ignore_tag_body,
       dialogFormVisible: false, // 用于控制表单对话框的开启和关闭
       dialogVisible: false, // 用于控制错误提示对话框的开启和关闭
-      formLabelWidth: "5rem", // 设定表单对话框内表单是宽度
+      formLabelWidth: '5rem', // 设定表单对话框内表单是宽度
       form: {
         // 表单对话框内表单的数据
-        link: "",
-        region: "",
+        link: '',
+        region: '',
       },
       externalLink: {
         markdown_css: false,
         // 默认public文件夹下
-        hljs_js: () => "md/highlightjs/highlight.min.js",
-        hljs_css: (css) => "md/highlightjs/styles/" + css + ".min.css",
-        hljs_lang: (lang) => "md/highlightjs/languages/" + lang + ".min.js",
-        katex_css: () => "md/katex/katex.min.css",
-        katex_js: () => "md/katex/katex.min.js",
+        hljs_js: () => 'md/highlightjs/highlight.min.js',
+        hljs_css: (css) => 'md/highlightjs/styles/' + css + '.min.css',
+        hljs_lang: (lang) => 'md/highlightjs/languages/' + lang + '.min.js',
+        katex_css: () => 'md/katex/katex.min.css',
+        katex_js: () => 'md/katex/katex.min.js',
       },
       linuxbkurl: window?.location?.href,
       head: {},
       passparam: {
-        id: "",
+        id: '',
       },
-      type: "",
-      contestid: "",
-      code: "",
+      type: '',
+      contestid: '',
+      code: '',
       tableData: {
-        id: "",
-        problemName: "",
-        problemContent: "",
-        problemCinTest: "",
-        problemCoutTest: "",
+        id: '',
+        problemName: '',
+        problemContent: '',
+        problemCinTest: '',
+        problemCoutTest: '',
         Time: 1000,
         Memory: 128,
-        problemFrom: "LTPP",
-        problemLabe: "算法",
+        problemFrom: 'LTPP',
+        problemLabe: '算法',
         public: 1,
       },
       /* context:  '',//输入的数据 */
@@ -576,38 +576,38 @@ export default {
         return;
       }
       this.$msg({
-        type: "success",
-        message: "开始下载",
+        type: 'success',
+        message: '开始下载',
         duration: 1600,
         offset: 80,
       });
       this.is_download = true;
       await this.$ajax({
-        method: "post",
-        url: "/Oj/downloadTest",
-        responseType: "blob",
+        method: 'post',
+        url: '/Oj/downloadTest',
+        responseType: 'blob',
         headers: {
-          "Content-Type": "application/json; application/octet-stream;",
+          'Content-Type': 'application/json; application/octet-stream;',
         },
         data: {
           problem_id: this.tableData.id,
         },
       })
         .then((res) => {
-          let reslastname = ".zip";
+          let reslastname = '.zip';
           let Name = this.tableData.problemName + reslastname;
           if (window.navigator && window.navigator.msSaveOrOpenBlob) {
             const blob = new Blob([res?.data], {
-              type: "application/zip",
+              type: 'application/zip',
             });
             window.navigator.msSaveOrOpenBlob(blob, Name);
           } else {
             /* 火狐谷歌的文件下载方式 */
             const blob = new Blob([res?.data], {
-              type: "application/zip",
+              type: 'application/zip',
             });
             let url = window.URL.createObjectURL(blob);
-            const link = document.createElement("a"); // 创建a标签
+            const link = document.createElement('a'); // 创建a标签
             link.href = url;
             link.download = Name; // 重命名文件
             link.click();
@@ -615,8 +615,8 @@ export default {
           }
           setTimeout(() => {
             this.$msg({
-              type: "success",
-              message: "下载完成",
+              type: 'success',
+              message: '下载完成',
               duration: 1600,
               offset: 80,
             });
@@ -626,7 +626,7 @@ export default {
         .catch((t) => {
           setTimeout(() => {
             this.$msg({
-              type: "error",
+              type: 'error',
               message: t,
               duration: 1600,
               offset: 80,
@@ -636,41 +636,41 @@ export default {
         });
     },
     ChangeCacheTheme() {
-      window.localStorage.setItem("Theme", this.usertheme);
+      window.localStorage.setItem('Theme', this.usertheme);
     },
     ChangeCacheLanguage() {
-      window.localStorage.setItem("Language", this.userlanguage);
+      window.localStorage.setItem('Language', this.userlanguage);
     },
     videoLink() {
       // 准备链接模板
-      let linkFrame = "";
-      if (this.form.region == "") {
-        this.form.region = "url";
+      let linkFrame = '';
+      if (this.form.region == '') {
+        this.form.region = 'url';
       }
       // 创建一个div盒子，为提取src做准备
-      let box = document.createElement("div");
+      let box = document.createElement('div');
       // 将原始链接插入到盒子中
 
       box.innerHTML = this.form.link;
       // 判断不同的视频原链接类型
-      if (this.form.region == "url") {
+      if (this.form.region == 'url') {
         let linkFrameStart = `<div align="center" width="100%" style="border-width:0rem"><video style="height:46vh; width: 100%" controls controlslist="nodownload"><source src="`;
         let linkFrameEnd = `" type="video/mp4" /></video></div>`;
 
         linkFrame = linkFrameStart + this.form.link + linkFrameEnd;
       } else if (
-        this.form.region == "iframe" &&
-        box.getElementsByTagName("iframe").length > 0
+        this.form.region == 'iframe' &&
+        box.getElementsByTagName('iframe').length > 0
       ) {
         let linkFrameStart = `<div align="center" width="100%" style="border-width:0rem"><iframe height="${
-          (window.innerHeight - 240) / 2 + "px"
+          (window.innerHeight - 240) / 2 + 'px'
         }" width="80%" src="`;
         let linkFrameEnd = `" allowfullscreen="true" scrolling="no" border="0" frameborder="no" framespacing="0" style="border-width: 0rem; min-height: 31.2rem;"></iframe></div>`;
 
         // 从iframe标签中提取src属性
         linkFrame =
           linkFrameStart +
-          box.getElementsByTagName("iframe")[0].getAttribute("src") +
+          box.getElementsByTagName('iframe')[0].getAttribute('src') +
           linkFrameEnd;
       } else {
         // 原始链接格式错误时弹出错误提示
@@ -678,10 +678,10 @@ export default {
         this.dialogVisible = true;
       }
       // 复原表单文本框内容
-      this.form.link = "";
+      this.form.link = '';
 
       // 获取文本域中当前光标起始位置、结束位置以及滚动条位置（滚动条位置我认为没有必要，如有需要可以自己取消注释）
-      let textarea = document.getElementsByClassName("auto-textarea-input")[0];
+      let textarea = document.getElementsByClassName('auto-textarea-input')[0];
       let posStart = textarea.selectionStart;
       let posEnd = textarea.selectionEnd;
       // let posScroll = document.getElementsByClassName("v-note-edit")[0].scrollTop;
@@ -692,7 +692,7 @@ export default {
         this.$refs.md.d_value.length
       );
       // 拼接并替换文本域内容
-      this.$refs.md.d_value = subStart + "\n" + linkFrame + "\n" + subEnd;
+      this.$refs.md.d_value = subStart + '\n' + linkFrame + '\n' + subEnd;
       // document.getElementsByClassName("v-note-edit")[0].scrollTop = posScroll;
 
       // 关闭对话框
@@ -710,10 +710,10 @@ export default {
       }
       this.issendfinish = false;
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Oj/addProblem",
+        method: 'post',
+        url: '/Oj/addProblem',
         portType: {
-          process: "8794",
+          process: '8794',
         },
         data: {
           data: this.tableData,
@@ -721,7 +721,7 @@ export default {
       }).catch((t) => {
         this.issendfinish = true;
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -730,8 +730,8 @@ export default {
       this.issendfinish = true;
       if (res?.code == 1) {
         this.$msg({
-          type: "success",
-          message: "请添加测试样例",
+          type: 'success',
+          message: '请添加测试样例',
           duration: 1600,
           offset: 80,
         });
@@ -741,7 +741,7 @@ export default {
         };
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -755,10 +755,10 @@ export default {
       }
       this.issendfinish = false;
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Oj/updateProblem",
+        method: 'post',
+        url: '/Oj/updateProblem',
         portType: {
-          process: "8794",
+          process: '8794',
         },
         data: {
           data: this.tableData,
@@ -766,7 +766,7 @@ export default {
       }).catch((t) => {
         this.issendfinish = true;
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -775,14 +775,14 @@ export default {
       this.issendfinish = true;
       if (res?.code == 1) {
         this.$msg({
-          type: "success",
+          type: 'success',
           message: res?.msg,
           duration: 1600,
           offset: 80,
         });
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -793,14 +793,14 @@ export default {
     getupres(response) {
       if (response && response.code && response.code != 1) {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: response.msg,
           duration: 1600,
           offset: 80,
         });
       } else {
         this.$msg({
-          type: "success",
+          type: 'success',
           message: response.msg,
           duration: 1600,
           offset: 80,
@@ -809,19 +809,19 @@ export default {
     },
     async getlinuxbkurl() {
       const res = await this.getBackurl();
-      this.linuxbkurl = res + "/Testupload/saveTest";
+      this.linuxbkurl = res + '/Testupload/saveTest';
     },
     // 绑定@imgAdd event
     $imgAdd(pos, $file) {
-      this.imgAddMiddleware(pos, $file, "md");
+      this.imgAddMiddleware(pos, $file, 'md');
     },
     //获取题目内容
     async getproblem(id) {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Oj/backLookOneProblem",
+        method: 'post',
+        url: '/Oj/backLookOneProblem',
         portType: {
-          process: "8794",
+          process: '8794',
         },
         data: {
           problem_id: id,
@@ -829,7 +829,7 @@ export default {
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -840,8 +840,8 @@ export default {
         this.tableData = res?.data;
       } else {
         this.$msg({
-          type: "error",
-          message: "该题目不存在，即将返回！",
+          type: 'error',
+          message: '该题目不存在，即将返回！',
           duration: 1600,
           offset: 80,
         });
@@ -852,5 +852,5 @@ export default {
 };
 </script>
 <style scoped>
-@import "../../../public/md/markdown/github-markdown.min.css";
+@import '../../../public/md/markdown/github-markdown.min.css';
 </style>

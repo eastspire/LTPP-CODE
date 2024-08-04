@@ -39,7 +39,7 @@
           <div
             v-for="tem in user_list"
             :key="tem.idnex"
-            class="user"
+            class="user appear"
             :style="`${
               tem.name === now_user.name ? user_deep_color : user_no_deep_color
             }`"

@@ -180,9 +180,9 @@
 </template>
 
 <script>
-import urlencode from "../../../updateCompoents/urlencode";
+import urlencode from '../../../updateCompoents/urlencode';
 export default {
-  name: "oj",
+  name: 'oj',
   async created() {
     this.isseetip = true;
     this.issearch = false; //判断是否搜索，从而进行分页查找
@@ -202,18 +202,18 @@ export default {
   },
   data() {
     return {
-      lastkey: "",
+      lastkey: '',
       isseetip: true,
       issearch: false,
       problemList: [],
       problemId: 0,
-      problemLabe: "", //题目标签
-      problemName: "",
+      problemLabe: '', //题目标签
+      problemName: '',
       problemAc: 0,
       limit: 50,
       total: 0,
       page: 1,
-      key: "",
+      key: '',
       passdata: {},
     };
   },
@@ -235,33 +235,33 @@ export default {
      */
     cellStyle({ row, rowIndex }) {
       let styleRes = {
-        background: "rgba(var(--ltpp-light-color), 0.16) !important",
-        height: "3.6rem !important",
-        color: "chartreuse",
+        background: 'rgba(var(--ltpp-light-color), 0.16) !important',
+        height: '3.6rem !important',
+        color: 'chartreuse',
       };
       if (rowIndex % 2 != 0) {
         styleRes.background =
-          "rgba(var(--ltpp-main-bk-color), 0.06) !important";
+          'rgba(var(--ltpp-main-bk-color), 0.06) !important';
       }
       if (parseFloat(row.hassolve) === 1) {
-        styleRes.color = "chartreuse";
+        styleRes.color = 'chartreuse';
         return styleRes;
       } else {
-        styleRes.color = "var(--ltpp-main-text-color)";
+        styleRes.color = 'var(--ltpp-main-text-color)';
         return styleRes;
       }
     },
 
     toonepro(id) {
       this.passdata.id = id;
-      this.passdata.contestid = "";
+      this.passdata.contestid = '';
       id &&
         id != this.$SqsGlobal.loading_tips &&
         this.$router.push({
-          path: "/oneproblem",
+          path: '/oneproblem',
           query: {
-            path: urlencode(id, "gbk"),
-            contest: urlencode("", "gbk"),
+            path: urlencode(id, 'gbk'),
+            contest: urlencode('', 'gbk'),
           },
         });
     },
@@ -288,10 +288,10 @@ export default {
     async getlist() {
       this.initData();
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Oj/getProblemList",
+        method: 'post',
+        url: '/Oj/getProblemList',
         portType: {
-          process: "8794",
+          process: '8794',
         },
         data: {
           page: this.page,
@@ -299,7 +299,7 @@ export default {
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -313,10 +313,10 @@ export default {
       this.lastkey = this.key;
       this.initData();
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Oj/searchProblem",
+        method: 'post',
+        url: '/Oj/searchProblem',
         portType: {
-          process: "8794",
+          process: '8794',
         },
         data: {
           key: this.key,
@@ -325,7 +325,7 @@ export default {
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -336,7 +336,7 @@ export default {
     },
     //搜索预处理
     search() {
-      if (this.key == "" || this.key == null || this.key == undefined) {
+      if (this.key == '' || this.key == null || this.key == undefined) {
         this.issearch = false;
         this.getlist();
         return;

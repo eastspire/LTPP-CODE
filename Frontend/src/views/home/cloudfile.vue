@@ -75,7 +75,7 @@
             <div style="height: 0.8rem"></div>
             <div
               v-for="(tem, index) in list"
-              class="shadow ltpp-list-box"
+              class="shadow ltpp-list-box appear"
               :key="index"
               :style="`cursor: pointer; background-color:${
                 index % 2 != 0 ? deepcolor : notdeepcolor
@@ -551,16 +551,15 @@
   </div>
 </template>
 
-
 <script>
-import "../../../public/md/markdown/github-markdown.min.css";
-import urlencode from "../../../updateCompoents/urlencode";
-import myide from "../../components/myide.vue";
-const file_txt_loading_tips = "资源加载中！请耐心等待！";
-import ShowCode from "../../components/showcode.vue";
+import '../../../public/md/markdown/github-markdown.min.css';
+import urlencode from '../../../updateCompoents/urlencode';
+import myide from '../../components/myide.vue';
+const file_txt_loading_tips = '资源加载中！请耐心等待！';
+import ShowCode from '../../components/showcode.vue';
 
 export default {
-  name: "cloudfile",
+  name: 'cloudfile',
   components: {
     myide,
     ShowCode,
@@ -569,18 +568,18 @@ export default {
     prop() {
       let data = {
         subfield: false, // 单双栏模式
-        defaultOpen: "edit", //edit： 默认展示编辑区域 ， preview： 默认展示预览区域
+        defaultOpen: 'edit', //edit： 默认展示编辑区域 ， preview： 默认展示预览区域
         editable: true,
         toolbarsFlag: true, //工具栏
         scrollStyle: true,
-        codeStyle: "atom-one-dark",
+        codeStyle: 'atom-one-dark',
         boxShadow: false,
         ishljs: true,
         tabSize: 4,
-        toolbarsBackground: "rgba(0,0,0,0)",
-        editorBackground: "rgba(0,0,0,0)",
-        previewBackground: "rgba(0,0,0,0)",
-        fontSize: "1.06rem",
+        toolbarsBackground: 'rgba(0,0,0,0)',
+        editorBackground: 'rgba(0,0,0,0)',
+        previewBackground: 'rgba(0,0,0,0)',
+        fontSize: '1.06rem',
         navigation: false,
       };
       return data;
@@ -603,10 +602,10 @@ export default {
     this.IsShowUp = false;
     this.Isnew = false;
     this.txt_load_finish = false;
-    this.height = window.innerHeight - 198 + "px";
+    this.height = window.innerHeight - 198 + 'px';
     this.head = {
-      Authorization: "Bearer " + window.localStorage.getItem("authorization"),
-      Key: window.localStorage.getItem("key"),
+      Authorization: 'Bearer ' + window.localStorage.getItem('authorization'),
+      Key: window.localStorage.getItem('key'),
       Requestid: this.Base64Encode(new Date().getTime()),
     };
     this.requestid_timer = setInterval(() => {
@@ -615,12 +614,12 @@ export default {
   },
   async created() {
     this.isseetip = true;
-    const tem_linuxurl = window.sessionStorage.getItem("linuxurl");
+    const tem_linuxurl = window.sessionStorage.getItem('linuxurl');
     if (!tem_linuxurl) {
       await this.getlinuxurl();
     } else {
       this.linuxurl = tem_linuxurl;
-      this.cloudfileurl = this.linuxurl + "/Cloudfile/upFile";
+      this.cloudfileurl = this.linuxurl + '/Cloudfile/upFile';
     }
     await this.loadCharset();
     this.getlist();
@@ -633,28 +632,28 @@ export default {
       loadfinish: false,
       file_idx: 0,
       requestid_timer: null,
-      ide_code: "",
+      ide_code: '',
       is_code_file: false,
-      language: "cpp",
+      language: 'cpp',
       char_set: [],
       dialogFormVisible: false, // 用于控制表单对话框的开启和关闭
       dialogVisible: false, // 用于控制错误提示对话框的开启和关闭
-      formLabelWidth: "5rem", // 设定表单对话框内表单是宽度
+      formLabelWidth: '5rem', // 设定表单对话框内表单是宽度
       form: {
         // 表单对话框内表单的数据
-        link: "",
-        region: "",
+        link: '',
+        region: '',
       },
       xss_options: this.$SqsGlobal.xss_options,
       stripIgnoreTagBody: this.$SqsGlobal.strip_ignore_tag_body,
       externalLink: {
         markdown_css: false,
         // 默认public文件夹下
-        hljs_js: () => "md/highlightjs/highlight.min.js",
-        hljs_css: (css) => "md/highlightjs/styles/" + css + ".min.css",
-        hljs_lang: (lang) => "md/highlightjs/languages/" + lang + ".min.js",
-        katex_css: () => "md/katex/katex.min.css",
-        katex_js: () => "md/katex/katex.min.js",
+        hljs_js: () => 'md/highlightjs/highlight.min.js',
+        hljs_css: (css) => 'md/highlightjs/styles/' + css + '.min.css',
+        hljs_lang: (lang) => 'md/highlightjs/languages/' + lang + '.min.js',
+        katex_css: () => 'md/katex/katex.min.css',
+        katex_js: () => 'md/katex/katex.min.js',
       },
       toolbars: {
         bold: true, // 粗体
@@ -682,34 +681,34 @@ export default {
       },
       isseetip: true,
       iscloseFile: false,
-      height: window.innerHeight + "px",
-      deepcolor: "rgba(var(--ltpp-light-color), 0.16)",
-      notdeepcolor: "rgba(var(--ltpp-main-bk-color), 0.06)",
+      height: window.innerHeight + 'px',
+      deepcolor: 'rgba(var(--ltpp-light-color), 0.16)',
+      notdeepcolor: 'rgba(var(--ltpp-main-bk-color), 0.06)',
       file_percentage: 0,
       gitclass: [
-        "folder",
-        "music",
-        "video",
-        "code",
-        "pdf",
-        "compressed",
-        "photo",
-        "exe",
-        "txt",
+        'folder',
+        'music',
+        'video',
+        'code',
+        'pdf',
+        'compressed',
+        'photo',
+        'exe',
+        'txt',
       ],
       IsShowStaticFile: false,
-      ShowStaticFileUrl: "",
+      ShowStaticFileUrl: '',
       linuxurl: window?.location?.href,
       cloudfileurl: window?.location?.href,
       IsShowTxt: false,
       IsShowUp: false,
-      code: "",
+      code: '',
       list: [],
-      filename: "",
-      filepath: "",
+      filename: '',
+      filepath: '',
       head: {},
       Isnew: false,
-      newname: "",
+      newname: '',
       isfile: false,
     };
   },
@@ -719,34 +718,34 @@ export default {
     },
     videoLink() {
       // 准备链接模板
-      let linkFrame = "";
-      if (this.form.region == "") {
-        this.form.region = "url";
+      let linkFrame = '';
+      if (this.form.region == '') {
+        this.form.region = 'url';
       }
       // 创建一个div盒子，为提取src做准备
-      let box = document.createElement("div");
+      let box = document.createElement('div');
       // 将原始链接插入到盒子中
 
       box.innerHTML = this.form.link;
       // 判断不同的视频原链接类型
-      if (this.form.region == "url") {
+      if (this.form.region == 'url') {
         let linkFrameStart = `<div align="center" width="100%" style="border-width:0rem"><video style="height:46vh; width: 100%" controls controlslist="nodownload"><source src="`;
         let linkFrameEnd = `" type="video/mp4" /></video></div>`;
 
         linkFrame = linkFrameStart + this.form.link + linkFrameEnd;
       } else if (
-        this.form.region == "iframe" &&
-        box.getElementsByTagName("iframe").length > 0
+        this.form.region == 'iframe' &&
+        box.getElementsByTagName('iframe').length > 0
       ) {
         let linkFrameStart = `<div align="center" width="100%" style="border-width:0rem"><iframe height="${
-          (window.innerHeight - 240) / 2 + "px"
+          (window.innerHeight - 240) / 2 + 'px'
         }" width="80%" src="`;
         let linkFrameEnd = `" allowfullscreen="true" scrolling="no" border="0" frameborder="no" framespacing="0" style="border-width: 0rem; min-height: 31.2rem;"></iframe></div>`;
 
         // 从iframe标签中提取src属性
         linkFrame =
           linkFrameStart +
-          box.getElementsByTagName("iframe")[0].getAttribute("src") +
+          box.getElementsByTagName('iframe')[0].getAttribute('src') +
           linkFrameEnd;
       } else {
         // 原始链接格式错误时弹出错误提示
@@ -754,10 +753,10 @@ export default {
         this.dialogVisible = true;
       }
       // 复原表单文本框内容
-      this.form.link = "";
+      this.form.link = '';
 
       // 获取文本域中当前光标起始位置、结束位置以及滚动条位置（滚动条位置我认为没有必要，如有需要可以自己取消注释）
-      let textarea = document.getElementsByClassName("auto-textarea-input")[0];
+      let textarea = document.getElementsByClassName('auto-textarea-input')[0];
       let posStart = textarea.selectionStart;
       let posEnd = textarea.selectionEnd;
       // let posScroll = document.getElementsByClassName("v-note-edit")[0].scrollTop;
@@ -768,7 +767,7 @@ export default {
         this.$refs.md.d_value.length
       );
       // 拼接并替换文本域内容
-      this.$refs.md.d_value = subStart + "\n" + linkFrame + "\n" + subEnd;
+      this.$refs.md.d_value = subStart + '\n' + linkFrame + '\n' + subEnd;
       // document.getElementsByClassName("v-note-edit")[0].scrollTop = posScroll;
 
       // 关闭对话框
@@ -777,7 +776,7 @@ export default {
 
     // 绑定@imgAdd event
     async $imgAdd(pos, $file) {
-      this.imgAddMiddleware(pos, $file, "md");
+      this.imgAddMiddleware(pos, $file, 'md');
     },
     // 文件解码
     get_name(str) {
@@ -785,12 +784,12 @@ export default {
         return;
       }
       let point_loc = str.length;
-      let first_base64_name = "";
-      let name = "";
-      let first_name = "";
-      let last_name = "";
+      let first_base64_name = '';
+      let name = '';
+      let first_name = '';
+      let last_name = '';
       for (let i = 0; i < str.length; ++i) {
-        if (str[i] == ".") {
+        if (str[i] == '.') {
           point_loc = i;
           break;
         }
@@ -807,14 +806,14 @@ export default {
     async loadCharset() {
       while (!this.char_set.length) {
         const { data: res } = await this.$ajax({
-          method: "post",
-          url: "/Cloudfile/loadCharset",
+          method: 'post',
+          url: '/Cloudfile/loadCharset',
           portType: {
-            process: "8797",
+            process: '8797',
           },
         }).catch((t) => {
           this.$msg({
-            type: "error",
+            type: 'error',
             message: t,
             duration: 1600,
             offset: 80,
@@ -835,19 +834,19 @@ export default {
     async getlinuxurl() {
       const res = await this.getBackurl();
       this.linuxurl = res;
-      this.cloudfileurl = res + "/Cloudfile/upFile";
+      this.cloudfileurl = res + '/Cloudfile/upFile';
     },
 
     async getPercentage() {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Cloudfile/getcloudfilePercentage",
+        method: 'post',
+        url: '/Cloudfile/getcloudfilePercentage',
         portType: {
-          process: "8797",
+          process: '8797',
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -856,24 +855,24 @@ export default {
       this.file_percentage = res?.data;
     },
     async newfile() {
-      if (this.newname == "") {
+      if (this.newname == '') {
         this.$msg({
-          type: "error",
-          message: "名称不能为空！",
+          type: 'error',
+          message: '名称不能为空！',
           duration: 1600,
           offset: 80,
         });
         return;
       }
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Cloudfile/newFile",
+        method: 'post',
+        url: '/Cloudfile/newFile',
         data: {
           name: this.newname,
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -881,14 +880,14 @@ export default {
       });
       if (res?.code == 1) {
         this.$msg({
-          type: "success",
+          type: 'success',
           message: res?.msg,
           duration: 600,
           offset: 80,
         });
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -900,11 +899,11 @@ export default {
     //首次加载自动获取文件
     async getlist() {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Cloudfile/loadList",
+        method: 'post',
+        url: '/Cloudfile/loadList',
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -919,14 +918,14 @@ export default {
     async reloadList(response, file, file_list) {
       if (response && response.code && response.code != 1) {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: response.msg,
           duration: 1600,
           offset: 80,
         });
       } else {
         this.$msg({
-          type: "success",
+          type: 'success',
           message: response.msg,
           duration: 1600,
           offset: 80,
@@ -935,11 +934,11 @@ export default {
       this.deleteOneFileHistoryFromUpList(file, file_list);
       this.getPercentage();
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Cloudfile/loadList",
+        method: 'post',
+        url: '/Cloudfile/loadList',
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -949,14 +948,14 @@ export default {
     },
     async refreshlist(path) {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Cloudfile/loadList",
+        method: 'post',
+        url: '/Cloudfile/loadList',
         data: {
           path: path,
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -990,20 +989,20 @@ export default {
       this.code = file_txt_loading_tips;
       this.txt_load_finish = false;
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Cloudfile/lookCode",
+        method: 'post',
+        url: '/Cloudfile/lookCode',
         data: {
           path: this.filepath,
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
         });
         this.txt_load_finish = false;
-        this.code = "资源加载失败！请稍后重试！";
+        this.code = '资源加载失败！请稍后重试！';
         return;
       });
       this.txt_load_finish = true;
@@ -1024,15 +1023,15 @@ export default {
         this.code = this.ide_code;
       }
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Cloudfile/updataCode",
+        method: 'post',
+        url: '/Cloudfile/updataCode',
         data: {
           path: this.filepath,
           code: this.code,
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -1040,7 +1039,7 @@ export default {
       });
       if (res?.code == 1) {
         this.$msg({
-          type: "success",
+          type: 'success',
           message: res?.msg,
           duration: 600,
           offset: 80,
@@ -1050,7 +1049,7 @@ export default {
         } catch (err) {}
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -1062,12 +1061,12 @@ export default {
         this.$store.state.my_id &&
         this.$store.state.my_id != null &&
         this.$store.state.my_id != undefined &&
-        this.$store.state.my_id != ""
+        this.$store.state.my_id != ''
       ) {
         this.ShowStaticFileUrl =
           this.linuxurl + this.base64_decode(this.filepath);
       } else {
-        this.$store.commit("updateObj", { my_id: this.getMyId() });
+        this.$store.commit('updateObj', { my_id: this.getMyId() });
         this.ShowStaticFileUrl =
           this.linuxurl + this.base64_decode(this.filepath);
       }
@@ -1077,27 +1076,27 @@ export default {
         this.$store.state.my_id &&
         this.$store.state.my_id != null &&
         this.$store.state.my_id != undefined &&
-        this.$store.state.my_id != ""
+        this.$store.state.my_id != ''
       ) {
         let url = this.linuxurl + this.base64_decode(this.filepath);
         this.IsShowTxt = false;
         this.IsShowStaticFile = false;
         this.$router.push({
-          path: "/staticfile",
+          path: '/staticfile',
           query: {
-            path: urlencode(url, "gbk"),
+            path: urlencode(url, 'gbk'),
           },
         });
         return;
       } else {
-        this.$store.commit("updateObj", { my_id: this.getMyId() });
+        this.$store.commit('updateObj', { my_id: this.getMyId() });
         let url = this.linuxurl + this.base64_decode(this.filepath);
         this.IsShowTxt = false;
         this.IsShowStaticFile = false;
         this.$router.push({
-          path: "/staticfile",
+          path: '/staticfile',
           query: {
-            path: urlencode(url, "gbk"),
+            path: urlencode(url, 'gbk'),
           },
         });
         return;
@@ -1110,24 +1109,24 @@ export default {
         this.$store.state.my_id != undefined &&
         this.$store.state.my_id != 0
       ) {
-        let url = this.linuxurl + "/Filehtml/lookView?path=" + this.filepath;
+        let url = this.linuxurl + '/Filehtml/lookView?path=' + this.filepath;
         window.open(url);
         return;
       }
-      this.$store.commit("updateObj", { my_id: this.getMyId() });
-      let url = this.linuxurl + "/Filehtml/lookView?path=" + this.filepath;
+      this.$store.commit('updateObj', { my_id: this.getMyId() });
+      let url = this.linuxurl + '/Filehtml/lookView?path=' + this.filepath;
       window.open(url);
     },
     async deletefile(path) {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Cloudfile/deleteFile",
+        method: 'post',
+        url: '/Cloudfile/deleteFile',
         data: {
           path: path,
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -1135,14 +1134,14 @@ export default {
       });
       if (res?.code == 1) {
         this.$msg({
-          type: "success",
+          type: 'success',
           message: res?.msg,
           duration: 600,
           offset: 80,
         });
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -1151,19 +1150,19 @@ export default {
       this.refreshlist();
       this.getPercentage();
     },
-    showdelete(path, name = "") {
+    showdelete(path, name = '') {
       name = this.base64_decode(name);
-      this.$alert(`此操作将永久把【${name}】隐藏（文件依然存在）`, "提示", {
-        confirmButtonText: "确定",
-        type: "warning",
+      this.$alert(`此操作将永久把【${name}】隐藏（文件依然存在）`, '提示', {
+        confirmButtonText: '确定',
+        type: 'warning',
       })
         .then(() => {
           this.deletefile(path);
         })
         .catch(() => {
           this.$msg({
-            type: "info",
-            message: "已取消删除",
+            type: 'info',
+            message: '已取消删除',
             duration: 600,
             offset: 80,
           });
@@ -1172,7 +1171,7 @@ export default {
     //下载单个文件
     async downloadonefile() {
       this.downloadUrlContent(
-        "/Cloudfile/downloadFile",
+        '/Cloudfile/downloadFile',
         { path: this.filepath },
         this.Base64Decode(this.filename, this.char_set)
       );
@@ -1181,7 +1180,7 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-@import "../../../public/md/markdown/github-markdown.min.css";
+@import '../../../public/md/markdown/github-markdown.min.css';
 
 /deep/.el-textarea__inner {
   color: var(--ltpp-box-text-color) !important;
@@ -1190,7 +1189,7 @@ export default {
 }
 .folder {
   float: left;
-  background-image: url("../../assets/file.png");
+  background-image: url('../../assets/file.png');
   background-size: 80% auto;
   height: 4rem;
   width: 4rem;
@@ -1200,7 +1199,7 @@ export default {
 }
 .code {
   float: left;
-  background-image: url("../../assets/code.png");
+  background-image: url('../../assets/code.png');
   background-size: 80% auto;
   height: 4rem;
   width: 4rem;
@@ -1211,7 +1210,7 @@ export default {
 
 .music {
   float: left;
-  background-image: url("../../assets/music.png");
+  background-image: url('../../assets/music.png');
   background-size: 80% auto;
   height: 4rem;
   width: 4rem;
@@ -1222,7 +1221,7 @@ export default {
 
 .video {
   float: left;
-  background-image: url("../../assets/video.png");
+  background-image: url('../../assets/video.png');
   background-size: 80% auto;
   height: 4rem;
   width: 4rem;
@@ -1233,7 +1232,7 @@ export default {
 
 .pdf {
   float: left;
-  background-image: url("../../assets/pdf.png");
+  background-image: url('../../assets/pdf.png');
   background-size: 80% auto;
   height: 4rem;
   width: 4rem;
@@ -1244,7 +1243,7 @@ export default {
 
 .compressed {
   float: left;
-  background-image: url("../../assets/zip.png");
+  background-image: url('../../assets/zip.png');
   background-size: 80% auto;
   height: 4rem;
   width: 4rem;
@@ -1255,7 +1254,7 @@ export default {
 
 .txt {
   float: left;
-  background-image: url("../../assets/txt.png");
+  background-image: url('../../assets/txt.png');
   background-size: 80% auto;
   height: 4rem;
   width: 4rem;
@@ -1266,7 +1265,7 @@ export default {
 
 .photo {
   float: left;
-  background-image: url("../../assets/photo.png");
+  background-image: url('../../assets/photo.png');
   background-size: 80% auto;
   height: 4rem;
   width: 4rem;
@@ -1277,7 +1276,7 @@ export default {
 
 .exe {
   float: left;
-  background-image: url("../../assets/exe.png");
+  background-image: url('../../assets/exe.png');
   background-size: 80% auto;
   height: 4rem;
   width: 4rem;

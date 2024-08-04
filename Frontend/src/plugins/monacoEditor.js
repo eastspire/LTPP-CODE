@@ -6,10 +6,8 @@
  * @FilePath: \LTPP-CODE\Frontend\src\plugins\monacoEditor.js
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
- * Copyright (c) 2023 by SQS, All Rights Reserved. 
+ * Copyright (c) 2023 by SQS, All Rights Reserved.
  */
 import * as monaco from '../../updateCompoents/monaco-editor/esm/vs/editor/editor.main.js';
 
-export {
-    monaco
-};
+export { monaco };

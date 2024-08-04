@@ -131,7 +131,7 @@
                       {{
                         !isNaN(parseFloat(scope.row.times)) &&
                         isFinite(scope.row.times)
-                          ? scope.row.times + "次"
+                          ? scope.row.times + '次'
                           : scope.row.times
                       }}
                     </span>
@@ -278,7 +278,7 @@
           :class="`${
             goods_data.has_buy ? 'el-icon-download' : 'el-icon-s-finance'
           }`"
-          >{{ goods_data.has_buy ? " 下载" : " 购买" }}</el-button
+          >{{ goods_data.has_buy ? ' 下载' : ' 购买' }}</el-button
         >
         <el-button
           size="small"
@@ -297,7 +297,7 @@
 
 <script>
 export default {
-  name: "goods",
+  name: 'goods',
   async created() {
     this.issearch = false; //判断是否搜索，从而进行分页查找
     this.page = 1;
@@ -319,13 +319,13 @@ export default {
     return {
       isseetip: true,
       see_dialog: false,
-      lastkey: "",
+      lastkey: '',
       issearch: false,
       goodsList: [],
       limit: 50,
       total: 0,
       page: 1,
-      key: "",
+      key: '',
       goods_data: {},
     };
   },
@@ -347,19 +347,19 @@ export default {
      */
     cellStyle({ row, rowIndex }) {
       let styleRes = {
-        background: "rgba(var(--ltpp-light-color), 0.16) !important",
-        height: "3.6rem !important",
-        color: "chartreuse",
+        background: 'rgba(var(--ltpp-light-color), 0.16) !important',
+        height: '3.6rem !important',
+        color: 'chartreuse',
       };
       if (rowIndex % 2 != 0) {
         styleRes.background =
-          "rgba(var(--ltpp-main-bk-color), 0.06) !important";
+          'rgba(var(--ltpp-main-bk-color), 0.06) !important';
       }
       if (row.has_buy) {
-        styleRes.color = "chartreuse";
+        styleRes.color = 'chartreuse';
         return styleRes;
       } else {
-        styleRes.color = "var(--ltpp-main-text-color)";
+        styleRes.color = 'var(--ltpp-main-text-color)';
         return styleRes;
       }
     },
@@ -385,17 +385,17 @@ export default {
 
     async downloadGoods() {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Goods/judgeCanBuy",
+        method: 'post',
+        url: '/Goods/judgeCanBuy',
         portType: {
-          process: "8797",
+          process: '8797',
         },
         data: {
           id: this.goods_data.id,
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -404,7 +404,7 @@ export default {
       });
       if (res?.code == 1) {
         this.$notice({
-          title: "通知",
+          title: '通知',
           dangerouslyUseHTMLString: true,
           message: res?.msg,
           duration: 3600,
@@ -412,7 +412,7 @@ export default {
         });
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -420,17 +420,17 @@ export default {
         return;
       }
       this.$msg({
-        type: "success",
-        message: "开始下载",
+        type: 'success',
+        message: '开始下载',
         duration: 1600,
         offset: 80,
       });
       await this.$ajax({
-        method: "post",
-        url: "/Goods/downloadOne",
-        responseType: "blob",
+        method: 'post',
+        url: '/Goods/downloadOne',
+        responseType: 'blob',
         headers: {
-          "Content-Type": "application/json; application/octet-stream;",
+          'Content-Type': 'application/json; application/octet-stream;',
         },
         data: {
           id: this.goods_data.id,
@@ -439,29 +439,29 @@ export default {
         .then((res) => {
           this.see_dialog = false;
           this.$msg({
-            type: "success",
-            message: "下载完成",
+            type: 'success',
+            message: '下载完成',
             duration: 1600,
             offset: 80,
           });
-          let Name = "";
-          if (this.goods_data.name.indexOf("." + this.goods_data.type) != -1) {
+          let Name = '';
+          if (this.goods_data.name.indexOf('.' + this.goods_data.type) != -1) {
             Name = this.goods_data.name;
           } else {
-            Name = this.goods_data.name + "." + this.goods_data.type;
+            Name = this.goods_data.name + '.' + this.goods_data.type;
           }
           if (window.navigator && window.navigator.msSaveOrOpenBlob) {
             const blob = new Blob([res?.data], {
-              type: "application/octet-stream;application/zip",
+              type: 'application/octet-stream;application/zip',
             });
             window.navigator.msSaveOrOpenBlob(blob, Name);
           } else {
             /* 火狐谷歌的文件下载方式 */
             const blob = new Blob([res?.data], {
-              type: "application/octet-stream;application/zip",
+              type: 'application/octet-stream;application/zip',
             });
             let url = window.URL.createObjectURL(blob);
-            const link = document.createElement("a"); // 创建a标签
+            const link = document.createElement('a'); // 创建a标签
             link.href = url;
             link.download = Name; // 重命名文件
             link.click();
@@ -475,7 +475,7 @@ export default {
         })
         .catch((t) => {
           this.$msg({
-            type: "error",
+            type: 'error',
             message: t,
             duration: 1600,
             offset: 80,
@@ -486,10 +486,10 @@ export default {
     async getlist() {
       this.initData();
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Goods/getList",
+        method: 'post',
+        url: '/Goods/getList',
         portType: {
-          process: "8794",
+          process: '8794',
         },
         data: {
           page: this.page,
@@ -497,7 +497,7 @@ export default {
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -508,7 +508,7 @@ export default {
         this.goodsList = res?.data;
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -518,17 +518,17 @@ export default {
     async lookOne(id) {
       this.goods_data = [];
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Goods/lookOne",
+        method: 'post',
+        url: '/Goods/lookOne',
         portType: {
-          process: "8794",
+          process: '8794',
         },
         data: {
           id: id,
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -539,7 +539,7 @@ export default {
         this.see_dialog = true;
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -551,10 +551,10 @@ export default {
       this.lastkey = this.key;
       this.initData();
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Goods/keySearch",
+        method: 'post',
+        url: '/Goods/keySearch',
         portType: {
-          process: "8794",
+          process: '8794',
         },
         data: {
           key: this.key,
@@ -563,7 +563,7 @@ export default {
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -574,7 +574,7 @@ export default {
         this.total = res.allnum;
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -583,7 +583,7 @@ export default {
     },
     //搜索预处理
     search() {
-      if (this.key == "" || this.key == null || this.key == undefined) {
+      if (this.key == '' || this.key == null || this.key == undefined) {
         this.issearch = false;
         this.getlist();
         return;

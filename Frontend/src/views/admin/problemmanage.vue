@@ -210,10 +210,10 @@
 </template>
 
 <script>
-import urlencode from "../../../updateCompoents/urlencode";
+import urlencode from '../../../updateCompoents/urlencode';
 
 export default {
-  name: "problemmanage",
+  name: 'problemmanage',
   async created() {
     this.isseetip = true;
     this.page = 1;
@@ -231,17 +231,17 @@ export default {
   },
   data() {
     return {
-      lastkey: "",
+      lastkey: '',
       isseetip: true,
       linuxurl: window?.location?.href,
       passparam: {
-        id: "",
+        id: '',
       },
       problemList: [],
       total: 0,
       page: 1,
       limit: 50,
-      key: "",
+      key: '',
     };
   },
   methods: {
@@ -263,25 +263,25 @@ export default {
     cellStyle({ row, rowIndex }) {
       let acpoint = (row.ACpoint * 100).toFixed(0);
       let styleRes = {
-        background: "rgba(var(--ltpp-light-color), 0.16) !important",
-        height: "3.6rem !important",
-        color: "chartreuse",
+        background: 'rgba(var(--ltpp-light-color), 0.16) !important',
+        height: '3.6rem !important',
+        color: 'chartreuse',
       };
       if (rowIndex % 2 != 0) {
         styleRes.background =
-          "rgba(var(--ltpp-main-bk-color), 0.06) !important";
+          'rgba(var(--ltpp-main-bk-color), 0.06) !important';
       }
       if (acpoint <= 30) {
         /* 正确率低于30*/
-        styleRes.color = "red";
+        styleRes.color = 'red';
         return styleRes;
       } else if (acpoint <= 80) {
         /* 正确率低于80大于30 */
-        styleRes.color = "#F2F6FC";
+        styleRes.color = '#F2F6FC';
         return styleRes;
       } else {
         /* 正确率低于100大于80 */
-        styleRes.color = "chartreuse";
+        styleRes.color = 'chartreuse';
         return styleRes;
       }
     },
@@ -299,10 +299,10 @@ export default {
     async getlist() {
       this.initData();
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Oj/backGetProblemList",
+        method: 'post',
+        url: '/Oj/backGetProblemList',
         portType: {
-          process: "8794",
+          process: '8794',
         },
         data: {
           page: this.page,
@@ -310,7 +310,7 @@ export default {
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -325,17 +325,17 @@ export default {
       if (!id || id == this.$SqsGlobal.loading_tips) {
         return;
       }
-      this.$confirm("确定删除该题目吗？", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
+      this.$confirm('确定删除该题目吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
       })
         .then(() => {
           this.$ajax({
-            method: "post",
-            url: "/Oj/deleteProblem",
+            method: 'post',
+            url: '/Oj/deleteProblem',
             portType: {
-              process: "8794",
+              process: '8794',
             },
             data: {
               delete_id: id,
@@ -344,14 +344,14 @@ export default {
             .then((res) => {
               if (res?.data.code == 1) {
                 this.$msg({
-                  type: "success",
+                  type: 'success',
                   message: res?.data.msg,
                   duration: 1600,
                   offset: 80,
                 });
               } else {
                 this.$msg({
-                  type: "error",
+                  type: 'error',
                   message: res?.data.msg,
                   duration: 1600,
                   offset: 80,
@@ -361,7 +361,7 @@ export default {
             })
             .catch((t) => {
               this.$msg({
-                type: "error",
+                type: 'error',
                 message: t,
                 duration: 1600,
                 offset: 80,
@@ -370,10 +370,10 @@ export default {
         })
         .catch(() => {
           this.$msg({
-            type: "info",
+            type: 'info',
             duration: 1600,
             offset: 80,
-            message: "取消删除",
+            message: '取消删除',
           });
         });
     },
@@ -382,10 +382,10 @@ export default {
       this.lastkey = this.key;
       this.initData();
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Oj/backSearchProblem",
+        method: 'post',
+        url: '/Oj/backSearchProblem',
         portType: {
-          process: "8794",
+          process: '8794',
         },
         data: {
           key: this.key,
@@ -394,7 +394,7 @@ export default {
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -420,20 +420,20 @@ export default {
       id &&
         id != this.$SqsGlobal.loading_tips &&
         this.$router.push({
-          path: "/oneproblemmanage",
+          path: '/oneproblemmanage',
           query: {
-            path: urlencode(id, "gbk"),
-            contestid: urlencode("", "gbk"),
+            path: urlencode(id, 'gbk'),
+            contestid: urlencode('', 'gbk'),
           },
         });
     },
     //添加
     addid() {
       this.$router.push({
-        path: "/oneproblemmanage",
+        path: '/oneproblemmanage',
         query: {
-          path: urlencode("", "gbk"),
-          contestid: urlencode("", "gbk"),
+          path: urlencode('', 'gbk'),
+          contestid: urlencode('', 'gbk'),
         },
       });
     },

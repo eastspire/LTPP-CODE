@@ -127,8 +127,8 @@
                 color: rgba(var(--ltpp-main-bk-color), 1);
               "
               @click="DeleteQuestionSheetProblem(tem.id)"
-              >点击移除题目：{{ "|标题|：" + tem.problemName }}
-              {{ "|标签|:" + tem.problemLabe }}</el-button
+              >点击移除题目：{{ '|标题|：' + tem.problemName }}
+              {{ '|标签|:' + tem.problemLabe }}</el-button
             >
           </div>
         </div>
@@ -349,20 +349,20 @@
 </template>
 
 <script>
-import urlencode from "../../../updateCompoents/urlencode";
-import "../../../public/md/markdown/github-markdown.min.css";
+import urlencode from '../../../updateCompoents/urlencode';
+import '../../../public/md/markdown/github-markdown.min.css';
 export default {
-  name: "addquestionsheet",
+  name: 'addquestionsheet',
   activated() {},
   async activated() {
     this.isseetip = true;
     this.isup = false;
     this.page = 1;
-    this.keyvalue = "";
+    this.keyvalue = '';
     this.total = 0;
     this.blogpagesize = 10;
     this.issearch = false;
-    this.form.region = "url";
+    this.form.region = 'url';
     await this.getlist();
     this.$nextTick(() => {
       this.totop();
@@ -383,22 +383,22 @@ export default {
       stripIgnoreTagBody: this.$SqsGlobal.strip_ignore_tag_body,
       dialogFormVisible: false, // 用于控制表单对话框的开启和关闭
       dialogVisible: false, // 用于控制错误提示对话框的开启和关闭
-      formLabelWidth: "5rem", // 设定表单对话框内表单是宽度
+      formLabelWidth: '5rem', // 设定表单对话框内表单是宽度
       form: {
         // 表单对话框内表单的数据
-        link: "",
-        region: "",
+        link: '',
+        region: '',
       },
       externalLink: {
         markdown_css: false,
         // 默认public文件夹下
-        hljs_js: () => "md/highlightjs/highlight.min.js",
-        hljs_css: (css) => "md/highlightjs/styles/" + css + ".min.css",
-        hljs_lang: (lang) => "md/highlightjs/languages/" + lang + ".min.js",
-        katex_css: () => "md/katex/katex.min.css",
-        katex_js: () => "md/katex/katex.min.js",
+        hljs_js: () => 'md/highlightjs/highlight.min.js',
+        hljs_css: (css) => 'md/highlightjs/styles/' + css + '.min.css',
+        hljs_lang: (lang) => 'md/highlightjs/languages/' + lang + '.min.js',
+        katex_css: () => 'md/katex/katex.min.css',
+        katex_js: () => 'md/katex/katex.min.js',
       },
-      keyvalue: "",
+      keyvalue: '',
       onedata: {},
       problemlist: [],
       total: 0,
@@ -438,18 +438,18 @@ export default {
     prop() {
       let data = {
         subfield: false, // 单双栏模式
-        defaultOpen: "edit", //edit： 默认展示编辑区域 ， preview： 默认展示预览区域
+        defaultOpen: 'edit', //edit： 默认展示编辑区域 ， preview： 默认展示预览区域
         editable: true,
         toolbarsFlag: true, //工具栏
         scrollStyle: true,
-        codeStyle: "atom-one-dark",
+        codeStyle: 'atom-one-dark',
         boxShadow: false,
         ishljs: true,
         tabSize: 4,
-        toolbarsBackground: "rgba(0,0,0,0)",
-        editorBackground: "rgba(0,0,0,0)",
-        previewBackground: "rgba(0,0,0,0)",
-        fontSize: "1.06rem",
+        toolbarsBackground: 'rgba(0,0,0,0)',
+        editorBackground: 'rgba(0,0,0,0)',
+        previewBackground: 'rgba(0,0,0,0)',
+        fontSize: '1.06rem',
         navigation: false,
       };
       return data;
@@ -460,43 +460,43 @@ export default {
       id &&
         id != this.$SqsGlobal.loading_tips &&
         this.$router.push({
-          path: "/oneproblem",
+          path: '/oneproblem',
           query: {
-            path: urlencode(id, "gbk"),
-            contest: urlencode("", "gbk"),
+            path: urlencode(id, 'gbk'),
+            contest: urlencode('', 'gbk'),
           },
         });
     },
     videoLink() {
       // 准备链接模板
-      let linkFrame = "";
-      if (this.form.region == "") {
-        this.form.region = "url";
+      let linkFrame = '';
+      if (this.form.region == '') {
+        this.form.region = 'url';
       }
       // 创建一个div盒子，为提取src做准备
-      let box = document.createElement("div");
+      let box = document.createElement('div');
       // 将原始链接插入到盒子中
 
       box.innerHTML = this.form.link;
       // 判断不同的视频原链接类型
-      if (this.form.region == "url") {
+      if (this.form.region == 'url') {
         let linkFrameStart = `<div align="center" width="100%" style="border-width:0rem"><video style="height:46vh; width: 100%" controls controlslist="nodownload"><source src="`;
         let linkFrameEnd = `" type="video/mp4" /></video></div>`;
 
         linkFrame = linkFrameStart + this.form.link + linkFrameEnd;
       } else if (
-        this.form.region == "iframe" &&
-        box.getElementsByTagName("iframe").length > 0
+        this.form.region == 'iframe' &&
+        box.getElementsByTagName('iframe').length > 0
       ) {
         let linkFrameStart = `<div align="center" width="100%" style="border-width:0rem"><iframe height="${
-          (window.innerHeight - 240) / 2 + "px"
+          (window.innerHeight - 240) / 2 + 'px'
         }" width="80%" src="`;
         let linkFrameEnd = `" allowfullscreen="true" scrolling="no" border="0" frameborder="no" framespacing="0" style="border-width: 0rem; min-height: 31.2rem;"></iframe></div>`;
 
         // 从iframe标签中提取src属性
         linkFrame =
           linkFrameStart +
-          box.getElementsByTagName("iframe")[0].getAttribute("src") +
+          box.getElementsByTagName('iframe')[0].getAttribute('src') +
           linkFrameEnd;
       } else {
         // 原始链接格式错误时弹出错误提示
@@ -504,10 +504,10 @@ export default {
         this.dialogVisible = true;
       }
       // 复原表单文本框内容
-      this.form.link = "";
+      this.form.link = '';
 
       // 获取文本域中当前光标起始位置、结束位置以及滚动条位置（滚动条位置我认为没有必要，如有需要可以自己取消注释）
-      let textarea = document.getElementsByClassName("auto-textarea-input")[0];
+      let textarea = document.getElementsByClassName('auto-textarea-input')[0];
       let posStart = textarea.selectionStart;
       let posEnd = textarea.selectionEnd;
       // let posScroll = document.getElementsByClassName("v-note-edit")[0].scrollTop;
@@ -518,7 +518,7 @@ export default {
         this.$refs.md.d_value.length
       );
       // 拼接并替换文本域内容
-      this.$refs.md.d_value = subStart + "\n" + linkFrame + "\n" + subEnd;
+      this.$refs.md.d_value = subStart + '\n' + linkFrame + '\n' + subEnd;
       // document.getElementsByClassName("v-note-edit")[0].scrollTop = posScroll;
 
       // 关闭对话框
@@ -534,25 +534,25 @@ export default {
     cellStyle({ row, rowIndex }) {
       let acpoint = (row.ACpoint * 100).toFixed(0);
       let styleRes = {
-        background: "rgba(var(--ltpp-light-color), 0.16) !important",
-        height: "3.6rem !important",
-        color: "chartreuse",
+        background: 'rgba(var(--ltpp-light-color), 0.16) !important',
+        height: '3.6rem !important',
+        color: 'chartreuse',
       };
       if (rowIndex % 2 != 0) {
         styleRes.background =
-          "rgba(var(--ltpp-main-bk-color), 0.06) !important";
+          'rgba(var(--ltpp-main-bk-color), 0.06) !important';
       }
       if (acpoint <= 30) {
         /* 正确率低于30*/
-        styleRes.color = "red";
+        styleRes.color = 'red';
         return styleRes;
       } else if (acpoint <= 80) {
         /* 正确率低于80大于30 */
-        styleRes.color = "#F2F6FC";
+        styleRes.color = '#F2F6FC';
         return styleRes;
       } else {
         /* 正确率低于100大于80 */
-        styleRes.color = "chartreuse";
+        styleRes.color = 'chartreuse';
         return styleRes;
       }
     },
@@ -561,7 +561,7 @@ export default {
     },
     // 绑定@imgAdd event
     $imgAdd(pos, $file) {
-      this.imgAddMiddleware(pos, $file, "md");
+      this.imgAddMiddleware(pos, $file, 'md');
     },
     handleCurrentChange(val) {
       this.page = val;
@@ -584,10 +584,10 @@ export default {
     //获取题目列表
     async getlist() {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Oj/getProblemList",
+        method: 'post',
+        url: '/Oj/getProblemList',
         portType: {
-          process: "8794",
+          process: '8794',
         },
         data: {
           page: this.page,
@@ -595,7 +595,7 @@ export default {
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -615,8 +615,8 @@ export default {
     async AddQuestionSheetProblem() {
       if (this.isup) {
         this.$msg({
-          type: "error",
-          message: "正在创建题单，请耐心等待！",
+          type: 'error',
+          message: '正在创建题单，请耐心等待！',
           duration: 1600,
           offset: 80,
         });
@@ -627,14 +627,14 @@ export default {
       this.addproblem.forEach((val) => {
         resproblem.push(val.id);
       });
-      if (!(this.$store.state.root && this.$store.state.my_name === "root")) {
+      if (!(this.$store.state.root && this.$store.state.my_name === 'root')) {
         this.defaultnum = 0;
       }
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/QuestionSheet/addOneQuestionSheet",
+        method: 'post',
+        url: '/QuestionSheet/addOneQuestionSheet',
         portType: {
-          process: "8796",
+          process: '8796',
         },
         data: {
           data: this.onedata,
@@ -644,7 +644,7 @@ export default {
         this.isup = false;
         this.defaultnum = 0;
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -658,19 +658,19 @@ export default {
         resproblem = [];
         this.addproblem = [];
         this.page = 1;
-        this.keyvalue = "";
+        this.keyvalue = '';
         this.total = 0;
         this.blogpagesize = 10;
         this.issearch = false;
-        this.form.region = "url";
+        this.form.region = 'url';
         this.form = {
           // 表单对话框内表单的数据
-          link: "",
-          region: "",
+          link: '',
+          region: '',
         };
         this.isup = false;
         this.$msg({
-          type: "success",
+          type: 'success',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -678,7 +678,7 @@ export default {
         this.$router.go(-1);
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -689,18 +689,18 @@ export default {
     changechoose(val) {
       this.addproblem.push(val);
       this.$msg({
-        type: "success",
-        message: "添加成功",
+        type: 'success',
+        message: '添加成功',
         duration: 1600,
         offset: 80,
       });
     },
     async keysearch() {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Contest/backContestSearchProblem",
+        method: 'post',
+        url: '/Contest/backContestSearchProblem',
         portType: {
-          process: "8794",
+          process: '8794',
         },
         data: {
           key: this.keyvalue,
@@ -709,7 +709,7 @@ export default {
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -722,7 +722,7 @@ export default {
     search() {
       this.page = 1;
       if (
-        this.keyvalue == "" ||
+        this.keyvalue == '' ||
         this.keyvalue == null ||
         this.keyvalue == undefined
       ) {
@@ -737,7 +737,7 @@ export default {
 };
 </script>
 <style scoped>
-@import "../../../public/md/markdown/github-markdown.min.css";
+@import '../../../public/md/markdown/github-markdown.min.css';
 ::v-deep .el-table,
 ::v-deep .el-table__expanded-cell {
   background-color: transparent !important;

@@ -1,7 +1,4 @@
-/* 
-    个人信息修改
-
- */
+/* 个人信息修改 */
 <template>
   <div @contextmenu.prevent="" style="margin-left: auto; margin-right: auto">
     <div
@@ -58,9 +55,9 @@
           {{
             userdata.money
               ? userdata.money < 0
-                ? "欠费：" + Math.abs(userdata.money) + " 学虫币"
-                : "余额：" + Math.abs(userdata.money) + " 学虫币"
-              : "加载中"
+                ? '欠费：' + Math.abs(userdata.money) + ' 学虫币'
+                : '余额：' + Math.abs(userdata.money) + ' 学虫币'
+              : '加载中'
           }}
         </span>
         <div style="height: 1.6rem"></div>
@@ -473,7 +470,7 @@
           注册时间
         </p>
         <div style="font-size: 1.06rem">
-          {{ this.userdata["registertime"] }}
+          {{ this.userdata['registertime'] }}
         </div>
 
         <p
@@ -487,7 +484,7 @@
           最近在线
         </p>
         <div style="font-size: 1.06rem">
-          {{ userdata["lastlogin"] }}
+          {{ userdata['lastlogin'] }}
         </div>
 
         <div style="height: 2rem"></div>
@@ -521,16 +518,16 @@
 
 <script>
 export default {
-  name: "mydatamanage",
+  name: 'mydatamanage',
   async activated() {
     this.isup = false;
-    this.linuxurl = window.localStorage.getItem("linuxurl");
-    this.headimage = this.linuxurl + "/User/saveheadimage";
-    this.bkimage = this.linuxurl + "/User/saveBkImage";
-    this.videoimage = this.linuxurl + "/User/saveVideoBkImage";
+    this.linuxurl = window.localStorage.getItem('linuxurl');
+    this.headimage = this.linuxurl + '/User/saveheadimage';
+    this.bkimage = this.linuxurl + '/User/saveBkImage';
+    this.videoimage = this.linuxurl + '/User/saveVideoBkImage';
     this.head = {
-      Authorization: "Bearer " + window.localStorage.getItem("authorization"),
-      Key: window.localStorage.getItem("key"),
+      Authorization: 'Bearer ' + window.localStorage.getItem('authorization'),
+      Key: window.localStorage.getItem('key'),
       Requestid: this.Base64Encode(new Date().getTime()),
     };
     this.requestid_timer = setInterval(() => {
@@ -553,36 +550,36 @@ export default {
       isup: false,
       userdata: [],
       head: {
-        authorization: "Bearer " + window.localStorage.getItem("authorization"),
-        key: window.localStorage.getItem("key"),
+        authorization: 'Bearer ' + window.localStorage.getItem('authorization'),
+        key: window.localStorage.getItem('key'),
         Requestid: this.Base64Encode(new Date().getTime()),
       },
       linuxurl: window?.location?.href,
-      bkimage: "",
-      videoimage: "",
-      headimage: "",
+      bkimage: '',
+      videoimage: '',
+      headimage: '',
       timeout: null,
-      key_search_school: "",
-      key_search_college: "",
-      key_search_subject: "",
-      key_search_class: "",
+      key_search_school: '',
+      key_search_college: '',
+      key_search_subject: '',
+      key_search_class: '',
     };
   },
 
   methods: {
     async querySearchSchoolAsync(queryString, cb) {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/School/keySearch",
+        method: 'post',
+        url: '/School/keySearch',
         portType: {
-          process: "8793",
+          process: '8793',
         },
         data: {
           key: this.key_search_school,
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -599,22 +596,22 @@ export default {
       }
     },
     handleSelectSchool(data) {
-      this.userdata["school"] = data.name;
+      this.userdata['school'] = data.name;
     },
 
     async querySearchCollegeAsync(queryString, cb) {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/College/keySearch",
+        method: 'post',
+        url: '/College/keySearch',
         portType: {
-          process: "8793",
+          process: '8793',
         },
         data: {
           key: this.key_search_college,
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -631,22 +628,22 @@ export default {
       }
     },
     handleSelectCollege(data) {
-      this.userdata["college"] = data.name;
+      this.userdata['college'] = data.name;
     },
 
     async querySearchSubjectAsync(queryString, cb) {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Subject/keySearch",
+        method: 'post',
+        url: '/Subject/keySearch',
         portType: {
-          process: "8793",
+          process: '8793',
         },
         data: {
           key: this.key_search_subject,
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -663,22 +660,22 @@ export default {
       }
     },
     handleSelectSubject(data) {
-      this.userdata["subject"] = data.name;
+      this.userdata['subject'] = data.name;
     },
 
     async querySearchClassAsync(queryString, cb) {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Classes/keySearch",
+        method: 'post',
+        url: '/Classes/keySearch',
         portType: {
-          process: "8793",
+          process: '8793',
         },
         data: {
           key: this.key_search_class,
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -695,7 +692,7 @@ export default {
       }
     },
     handleSelectClass(data) {
-      this.userdata["class"] = data.name;
+      this.userdata['class'] = data.name;
     },
     resetHeadImageFileList() {
       try {
@@ -716,15 +713,15 @@ export default {
       this.resetHeadImageFileList();
       if (res?.code == 1) {
         this.$msg({
-          type: "success",
+          type: 'success',
           message: res?.msg,
           duration: 1600,
           offset: 80,
         });
-        this.$store.commit("updateObj", { headimage: res.url });
+        this.$store.commit('updateObj', { headimage: res.url });
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -735,15 +732,15 @@ export default {
       this.resetBkImageFileList();
       if (res?.code == 1) {
         this.$msg({
-          type: "success",
+          type: 'success',
           message: res?.msg,
           duration: 1600,
           offset: 80,
         });
-        this.$store.commit("updateObj", { bkimage: res.url });
+        this.$store.commit('updateObj', { bkimage: res.url });
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -754,16 +751,16 @@ export default {
       this.resetVideoFileList();
       if (res?.code == 1) {
         this.$msg({
-          type: "success",
+          type: 'success',
           message: res?.msg,
           duration: 1600,
           offset: 80,
         });
-        this.$store.commit("updateObj", { bkvideo: res.url });
+        this.$store.commit('updateObj', { bkvideo: res.url });
         this.$router.go(0);
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -772,38 +769,38 @@ export default {
     },
     async resetbkimg() {
       await this.$ajax({
-        method: "post",
-        url: "/User/resetBkImage",
+        method: 'post',
+        url: '/User/resetBkImage',
         portType: {
-          process: "8793",
+          process: '8793',
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
         });
       });
       this.$msg({
-        type: "success",
-        message: "操作成功",
+        type: 'success',
+        message: '操作成功',
         duration: 1600,
         offset: 80,
       });
-      this.$store.commit("updateObj", { bkimage: "" });
-      this.$store.commit("updateObj", { bkvideo: "" });
+      this.$store.commit('updateObj', { bkimage: '' });
+      this.$store.commit('updateObj', { bkvideo: '' });
     },
     async useqqheadimage() {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/User/useQqHeadimage",
+        method: 'post',
+        url: '/User/useQqHeadimage',
         portType: {
-          process: "8793",
+          process: '8793',
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -811,65 +808,65 @@ export default {
       });
       if (res?.code == 1) {
         this.$msg({
-          type: "success",
+          type: 'success',
           message: res?.msg,
           duration: 1600,
           offset: 80,
         });
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
         });
       }
-      this.$store.commit("updateObj", { headimage: res.url });
+      this.$store.commit('updateObj', { headimage: res.url });
     },
     async getlinuxurl() {
       const res = await this.getBackurl();
       this.linuxurl = res;
-      this.headimage = res + "/User/saveHeadImage";
-      this.bkimage = res + "/User/saveBkImage";
-      this.videoimage = res + "/User/saveVideoBkImage";
+      this.headimage = res + '/User/saveHeadImage';
+      this.bkimage = res + '/User/saveBkImage';
+      this.videoimage = res + '/User/saveVideoBkImage';
     },
     async loaddata() {
       const { data: res } = await this.$ajax({
-        method: "get",
-        url: "/User/loadSelfData",
+        method: 'get',
+        url: '/User/loadSelfData',
         portType: {
-          process: "8793",
+          process: '8793',
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
         });
       });
       this.userdata = res?.data;
-      this.key_search_school = res?.data["school"];
-      this.key_search_college = res?.data["college"];
-      this.key_search_subject = res?.data["subject"];
-      this.key_search_class = res?.data["class"];
+      this.key_search_school = res?.data['school'];
+      this.key_search_college = res?.data['college'];
+      this.key_search_subject = res?.data['subject'];
+      this.key_search_class = res?.data['class'];
     },
     async updata() {
       if (this.isup) {
         return;
       }
       this.isup = true;
-      this.$store.commit("updateObj", {
+      this.$store.commit('updateObj', {
         image_use_remote: this.userdata?.image_use_remote,
       });
-      this.$store.commit("updateObj", {
+      this.$store.commit('updateObj', {
         open_system_notice: this.userdata?.open_system_notice,
       });
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/User/updateUser",
+        method: 'post',
+        url: '/User/updateUser',
         portType: {
-          process: "8793",
+          process: '8793',
         },
         data: {
           data: this.userdata,
@@ -877,7 +874,7 @@ export default {
       }).catch((t) => {
         this.isup = false;
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -889,14 +886,14 @@ export default {
         this.getCss();
         if (res?.code == 1) {
           this.$msg({
-            type: "success",
+            type: 'success',
             message: res?.msg,
             duration: 1600,
             offset: 80,
           });
         } else {
           this.$msg({
-            type: "error",
+            type: 'error',
             message: res?.msg,
             duration: 1600,
             offset: 80,

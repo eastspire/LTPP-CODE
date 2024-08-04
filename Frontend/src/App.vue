@@ -44,7 +44,7 @@ export default {
   name: 'LTPP',
   data() {
     return {
-      version: '2.9.2',
+      version: '2.9.3',
       get_version_lock: false,
     };
   },
@@ -295,6 +295,24 @@ export default {
   -moz-user-select: none !important;
   -ms-user-select: none !important;
   user-select: none !important;
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+    scale: 0.78;
+  }
+
+  to {
+    opacity: 1;
+    scale: 1;
+  }
+}
+
+.appear {
+  animation: appear linear;
+  animation-timeline: view();
+  animation-range: entry 0;
 }
 
 .ltpp-list-box {
@@ -1465,11 +1483,6 @@ p {
 .el-pagination__jump,
 .el-pagination__total {
   padding: 0rem 0.6rem !important;
-}
-
-.el-submenu__title,
-.el-notification,
-.el-menu-item {
 }
 
 .el-submenu__title:hover {

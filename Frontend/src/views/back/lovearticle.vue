@@ -1,9 +1,4 @@
-/* 
-收藏的博客
-
-
- */
-
+/* 收藏的博客 */
 
 <template>
   <div @contextmenu.prevent="" style="margin-left: auto; margin-right: auto">
@@ -28,7 +23,7 @@
       <div>
         <div
           @click="passdata(temtable.id)"
-          class="pulse-enter-active shadow ltpp-list-box"
+          class="pulse-enter-active shadow ltpp-list-box appear"
           style="
             border-width: 0rem;
             height: 8rem;
@@ -160,9 +155,9 @@
 </template>
 
 <script>
-import urlencode from "../../../updateCompoents/urlencode";
+import urlencode from '../../../updateCompoents/urlencode';
 export default {
-  name: "lovearticle",
+  name: 'lovearticle',
   activated() {
     this.search();
   },
@@ -183,21 +178,21 @@ export default {
     },
     tableRowClassName({ row, rowIndex }) {
       if (rowIndex === 1) {
-        return "warning-row";
+        return 'warning-row';
       } else if (rowIndex === 3) {
-        return "success-row";
+        return 'success-row';
       }
-      return "";
+      return '';
     },
 
     async keysearch() {
       this.lastkey = this.key;
       this.initData();
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Article/findLoveArticle",
+        method: 'post',
+        url: '/Article/findLoveArticle',
         portType: {
-          process: "8792",
+          process: '8792',
         },
         data: {
           key: this.key,
@@ -206,7 +201,7 @@ export default {
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -218,7 +213,7 @@ export default {
 
       if (!this.showone) {
         this.$msg({
-          type: "success",
+          type: 'success',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -228,7 +223,7 @@ export default {
     },
     search() {
       this.issearch = false;
-      if (this.key == "" || this.key == null || this.key == undefined) {
+      if (this.key == '' || this.key == null || this.key == undefined) {
         this.issearch = false;
         this.getlist();
         return;
@@ -263,9 +258,9 @@ export default {
       id &&
         id != this.$SqsGlobal.loading_tips &&
         this.$router.push({
-          path: "/onearticle",
+          path: '/onearticle',
           query: {
-            path: urlencode(id, "gbk"),
+            path: urlencode(id, 'gbk'),
           },
         });
     },
@@ -273,10 +268,10 @@ export default {
     async getlist() {
       this.initData();
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Article/loadLoveArticleList",
+        method: 'post',
+        url: '/Article/loadLoveArticleList',
         portType: {
-          process: "8792",
+          process: '8792',
         },
         data: {
           page: this.page,
@@ -284,7 +279,7 @@ export default {
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -295,7 +290,7 @@ export default {
       this.total = res.allnum; //总条数
       if (!this.showone) {
         this.$msg({
-          type: "success",
+          type: 'success',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -306,13 +301,13 @@ export default {
   },
   data() {
     return {
-      lastkey: "",
+      lastkey: '',
       showone: false,
       issearch: false,
       total: 0,
       limit: 50,
       page: 1,
-      key: "",
+      key: '',
       tableData: [],
     };
   },

@@ -28,7 +28,7 @@
           </el-carousel-item>
         </el-carousel>
         <div
-          style="height: 2.6rem"
+          style="height: 1.68rem"
           v-show="
             photoList &&
             photoList != undefined &&
@@ -50,7 +50,7 @@
         >
           <div>
             <div style="text-align: center">
-              <div style="height: 1rem"></div>
+              <div style="height: 0.68rem"></div>
               <p
                 style="
                   font-size: 1.4rem;
@@ -80,7 +80,7 @@
             </div>
           </div>
 
-          <div style="height: 1rem"></div>
+          <div style="height: 0.68rem"></div>
           <div
             style="overflow: auto"
             v-for="tem in shortsentenceList"
@@ -108,7 +108,7 @@
               {{ tem.from }}
             </div>
           </div>
-          <div style="height: 1rem"></div>
+          <div style="height: 0.68rem"></div>
         </div>
         <div
           v-show="
@@ -117,7 +117,7 @@
             shortsentenceList != null &&
             shortsentenceList.length > 0
           "
-          style="height: 2.6rem"
+          style="height: 1.68rem"
         ></div>
         <!-- 公告 -->
         <div
@@ -125,7 +125,7 @@
           v-if="notice && notice != undefined && notice != null"
           style="text-align: center"
         >
-          <div style="height: 1rem"></div>
+          <div style="height: 0.68rem"></div>
           <p
             class="el-icon-s-order"
             style="
@@ -196,17 +196,17 @@
 </template>
 
 <script>
-import "../../../public/md/markdown/github-markdown.min.css";
-import "../../../public/md/css/index.css";
+import '../../../public/md/markdown/github-markdown.min.css';
+import '../../../public/md/css/index.css';
 
 export default {
-  name: "homelist",
+  name: 'homelist',
   async created() {
     this.page = 1;
     this.allnum = 0;
     this.notice = {};
     this.shortsentenceList = this.$SqsGlobal.short_sentence_list;
-    this.linuxurl = window.sessionStorage.getItem("linuxurl");
+    this.linuxurl = window.sessionStorage.getItem('linuxurl');
     if (!this.linuxurl) {
       await this.getlinuxurl();
     }
@@ -218,18 +218,18 @@ export default {
     prop() {
       let data = {
         subfield: false, // 单双栏模式
-        defaultOpen: "preview", //edit： 默认展示编辑区域 ， preview： 默认展示预览区域
+        defaultOpen: 'preview', //edit： 默认展示编辑区域 ， preview： 默认展示预览区域
         editable: false,
         toolbarsFlag: false, //工具栏
         scrollStyle: true,
-        codeStyle: "atom-one-dark",
+        codeStyle: 'atom-one-dark',
         boxShadow: false,
         ishljs: true,
         tabSize: 4,
-        toolbarsBackground: "rgba(0,0,0,0)",
-        editorBackground: "rgba(0,0,0,0)",
-        previewBackground: "rgba(0,0,0,0)",
-        fontSize: "1.06rem",
+        toolbarsBackground: 'rgba(0,0,0,0)',
+        editorBackground: 'rgba(0,0,0,0)',
+        previewBackground: 'rgba(0,0,0,0)',
+        fontSize: '1.06rem',
         navigation: false,
       };
       return data;
@@ -248,11 +248,11 @@ export default {
       externalLink: {
         markdown_css: false,
         // 默认public文件夹下
-        hljs_js: () => "md/highlightjs/highlight.min.js",
-        hljs_css: (css) => "md/highlightjs/styles/" + css + ".min.css",
-        hljs_lang: (lang) => "md/highlightjs/languages/" + lang + ".min.js",
-        katex_css: () => "md/katex/katex.min.css",
-        katex_js: () => "md/katex/katex.min.js",
+        hljs_js: () => 'md/highlightjs/highlight.min.js',
+        hljs_css: (css) => 'md/highlightjs/styles/' + css + '.min.css',
+        hljs_lang: (lang) => 'md/highlightjs/languages/' + lang + '.min.js',
+        katex_css: () => 'md/katex/katex.min.css',
+        katex_js: () => 'md/katex/katex.min.js',
       },
       /* context:  */
       toolbars: {
@@ -289,14 +289,14 @@ export default {
     //获取短句列表
     async getshortsentencelist() {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Shortsentence/loadShortSentence",
+        method: 'post',
+        url: '/Shortsentence/loadShortSentence',
         data: {
           page: 1,
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -307,14 +307,14 @@ export default {
     //刷新短句列表
     async refreshshortsentencelist() {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Shortsentence/refreshShortSentence",
+        method: 'post',
+        url: '/Shortsentence/refreshShortSentence',
         data: {
           page: 1,
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -328,11 +328,11 @@ export default {
     //获取图片列表
     async getphotolist() {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Photo/loadPhoto",
+        method: 'post',
+        url: '/Photo/loadPhoto',
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -342,14 +342,14 @@ export default {
     },
     async getNotice() {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Notice/loadNotice",
+        method: 'post',
+        url: '/Notice/loadNotice',
         data: {
           page: this.page,
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -364,6 +364,6 @@ export default {
 };
 </script>
 
-<style  lang="less" scoped>
-@import "../../../public/md/markdown/github-markdown.min.css";
+<style lang="less" scoped>
+@import '../../../public/md/markdown/github-markdown.min.css';
 </style>

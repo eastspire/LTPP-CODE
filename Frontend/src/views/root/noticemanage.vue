@@ -408,10 +408,10 @@
 </template>
 
 <script>
-import "../../../public/md/markdown/github-markdown.min.css";
-import "../../../public/md/css/index.css";
+import '../../../public/md/markdown/github-markdown.min.css';
+import '../../../public/md/css/index.css';
 export default {
-  name: "noticemanage",
+  name: 'noticemanage',
   async activated() {
     this.isseetip = true;
     this.page = 1;
@@ -429,18 +429,18 @@ export default {
     prop() {
       let data = {
         subfield: false, // 单双栏模式
-        defaultOpen: "edit", //edit： 默认展示编辑区域 ， preview： 默认展示预览区域
+        defaultOpen: 'edit', //edit： 默认展示编辑区域 ， preview： 默认展示预览区域
         editable: true,
         toolbarsFlag: true, //工具栏
         scrollStyle: true,
-        codeStyle: "atom-one-dark",
+        codeStyle: 'atom-one-dark',
         boxShadow: false,
         ishljs: true,
         tabSize: 4,
-        toolbarsBackground: "rgba(0,0,0,0)",
-        editorBackground: "rgba(0,0,0,0)",
-        previewBackground: "rgba(0,0,0,0)",
-        fontSize: "1.06rem",
+        toolbarsBackground: 'rgba(0,0,0,0)',
+        editorBackground: 'rgba(0,0,0,0)',
+        previewBackground: 'rgba(0,0,0,0)',
+        fontSize: '1.06rem',
         navigation: false,
       };
       return data;
@@ -451,13 +451,13 @@ export default {
       load_txt_finish: false,
       form: {
         // 表单对话框内表单的数据
-        link: "",
-        region: "",
+        link: '',
+        region: '',
       },
       dialogFormVisible: false, // 用于控制表单对话框的开启和关闭
       dialogVisible: false, // 用于控制错误提示对话框的开启和关闭
-      formLabelWidth: "5rem", // 设定表单对话框内表单是宽度
-      lastkey: "",
+      formLabelWidth: '5rem', // 设定表单对话框内表单是宽度
+      lastkey: '',
       isseetip: true,
       isupdate: false,
       isadd: false,
@@ -465,19 +465,19 @@ export default {
       total: 0,
       page: 1,
       limit: 50,
-      key: "",
+      key: '',
       id: 0,
-      content: "",
+      content: '',
       xss_options: this.$SqsGlobal.xss_options,
       stripIgnoreTagBody: this.$SqsGlobal.strip_ignore_tag_body,
       externalLink: {
         markdown_css: false,
         // 默认public文件夹下
-        hljs_js: () => "md/highlightjs/highlight.min.js",
-        hljs_css: (css) => "md/highlightjs/styles/" + css + ".min.css",
-        hljs_lang: (lang) => "md/highlightjs/languages/" + lang + ".min.js",
-        katex_css: () => "md/katex/katex.min.css",
-        katex_js: () => "md/katex/katex.min.js",
+        hljs_js: () => 'md/highlightjs/highlight.min.js',
+        hljs_css: (css) => 'md/highlightjs/styles/' + css + '.min.css',
+        hljs_lang: (lang) => 'md/highlightjs/languages/' + lang + '.min.js',
+        katex_css: () => 'md/katex/katex.min.css',
+        katex_js: () => 'md/katex/katex.min.js',
       },
       /* context:  */
       toolbars: {
@@ -516,34 +516,34 @@ export default {
     },
     videoLink() {
       // 准备链接模板
-      let linkFrame = "";
-      if (this.form.region == "") {
-        this.form.region = "url";
+      let linkFrame = '';
+      if (this.form.region == '') {
+        this.form.region = 'url';
       }
       // 创建一个div盒子，为提取src做准备
-      let box = document.createElement("div");
+      let box = document.createElement('div');
       // 将原始链接插入到盒子中
 
       box.innerHTML = this.form.link;
       // 判断不同的视频原链接类型
-      if (this.form.region == "url") {
+      if (this.form.region == 'url') {
         let linkFrameStart = `<div align="center" width="100%" style="border-width:0rem"><video style="height:46vh; width: 100%" controls controlslist="nodownload"><source src="`;
         let linkFrameEnd = `" type="video/mp4" /></video></div>`;
 
         linkFrame = linkFrameStart + this.form.link + linkFrameEnd;
       } else if (
-        this.form.region == "iframe" &&
-        box.getElementsByTagName("iframe").length > 0
+        this.form.region == 'iframe' &&
+        box.getElementsByTagName('iframe').length > 0
       ) {
         let linkFrameStart = `<div align="center" width="100%" style="border-width:0rem"><iframe height="${
-          (window.innerHeight - 240) / 2 + "px"
+          (window.innerHeight - 240) / 2 + 'px'
         }" width="80%" src="`;
         let linkFrameEnd = `" allowfullscreen="true" scrolling="no" border="0" frameborder="no" framespacing="0" style="border-width: 0rem; min-height: 31.2rem;"></iframe></div>`;
 
         // 从iframe标签中提取src属性
         linkFrame =
           linkFrameStart +
-          box.getElementsByTagName("iframe")[0].getAttribute("src") +
+          box.getElementsByTagName('iframe')[0].getAttribute('src') +
           linkFrameEnd;
       } else {
         // 原始链接格式错误时弹出错误提示
@@ -551,10 +551,10 @@ export default {
         this.dialogVisible = true;
       }
       // 复原表单文本框内容
-      this.form.link = "";
+      this.form.link = '';
 
       // 获取文本域中当前光标起始位置、结束位置以及滚动条位置（滚动条位置我认为没有必要，如有需要可以自己取消注释）
-      let textarea = document.getElementsByClassName("auto-textarea-input")[0];
+      let textarea = document.getElementsByClassName('auto-textarea-input')[0];
       let posStart = textarea.selectionStart;
       let posEnd = textarea.selectionEnd;
       // let posScroll = document.getElementsByClassName("v-note-edit")[0].scrollTop;
@@ -565,7 +565,7 @@ export default {
         this.$refs.md.d_value.length
       );
       // 拼接并替换文本域内容
-      this.$refs.md.d_value = subStart + "\n" + linkFrame + "\n" + subEnd;
+      this.$refs.md.d_value = subStart + '\n' + linkFrame + '\n' + subEnd;
       // document.getElementsByClassName("v-note-edit")[0].scrollTop = posScroll;
 
       // 关闭对话框
@@ -573,13 +573,13 @@ export default {
     },
     // 绑定@imgAdd event
     async $imgAdd(pos, $file) {
-      this.imgAddMiddleware(pos, $file, "md");
+      this.imgAddMiddleware(pos, $file, 'md');
     },
     cellStyle({ row, rowIndex }) {
       let styleRes = {
-        background: "rgba(var(--ltpp-light-color), 0.16) !important",
-        height: "3.6rem !important",
-        color: "chartreuse",
+        background: 'rgba(var(--ltpp-light-color), 0.16) !important',
+        height: '3.6rem !important',
+        color: 'chartreuse',
       };
       return styleRes;
     },
@@ -597,10 +597,10 @@ export default {
     async getlist() {
       this.initData();
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Notice/backLoadNotice",
+        method: 'post',
+        url: '/Notice/backLoadNotice',
         portType: {
-          process: "8797",
+          process: '8797',
         },
         data: {
           page: this.page,
@@ -608,7 +608,7 @@ export default {
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -619,7 +619,7 @@ export default {
 
       if (res?.code != 1) {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -632,33 +632,33 @@ export default {
         return;
       }
       this.isupdate = true;
-      this.content = "资源加载中！请耐心等待！";
+      this.content = '资源加载中！请耐心等待！';
       this.load_txt_finish = false;
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Notice/backlookOneNotice",
+        method: 'post',
+        url: '/Notice/backlookOneNotice',
         portType: {
-          process: "8797",
+          process: '8797',
         },
         data: {
           notice_id: this.id,
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
         });
         this.load_txt_finish = true;
-        this.content = "资源加载失败！请稍后重试！";
+        this.content = '资源加载失败！请稍后重试！';
       });
       this.load_txt_finish = true;
       if (res?.code == 1) {
         this.content = res?.data;
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -670,17 +670,17 @@ export default {
       if (!this.id) {
         return;
       }
-      this.$confirm("确定删除该公告吗？", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
+      this.$confirm('确定删除该公告吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
       })
         .then(() => {
           this.$ajax({
-            method: "post",
-            url: "/Notice/deleteOneNotice",
+            method: 'post',
+            url: '/Notice/deleteOneNotice',
             portType: {
-              process: "8797",
+              process: '8797',
             },
             data: {
               delete_id: this.id,
@@ -688,7 +688,7 @@ export default {
           }).then((res) => {
             if (res?.data.code == 1) {
               this.$msg({
-                type: "success",
+                type: 'success',
                 message: res?.data.msg,
                 duration: 1600,
                 offset: 80,
@@ -696,7 +696,7 @@ export default {
               this.search();
             } else {
               this.$msg({
-                type: "error",
+                type: 'error',
                 message: res?.data.msg,
                 duration: 1600,
                 offset: 80,
@@ -707,10 +707,10 @@ export default {
         })
         .catch(() => {
           this.$msg({
-            type: "info",
+            type: 'info',
             duration: 1600,
             offset: 80,
-            message: "取消删除",
+            message: '取消删除',
           });
         });
     },
@@ -719,10 +719,10 @@ export default {
       this.lastkey = this.key;
       this.initData();
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Notice/backFindNotice",
+        method: 'post',
+        url: '/Notice/backFindNotice',
         portType: {
-          process: "8797",
+          process: '8797',
         },
         data: {
           key: this.key,
@@ -731,7 +731,7 @@ export default {
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -742,7 +742,7 @@ export default {
 
       if (res?.code != 1) {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -764,10 +764,10 @@ export default {
     //更新
     async updateid() {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Notice/updateOneNotice",
+        method: 'post',
+        url: '/Notice/updateOneNotice',
         portType: {
-          process: "8797",
+          process: '8797',
         },
         data: {
           tabledata: {
@@ -777,7 +777,7 @@ export default {
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -785,30 +785,30 @@ export default {
       });
       if (res?.code == 1) {
         this.$msg({
-          type: "success",
+          type: 'success',
           message: res?.msg,
           duration: 1600,
           offset: 80,
         });
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
         });
       }
       this.id = 0;
-      this.content = "";
+      this.content = '';
       this.search();
     },
     //添加
     async addid() {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Notice/addOneNotice",
+        method: 'post',
+        url: '/Notice/addOneNotice',
         portType: {
-          process: "8797",
+          process: '8797',
         },
         data: {
           tabledata: {
@@ -817,7 +817,7 @@ export default {
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -825,28 +825,28 @@ export default {
       });
       if (res?.code == 1) {
         this.$msg({
-          type: "success",
+          type: 'success',
           message: res?.msg,
           duration: 1600,
           offset: 80,
         });
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
         });
       }
       this.id = 0;
-      this.content = "";
+      this.content = '';
       this.search();
     },
   },
 };
 </script>
 <style scoped>
-@import "../../../public/md/markdown/github-markdown.min.css";
+@import '../../../public/md/markdown/github-markdown.min.css';
 ::v-deep .el-table,
 ::v-deep .el-table__expanded-cell {
   background-color: transparent !important;

@@ -43,6 +43,7 @@
           v-for="(tem, index) in data_list"
           :key="index"
           style="padding: 1rem"
+          class="appear"
         >
           <div style="height: 0.36rem"></div>
           <div style="display: flex; flex-direction: column; text-align: right">

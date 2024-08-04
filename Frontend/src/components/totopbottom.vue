@@ -102,7 +102,7 @@
 
 <script>
 export default {
-  name: "totopbottom",
+  name: 'totopbottom',
   data() {
     return {
       timer: null,
@@ -114,14 +114,14 @@ export default {
     scrollToTop() {
       window.scrollTo({
         top: 0,
-        behavior: "smooth",
+        behavior: 'smooth',
       });
     },
     scrollToBottom() {
       window.scrollTo({
         top:
           document.documentElement.scrollHeight || document.body.scrollHeight,
-        behavior: "smooth",
+        behavior: 'smooth',
       });
     },
     changeView() {
@@ -150,11 +150,11 @@ export default {
     },
   },
   mounted() {
-    window.addEventListener("scroll", this.handleScroll);
+    window.addEventListener('scroll', this.handleScroll);
     this.creatTimer();
   },
   beforeDestroy() {
-    window.removeEventListener("scroll", this.handleScroll);
+    window.removeEventListener('scroll', this.handleScroll);
     this.cleatTimer();
   },
 };
@@ -164,18 +164,18 @@ export default {
 .scroll-to-bottom {
   position: fixed;
   bottom: 2.8rem;
-  right: 4.66rem;
+  right: 3.78rem;
   background-color: transparent;
   cursor: pointer;
-  z-index: 100 !important;
+  z-index: 1000006 !important;
 }
 
 .scroll-to-top {
   position: fixed;
   bottom: 6.6rem;
-  right: 4.66rem;
+  right: 3.78rem;
   background-color: transparent;
   cursor: pointer;
-  z-index: 100 !important;
+  z-index: 1000006 !important;
 }
 </style>

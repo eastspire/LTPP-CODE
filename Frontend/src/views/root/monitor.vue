@@ -98,11 +98,11 @@
                   "
                 >
                   {{
-                    scope.row.grade == 3 && scope.row.name == "root"
-                      ? "超级管理员"
+                    scope.row.grade == 3 && scope.row.name == 'root'
+                      ? '超级管理员'
                       : scope.row.grade == 3 || scope.row.grade == 2
-                      ? "管理员"
-                      : "用户"
+                      ? '管理员'
+                      : '用户'
                   }}
                 </p>
               </template>
@@ -145,9 +145,9 @@
 </template>
 
 <script>
-import urlencode from "../../../updateCompoents/urlencode";
+import urlencode from '../../../updateCompoents/urlencode';
 export default {
-  name: "monitor",
+  name: 'monitor',
   activated() {
     this.page = 1;
     this.limit = 50;
@@ -160,10 +160,10 @@ export default {
       total: 0,
       page: 1,
       limit: 50,
-      lastkey: "",
-      key: "",
+      lastkey: '',
+      key: '',
       time: [],
-      last_id: "",
+      last_id: '',
     };
   },
   methods: {
@@ -179,20 +179,20 @@ export default {
       id &&
         id != this.$SqsGlobal.loading_tips &&
         this.$router.push({
-          path: "/userpage",
+          path: '/userpage',
           query: {
-            path: urlencode(id, "gbk"),
+            path: urlencode(id, 'gbk'),
           },
         });
     },
     cellStyle({ rowIndex }) {
       let styleRes = {
-        background: "rgba(var(--ltpp-light-color), 0.16) !important",
-        color: "chartreuse",
+        background: 'rgba(var(--ltpp-light-color), 0.16) !important',
+        color: 'chartreuse',
       };
       if (rowIndex % 2 != 0) {
         styleRes.background =
-          "rgba(var(--ltpp-main-bk-color), 0.06) !important";
+          'rgba(var(--ltpp-main-bk-color), 0.06) !important';
       }
       return styleRes;
     },
@@ -218,10 +218,10 @@ export default {
     async getlist() {
       this.initData();
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/monitor/getData",
+        method: 'post',
+        url: '/monitor/getData',
         portType: {
-          process: "8797",
+          process: '8797',
         },
         data: {
           id: this.last_id,
@@ -232,7 +232,7 @@ export default {
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -240,7 +240,7 @@ export default {
         return;
       });
       if (!this.monitorList?.length) {
-        this.last_id = res?.data?.length ? res?.data[0].id : "";
+        this.last_id = res?.data?.length ? res?.data[0].id : '';
       }
       this.total = res.allnum;
       this.monitorList = res?.data;
@@ -250,10 +250,10 @@ export default {
       this.lastkey = this.key;
       this.initData();
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/monitor/getData",
+        method: 'post',
+        url: '/monitor/getData',
         portType: {
-          process: "8797",
+          process: '8797',
         },
         data: {
           id: this.last_id,
@@ -264,7 +264,7 @@ export default {
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -272,22 +272,22 @@ export default {
         return;
       });
       if (!this.monitorList?.length) {
-        this.last_id = res?.data?.length ? res?.data[0].id : "";
+        this.last_id = res?.data?.length ? res?.data[0].id : '';
       }
       this.monitorList = res?.data;
       this.total = res.allnum;
     },
     //搜索预处理
     search() {
-      if (this.key == "" || this.key == null || this.key == undefined) {
+      if (this.key == '' || this.key == null || this.key == undefined) {
         this.issearch = false;
-        this.last_id = "";
+        this.last_id = '';
         this.getlist();
         return;
       }
       this.monitorList = [];
       if (this.lastkey != this.key) {
-        this.last_id = "";
+        this.last_id = '';
         this.page = 1;
       }
       this.issearch = true;

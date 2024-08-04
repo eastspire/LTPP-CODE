@@ -43,7 +43,7 @@
 export default {
   date() {
     return {
-      footmeddage: "",
+      footmeddage: '',
       is_ssl: true,
     };
   },
@@ -53,45 +53,45 @@ export default {
   created() {
     let date = new Date();
     let year = date.getFullYear();
-    this.footmeddage = "©2021 - " + year + " LTPP版权所有";
+    this.footmeddage = '©2021 - ' + year + ' LTPP版权所有';
   },
   methods: {
     changeBackendNetworkUrl() {
-      this.$prompt("请输入代理后端地址", "提示", {
+      this.$prompt('请输入代理后端地址', '提示', {
         distinguishCancelAndClose: true,
-        confirmButtonText: "确定",
-        cancelButtonText: "重置",
+        confirmButtonText: '确定',
+        cancelButtonText: '重置',
         inputPattern:
           /^(https?:\/\/(([a-zA-Z0-9]+-?)+[a-zA-Z0-9]+\.)+(([a-zA-Z0-9]+-?)+[a-zA-Z0-9]+))(:\d+)?(\/.*)?(\?.*)?(#.*)?$/,
-        inputErrorMessage: "代理后端地址不正确",
+        inputErrorMessage: '代理后端地址不正确',
       })
         .then(({ value }) => {
           try {
-            window.localStorage.setItem("backend_network_url", value);
+            window.localStorage.setItem('backend_network_url', value);
           } catch (err) {}
-          this.$store.commit("updateObj", { backend_network_url: value });
+          this.$store.commit('updateObj', { backend_network_url: value });
           this.$notice({
-            title: "当前环境",
+            title: '当前环境',
             dangerouslyUseHTMLString: false,
             message:
               this.$store.state.backend_network_url ==
               this.$store.state.default_backend_network_url
-                ? "官方环境"
-                : "代理环境",
+                ? '官方环境'
+                : '代理环境',
             duration: 3600,
             offset: 80,
           });
         })
         .catch((action) => {
-          if (action !== "cancel") {
+          if (action !== 'cancel') {
             this.$notice({
-              title: "当前环境",
+              title: '当前环境',
               dangerouslyUseHTMLString: false,
               message:
                 this.$store.state.backend_network_url ==
                 this.$store.state.default_backend_network_url
-                  ? "官方环境"
-                  : "代理环境",
+                  ? '官方环境'
+                  : '代理环境',
               duration: 3600,
               offset: 80,
             });
@@ -99,21 +99,21 @@ export default {
           }
           try {
             window.localStorage.setItem(
-              "backend_network_url",
+              'backend_network_url',
               this.$store.state.default_backend_network_url
             );
           } catch (err) {}
-          this.$store.commit("updateObj", {
+          this.$store.commit('updateObj', {
             backend_network_url: this.$store.state.default_backend_network_url,
           });
           this.$notice({
-            title: "当前环境",
+            title: '当前环境',
             dangerouslyUseHTMLString: false,
             message:
               this.$store.state.backend_network_url ==
               this.$store.state.default_backend_network_url
-                ? "官方环境"
-                : "代理环境",
+                ? '官方环境'
+                : '代理环境',
             duration: 3600,
             offset: 80,
           });
@@ -122,6 +122,5 @@ export default {
   },
 };
 </script>
-    
-<style>
-</style>
+
+<style></style>

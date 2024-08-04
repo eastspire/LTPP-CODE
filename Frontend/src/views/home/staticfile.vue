@@ -51,11 +51,11 @@
 </template>
 
 <script>
-import urlencode from "../../../updateCompoents/urlencode";
+import urlencode from '../../../updateCompoents/urlencode';
 export default {
-  name: "staticfile",
+  name: 'staticfile',
   activated() {
-    this.url = "";
+    this.url = '';
     if (
       !(
         this.$route &&
@@ -68,10 +68,10 @@ export default {
       this.$router.go(-1);
       return;
     }
-    this.url = urlencode.decode(this.$route.query.path, "gbk");
+    this.url = urlencode.decode(this.$route.query.path, 'gbk');
   },
   deactivated() {
-    this.url = "";
+    this.url = '';
   },
 
   data() {

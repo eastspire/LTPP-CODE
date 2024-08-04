@@ -37,7 +37,7 @@
               element-loading-background="background-color:rgba(var(--ltpp-main-bk-color),var(--ltpp-list-box-bk-opacity))"
               @click="toOneArticle(temtable.id)"
               style="cursor: pointer"
-              class="shadow ltpp-list-box"
+              class="shadow ltpp-list-box appear"
             >
               <div style="height: 22rem; width: 100%">
                 <div style="padding: 0rem; position: relative">

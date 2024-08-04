@@ -1,7 +1,4 @@
-/* 
-    用户管理
-
- */
+/* 用户管理 */
 
 <template>
   <div @contextmenu.prevent="" style="margin-left: auto; margin-right: auto">
@@ -53,7 +50,7 @@
                 ? (dialogFormVisible = true)
                 : (dialogFormVisible = false);
             "
-            class="pulse-enter-active shadow ltpp-list-box"
+            class="pulse-enter-active shadow ltpp-list-box appear"
             style="
               border-width: 0rem;
               height: 8rem;
@@ -703,9 +700,9 @@
 </template>
 
 <script>
-import urlencode from "../../../updateCompoents/urlencode";
+import urlencode from '../../../updateCompoents/urlencode';
 export default {
-  name: "usermanage",
+  name: 'usermanage',
   async activated() {
     this.search();
   },
@@ -727,18 +724,18 @@ export default {
     },
     async addblack(id) {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/Setting/addBlackIpUser",
+        method: 'post',
+        url: '/Setting/addBlackIpUser',
         portType: {
-          process: "8797",
+          process: '8797',
         },
         data: {
-          ip: "0.0.0.0",
+          ip: '0.0.0.0',
           user_id: id,
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -746,14 +743,14 @@ export default {
       });
       if (res?.code == 1) {
         this.$msg({
-          type: "success",
+          type: 'success',
           message: res?.msg,
           duration: 1600,
           offset: 80,
         });
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -762,17 +759,17 @@ export default {
     },
     async unonline(id) {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/User/unOnline",
+        method: 'post',
+        url: '/User/unOnline',
         portType: {
-          process: "8793",
+          process: '8793',
         },
         data: {
           user_id: id,
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -780,14 +777,14 @@ export default {
       });
       if (res?.code == 1) {
         this.$msg({
-          type: "success",
+          type: 'success',
           message: res?.msg,
           duration: 1600,
           offset: 80,
         });
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -799,18 +796,18 @@ export default {
       id &&
         id != this.$SqsGlobal.loading_tips &&
         this.$router.push({
-          path: "/userpage",
+          path: '/userpage',
           query: {
-            path: urlencode(id, "gbk"),
+            path: urlencode(id, 'gbk'),
           },
         });
     },
     async adduser() {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/User/addUser",
+        method: 'post',
+        url: '/User/addUser',
         portType: {
-          process: "8793",
+          process: '8793',
         },
         data: {
           data: {
@@ -824,7 +821,7 @@ export default {
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -833,14 +830,14 @@ export default {
       if (res?.code == 1) {
         this.page = 1;
         this.limit = 50;
-        this.headimage = "";
-        this.name = "";
-        this.password = "";
-        this.sex = "";
-        this.grade = "";
-        this.email = "";
+        this.headimage = '';
+        this.name = '';
+        this.password = '';
+        this.sex = '';
+        this.grade = '';
+        this.email = '';
         this.$msg({
-          type: "success",
+          type: 'success',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -848,7 +845,7 @@ export default {
         this.addclick = false;
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -860,21 +857,21 @@ export default {
 
     tableRowClassName({ row, rowIndex }) {
       if (rowIndex === 1) {
-        return "warning-row";
+        return 'warning-row';
       } else if (rowIndex === 3) {
-        return "success-row";
+        return 'success-row';
       }
-      return "";
+      return '';
     },
 
     async keysearch() {
       this.lastkey = this.key;
       this.initData();
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/User/findUser",
+        method: 'post',
+        url: '/User/findUser',
         portType: {
-          process: "8793",
+          process: '8793',
         },
         data: {
           key: this.key,
@@ -883,7 +880,7 @@ export default {
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -894,7 +891,7 @@ export default {
 
       if (!this.showone) {
         this.$msg({
-          type: "success",
+          type: 'success',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -933,17 +930,17 @@ export default {
       }
       this.userdata = {};
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/User/lookUserData",
+        method: 'post',
+        url: '/User/lookUserData',
         portType: {
-          process: "8793",
+          process: '8793',
         },
         data: {
           user_id: id,
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -960,10 +957,10 @@ export default {
         return;
       }
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/User/loadUserList",
+        method: 'post',
+        url: '/User/loadUserList',
         portType: {
-          process: "8793",
+          process: '8793',
         },
         data: {
           page: this.page,
@@ -971,7 +968,7 @@ export default {
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -983,17 +980,17 @@ export default {
 
     async updateuser(is_close_dialog = true, need_get_new_list = true) {
       const { data: res } = await this.$ajax({
-        method: "post",
-        url: "/User/rootUpdateUser",
+        method: 'post',
+        url: '/User/rootUpdateUser',
         portType: {
-          process: "8793",
+          process: '8793',
         },
         data: {
           data: this.userdata,
         },
       }).catch((t) => {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: t,
           duration: 1600,
           offset: 80,
@@ -1001,7 +998,7 @@ export default {
       });
       if (res?.code == 1) {
         this.$msg({
-          type: "success",
+          type: 'success',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -1011,7 +1008,7 @@ export default {
         }
       } else {
         this.$msg({
-          type: "error",
+          type: 'error',
           message: res?.msg,
           duration: 1600,
           offset: 80,
@@ -1022,17 +1019,17 @@ export default {
       }
     },
     async deleteuser() {
-      this.$confirm("确定删除该用户吗？", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
+      this.$confirm('确定删除该用户吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
       })
         .then(() => {
           this.$ajax({
-            method: "post",
-            url: "/User/deleteUser",
+            method: 'post',
+            url: '/User/deleteUser',
             portType: {
-              process: "8793",
+              process: '8793',
             },
             data: {
               delete_id: this.userdata.id,
@@ -1041,14 +1038,14 @@ export default {
             .then((res) => {
               if (res?.data.code == 1) {
                 this.$msg({
-                  type: "success",
+                  type: 'success',
                   message: res?.data.msg,
                   duration: 1600,
                   offset: 80,
                 });
               } else {
                 this.$msg({
-                  type: "error",
+                  type: 'error',
                   message: res?.data.msg,
                   duration: 1600,
                   offset: 80,
@@ -1058,7 +1055,7 @@ export default {
             })
             .catch((t) => {
               this.$msg({
-                type: "error",
+                type: 'error',
                 message: t,
                 duration: 1600,
                 offset: 80,
@@ -1067,10 +1064,10 @@ export default {
         })
         .catch(() => {
           this.$msg({
-            type: "info",
+            type: 'info',
             duration: 1600,
             offset: 80,
-            message: "取消删除",
+            message: '取消删除',
           });
         });
     },
@@ -1078,21 +1075,21 @@ export default {
 
   data() {
     return {
-      lastkey: "",
+      lastkey: '',
       showone: false,
       addclick: false,
-      headimage: "",
-      name: "",
-      password: "",
-      sex: "",
+      headimage: '',
+      name: '',
+      password: '',
+      sex: '',
       grade: 1,
-      email: "",
+      email: '',
       dialogTableVisible: false,
       dialogFormVisible: false,
       total: 0,
       limit: 50,
       page: 1,
-      key: "",
+      key: '',
       tableData: [],
       userdata: {},
     };

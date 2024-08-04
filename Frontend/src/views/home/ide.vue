@@ -14,9 +14,9 @@
   </div>
 </template>
 <script>
-import Myide from "../../components/myide.vue";
+import Myide from '../../components/myide.vue';
 export default {
-  name: "ide",
+  name: 'ide',
   components: {
     Myide,
   },
