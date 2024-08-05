@@ -216,7 +216,7 @@
             size="small"
             type="success"
             width="auto"
-            style="margin-right: 2rem; font-size: 1.06rem"
+            style="margin-left: 2rem; font-size: 1.06rem"
             class="pulse-enter-active"
             @click="
               isadd = false;
