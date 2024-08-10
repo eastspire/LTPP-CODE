@@ -24,10 +24,11 @@
  */
 
 return [
-    'DouYinCrontab' => [
-        'handler' => process\DouYinCrontab::class,
-        'count' => 1
-    ],
+    // 抖音安全机制升级，之前爬取逻辑不适用
+    // 'DouYinCrontab' => [
+    //     'handler' => process\DouYinCrontab::class,
+    //     'count' => 1
+    // ],
     'CodeStatusCorrectCrontab' => [
         'handler' => process\CodeStatusCorrectCrontab::class,
         'count' => 1
