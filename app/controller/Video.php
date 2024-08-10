@@ -60,12 +60,12 @@ class Video
                     }
                     unset($tem->isdouyin);
                 }
+                // 域名替换
+                $tem->url = str_replace('/v3-webf.douyinvod.com/', Base::$douyin_collection_response_replace_url, $tem->url);
                 if (!$is_need_change_url || !isset($tem->url)) {
                     continue;
                 }
-                // 域名替换
-                $tem->url = str_replace('/v3-webf.douyinvod.com/', Base::$douyin_collection_response_replace_url, $tem->url);
-                $referer = 'Referer=';
+                $referer = '';
                 $tem->url = $base_url . Proxy::$path_method . '?' . Proxy::$source_url_key_name . '=' . urlencode($tem->url) .
                     '&' . Proxy::$source_request_header_key_name . '=' . urlencode($referer) .
                     '&' . Proxy::$source_response_header_key_name . '=' . urlencode($response_header);
@@ -77,15 +77,50 @@ class Video
                     }
                     unset($db->isdouyin);
                 }
+                // 域名替换
+                $db->url = str_replace(Base::$douyin_collection_response_url, Base::$douyin_collection_response_replace_url, $db->url);
                 if (!$is_need_change_url || !isset($db->url)) {
                     return;
                 }
-                // 域名替换
-                $db->url = str_replace(Base::$douyin_collection_response_url, Base::$douyin_collection_response_replace_url, $db->url);
-                $referer = 'Referer=';
+                $referer = '';
                 $db->url = $base_url . Proxy::$path_method . '?' . Proxy::$source_url_key_name . '=' . urlencode($db->url) .
                     '&' . Proxy::$source_request_header_key_name . '=' . urlencode($referer) .
                     '&' . Proxy::$source_response_header_key_name . '=' . urlencode($response_header);
+                return;
+            }
+        }
+    }
+
+    /**
+     * 改变视频域名
+     * @param * $db
+     */
+    static protected function changeVideoDomain(&$db)
+    {
+        if (!$db) {
+            return;
+        }
+        foreach ($db as $key => &$tem) {
+            if (is_object($tem)) {
+                if (isset($tem->isdouyin)) {
+                    if (!$tem->isdouyin) {
+                        unset($tem->isdouyin);
+                        continue;
+                    }
+                    unset($tem->isdouyin);
+                }
+                // 域名替换
+                $tem->url = str_replace('/v3-webf.douyinvod.com/', Base::$douyin_collection_response_replace_url, $tem->url);
+            } else {
+                if (isset($db->isdouyin)) {
+                    if (!$db->isdouyin) {
+                        unset($db->isdouyin);
+                        return;
+                    }
+                    unset($db->isdouyin);
+                }
+                // 域名替换
+                $db->url = str_replace(Base::$douyin_collection_response_url, Base::$douyin_collection_response_replace_url, $db->url);
                 return;
             }
         }
@@ -154,7 +189,6 @@ class Video
                 }
             }
         }
-        Video::changeVideoUrl($res);
         return [$res, $allnum];
     }
 
@@ -317,6 +351,7 @@ class Video
      */
     public function findVideo(Request $request)
     {
+        $origin = $request->header('origin', '');
         $key = $request->post('key');
         $video_uid = $request->post('video_id');
         $video_id = Base::getIdByUid($video_uid);
@@ -348,7 +383,11 @@ class Video
                 ->orderBy('id', 'desc')
                 ->first();
         }
-        Video::changeVideoUrl($info);
+        if ($origin) {
+            Video::changeVideoUrl($info);
+        } else {
+            Video::changeVideoDomain($info);
+        }
         Base::dataToSafe($info);
         if ($info) {
             return json(['code' => 1, 'data' => $info, 'msg' => '查找视频成功']);
@@ -363,12 +402,17 @@ class Video
      */
     public function appLoadVideo(Request $request)
     {
+        $origin = $request->header('origin', '');
         $video_uid = $request->post('id');
         $video_id = Base::getIdByUid($video_uid);
         $do = $request->post('do');
         $limit = 3;
         $data = Base::getDataByLimit('video', $video_id, $limit, Video::$video_db_key, $do);
-        Video::changeVideoUrl($data);
+        if ($origin) {
+            Video::changeVideoUrl($data);
+        } else {
+            Video::changeVideoDomain($data);
+        }
         Base::dataToSafe($data);
         return json(['code' => 1, 'data' => $data, 'msg' => '视频列表获取成功']);
     }
@@ -380,6 +424,7 @@ class Video
      */
     public function loadVideo(Request $request)
     {
+        $origin = $request->header('origin', '');
         $video_uid = $request->post('video_id');
         $video_id = Base::getIdByUid($video_uid);
         $isdown = $request->post('do') ? $request->post('do')  == 'down' : true;
@@ -407,7 +452,11 @@ class Video
                 ->orderBy('id', 'desc')
                 ->first();
         }
-        Video::changeVideoUrl($info);
+        if ($origin) {
+            Video::changeVideoUrl($info);
+        } else {
+            Video::changeVideoDomain($info);
+        }
         Base::dataToSafe($info);
         if ($info) {
             return json(['code' => 1, 'data' => $info, 'msg' => '视频列表获取成功']);
@@ -428,6 +477,7 @@ class Video
         if (!$isroot) {
             return json(['code' => -1, 'data' => [], 'allnum' => 0, 'msg' => '权限不足']);
         }
+        $origin = $request->header('origin', '');
         $key = $request->post('key');
         $page = $request->post('page');
         $limit = $request->post('limit');
@@ -456,7 +506,11 @@ class Video
                     ->where('isdel', 0);
             })
             ->count();
-        Video::changeVideoUrl($info, false);
+        if ($origin) {
+            Video::changeVideoUrl($info, false);
+        } else {
+            Video::changeVideoDomain($info);
+        }
         Base::dataToSafe($info);
         if ($info) {
             return json(['code' => 1, 'data' => $info, 'allnum' => $allnum, 'msg' => '查找视频成功']);
@@ -477,6 +531,7 @@ class Video
         if (!$isroot) {
             return json(['code' => -1, 'data' => [], 'allnum' => 0, 'msg' => '权限不足']);
         }
+        $origin = $request->header('origin', '');
         $page = $request->post('page');
         $limit = $request->post('limit');
         Base::judgePageLimitIsSafe($page, $limit);
@@ -489,7 +544,11 @@ class Video
         $allnum = Db::table('video')
             ->where('isdel', 0)
             ->count();
-        Video::changeVideoUrl($info, false);
+        if ($origin) {
+            Video::changeVideoUrl($info, false);
+        } else {
+            Video::changeVideoDomain($info);
+        }
         Base::dataToSafe($info);
         if ($info) {
             return json(['code' => 1, 'data' => $info, 'allnum' => $allnum, 'msg' => '视频列表获取成功']);
@@ -725,6 +784,7 @@ class Video
     {
         $video_uid = $request->post('video_id');
         $video_id = Base::getIdByUid($video_uid);
+        $origin = $request->header('origin', '');
         $videodb = Db::table('video')
             ->where('id', $video_id)
             ->where('isdel', 0)
@@ -733,7 +793,11 @@ class Video
         if (!$videodb) {
             return json(['code' => -1, 'data' => [], 'msg' => '视频不存在']);
         }
-        Video::changeVideoUrl($videodb);
+        if ($origin) {
+            Video::changeVideoUrl($videodb);
+        } else {
+            Video::changeVideoDomain($videodb);
+        }
         Base::dataToSafe($videodb);
         return json(['code' => 1, 'data' => $videodb, 'msg' => '视频加载完成']);
     }
@@ -976,13 +1040,18 @@ class Video
     {
         $my_uid = JwtToken::getCurrentId();
         $my_aid = Base::getIdByUid($my_uid);
+        $origin = $request->header('origin', '');
         $key = $request->post('key');
         $page = $request->post('page');
         $limit = 1;
         $db = Video::getVideoFromLoveOrFabulous('lovevideo', $my_aid, $page, $limit, $key);
         $res = $db[0];
         $allnum = $db[1];
-        Video::changeVideoUrl($res);
+        if ($origin) {
+            Video::changeVideoUrl($res);
+        } else {
+            Video::changeVideoDomain($res);
+        }
         Base::dataToSafe($res);
         if ($res) {
             return json(['code' => 1, 'data' => $res, 'allnum' => $allnum, 'msg' => '查找视频成功']);
@@ -998,13 +1067,18 @@ class Video
     public function loadLoveVideo(Request $request)
     {
         $my_uid = JwtToken::getCurrentId();
+        $origin = $request->header('origin', '');
         $my_aid = Base::getIdByUid($my_uid);
         $page = $request->post('page');
         $limit = 1;
         $db = Video::getVideoFromLoveOrFabulous('lovevideo', $my_aid, $page, $limit);
         $res = $db[0];
         $allnum = $db[1];
-        Video::changeVideoUrl($res);
+        if ($origin) {
+            Video::changeVideoUrl($res);
+        } else {
+            Video::changeVideoDomain($res);
+        }
         Base::dataToSafe($res);
         if ($res) {
             return json(['code' => 1, 'data' => $res, 'allnum' => $allnum, 'msg' => '视频加载成功']);
@@ -1020,6 +1094,7 @@ class Video
     public function findFabulousVideo(Request $request)
     {
         $my_uid = JwtToken::getCurrentId();
+        $origin = $request->header('origin', '');
         $my_aid = Base::getIdByUid($my_uid);
         $key = $request->post('key');
         $page = $request->post('page');
@@ -1027,7 +1102,11 @@ class Video
         $db = Video::getVideoFromLoveOrFabulous('fabulousvideo', $my_aid, $page, $limit, $key);
         $res = $db[0];
         $allnum = $db[1];
-        Video::changeVideoUrl($res);
+        if ($origin) {
+            Video::changeVideoUrl($res);
+        } else {
+            Video::changeVideoDomain($res);
+        }
         Base::dataToSafe($res);
         if ($res) {
             return json(['code' => 1, 'data' => $res, 'allnum' => $allnum, 'msg' => '查找视频成功']);
@@ -1043,13 +1122,18 @@ class Video
     public function loadFabulousVideo(Request $request)
     {
         $my_uid = JwtToken::getCurrentId();
+        $origin = $request->header('origin', '');
         $my_aid = Base::getIdByUid($my_uid);
         $page = $request->post('page');
         $limit = 1;
         $db = Video::getVideoFromLoveOrFabulous('fabulousvideo', $my_aid, $page, $limit);
         $res = $db[0];
         $allnum = $db[1];
-        Video::changeVideoUrl($res);
+        if ($origin) {
+            Video::changeVideoUrl($res);
+        } else {
+            Video::changeVideoDomain($res);
+        }
         Base::dataToSafe($res);
         if ($res) {
             return json(['code' => 1, 'data' => $res, 'allnum' => $allnum, 'msg' => '视频加载成功']);

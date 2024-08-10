@@ -979,6 +979,21 @@ Vue.prototype.openUrlUseATag = function (url) {
   }
 };
 
+/**
+ * 打开视频新页面
+ * @param {string} param_url
+ */
+Vue.prototype.openVideoUrlPage = function (param_url) {
+  const obj = new URL(param_url);
+  let search_obj = new URLSearchParams(obj?.search ?? '');
+  let url = search_obj.get('url') ?? '';
+  const res_url = `${location?.origin ?? ''}${
+    location.pathname ?? ''
+  }?redirect_url=${encodeURI(url) ?? ''}`;
+  this.copy(res_url);
+  Vue.prototype.openUrlUseATag(res_url);
+};
+
 Vue.prototype.captureScreen = function () {
   // 确保浏览器支持HTML5的屏幕捕获API
   if (!navigator.mediaDevices.getDisplayMedia) {

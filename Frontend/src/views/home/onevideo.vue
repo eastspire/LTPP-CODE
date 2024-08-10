@@ -77,6 +77,10 @@
               class="share el-icon-share my-span"
               @click="share(true)"
             ></span>
+            <span
+              class="open el-icon-s-platform my-span"
+              @click="openVideoUrlPage(onevideo?.url)"
+            ></span>
           </div>
         </div>
       </div>
@@ -753,106 +757,5 @@ export default {
 .demo-drawer__content {
   padding: 2rem;
   text-align: center;
-}
-
-.video-box {
-  position: relative;
-}
-
-.video-box .dec {
-  position: absolute;
-  cursor: pointer;
-  font-size: 2rem;
-  color: rgba(248, 249, 250, 0.6);
-  top: 50%;
-  left: 2%;
-  transform: translateY(-50%);
-}
-
-.video-box .inc {
-  position: absolute;
-  cursor: pointer;
-  font-size: 2rem;
-  color: rgba(248, 249, 250, 0.6);
-  top: 50%;
-  right: 2%;
-  transform: translateY(-50%);
-}
-
-.video-box .love {
-  position: absolute;
-  cursor: pointer;
-  font-size: 2rem;
-  color: deeppink;
-  top: 40%;
-  right: 2%;
-  transform: translateY(-50%);
-}
-
-.video-box .no-love {
-  position: absolute;
-  cursor: pointer;
-  font-size: 2rem;
-  color: rgba(248, 249, 250, 0.6);
-  top: 40%;
-  right: 2%;
-  transform: translateY(-50%);
-}
-
-.video-box .fabulous {
-  position: absolute;
-  cursor: pointer;
-  font-size: 2rem;
-  color: deeppink;
-  top: 30%;
-  right: 2%;
-  transform: translateY(-50%);
-}
-
-.video-box .no-fabulous {
-  position: absolute;
-  cursor: pointer;
-  font-size: 2rem;
-  color: rgba(248, 249, 250, 0.6);
-  top: 30%;
-  right: 2%;
-  transform: translateY(-50%);
-}
-
-.video-box .comment {
-  position: absolute;
-  cursor: pointer;
-  font-size: 2rem;
-  color: rgba(248, 249, 250, 0.6);
-  top: 60%;
-  right: 2%;
-  transform: translateY(-50%);
-}
-
-.video-box .share {
-  position: absolute;
-  cursor: pointer;
-  font-size: 2rem;
-  color: rgba(248, 249, 250, 0.6);
-  top: 70%;
-  right: 2%;
-  transform: translateY(-50%);
-}
-
-.video-box span:hover {
-  color: deeppink;
-  font-size: 2.6rem;
-  animation-name: txt-to-big;
-  animation-duration: 0.6s;
-}
-
-@keyframes txt-to-big {
-  0% {
-    font-size: 2rem;
-  }
-
-  100% {
-    font-size: 2.6rem;
-  }
 }
 </style>

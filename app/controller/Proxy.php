@@ -94,6 +94,9 @@ class Proxy
         // 根据解码后的&分割数据
         $data = explode('&', $data);
         $file_data = Base::notFoundPage();
+        if (!$url) {
+            return Proxy::getResponse($file_data, $response_header);
+        }
         // GET
         if ($is_get) {
             $file_data = Base::getRequest($url, $request_header);
