@@ -264,6 +264,16 @@ class Base
     static $db_file_path_same_name = '_file_path';
 
     /**
+     * 抖音收藏接口返回视频地址
+     */
+    static $douyin_collection_response_url = '/v3-webf.douyinvod.com/';
+
+    /**
+     * 抖音收藏接口返回视频替换后地址
+     */
+    static $douyin_collection_response_replace_url = '/v3-cold.douyinvod.com/';
+
+    /**
      * @var array $extion_map_number 文件类型转数字
      */
     static public $extion_map_number = [
@@ -1339,8 +1349,7 @@ class Base
     {
         $my_uid = '';
         if (!$handler) {
-            $handler = function () {
-            };
+            $handler = function () {};
         }
         try {
             $is_logout = false;

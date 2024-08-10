@@ -63,7 +63,9 @@ class Video
                 if (!$is_need_change_url || !isset($tem->url)) {
                     continue;
                 }
-                $referer = 'Referer=' . $tem->url;
+                // 域名替换
+                $tem->url = str_replace('/v3-webf.douyinvod.com/', Base::$douyin_collection_response_replace_url, $tem->url);
+                $referer = 'Referer=';
                 $tem->url = $base_url . Proxy::$path_method . '?' . Proxy::$source_url_key_name . '=' . urlencode($tem->url) .
                     '&' . Proxy::$source_request_header_key_name . '=' . urlencode($referer) .
                     '&' . Proxy::$source_response_header_key_name . '=' . urlencode($response_header);
@@ -78,7 +80,9 @@ class Video
                 if (!$is_need_change_url || !isset($db->url)) {
                     return;
                 }
-                $referer = 'Referer=' . $db->url;
+                // 域名替换
+                $db->url = str_replace(Base::$douyin_collection_response_url, Base::$douyin_collection_response_replace_url, $db->url);
+                $referer = 'Referer=';
                 $db->url = $base_url . Proxy::$path_method . '?' . Proxy::$source_url_key_name . '=' . urlencode($db->url) .
                     '&' . Proxy::$source_request_header_key_name . '=' . urlencode($referer) .
                     '&' . Proxy::$source_response_header_key_name . '=' . urlencode($response_header);
