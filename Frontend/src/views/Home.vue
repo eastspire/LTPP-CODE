@@ -1127,7 +1127,7 @@ export default {
             group_data: {},
           };
           this.postmessage(msg);
-        }, 666);
+        }, 1000);
         resolve();
       } catch (err) {
         resolve();

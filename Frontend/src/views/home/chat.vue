@@ -198,7 +198,7 @@
             </div>
           </div>
         </el-main>
-        <el-footer height="16rem" v-show="now_user && now_user.id">
+        <el-footer height="12.6rem" v-show="now_user && now_user.id">
           <div>
             <el-button
               type="text"
@@ -241,8 +241,8 @@
               :xssOptions="xss_options"
               :stripIgnoreTagBody="stripIgnoreTagBody"
               style="
-                min-height: 12.6rem;
-                max-height: 12.6rem;
+                min-height: 9.5rem;
+                max-height: 9.5rem;
                 z-index: 0;
                 width: 100% !important;
                 border-width: 0rem;
