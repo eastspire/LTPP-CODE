@@ -889,7 +889,7 @@ export default {
       // 复原表单文本框内容
       this.form.link = '';
 
-      // 获取文本域中当前光标起始位置、结束位置以及滚动条位置（滚动条位置我认为没有必要，如有需要可以自己取消注释）
+      // 获取文本域中当前光标起始位置、结束位置以及滚动条位置
       let textarea = document.getElementsByClassName('auto-textarea-input')[0];
       let posStart = textarea.selectionStart;
       let posEnd = textarea.selectionEnd;
@@ -1391,7 +1391,8 @@ export default {
     // 加载历史消息
     async getHistoryChatData(is_init = false) {
       this.isSeeLastBtn = false;
-      if (!this.now_user.id || !this.now_user.type) {
+      const copy_now_user_id = this.now_user.id;
+      if (!copy_now_user_id || !this.now_user.type) {
         this.$msg({
           type: 'error',
           message: '用户加载出错',
@@ -1447,6 +1448,10 @@ export default {
           });
         return;
       });
+      if (this.now_user.id != copy_now_user_id) {
+        // 切换用户了
+        return;
+      }
       if (res?.code == 1) {
         let len = res?.data.length;
         if (len > 0) {

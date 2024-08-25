@@ -264,14 +264,9 @@ class Base
     static $db_file_path_same_name = '_file_path';
 
     /**
-     * 抖音收藏接口返回视频地址
+     * 抖音收藏接口返回视频替换后域名
      */
-    static $douyin_collection_response_url = '/v3-webf.douyinvod.com/';
-
-    /**
-     * 抖音收藏接口返回视频替换后地址
-     */
-    static $douyin_collection_response_replace_url = '/v3-cold.douyinvod.com/';
+    static $douyin_collection_response_replace_url_domain = 'v3-cold.douyinvod.com';
 
     /**
      * @var array $extion_map_number 文件类型转数字
@@ -5963,5 +5958,29 @@ class Base
         $redis37->set($key, $now);
         Base::judgeCreatPath($path);
         Base::writeToFile($path . Base::$testdata_time_file_name, $now);
+    }
+
+    /**
+     * 替换URL域名
+     */
+    public static function replaceDomain($url, $new_domain)
+    {
+        $parsedUrl = parse_url($url);
+
+        if ($parsedUrl === false) {
+            return $url;
+        }
+
+        $parsedUrl['host'] = $new_domain;
+
+        $newUrl = (isset($parsedUrl['scheme']) ? $parsedUrl['scheme'] . '://' : '') .
+            (isset($parsedUrl['user']) ? $parsedUrl['user'] . (isset($parsedUrl['pass']) ? ':' . $parsedUrl['pass'] : '') . '@' : '') .
+            $parsedUrl['host'] .
+            (isset($parsedUrl['port']) ? ':' . $parsedUrl['port'] : '') .
+            (isset($parsedUrl['path']) ? $parsedUrl['path'] : '') .
+            (isset($parsedUrl['query']) ? '?' . $parsedUrl['query'] : '') .
+            (isset($parsedUrl['fragment']) ? '#' . $parsedUrl['fragment'] : '');
+
+        return $newUrl;
     }
 };

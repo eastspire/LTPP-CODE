@@ -61,7 +61,7 @@ class Video
                     unset($tem->isdouyin);
                 }
                 // 域名替换
-                $tem->url = str_replace('/v3-webf.douyinvod.com/', Base::$douyin_collection_response_replace_url, $tem->url);
+                $tem->url = str_replace($tem->url, Base::$douyin_collection_response_replace_url_domain, $tem->url);
                 if (!$is_need_change_url || !isset($tem->url)) {
                     continue;
                 }
@@ -78,7 +78,7 @@ class Video
                     unset($db->isdouyin);
                 }
                 // 域名替换
-                $db->url = str_replace(Base::$douyin_collection_response_url, Base::$douyin_collection_response_replace_url, $db->url);
+                $db->url = Base::replaceDomain($db->url, Base::$douyin_collection_response_replace_url_domain);
                 if (!$is_need_change_url || !isset($db->url)) {
                     return;
                 }
@@ -110,7 +110,7 @@ class Video
                     unset($tem->isdouyin);
                 }
                 // 域名替换
-                $tem->url = str_replace('/v3-webf.douyinvod.com/', Base::$douyin_collection_response_replace_url, $tem->url);
+                $tem->url = Base::replaceDomain($tem->url, Base::$douyin_collection_response_replace_url_domain);
             } else {
                 if (isset($db->isdouyin)) {
                     if (!$db->isdouyin) {
@@ -120,7 +120,7 @@ class Video
                     unset($db->isdouyin);
                 }
                 // 域名替换
-                $db->url = str_replace(Base::$douyin_collection_response_url, Base::$douyin_collection_response_replace_url, $db->url);
+                $db->url = Base::replaceDomain($db->url, Base::$douyin_collection_response_replace_url_domain);
                 return;
             }
         }
