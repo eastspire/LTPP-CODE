@@ -590,14 +590,14 @@ class Linux
             'port' => $port,
             'password' => $password,
             'port_num' => $port_num,
+            'cpu' =>  $cpu,
+            'memory' => $memory
         ];
         RedisQueue::send(Base::$redis_queue_request_name, [
             'user_id' => $my_aid,
             'url' => $url,
             'is_post' => true,
             'data' => $data,
-            'cpu' =>  $cpu,
-            'memory' => $memory
         ]);
         return json([
             'code' => 1,
