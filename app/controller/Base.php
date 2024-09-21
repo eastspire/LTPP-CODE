@@ -36,7 +36,7 @@ class Base
     /**
      * Redis数据库数目
      */
-    static $redis_db_num = 38;
+    static $redis_db_num = 39;
 
     /**
      * mysql域名
@@ -1236,6 +1236,7 @@ class Base
         'oneArticle' => true,
         'lookContestProblemCode' => true,
         'proxyRequest' => true,
+        'shareCode' => true,
     ];
 
     /**
@@ -1675,6 +1676,32 @@ class Base
         }
         $code = "```$language\n" . $code . "\n```";
         return Base::markdownToHTML($code, $path, $file_extion);
+    }
+
+
+    /**
+     * 代码分享转HTML
+     * @param object $code_share_db
+     */
+    static public function codeShareToHTML($code_share_db)
+    {
+        try {
+            if (!$code_share_db) {
+                return Base::notFoundPage();
+            }
+            $language = Base::$language_map[strtolower($code_share_db->language)] ?? 'cpp';
+            $code = $code_share_db->code ?? '';
+            $user_name = Base::getUserData($code_share_db->userid)->name ?? '';
+            $time = $code_share_db->time ?? '';
+            $url = Base::getSettingKeyData('GLOBfronturl');
+            $desc = "## [代码来自LTPP用户【 $user_name 】分享]($url)\n\n> 分享时间: $time\n\n";
+            $code = "```$language\n" . $code . "\n```";
+            $md = $desc . $code;
+            return Base::markdownToHTML($md);
+        } catch (Exception $e) {
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
+        }
+        return Base::notFoundPage();
     }
 
     /**
@@ -3513,6 +3540,37 @@ class Base
                 return [];
             }
             $redis33->setEx($key, Base::$redis_timeout, json_encode($db));
+            return $db;
+        } catch (Exception $e) {
+            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
+            return [];
+        }
+    }
+
+    /**
+     * 获取缓存中分享代码信息
+     * @param int $code_id
+     */
+    static public function getShareCodeData($code_id)
+    {
+        try {
+            if (!is_numeric($code_id)) {
+                return [];
+            }
+            $redis38 = Redis::connection('db38');
+            $key = 'CodeShare' . $code_id;
+            $db = $redis38->get($key);
+            if ($db) {
+                return json_decode($db, false);
+            }
+            $db = Db::table('codeshare')
+                ->where('id', $code_id)
+                ->where('isdel', 0)
+                ->first();
+            if (!$db) {
+                return [];
+            }
+            $redis38->setEx($key, Base::$redis_timeout, json_encode($db));
             return $db;
         } catch (Exception $e) {
             Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());

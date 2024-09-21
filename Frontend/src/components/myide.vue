@@ -53,17 +53,25 @@
           </div>
           <div style="text-align: right">
             <el-button
-              class="el-icon-full-screen"
-              @click="full"
+              class="el-icon-share"
+              @click="shareCode"
+              :loading="is_sharing"
               type="primary"
-              style="margin-right: 1.6rem; background-color: #242424"
+              style="
+                margin-right: 1rem;
+                background-color: var(--ltpp-main-color);
+              "
             ></el-button>
             <el-select
               :popper-append-to-body="true"
               v-model="my_language"
               placeholder="请选择语言"
               @change="ChangeCacheLanguage()"
-              style="margin: 0.6rem 0rem 0.8rem 0rem; text-align: left"
+              style="
+                margin: 0.6rem 1rem 0.8rem 0rem;
+                text-align: left;
+                background-color: var(--ltpp-main-color);
+              "
             >
               <el-option
                 v-for="item in $SqsGlobal.options"
@@ -73,6 +81,15 @@
               >
               </el-option>
             </el-select>
+            <el-button
+              class="el-icon-full-screen"
+              @click="full"
+              type="primary"
+              style="
+                margin: 0.6rem 0rem 0.8rem 0rem;
+                background-color: var(--ltpp-main-color);
+              "
+            ></el-button>
           </div>
         </div>
 
@@ -255,6 +272,7 @@ export default {
   created() {
     this.changeCodeCSS(this.usertheme);
     this.my_ide_id = this.randomString();
+    this.is_sharing = false;
     this.istestres = false;
     this.isshow = false;
     this.ac = '';
@@ -373,6 +391,7 @@ export default {
   },
   data() {
     return {
+      is_sharing: false,
       test_query_one_can_next: true,
       has_ac_code: '',
       is_has_ac_code: false,
@@ -982,6 +1001,45 @@ export default {
         this.my_code = cache_code;
         this.editor.setValue(this.my_code);
         this.save();
+      }
+    },
+    async shareCode() {
+      if (this.is_sharing) {
+        return;
+      }
+      this.is_sharing = true;
+      this.my_code = this.editor.getValue();
+      const { data: res } = await this.$ajax({
+        method: 'post',
+        url: '/Codeshare/addShareCode',
+        portType: {
+          process: '8790',
+        },
+        data: {
+          code: this.my_code,
+          language: this.$SqsGlobal.language_map[this.my_language],
+        },
+      }).catch((t) => {
+        this.is_sharing = false;
+        this.$msg({
+          type: 'error',
+          message: t,
+          duration: 1600,
+          offset: 80,
+        });
+        return;
+      });
+      this.is_sharing = false;
+      if (res?.code == 1) {
+        const url = res?.url;
+        this.copy(url);
+      } else {
+        this.$msg({
+          type: 'error',
+          message: res?.msg,
+          duration: 1600,
+          offset: 80,
+        });
       }
     },
   },

@@ -9,7 +9,6 @@ use app\controller\Base;
 
 class AuthCheckTest implements MiddlewareInterface
 {
-
     public function process(Request $request, callable $handler): Response
     {
         return Base::judgeAuthCheckTestSafe($request, $handler);
