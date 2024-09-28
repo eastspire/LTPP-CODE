@@ -362,9 +362,10 @@ class QuestionSheet
         if ($db) {
             $res = [];
             $allnum = 0;
+            $resdata = [];
             $user_db = Base::getUserData($my_aid);
             foreach ($db as &$tem) {
-                $tem = Base::getQuestionSheetData($tem->question_sheet_id);
+                $tem_db = Base::getQuestionSheetData($tem->question_sheet_id);
                 $has = Db::table('question_sheet')
                     ->where('id', $tem->question_sheet_id)
                     ->where('name', 'like', '%' . $key . '%')
@@ -375,12 +376,12 @@ class QuestionSheet
                 }
                 ++$allnum;
                 if ($user_db) {
-                    $tem->creator_name = $user_db->name;
+                    $tem_db->creator_name = $user_db->name;
                 } else {
-                    $tem->creator_name = Base::$unknow_user_name;
+                    $tem_db->creator_name = Base::$unknow_user_name;
                 }
-                $tem->password = $tem->password ? true : false;
-                $res[] = $tem;
+                $tem_db->password = $tem_db->password ? true : false;
+                $res[] = $tem_db;
             }
             for ($i = $limit * ($page - 1); $i < $limit * $page && $i < $allnum; ++$i) {
                 $resdata[] = $res[$i];
