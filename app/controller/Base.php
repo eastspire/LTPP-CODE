@@ -4762,7 +4762,6 @@ class Base
             $memory_used = intval($res['memory_used']);
             $msg = $res['msg'];
         } catch (Exception $e) {
-            Base::sendErrorNotice($e->getTraceAsString(), $e->getMessage());
             // 触发错误的情况是判题机输出 Segmentation fault (core dumped) 导致解析json失败
             // 而判题机触发该错误是不断分配内存不回收触发安全机制导致程序崩溃
             // 由于具体分配内存大小不确定，所以按照 RE 处理
