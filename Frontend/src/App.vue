@@ -44,7 +44,7 @@ export default {
   name: 'LTPP',
   data() {
     return {
-      version: '2.9.6',
+      version: '2.10.0',
       get_version_lock: false,
     };
   },
@@ -171,7 +171,8 @@ export default {
           });
           return;
         }
-        if (this.version < res.version) {
+        // 版本不匹配，重新加载
+        if (this.version != res.version) {
           this.$notice({
             title: '发现新版本！',
             dangerouslyUseHTMLString: true,

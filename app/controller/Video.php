@@ -6,7 +6,6 @@ use support\Request;
 use Tinywan\Jwt\JwtToken;
 use support\Db;
 
-
 class Video
 {
     /**

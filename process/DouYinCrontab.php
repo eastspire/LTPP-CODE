@@ -217,16 +217,7 @@ class DouYinCrontab
                                 'love' => $collect_count,
                                 'time' => date('Y-m-d H:i:s', time())
                             ]);
-                    } else {
-                        // 无论是否保存文件，先插入抖音的视频地址
-                        Base::insertToDb('video', [
-                            'isdouyin' => 1,
-                            'name' => $video_name,
-                            'tag' => $tag,
-                            'url' => $video_url,
-                            'fabulous' => $digg_count,
-                            'love' => $collect_count
-                        ]);
+                    } else {                        
                         if ($is_save_file) {
                             $has = Db::table('video')
                                 ->where('name', $video_name)
@@ -255,6 +246,15 @@ class DouYinCrontab
                                     ]);
                                 }
                             }
+                        } else {
+                            Base::insertToDb('video', [
+                                'isdouyin' => 1,
+                                'name' => $video_name,
+                                'tag' => $tag,
+                                'url' => $video_url,
+                                'fabulous' => $digg_count,
+                                'love' => $collect_count
+                            ]);
                         }
                     }
                     ++$cnt;
