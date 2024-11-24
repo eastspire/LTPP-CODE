@@ -1,6 +1,14 @@
 #!/bin/bash
 git config --global core.autocrlf input;
 git add .;
+echo -n "Please enter the branch and press Enter:"
+read branch
+if [ -z "$branch" ]; then
+    echo "The branch cannot be empty. Please rerun the script and provide a valid branch."
+    echo "Press Enter to exit...";
+    read -n 1;
+    exit 1
+fi
 echo -n "Please enter the update message and press Enter:"
 read update_message
 if [ -z "$update_message" ]; then
@@ -10,11 +18,11 @@ if [ -z "$update_message" ]; then
     exit 1
 fi
 git commit -m "feat:$update_message";
-git push github master;
+git push github "$branch";
 echo -e "\e[32mgithub push finish\e[0m";
-git push ltpp master;
+git push ltpp "$branch";
 echo -e "\e[32mltpp push finish\e[0m";
-git push origin master;
+git push origin "$branch";
 echo -e "\e[32morigin push finish\e[0m";
 echo "Press Enter to continue...";
 read -n 1;
