@@ -4,10 +4,7 @@ git add .;
 echo -n "Please enter the branch and press Enter:"
 read branch
 if [ -z "$branch" ]; then
-    echo "The branch cannot be empty. Please rerun the script and provide a valid branch."
-    echo "Press Enter to exit...";
-    read -n 1;
-    exit 1
+    branch="master"
 fi
 echo -n "Please enter the update message and press Enter:"
 read update_message
