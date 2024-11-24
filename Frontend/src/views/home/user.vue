@@ -5,20 +5,14 @@
         <el-input
           style="font-size: 1.06rem"
           placeholder="请输入需要搜索的用户名"
-          @keyup.enter.native="
-            showone = false;
-            searchuser();
-          "
+          @keyup.enter.native="searchuser()"
           v-model.lazy="key"
           class="input-with-select"
         >
           <el-button
             slot="append"
             icon="el-icon-search"
-            @click="
-              showone = false;
-              searchuser();
-            "
+            @click="searchuser()"
           ></el-button>
         </el-input>
       </div>
@@ -268,13 +262,11 @@ export default {
     this.page = 1;
     this.limit = 50;
     this.issearch = true;
-    this.showone = false;
     await this.looklist();
   },
   data() {
     return {
       lastkey: '',
-      showone: false,
       key: '',
       issearch: false,
       tableData: [],
@@ -319,15 +311,6 @@ export default {
       this.tableData = res?.data;
       if (res.allnum == 0) {
         this.issearch = false;
-      }
-      if (!this.showone) {
-        this.$msg({
-          type: 'success',
-          message: res?.msg,
-          duration: 1600,
-          offset: 80,
-        });
-        this.showone = true;
       }
     },
 
@@ -384,15 +367,6 @@ export default {
       this.tableData = res?.data;
       if (res.allnum == 0) {
         this.issearch = false;
-      }
-      if (!this.showone) {
-        this.$msg({
-          type: 'success',
-          message: res?.msg,
-          duration: 1600,
-          offset: 80,
-        });
-        this.showone = true;
       }
     },
 

@@ -45,7 +45,7 @@ export default {
   name: 'LTPP',
   data() {
     return {
-      version: '2.10.0',
+      version: '2.11.0',
       get_version_lock: false,
     };
   },
@@ -984,7 +984,7 @@ a:active {
   cursor: pointer;
   font-size: 2rem;
   color: rgba(248, 249, 250, 0.6);
-  top: 40%;
+  top: 50%;
   left: 2%;
   transform: translateY(-50%);
 }
@@ -994,7 +994,7 @@ a:active {
   cursor: pointer;
   font-size: 2rem;
   color: rgba(248, 249, 250, 0.6);
-  top: 40%;
+  top: 50%;
   right: 2%;
   transform: translateY(-50%);
 }
@@ -1039,17 +1039,17 @@ a:active {
   transform: translateY(-50%);
 }
 
-.video-box .comment {
+.video-box .download {
   position: absolute;
   cursor: pointer;
   font-size: 2rem;
   color: rgba(248, 249, 250, 0.6);
-  top: 50%;
+  top: 40%;
   right: 2%;
   transform: translateY(-50%);
 }
 
-.video-box .share {
+.video-box .comment {
   position: absolute;
   cursor: pointer;
   font-size: 2rem;
@@ -1059,12 +1059,22 @@ a:active {
   transform: translateY(-50%);
 }
 
-.video-box .open {
+.video-box .share {
   position: absolute;
   cursor: pointer;
   font-size: 2rem;
   color: rgba(248, 249, 250, 0.6);
   top: 70%;
+  right: 2%;
+  transform: translateY(-50%);
+}
+
+.video-box .open {
+  position: absolute;
+  cursor: pointer;
+  font-size: 2rem;
+  color: rgba(248, 249, 250, 0.6);
+  top: 80%;
   right: 2%;
   transform: translateY(-50%);
 }

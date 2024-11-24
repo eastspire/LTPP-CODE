@@ -676,8 +676,8 @@ Vue.prototype.judgeSystemIsPhone = function () {
 
 Vue.prototype.downloadNoUrlContent = async function (
   type = 'text/html',
-  data,
-  download_name = ''
+  download_name = '',
+  data = {}
 ) {
   this.$msg({
     type: 'success',
@@ -863,6 +863,16 @@ Vue.prototype.sendNotification = function (
   } catch (err) {}
 };
 
+Vue.prototype.getFileExtensionName = function (name) {
+  try {
+    const arr = name.split('.');
+    const len = arr.length;
+    const res = arr[len - 1];
+    return res;
+  } catch (e) {}
+  return '';
+};
+
 Vue.prototype.imgAddBase64 = async function (pos, $file, $ref_name) {
   reader.onload = (event) => {
     const base64_string = event.target.result;
@@ -987,9 +997,11 @@ Vue.prototype.openVideoUrlPage = function (param_url) {
   const obj = new URL(param_url);
   let search_obj = new URLSearchParams(obj?.search ?? '');
   let url = search_obj.get('url') ?? '';
-  const res_url = url ? `${location?.origin ?? ''}${
-    location.pathname ?? ''
-  }?redirect_url=${encodeURI(url) ?? ''}` : param_url;
+  const res_url = url
+    ? `${location?.origin ?? ''}${location.pathname ?? ''}?redirect_url=${
+        encodeURI(url) ?? ''
+      }`
+    : param_url;
   this.copy(res_url);
   Vue.prototype.openUrlUseATag(res_url);
 };

@@ -96,6 +96,16 @@
               ></span>
 
               <span
+                class="download el-icon-download my-span"
+                @click="
+                  downloadFile(
+                    onevideo?.url,
+                    `${onevideo?.name}.${getFileExtensionName(onevideo?.url)}`
+                  )
+                "
+              ></span>
+
+              <span
                 class="comment el-icon-s-comment my-span"
                 @click="
                   comment_load_all_finish = false;
@@ -394,15 +404,20 @@ export default {
     this.IsLove();
 
     this.comment_load_all_finish = false;
-    this.video = document.getElementById('nowvideo');
-    this.video && this.video.addEventListener('ended', this.videoEnd);
+    setTimeout(() => {
+      this.video = document.getElementById('nowvideo');
+      this.video && this.video.addEventListener('ended', this.videoEnd);
+    }, 0);
   },
   deactivated() {
     this.onevideo = {};
     this.isSeeComment = false;
     this.userComment = [];
     this.comment_load_all_finish = false;
-    this.video && this.video.removeEventListener('ended', this.videoEnd);
+    if (this.video) {
+      this.video.removeEventListener('ended', this.videoEnd);
+      this.video.pause();
+    }
   },
   data() {
     return {
@@ -431,11 +446,11 @@ export default {
     };
   },
   methods: {
-    async videoPlay() {
+    videoPlay() {
       let deep = 0;
       while (deep < this.$SqsGlobal.max_video_retry_times) {
         try {
-          this.video && (await this.video.play());
+          this.video && this.video.play();
           break;
         } catch (err) {
           ++deep;

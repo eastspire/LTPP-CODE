@@ -843,7 +843,7 @@ export default {
     goBack() {
       this.$router.go(-1);
     },
-    async videoPlay() {
+    videoPlay() {
       let deep = 0;
       this.video_dom = document.getElementById('video');
       while (deep < this.$SqsGlobal.max_video_retry_times) {
@@ -851,7 +851,7 @@ export default {
           if (this.video_load_error || !this.video_dom) {
             return;
           }
-          this.video_dom && (await this.video_dom.play());
+          this.video_dom && this.video_dom.play();
           break;
         } catch (err) {
           ++deep;
