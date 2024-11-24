@@ -9,6 +9,6 @@
  # QQ:1491579574
  # Copyright (c) 2023 by SQS, All Rights Reserved. 
 ###
-php webman build:bin 8.2
-php webman build:bin 8.2
+php -d phar.readonly=0 webman build:bin 8.2
+php -d phar.readonly=0 webman build:bin 8.2
 ./sh/bin_up.sh

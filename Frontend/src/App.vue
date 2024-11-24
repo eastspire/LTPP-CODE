@@ -6,6 +6,7 @@
 </template>
 
 <script>
+import { compareVersion } from './utils/helper';
 window.onload = () => {
   document.addEventListener('touchstart', function (event) {
     if (event.touches.length > 1) {
@@ -171,8 +172,8 @@ export default {
           });
           return;
         }
-        // 版本不匹配，重新加载
-        if (this.version != res.version) {
+        // 版本过低
+        if (compareVersion(this.version, res.version) < 0) {
           this.$notice({
             title: '发现新版本！',
             dangerouslyUseHTMLString: true,

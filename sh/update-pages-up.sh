@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 cd ./Frontend
-npm run build
+yarn run build
 cd ./frontend
 cp ../../vercel.json ./
 git init

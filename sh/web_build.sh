@@ -10,6 +10,6 @@
  # Copyright (c) 2023 by SQS, All Rights Reserved. 
 ###
 cd ./Frontend
-npm run build
+yarn run build
 cd ../sh
 ./web_up.sh
