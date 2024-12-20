@@ -590,7 +590,7 @@ Vue.prototype.initDevice = function () {
   if (store.state.now_width != now_width) {
     store.commit('updateObj', { now_width: now_width });
   }
-  const is_mobile_view = now_width < 888;
+  const is_mobile_view = now_width <= 888;
   const max_width =
     is_mobile_view && !store.state.login
       ? window.screen.width
@@ -598,6 +598,15 @@ Vue.prototype.initDevice = function () {
           store.state.default_home_to_left_right * 2) /
           100) *
         86.3;
+  if (is_mobile_view && store.state.lookmusic) {
+    store.commit('updateObj', {
+      lookmusic: false,
+    });
+  } else if (!is_mobile_view && !store.state.lookmusic) {
+    store.commit('updateObj', {
+      lookmusic: true,
+    });
+  }
   if (store.state.max_width != max_width) {
     store.commit('updateObj', {
       max_width: max_width,

@@ -209,15 +209,14 @@
                 </template>
               </mavon-editor>
             </div>
-            <div style="height: 8rem" v-show="$store.state.login"></div>
-            <div slot="footer">
+            <div style="height: 4rem" v-show="$store.state.login"></div>
+            <div
+              slot="footer"
+              style="display: flex; justify-content: space-around"
+            >
               <el-button
-                v-show="$store.state.login"
-                @click="tohome()"
-                width="auto"
+                v-if="is_public == 1"
                 style="
-                  float: right;
-                  margin-right: 0rem;
                   background-color: rgba(
                     var(--ltpp-main-bk-color),
                     1
@@ -225,15 +224,63 @@
                   color: rgba(var(--ltpp-light-color), 1) !important;
                   font-size: 1.06rem;
                 "
-                class="el-icon-s-unfold pulse-enter-active"
+                @click="shareArticle()"
+                width="auto"
+                class="el-icon-share pulse-enter-active"
               >
-                返回</el-button
+                一键分享</el-button
+              >
+              <el-button
+                v-if="is_public == 1"
+                style="
+                  background-color: rgba(
+                    var(--ltpp-main-bk-color),
+                    1
+                  ) !important;
+                  color: rgba(var(--ltpp-light-color), 1) !important;
+                  font-size: 1.06rem;
+                "
+                @click="standbyShareArticle()"
+                width="auto"
+                class="el-icon-share pulse-enter-active"
+              >
+                备用分享</el-button
+              >
+              <el-button
+                v-if="is_can_edit && $store.state.login"
+                style="
+                  background-color: rgba(
+                    var(--ltpp-main-bk-color),
+                    1
+                  ) !important;
+                  color: rgba(var(--ltpp-light-color), 1) !important;
+                  font-size: 1.06rem;
+                "
+                @click="toupdateonearticle()"
+                width="auto"
+                class="el-icon-s-order pulse-enter-active"
+              >
+                编辑</el-button
+              >
+              <el-button
+                v-show="!isfabulous && $store.state.login"
+                style="
+                  background-color: rgba(
+                    var(--ltpp-main-bk-color),
+                    1
+                  ) !important;
+                  color: rgba(var(--ltpp-light-color), 1) !important;
+                  font-size: 1.06rem;
+                "
+                @click="fabulousClick()"
+                width="auto"
+                class="el-icon-message-solid pulse-enter-active"
+              >
+                点赞</el-button
               >
               <el-button
                 v-show="!islove && $store.state.login"
                 style="
-                  float: right;
-                  margin-right: 2rem;
                   background-color: rgba(
                     var(--ltpp-main-bk-color),
                     1
@@ -251,8 +298,6 @@
               <el-button
                 v-show="islove && $store.state.login"
                 style="
-                  float: right;
-                  margin-right: 2rem;
                   background-color: rgba(
                     var(--ltpp-main-bk-color),
                     1
@@ -268,28 +313,8 @@
               </el-button>
 
               <el-button
-                v-show="!isfabulous && $store.state.login"
-                style="
-                  float: right;
-                  margin-right: 2rem;
-                  background-color: rgba(
-                    var(--ltpp-main-bk-color),
-                    1
-                  ) !important;
-                  color: rgba(var(--ltpp-light-color), 1) !important;
-                  font-size: 1.06rem;
-                "
-                @click="fabulousClick()"
-                width="auto"
-                class="el-icon-message-solid pulse-enter-active"
-              >
-                点赞</el-button
-              >
-              <el-button
                 v-show="$store.state.login"
                 style="
-                  float: right;
-                  margin-right: 2rem;
                   background-color: rgba(
                     var(--ltpp-main-bk-color),
                     1
@@ -303,12 +328,11 @@
               >
                 下载</el-button
               >
-
               <el-button
-                v-if="is_public == 1"
+                v-show="$store.state.login"
+                @click="tohome()"
+                width="auto"
                 style="
-                  float: right;
-                  margin-right: 2rem;
                   background-color: rgba(
                     var(--ltpp-main-bk-color),
                     1
@@ -316,58 +340,19 @@
                   color: rgba(var(--ltpp-light-color), 1) !important;
                   font-size: 1.06rem;
                 "
-                @click="standbyShareArticle()"
-                width="auto"
-                class="el-icon-share pulse-enter-active"
+                class="el-icon-s-unfold pulse-enter-active"
               >
-                备用分享</el-button
-              >
-              <el-button
-                v-if="is_public == 1"
-                style="
-                  float: right;
-                  margin-right: 2rem;
-                  background-color: rgba(
-                    var(--ltpp-main-bk-color),
-                    1
-                  ) !important;
-                  color: rgba(var(--ltpp-light-color), 1) !important;
-                  font-size: 1.06rem;
-                "
-                @click="shareArticle()"
-                width="auto"
-                class="el-icon-share pulse-enter-active"
-              >
-                一键分享</el-button
-              >
-              <el-button
-                v-if="is_can_edit && $store.state.login"
-                style="
-                  float: right;
-                  margin-right: 2rem;
-                  background-color: rgba(
-                    var(--ltpp-main-bk-color),
-                    1
-                  ) !important;
-                  color: rgba(var(--ltpp-light-color), 1) !important;
-                  font-size: 1.06rem;
-                "
-                @click="toupdateonearticle()"
-                width="auto"
-                class="el-icon-s-order pulse-enter-active"
-              >
-                编辑</el-button
+                返回</el-button
               >
             </div>
           </div>
           <div style="height: 4rem" v-show="$store.state.login"></div>
-
           <div style="padding: 0rem 1.68rem">
-            <div style="height: 3.2rem" v-show="$store.state.login"></div>
-            <div style="height: 0.6rem" v-show="!$store.state.login"></div>
+            <div style="height: 1.36rem" v-show="!$store.state.login"></div>
             <div>
               <!-- 查看评论 -->
               <div v-show="comment.length <= 0" class="no-select">
+                <div style="height: 2.8rem" v-show="!$store.state.login"></div>
                 <p
                   style="font-size: 1rem; font-weight: bold; text-align: center"
                 >

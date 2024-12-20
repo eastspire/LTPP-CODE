@@ -43,6 +43,7 @@ const state = {
   server_error: false,
   image_use_remote: true,
   open_system_notice: true,
+  lookmusic: false,
 };
 
 export const root_state = {
@@ -73,6 +74,7 @@ export const root_state = {
   server_error: false,
   image_use_remote: true,
   open_system_notice: true,
+  lookmusic: false,
 };
 
 let timer = null;

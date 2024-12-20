@@ -25,7 +25,7 @@
         :style="`width:${scroll_percent}vw;background-color:var(--ltpp-top-scroll-color);height:0.26rem;`"
       ></div>
     </div>
-    <div v-if="lookmusic == 1">
+    <div v-if="$store.state.lookmusic == 1">
       <music v-domDrag class="musicdiv"></music>
     </div>
     <div
@@ -354,7 +354,13 @@
             <el-menu-item
               index=""
               @click="
-                lookmusic == 1 ? (lookmusic = 0) : (lookmusic = 1);
+                $store.state.lookmusic == 1
+                  ? $store.commit('updateObj', {
+                      lookmusic: 0,
+                    })
+                  : $store.commit('updateObj', {
+                      lookmusic: 1,
+                    });
                 changemusic();
               "
             >
@@ -783,7 +789,6 @@ export default {
       reg: /^(https?:\/\/(([a-zA-Z0-9]+-?)+[a-zA-Z0-9]+\.)+[a-zA-Z]+)(:\d+)?(\/.*)?(\?.*)?(#.*)?$/,
       socket_timer: null,
       activeIndex: '1',
-      lookmusic: 0,
       classurl: window?.location?.href,
       websocket: null,
       isseenotice: false,
@@ -1219,12 +1224,24 @@ export default {
         });
       });
       if (res?.code == 1) {
-        this.lookmusic = res?.data;
+        this.$store.commit('updateObj', {
+          lookmusic: res?.data,
+        });
       } else {
-        this.lookmusic = 0;
+        this.$store.commit('updateObj', {
+          lookmusic: 0,
+        });
       }
       if (!this.$store.state.login) {
-        this.lookmusic = 1;
+        if (window.screen.width <= 888) {
+          this.$store.commit('updateObj', {
+            lookmusic: 0,
+          });
+        } else {
+          this.$store.commit('updateObj', {
+            lookmusic: 1,
+          });
+        }
       }
     },
     async changemusic() {
@@ -1383,11 +1400,15 @@ export default {
       });
     },
     clearmusiclogin() {
-      const is_use_music = this.lookmusic;
-      this.lookmusic = 0;
+      const is_use_music = this.$store.state.lookmusic;
+      this.$store.commit('updateObj', {
+        lookmusic: 0,
+      });
       window.localStorage.removeItem('cookie');
       this.$nextTick(() => {
-        this.lookmusic = is_use_music;
+        this.$store.commit('updateObj', {
+          lookmusic: is_use_music,
+        });
         this.$msg({
           type: 'success',
           message: '音乐注销成功',
