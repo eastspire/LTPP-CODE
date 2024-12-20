@@ -95,24 +95,33 @@ class Article extends Image
         if (!$info) {
             return \json(['code' => -1, 'msg' => '无该文章']);
         }
+        $my_aid = null;
+        $isroot = false;
+        $islove = false;
+        $isfabulous = false;
         //权限验证
-        $my_uid = JwtToken::getCurrentId();
-        $my_aid = Base::getIdByUid($my_uid);
-        $isroot = Base::judgeIsRoot($my_aid);
+        try {
+            $my_uid = JwtToken::getCurrentId();
+            $my_aid = Base::getIdByUid($my_uid);
+            $isroot = Base::judgeIsRoot($my_aid);
+        } catch (Exception) {
+        }
         $can_edit = ($info->writerid == $my_aid) || $isroot;
         if ($info->public != 1 && $info->writerid != $my_aid && !$isroot) {
             return \json(['code' => -1, 'msg' => '私密文章不可见']);
         }
-        $islove = Db::table('lovearticle')
-            ->where('userid', $my_aid)
-            ->where('articleid', $article_id)
-            ->where('isdel', 0)
-            ->exists();
-        $isfabulous = Db::table('fabulousarticle')
-            ->where('userid', $my_aid)
-            ->where('articleid', $article_id)
-            ->where('isdel', 0)
-            ->exists();
+        if ($my_aid) {
+            $islove = Db::table('lovearticle')
+                ->where('userid', $my_aid)
+                ->where('articleid', $article_id)
+                ->where('isdel', 0)
+                ->exists();
+            $isfabulous = Db::table('fabulousarticle')
+                ->where('userid', $my_aid)
+                ->where('articleid', $article_id)
+                ->where('isdel', 0)
+                ->exists();
+        }
         Base::dataToSafe($info);
         return json(['code' => 1, 'data' => $info, 'love' => $islove, 'fabulous' => $isfabulous, 'edit' => $can_edit, 'msg' => '加载文章成功']);
     }

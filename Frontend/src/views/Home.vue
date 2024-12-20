@@ -25,7 +25,7 @@
         :style="`width:${scroll_percent}vw;background-color:var(--ltpp-top-scroll-color);height:0.26rem;`"
       ></div>
     </div>
-    <div v-if="$store.state.login && lookmusic == 1">
+    <div v-if="lookmusic == 1">
       <music v-domDrag class="musicdiv"></music>
     </div>
     <div
@@ -709,30 +709,28 @@ export default {
   name: 'Home',
   components: { music, totopbottom },
   beforeCreate() {
-    this.$store.commit('updateObj', { login: false });
     let authorization = window.localStorage.getItem('authorization');
     let key = window.localStorage.getItem('key');
-    if (!authorization || !key) {
-      this.logoutRemove();
-      return;
-    }
+    this.$store.commit('updateObj', { login: authorization && key });
   },
   async created() {
     addEventListener('scroll', this.scrollEvent);
     setInterval(this.scrollEvent, 360);
-    this.judgelogin();
-    await this.getGrade();
-    await this.loadSelfData();
-    this.$store.commit('updateObj', { my_id: this.getMyId() });
     await this.getBackurl();
-    this.loadmynoticenum();
+    if (this.$store.state.login) {
+      this.judgelogin();
+      await this.getGrade();
+      await this.loadSelfData();
+      this.$store.commit('updateObj', { my_id: this.getMyId() });
+      this.loadmynoticenum();
+      /* 每1分钟发送一次心跳 并 获取一下未读消息数目*/
+      this.timer = setInterval(() => {
+        this.loadmynoticenum();
+        this.sendheart();
+      }, 60000);
+    }
     this.isseenotice = false;
     this.getisusemusic();
-    /* 每1分钟发送一次心跳 并 获取一下未读消息数目*/
-    this.timer = setInterval(() => {
-      this.loadmynoticenum();
-      this.sendheart();
-    }, 60000);
   },
   activated() {
     this.onRouteChanged();
@@ -798,19 +796,21 @@ export default {
     setInterval(() => {
       this.initDevice();
     }, 1000);
-    this.$EventBus.$on('closeWs', () => this.closeWs());
-    this.$EventBus.$on('chatSendMsg', (e) => {
-      this.postmessage(e);
-    });
-    await this.getsocketurl();
-    await this.getclassurl();
-    await this.setup();
-    // 点击关闭浏览器时触发关闭事件
-    window.addEventListener('beforeunload', (e) => {
-      try {
-        this.websocket && this.websocket.close && this.websocket.close();
-      } catch (err) {}
-    });
+    if (this.$store.state.login) {
+      this.$EventBus.$on('closeWs', () => this.closeWs());
+      this.$EventBus.$on('chatSendMsg', (e) => {
+        this.postmessage(e);
+      });
+      await this.getsocketurl();
+      await this.getclassurl();
+      await this.setup();
+      // 点击关闭浏览器时触发关闭事件
+      window.addEventListener('beforeunload', (e) => {
+        try {
+          this.websocket && this.websocket.close && this.websocket.close();
+        } catch (err) {}
+      });
+    }
   },
 
   methods: {
@@ -1222,6 +1222,9 @@ export default {
         this.lookmusic = res?.data;
       } else {
         this.lookmusic = 0;
+      }
+      if (!this.$store.state.login) {
+        this.lookmusic = 1;
       }
     },
     async changemusic() {

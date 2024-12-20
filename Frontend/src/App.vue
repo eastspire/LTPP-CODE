@@ -45,7 +45,7 @@ export default {
   name: 'LTPP',
   data() {
     return {
-      version: '2.11.0',
+      version: '2.12.0',
       get_version_lock: false,
     };
   },
@@ -53,10 +53,7 @@ export default {
     this.initDevice();
     let authorization = window.localStorage.getItem('authorization');
     let key = window.localStorage.getItem('key');
-    if (!authorization || !key) {
-      this.logoutRemove();
-      return;
-    }
+    this.$store.commit('updateObj', { login: authorization && key });
   },
   async mounted() {
     try {

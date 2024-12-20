@@ -5,7 +5,6 @@
     style="margin-left: auto; margin-right: auto"
     class="no-select"
   >
-    <div style="height: 1rem"></div>
     <div
       v-loading.lock="!loadfinish"
       element-loading-text="拼命加载中"
@@ -13,7 +12,9 @@
       element-loading-background="background-color:rgba(var(--ltpp-main-bk-color),var(--ltpp-list-box-bk-opacity))"
     >
       <div class="shadow main-center-box-content">
-        <div style="margin-left: 1.6rem; margin-right: 1.6rem">
+        <div
+          :style="`margin: 0rem ${$store.state.default_md_page_to_left_right}rem`"
+        >
           <div>
             <div style="height: 2rem"></div>
             <div
@@ -135,7 +136,7 @@
 
           <!-- 发表评论 -->
           <div class="no-select">
-            <div class="markdown-body">
+            <div class="markdown-body" v-show="$store.state.login">
               <mavon-editor
                 ref="md1"
                 @imgAdd="$imgAdd1"
@@ -208,9 +209,10 @@
                 </template>
               </mavon-editor>
             </div>
-            <div style="height: 8rem"></div>
+            <div style="height: 8rem" v-show="$store.state.login"></div>
             <div slot="footer">
               <el-button
+                v-show="$store.state.login"
                 @click="tohome()"
                 width="auto"
                 style="
@@ -228,7 +230,7 @@
                 返回</el-button
               >
               <el-button
-                v-show="!islove"
+                v-show="!islove && $store.state.login"
                 style="
                   float: right;
                   margin-right: 2rem;
@@ -247,7 +249,7 @@
               </el-button>
 
               <el-button
-                v-show="islove"
+                v-show="islove && $store.state.login"
                 style="
                   float: right;
                   margin-right: 2rem;
@@ -266,7 +268,7 @@
               </el-button>
 
               <el-button
-                v-show="!isfabulous"
+                v-show="!isfabulous && $store.state.login"
                 style="
                   float: right;
                   margin-right: 2rem;
@@ -284,6 +286,7 @@
                 点赞</el-button
               >
               <el-button
+                v-show="$store.state.login"
                 style="
                   float: right;
                   margin-right: 2rem;
@@ -299,6 +302,25 @@
                 class="el-icon-s-platform pulse-enter-active"
               >
                 下载</el-button
+              >
+
+              <el-button
+                v-if="is_public == 1"
+                style="
+                  float: right;
+                  margin-right: 2rem;
+                  background-color: rgba(
+                    var(--ltpp-main-bk-color),
+                    1
+                  ) !important;
+                  color: rgba(var(--ltpp-light-color), 1) !important;
+                  font-size: 1.06rem;
+                "
+                @click="standbyShareArticle()"
+                width="auto"
+                class="el-icon-share pulse-enter-active"
+              >
+                备用分享</el-button
               >
               <el-button
                 v-if="is_public == 1"
@@ -316,10 +338,10 @@
                 width="auto"
                 class="el-icon-share pulse-enter-active"
               >
-                分享</el-button
+                一键分享</el-button
               >
               <el-button
-                v-if="is_can_edit"
+                v-if="is_can_edit && $store.state.login"
                 style="
                   float: right;
                   margin-right: 2rem;
@@ -338,10 +360,11 @@
               >
             </div>
           </div>
-          <div style="height: 4rem"></div>
+          <div style="height: 4rem" v-show="$store.state.login"></div>
 
-          <div>
-            <div style="height: 3.2rem"></div>
+          <div style="padding: 0rem 1.68rem">
+            <div style="height: 3.2rem" v-show="$store.state.login"></div>
+            <div style="height: 0.6rem" v-show="!$store.state.login"></div>
             <div>
               <!-- 查看评论 -->
               <div v-show="comment.length <= 0" class="no-select">
@@ -434,9 +457,10 @@
                         type="text"
                         class="el-icon-delete pulse-enter-active"
                         v-show="
-                          temcomment.userid == myid ||
-                          ($store.state.root &&
-                            $store.state.my_name === $SqsGlobal.root_name)
+                          $store.state.login &&
+                          (temcomment.userid == myid ||
+                            ($store.state.root &&
+                              $store.state.my_name === $SqsGlobal.root_name))
                         "
                         @click="deletecomment(temcomment.id)"
                       ></el-button>
@@ -445,6 +469,7 @@
                         width="auto"
                         type="text"
                         class="el-icon-s-comment pulse-enter-active"
+                        v-show="$store.state.login"
                         @click="
                           touserid = temcomment.userid;
                           maincomment_id = temcomment.id;
@@ -583,9 +608,11 @@
                             type="text"
                             class="el-icon-delete pulse-enter-active"
                             v-show="
-                              temtousercomment.userid == myid ||
-                              ($store.state.root &&
-                                $store.state.my_name === $SqsGlobal.root_name)
+                              $store.state.login &&
+                              (temtousercomment.userid == myid ||
+                                ($store.state.root &&
+                                  $store.state.my_name ===
+                                    $SqsGlobal.root_name))
                             "
                             @click="deletecomment(temtousercomment.id)"
                           ></el-button>
@@ -595,6 +622,7 @@
                             width="auto"
                             type="text"
                             class="el-icon-s-comment pulse-enter-active"
+                            v-show="$store.state.login"
                             @click="
                               touserid = temtousercomment.userid;
                               maincomment_id = temtousercomment.maincommentid;
@@ -796,7 +824,6 @@
         </div>
         <div style="height: 2rem"></div>
       </div>
-      <div style="height: 2rem"></div>
     </div>
   </div>
 </template>
@@ -805,7 +832,6 @@
 import urlencode from '../../../updateCompoents/urlencode';
 import '../../../updateCompoents/mavon-editor/dist/markdown/github-markdown.min.css';
 import '../../../updateCompoents/mavon-editor/dist/css/index.css';
-let copy_lock = false;
 let is_first = true;
 
 export default {
@@ -932,10 +958,17 @@ export default {
     };
   },
   methods: {
-    async shareArticle() {
+    async standbyShareArticle() {
       try {
         const back_url = await this.getBackurl();
         let url = back_url + '/Article/oneArticle?path=' + this.article_id;
+        this.copy(url);
+      } catch (err) {}
+    },
+    async shareArticle() {
+      try {
+        const front_url = await this.getFronturl();
+        let url = front_url + '/onearticle?path=' + this.$route.query.path;
         this.copy(url);
       } catch (err) {}
     },
@@ -1115,6 +1148,9 @@ export default {
       this.myid = this.getMyId();
     },
     touserpage(id) {
+      if (!this.$store.state.login) {
+        return;
+      }
       id &&
         id != this.$SqsGlobal.loading_tips &&
         this.$router.push({

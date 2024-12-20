@@ -1237,6 +1237,16 @@ class Base
         'lookContestProblemCode' => true,
         'proxyRequest' => true,
         'shareCode' => true,
+        // 文章页面无需登录的接口
+        'loadOneArticle' => true,
+        'loadComment' => true,
+        'getIsUseMusic' => true,
+        'getSystemNoticeConfig' => true,
+        'getCss' => true,
+        'getImageSaveType' => true,
+        'getFrontUrl' => true,
+        'getMusicUid' => true,
+        'getLoveid' => true
     ];
 
     /**

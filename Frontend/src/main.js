@@ -15,6 +15,7 @@ import router from './router';
 import './plugins/element.js'; //UI
 import '../updateCompoents/animate.css'; //动画
 import store from './plugins/vuex.js';
+import { root_state } from './plugins/vuex.js';
 import SqsGlobal from './plugins/SqsGlobal.js';
 /* md */
 import mavonEditor from '../public/md/mavon-editor';
@@ -589,14 +590,43 @@ Vue.prototype.initDevice = function () {
   if (store.state.now_width != now_width) {
     store.commit('updateObj', { now_width: now_width });
   }
+  const is_mobile_view = now_width < 888;
   const max_width =
-    ((Math.min(1920, window.screen.width) -
-      store.state.default_home_to_left_right * 2) /
-      100) *
-    86.3;
+    is_mobile_view && !store.state.login
+      ? window.screen.width
+      : ((Math.min(1920, window.screen.width) -
+          store.state.default_home_to_left_right * 2) /
+          100) *
+        86.3;
   if (store.state.max_width != max_width) {
     store.commit('updateObj', {
       max_width: max_width,
+    });
+  }
+  if (
+    is_mobile_view &&
+    (store.state.default_home_to_left_right !== 0 ||
+      store.state.default_margin_top_bottom !== 0 ||
+      store.state.default_md_page_to_left_right !== 0)
+  ) {
+    store.commit('updateObj', {
+      default_home_to_left_right: 0,
+      default_margin_top_bottom: 0,
+      default_md_page_to_left_right: 0,
+    });
+  } else if (
+    !is_mobile_view &&
+    (store.state.default_home_to_left_right !=
+      root_state.default_home_to_left_right ||
+      store.state.default_margin_top_bottom !=
+        root_state.default_margin_top_bottom ||
+      store.state.default_md_page_to_left_right !=
+        root_state.default_md_page_to_left_right)
+  ) {
+    store.commit('updateObj', {
+      default_home_to_left_right: root_state.default_home_to_left_right,
+      default_margin_top_bottom: root_state.default_margin_top_bottom,
+      default_md_page_to_left_right: root_state.default_md_page_to_left_right,
     });
   }
 };
@@ -924,6 +954,9 @@ Vue.prototype.changeImageSaveType = function () {
     duration: 3600,
     offset: 80,
   });
+  if (!store.state.login) {
+    return;
+  }
   // 更新服务端用户配置
   axios({
     url: '/User/changeImageSaveType',
@@ -945,9 +978,13 @@ Vue.prototype.getImageSaveType = function () {
     .then((res) => {
       if (res?.data?.code == 1) {
         this.$store.commit('updateObj', { image_use_remote: res?.data?.data });
+      } else {
+        this.$store.commit('updateObj', { image_use_remote: 0 });
       }
     })
-    .catch((t) => {});
+    .catch((t) => {
+      this.$store.commit('updateObj', { image_use_remote: 0 });
+    });
 };
 
 // 获取系统通知配置
@@ -960,6 +997,10 @@ Vue.prototype.getSystemNoticeConfig = function () {
       if (res?.data?.code == 1) {
         this.$store.commit('updateObj', {
           open_system_notice: res?.data?.data,
+        });
+      } else {
+        this.$store.commit('updateObj', {
+          open_system_notice: 1,
         });
       }
     })

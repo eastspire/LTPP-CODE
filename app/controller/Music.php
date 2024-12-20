@@ -12,6 +12,7 @@
 
 namespace app\controller;
 
+use Exception;
 use support\Request;
 use Tinywan\Jwt\JwtToken;
 
@@ -23,20 +24,28 @@ class Music
      */
     public function getMusicUid()
     {
-        $my_uid = JwtToken::getCurrentId();
-        $my_aid = Base::getIdByUid($my_uid);
-        $data = Base::getUserData($my_aid);
-        if (!$data || empty($data) || !isset($data->musicuid)) {
+        try {
+            $my_uid = JwtToken::getCurrentId();
+            $my_aid = Base::getIdByUid($my_uid);
+            $data = Base::getUserData($my_aid);
+            if (!$data || empty($data) || !isset($data->musicuid)) {
+                return json([
+                    'code' => 1,
+                    'musicuid' => '',
+                    'msg' => '用户未设置网易云音乐UID'
+                ]);
+            }
             return json([
                 'code' => 1,
-                'musicuid' => '',
-                'msg' => '用户未设置网易云音乐UID'
+                'musicuid' => $data->musicuid,
+                'msg' => '用户网易云音乐UID加载完成'
             ]);
+        } catch (Exception) {
         }
         return json([
             'code' => 1,
-            'musicuid' => $data->musicuid,
-            'msg' => '用户网易云音乐UID加载完成'
+            'musicuid' => '',
+            'msg' => '用户未设置网易云音乐UID'
         ]);
     }
 
@@ -47,20 +56,28 @@ class Music
      */
     public function getLoveid()
     {
-        $my_uid = JwtToken::getCurrentId();
-        $my_aid = Base::getIdByUid($my_uid);
-        $data = Base::getUserData($my_aid);
-        if (!$data || empty($data) || !isset($data->musiclovelistid)) {
+        try {
+            $my_uid = JwtToken::getCurrentId();
+            $my_aid = Base::getIdByUid($my_uid);
+            $data = Base::getUserData($my_aid);
+            if (!$data || empty($data) || !isset($data->musiclovelistid)) {
+                return json([
+                    'code' => 1,
+                    'musiclovelistid' => '',
+                    'msg' => '用户未设置网易云音乐歌单ID'
+                ]);
+            }
             return json([
                 'code' => 1,
-                'musiclovelistid' => '',
-                'msg' => '用户未设置网易云音乐歌单ID'
+                'musiclovelistid' => $data->musiclovelistid,
+                'msg' => '用户网易云音乐歌单ID加载完成'
             ]);
+        } catch (Exception) {
         }
         return json([
             'code' => 1,
-            'musiclovelistid' => $data->musiclovelistid,
-            'msg' => '用户网易云音乐歌单ID加载完成'
+            'musiclovelistid' => '',
+            'msg' => '用户未设置网易云音乐歌单ID'
         ]);
     }
 };

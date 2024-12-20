@@ -2,6 +2,7 @@
 
 namespace app\controller;
 
+use Exception;
 use stdClass;
 use support\Request;
 use Tinywan\Jwt\JwtToken;
@@ -97,14 +98,18 @@ class User
      */
     public function getIsUseMusic(Request $request)
     {
-        $my_uid = JwtToken::getCurrentId();
-        $my_aid = Base::getIdByUid($my_uid);
-        $db = Base::getUserData($my_aid);
-        if (!$db) {
-            return json(['code' => -1, 'data' => '用户不存在']);
+        try {
+            $my_uid = JwtToken::getCurrentId();
+            $my_aid = Base::getIdByUid($my_uid);
+            $db = Base::getUserData($my_aid);
+            if (!$db) {
+                return json(['code' => -1, 'data' => '用户不存在']);
+            }
+            $data = $db->isusemusic;
+            return json(['code' => 1, 'data' => $data]);
+        } catch (Exception) {
         }
-        $data = $db->isusemusic;
-        return json(['code' => 1, 'data' => $data]);
+        return json(['code' => -1, 'data' => '用户不存在']);
     }
 
     /**
@@ -143,11 +148,15 @@ class User
      */
     public function getCss()
     {
-        $my_uid = JwtToken::getCurrentId();
-        $my_aid = Base::getIdByUid($my_uid);
-        $db = Base::getUserData($my_aid);
-        $css = $db->root_css;
-        return json(['code' => 1, 'data' => $css, 'msg' => 'CSS获取成功']);
+        try {
+            $my_uid = JwtToken::getCurrentId();
+            $my_aid = Base::getIdByUid($my_uid);
+            $db = Base::getUserData($my_aid);
+            $css = $db->root_css;
+            return json(['code' => 1, 'data' => $css, 'msg' => 'CSS获取成功']);
+        } catch (Exception) {
+        }
+        return json(['code' => 1, 'data' => '', 'msg' => 'CSS获取成功']);
     }
 
     /**
@@ -1462,13 +1471,17 @@ class User
      */
     public function getImageSaveType()
     {
-        $my_uid = JwtToken::getCurrentId();
-        $my_aid = Base::getIdByUid($my_uid);
-        $db = Base::getUserData($my_aid);
-        if (!$db) {
-            return json(['code' => -1, 'msg' => '用户不存在', 'data' => false]);
+        try {
+            $my_uid = JwtToken::getCurrentId();
+            $my_aid = Base::getIdByUid($my_uid);
+            $db = Base::getUserData($my_aid);
+            if (!$db) {
+                return json(['code' => -1, 'msg' => '用户不存在', 'data' => false]);
+            }
+            return json(['code' => 1, 'msg' => '加载完成', 'data' => $db->image_use_remote]);
+        } catch (Exception) {
         }
-        return json(['code' => 1, 'msg' => '加载完成', 'data' => $db->image_use_remote]);
+        return json(['code' => -1, 'msg' => '用户不存在', 'data' => false]);
     }
 
     /**
@@ -1476,12 +1489,16 @@ class User
      */
     public function getSystemNoticeConfig()
     {
-        $my_uid = JwtToken::getCurrentId();
-        $my_aid = Base::getIdByUid($my_uid);
-        $db = Base::getUserData($my_aid);
-        if (!$db) {
-            return json(['code' => -1, 'msg' => '用户不存在', 'data' => false]);
+        try {
+            $my_uid = JwtToken::getCurrentId();
+            $my_aid = Base::getIdByUid($my_uid);
+            $db = Base::getUserData($my_aid);
+            if (!$db) {
+                return json(['code' => -1, 'msg' => '用户不存在', 'data' => false]);
+            }
+            return json(['code' => 1, 'msg' => '加载完成', 'data' => $db->open_system_notice]);
+        } catch (Exception) {
         }
-        return json(['code' => 1, 'msg' => '加载完成', 'data' => $db->open_system_notice]);
+        return json(['code' => -1, 'msg' => '用户不存在', 'data' => false]);
     }
 };

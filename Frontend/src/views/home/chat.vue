@@ -1,11 +1,13 @@
 <template>
   <div
-    :style="`height:${$store.state.no_scroll_height}vh`"
+    :style="`height:${$store.state.no_scroll_height * 1.02}vh`"
     @contextmenu.prevent=""
   >
     <el-container
       class="shadow ltpp-list-box"
-      :style="`height:${$store.state.no_scroll_height}vh; border: 1px solid rgba(0,0,0,0.1);`"
+      :style="`height:${
+        $store.state.no_scroll_height * 1.02
+      }vh; border: 1px solid rgba(0,0,0,0.1);`"
     >
       <el-aside
         v-loading.lock="!chat_list_loadfinish"
