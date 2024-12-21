@@ -35,7 +35,7 @@
           </div>
           <div style="margin-left: 1.38rem; overflow: auto">
             <div style="float: left" class="no-select">
-              <p style="margin: 0.36rem 0.88rem 0rem 0rem">
+              <p style="margin: 0.36rem 0.36rem 0rem 0rem">
                 <el-tag
                   size="small"
                   class="pulse-enter-active"
@@ -48,7 +48,7 @@
               </p>
             </div>
             <div style="float: left" class="no-select">
-              <p style="margin: 0.36rem 0.88rem 0rem 0rem">
+              <p style="margin: 0.36rem 0.36rem 0rem 0rem">
                 <el-tag
                   size="small"
                   effect="dark"
@@ -59,7 +59,7 @@
               </p>
             </div>
             <div style="float: left" class="no-select">
-              <p style="margin: 0.36rem 0.88rem 0rem 0rem">
+              <p style="margin: 0.36rem 0.36rem 0rem 0rem">
                 <el-tag
                   size="small"
                   effect="dark"
@@ -70,7 +70,7 @@
               </p>
             </div>
             <div style="float: left" class="no-select">
-              <p style="margin: 0.36rem 0.88rem 0rem 0rem">
+              <p style="margin: 0.36rem 0.36rem 0rem 0rem">
                 <el-tag
                   size="small"
                   effect="dark"
@@ -81,7 +81,7 @@
               </p>
             </div>
             <div style="float: left" class="no-select">
-              <p style="margin: 0.36rem 0.88rem 0rem 0rem">
+              <p style="margin: 0.36rem 0.36rem 0rem 0rem">
                 <el-tag
                   size="small"
                   effect="dark"
@@ -93,10 +93,7 @@
             </div>
           </div>
           <div style="clear: both"></div>
-          <div
-            style="text-align: right"
-            v-show="problemid != '' && problemid != 0"
-          >
+          <div style="text-align: right" v-show="problemid">
             <el-button
               type="text"
               @click="topropage()"
@@ -210,17 +207,14 @@
               </mavon-editor>
             </div>
             <div style="height: 4rem"></div>
-            <div
-              slot="footer"
-              style="
-                display: flex;
-                justify-content: space-between;
-                padding: 0rem 1.06rem;
-                align-items: center;
-              "
-            >
-              <div></div>
-              <div>
+            <div slot="footer" style="padding: 0rem 1.68rem">
+              <div
+                style="
+                  display: flex;
+                  justify-content: flex-end;
+                  align-items: center;
+                "
+              >
                 <el-button
                   v-if="is_public == 1"
                   style="
@@ -230,12 +224,13 @@
                     ) !important;
                     color: rgba(var(--ltpp-light-color), 1) !important;
                     font-size: 1.06rem;
+                    margin-top: 0.56rem;
                   "
                   @click="shareArticle()"
                   width="auto"
                   class="el-icon-share pulse-enter-active"
                 >
-                  一键分享</el-button
+                  分享</el-button
                 >
                 <el-button
                   v-if="is_public == 1"
@@ -246,13 +241,22 @@
                     ) !important;
                     color: rgba(var(--ltpp-light-color), 1) !important;
                     font-size: 1.06rem;
+                    margin-top: 0.56rem;
                   "
                   @click="standbyShareArticle()"
                   width="auto"
                   class="el-icon-share pulse-enter-active"
                 >
-                  备用分享</el-button
+                  外链</el-button
                 >
+              </div>
+              <div
+                style="
+                  display: flex;
+                  justify-content: flex-end;
+                  align-items: center;
+                "
+              >
                 <el-button
                   v-show="is_can_edit"
                   style="
@@ -262,6 +266,7 @@
                     ) !important;
                     color: rgba(var(--ltpp-light-color), 1) !important;
                     font-size: 1.06rem;
+                    margin-top: 0.56rem;
                   "
                   @click="toupdateonearticle()"
                   width="auto"
@@ -278,6 +283,7 @@
                     ) !important;
                     color: rgba(var(--ltpp-light-color), 1) !important;
                     font-size: 1.06rem;
+                    margin-top: 0.56rem;
                   "
                   @click="fabulousClick()"
                   width="auto"
@@ -294,6 +300,7 @@
                     ) !important;
                     color: rgba(var(--ltpp-light-color), 1) !important;
                     font-size: 1.06rem;
+                    margin-top: 0.56rem;
                   "
                   @click="collectionClick()"
                   width="auto"
@@ -311,6 +318,7 @@
                     ) !important;
                     color: rgba(var(--ltpp-light-color), 1) !important;
                     font-size: 1.06rem;
+                    margin-top: 0.56rem;
                   "
                   @click="delcollectionClick()"
                   width="auto"
@@ -328,6 +336,7 @@
                     ) !important;
                     color: rgba(var(--ltpp-light-color), 1) !important;
                     font-size: 1.06rem;
+                    margin-top: 0.56rem;
                   "
                   @click="btnExport()"
                   width="auto"
@@ -346,6 +355,7 @@
                     ) !important;
                     color: rgba(var(--ltpp-light-color), 1) !important;
                     font-size: 1.06rem;
+                    margin-top: 0.56rem;
                   "
                   class="el-icon-s-unfold pulse-enter-active"
                 >

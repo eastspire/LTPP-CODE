@@ -440,9 +440,7 @@ hr {
 
 pre {
   min-height: 1rem !important;
-  white-space: pre-wrap !important;
-  word-wrap: break-word !important;
-  overflow-wrap: break-word !important;
+  overflow: auto;
   font-family: Consolas, Monaco, DejaVu Sans Mono, monospace !important;
   display: block !important;
   overflow-x: auto !important;

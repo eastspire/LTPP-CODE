@@ -61,7 +61,7 @@
           </div>
           <div style="overflow: auto">
             <div style="float: left" class="no-select">
-              <p style="margin: 1rem 1rem 0.5rem 1rem">
+              <p style="margin: 0.36rem 0.36rem 0rem 0rem">
                 <el-tag
                   size="small"
                   class="pulse-enter-active"
@@ -74,7 +74,7 @@
               </p>
             </div>
             <div style="float: left" class="no-select">
-              <p style="margin: 1rem 1rem 0.5rem 1rem">
+              <p style="margin: 0.36rem 0.36rem 0rem 0rem">
                 <el-tag
                   size="small"
                   effect="dark"
@@ -176,109 +176,111 @@
               slot="footer"
               style="
                 display: flex;
-                justify-content: space-between;
-                padding: 0rem 1.06rem;
+                justify-content: flex-end;
                 align-items: center;
               "
             >
-              <div></div>
-              <div>
-                <el-button
-                  style="
-                    background-color: rgba(
-                      var(--ltpp-main-bk-color),
-                      1
-                    ) !important;
-                    color: rgba(var(--ltpp-light-color), 1) !important;
-                    font-size: 1.06rem;
-                  "
-                  @click="shareQuestion()"
-                  width="auto"
-                  class="el-icon-share pulse-enter-active"
-                >
-                  一键分享</el-button
-                >
-                <el-button
-                  style="
-                    background-color: rgba(
-                      var(--ltpp-main-bk-color),
-                      1
-                    ) !important;
-                    color: rgba(var(--ltpp-light-color), 1) !important;
-                    font-size: 1.06rem;
-                  "
-                  v-show="is_can_edit"
-                  @click="toupdateonequestion()"
-                  width="auto"
-                  class="el-icon-s-order pulse-enter-active"
-                >
-                  编辑</el-button
-                >
-                <el-button
-                  style="
-                    background-color: rgba(
-                      var(--ltpp-main-bk-color),
-                      1
-                    ) !important;
-                    color: rgba(var(--ltpp-light-color), 1) !important;
-                    font-size: 1.06rem;
-                  "
-                  v-show="islove"
-                  @click="delcollectionClick()"
-                  width="auto"
-                  class="el-icon-star-on pulse-enter-active"
-                >
-                  取消收藏
-                </el-button>
-                <el-button
-                  style="
-                    background-color: rgba(
-                      var(--ltpp-main-bk-color),
-                      1
-                    ) !important;
-                    color: rgba(var(--ltpp-light-color), 1) !important;
-                    font-size: 1.06rem;
-                  "
-                  v-show="!islove"
-                  @click="collectionClick()"
-                  width="auto"
-                  class="el-icon-star-off pulse-enter-active"
-                >
-                  收藏
-                </el-button>
-                <el-button
-                  style="
-                    background-color: rgba(
-                      var(--ltpp-main-bk-color),
-                      1
-                    ) !important;
-                    color: rgba(var(--ltpp-light-color), 1) !important;
-                    font-size: 1.06rem;
-                  "
-                  v-show="$store.state.login"
-                  @click="btnExport()"
-                  width="auto"
-                  class="el-icon-s-platform pulse-enter-active"
-                >
-                  下载</el-button
-                >
-                <el-button
-                  style="
-                    background-color: rgba(
-                      var(--ltpp-main-bk-color),
-                      1
-                    ) !important;
-                    color: rgba(var(--ltpp-light-color), 1) !important;
-                    font-size: 1.06rem;
-                  "
-                  v-show="$store.state.login"
-                  @click="tohome()"
-                  width="auto"
-                  class="el-icon-s-unfold pulse-enter-active"
-                >
-                  返回</el-button
-                >
-              </div>
+              <el-button
+                style="
+                  background-color: rgba(
+                    var(--ltpp-main-bk-color),
+                    1
+                  ) !important;
+                  color: rgba(var(--ltpp-light-color), 1) !important;
+                  font-size: 1.06rem;
+                  margin-top: 0.56rem;
+                "
+                @click="shareQuestion()"
+                width="auto"
+                class="el-icon-share pulse-enter-active"
+              >
+                分享</el-button
+              >
+              <el-button
+                style="
+                  background-color: rgba(
+                    var(--ltpp-main-bk-color),
+                    1
+                  ) !important;
+                  color: rgba(var(--ltpp-light-color), 1) !important;
+                  font-size: 1.06rem;
+                  margin-top: 0.56rem;
+                "
+                v-show="is_can_edit"
+                @click="toupdateonequestion()"
+                width="auto"
+                class="el-icon-s-order pulse-enter-active"
+              >
+                编辑</el-button
+              >
+              <el-button
+                style="
+                  background-color: rgba(
+                    var(--ltpp-main-bk-color),
+                    1
+                  ) !important;
+                  color: rgba(var(--ltpp-light-color), 1) !important;
+                  font-size: 1.06rem;
+                  margin-top: 0.56rem;
+                "
+                v-show="islove"
+                @click="delcollectionClick()"
+                width="auto"
+                class="el-icon-star-on pulse-enter-active"
+              >
+                取消收藏
+              </el-button>
+              <el-button
+                style="
+                  background-color: rgba(
+                    var(--ltpp-main-bk-color),
+                    1
+                  ) !important;
+                  color: rgba(var(--ltpp-light-color), 1) !important;
+                  font-size: 1.06rem;
+                  margin-top: 0.56rem;
+                "
+                v-show="!islove"
+                @click="collectionClick()"
+                width="auto"
+                class="el-icon-star-off pulse-enter-active"
+              >
+                收藏
+              </el-button>
+              <el-button
+                style="
+                  background-color: rgba(
+                    var(--ltpp-main-bk-color),
+                    1
+                  ) !important;
+                  color: rgba(var(--ltpp-light-color), 1) !important;
+                  font-size: 1.06rem;
+                  margin-top: 0.56rem;
+                "
+                v-show="$store.state.login"
+                @click="btnExport()"
+                width="auto"
+                class="el-icon-s-platform pulse-enter-active"
+              >
+                下载</el-button
+              >
+              <el-button
+                style="
+                  background-color: rgba(
+                    var(--ltpp-main-bk-color),
+                    1
+                  ) !important;
+                  color: rgba(var(--ltpp-light-color), 1) !important;
+                  font-size: 1.06rem;
+                  margin-top: 0.56rem;
+                "
+                v-show="$store.state.login"
+                @click="tohome()"
+                width="auto"
+                class="el-icon-s-unfold pulse-enter-active"
+              >
+                返回</el-button
+              >
             </div>
           </div>
           <div style="height: 4rem"></div>
@@ -737,7 +739,6 @@
         </div>
         <div style="height: 2rem"></div>
       </div>
-      <div style="height: 2rem"></div>
     </div>
   </div>
 </template>

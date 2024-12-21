@@ -3,7 +3,11 @@
     <transition name="fade">
       <div
         v-if="show_left_button"
-        class="scroll-to-bottom"
+        :class="`${
+          $store.state.login && $store.state.now_width > 888
+            ? 'scroll-to-bottom-login'
+            : 'scroll-to-bottom-no-login'
+        }`"
         @click="scrollToBottom"
       >
         <svg
@@ -52,7 +56,15 @@
       </div>
     </transition>
     <transition name="fade">
-      <div v-if="show_right_button" class="scroll-to-top" @click="scrollToTop">
+      <div
+        v-if="show_right_button"
+        :class="`${
+          $store.state.login && $store.state.now_width > 888
+            ? 'scroll-to-top-login'
+            : 'scroll-to-top-no-login'
+        }`"
+        @click="scrollToTop"
+      >
         <svg
           t="1702827657891"
           class="icon"
@@ -161,19 +173,37 @@ export default {
 </script>
 
 <style scoped>
-.scroll-to-bottom {
+.scroll-to-bottom-login {
   position: fixed;
   bottom: 2.8rem;
-  right: 3.78rem;
+  right: 3.88rem;
   background-color: transparent;
   cursor: pointer;
   z-index: 1000006 !important;
 }
 
-.scroll-to-top {
+.scroll-to-bottom-no-login {
+  position: fixed;
+  bottom: 2.8rem;
+  right: 1.78rem;
+  background-color: transparent;
+  cursor: pointer;
+  z-index: 1000006 !important;
+}
+
+.scroll-to-top-login {
   position: fixed;
   bottom: 6.6rem;
-  right: 3.78rem;
+  right: 3.88rem;
+  background-color: transparent;
+  cursor: pointer;
+  z-index: 1000006 !important;
+}
+
+.scroll-to-top-no-login {
+  position: fixed;
+  bottom: 6.6rem;
+  right: 1.78rem;
   background-color: transparent;
   cursor: pointer;
   z-index: 1000006 !important;
