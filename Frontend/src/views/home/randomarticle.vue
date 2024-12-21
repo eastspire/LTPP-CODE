@@ -10,7 +10,6 @@
     element-loading-spinner="el-icon-loading"
     element-loading-background="background-color:rgba(var(--ltpp-main-bk-color),var(--ltpp-list-box-bk-opacity))"
   >
-    <div style="height: 1rem"></div>
     <div v-show="loadfinish" class="shadow main-center-box-content">
       <div style="margin-left: 1.6rem; margin-right: 1.6rem">
         <div style="border-width: 0rem">

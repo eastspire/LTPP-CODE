@@ -285,7 +285,6 @@ class Answer
                 ->where('isdel', 0)
                 ->select(Answer::$answer_db_key)
                 ->get();
-
             if ($temdb && !empty($temdb)) {
                 foreach ($temdb as &$tt) {
                     $tt->userheadimg = '';

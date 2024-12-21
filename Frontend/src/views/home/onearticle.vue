@@ -33,7 +33,7 @@
               {{ this.name }}
             </div>
           </div>
-          <div style="margin-left: 1.38rem">
+          <div style="margin-left: 1.38rem; overflow: auto">
             <div style="float: left" class="no-select">
               <p style="margin: 0.36rem 0.88rem 0rem 0rem">
                 <el-tag
@@ -136,7 +136,7 @@
 
           <!-- 发表评论 -->
           <div class="no-select">
-            <div class="markdown-body" v-show="$store.state.login">
+            <div class="markdown-body">
               <mavon-editor
                 ref="md1"
                 @imgAdd="$imgAdd1"
@@ -209,150 +209,156 @@
                 </template>
               </mavon-editor>
             </div>
-            <div style="height: 4rem" v-show="$store.state.login"></div>
+            <div style="height: 4rem"></div>
             <div
               slot="footer"
-              style="display: flex; justify-content: space-around"
+              style="
+                display: flex;
+                justify-content: space-between;
+                padding: 0rem 1.06rem;
+                align-items: center;
+              "
             >
-              <el-button
-                v-if="is_public == 1"
-                style="
-                  background-color: rgba(
-                    var(--ltpp-main-bk-color),
-                    1
-                  ) !important;
-                  color: rgba(var(--ltpp-light-color), 1) !important;
-                  font-size: 1.06rem;
-                "
-                @click="shareArticle()"
-                width="auto"
-                class="el-icon-share pulse-enter-active"
-              >
-                一键分享</el-button
-              >
-              <el-button
-                v-if="is_public == 1"
-                style="
-                  background-color: rgba(
-                    var(--ltpp-main-bk-color),
-                    1
-                  ) !important;
-                  color: rgba(var(--ltpp-light-color), 1) !important;
-                  font-size: 1.06rem;
-                "
-                @click="standbyShareArticle()"
-                width="auto"
-                class="el-icon-share pulse-enter-active"
-              >
-                备用分享</el-button
-              >
-              <el-button
-                v-if="is_can_edit && $store.state.login"
-                style="
-                  background-color: rgba(
-                    var(--ltpp-main-bk-color),
-                    1
-                  ) !important;
-                  color: rgba(var(--ltpp-light-color), 1) !important;
-                  font-size: 1.06rem;
-                "
-                @click="toupdateonearticle()"
-                width="auto"
-                class="el-icon-s-order pulse-enter-active"
-              >
-                编辑</el-button
-              >
-              <el-button
-                v-show="!isfabulous && $store.state.login"
-                style="
-                  background-color: rgba(
-                    var(--ltpp-main-bk-color),
-                    1
-                  ) !important;
-                  color: rgba(var(--ltpp-light-color), 1) !important;
-                  font-size: 1.06rem;
-                "
-                @click="fabulousClick()"
-                width="auto"
-                class="el-icon-message-solid pulse-enter-active"
-              >
-                点赞</el-button
-              >
-              <el-button
-                v-show="!islove && $store.state.login"
-                style="
-                  background-color: rgba(
-                    var(--ltpp-main-bk-color),
-                    1
-                  ) !important;
-                  color: rgba(var(--ltpp-light-color), 1) !important;
-                  font-size: 1.06rem;
-                "
-                @click="collectionClick()"
-                width="auto"
-                class="el-icon-star-off pulse-enter-active"
-              >
-                收藏
-              </el-button>
+              <div></div>
+              <div>
+                <el-button
+                  v-if="is_public == 1"
+                  style="
+                    background-color: rgba(
+                      var(--ltpp-main-bk-color),
+                      1
+                    ) !important;
+                    color: rgba(var(--ltpp-light-color), 1) !important;
+                    font-size: 1.06rem;
+                  "
+                  @click="shareArticle()"
+                  width="auto"
+                  class="el-icon-share pulse-enter-active"
+                >
+                  一键分享</el-button
+                >
+                <el-button
+                  v-if="is_public == 1"
+                  style="
+                    background-color: rgba(
+                      var(--ltpp-main-bk-color),
+                      1
+                    ) !important;
+                    color: rgba(var(--ltpp-light-color), 1) !important;
+                    font-size: 1.06rem;
+                  "
+                  @click="standbyShareArticle()"
+                  width="auto"
+                  class="el-icon-share pulse-enter-active"
+                >
+                  备用分享</el-button
+                >
+                <el-button
+                  v-show="is_can_edit"
+                  style="
+                    background-color: rgba(
+                      var(--ltpp-main-bk-color),
+                      1
+                    ) !important;
+                    color: rgba(var(--ltpp-light-color), 1) !important;
+                    font-size: 1.06rem;
+                  "
+                  @click="toupdateonearticle()"
+                  width="auto"
+                  class="el-icon-s-order pulse-enter-active"
+                >
+                  编辑</el-button
+                >
+                <el-button
+                  v-show="!isfabulous"
+                  style="
+                    background-color: rgba(
+                      var(--ltpp-main-bk-color),
+                      1
+                    ) !important;
+                    color: rgba(var(--ltpp-light-color), 1) !important;
+                    font-size: 1.06rem;
+                  "
+                  @click="fabulousClick()"
+                  width="auto"
+                  class="el-icon-message-solid pulse-enter-active"
+                >
+                  点赞</el-button
+                >
+                <el-button
+                  v-show="!islove"
+                  style="
+                    background-color: rgba(
+                      var(--ltpp-main-bk-color),
+                      1
+                    ) !important;
+                    color: rgba(var(--ltpp-light-color), 1) !important;
+                    font-size: 1.06rem;
+                  "
+                  @click="collectionClick()"
+                  width="auto"
+                  class="el-icon-star-off pulse-enter-active"
+                >
+                  收藏
+                </el-button>
 
-              <el-button
-                v-show="islove && $store.state.login"
-                style="
-                  background-color: rgba(
-                    var(--ltpp-main-bk-color),
-                    1
-                  ) !important;
-                  color: rgba(var(--ltpp-light-color), 1) !important;
-                  font-size: 1.06rem;
-                "
-                @click="delcollectionClick()"
-                width="auto"
-                class="el-icon-star-on pulse-enter-active"
-              >
-                取消收藏
-              </el-button>
+                <el-button
+                  v-show="islove"
+                  style="
+                    background-color: rgba(
+                      var(--ltpp-main-bk-color),
+                      1
+                    ) !important;
+                    color: rgba(var(--ltpp-light-color), 1) !important;
+                    font-size: 1.06rem;
+                  "
+                  @click="delcollectionClick()"
+                  width="auto"
+                  class="el-icon-star-on pulse-enter-active"
+                >
+                  取消收藏
+                </el-button>
 
-              <el-button
-                v-show="$store.state.login"
-                style="
-                  background-color: rgba(
-                    var(--ltpp-main-bk-color),
-                    1
-                  ) !important;
-                  color: rgba(var(--ltpp-light-color), 1) !important;
-                  font-size: 1.06rem;
-                "
-                @click="btnExport()"
-                width="auto"
-                class="el-icon-s-platform pulse-enter-active"
-              >
-                下载</el-button
-              >
-              <el-button
-                v-show="$store.state.login"
-                @click="tohome()"
-                width="auto"
-                style="
-                  background-color: rgba(
-                    var(--ltpp-main-bk-color),
-                    1
-                  ) !important;
-                  color: rgba(var(--ltpp-light-color), 1) !important;
-                  font-size: 1.06rem;
-                "
-                class="el-icon-s-unfold pulse-enter-active"
-              >
-                返回</el-button
-              >
+                <el-button
+                  v-show="$store.state.login"
+                  style="
+                    background-color: rgba(
+                      var(--ltpp-main-bk-color),
+                      1
+                    ) !important;
+                    color: rgba(var(--ltpp-light-color), 1) !important;
+                    font-size: 1.06rem;
+                  "
+                  @click="btnExport()"
+                  width="auto"
+                  class="el-icon-s-platform pulse-enter-active"
+                >
+                  下载</el-button
+                >
+                <el-button
+                  v-show="$store.state.login"
+                  @click="tohome()"
+                  width="auto"
+                  style="
+                    background-color: rgba(
+                      var(--ltpp-main-bk-color),
+                      1
+                    ) !important;
+                    color: rgba(var(--ltpp-light-color), 1) !important;
+                    font-size: 1.06rem;
+                  "
+                  class="el-icon-s-unfold pulse-enter-active"
+                >
+                  返回</el-button
+                >
+              </div>
             </div>
           </div>
-          <div style="height: 4rem" v-show="$store.state.login"></div>
+          <div style="height: 4rem"></div>
           <div style="padding: 0rem 1.68rem">
-            <div style="height: 1.36rem" v-show="!$store.state.login"></div>
             <div>
               <!-- 查看评论 -->
               <div v-show="comment.length <= 0" class="no-select">
-                <div style="height: 2.8rem" v-show="!$store.state.login"></div>
                 <p
                   style="font-size: 1rem; font-weight: bold; text-align: center"
                 >
@@ -364,44 +370,38 @@
                 <div>
                   <!-- 评论 -->
                   <div>
-                    <el-avatar
-                      :src="temcomment.userheadimg"
-                      style="height: 3rem; width: 3rem; float: left"
-                    >
-                    </el-avatar>
-                    <el-tooltip
-                      class="item"
-                      effect="dark"
-                      :content="'用户名：' + temcomment.username"
-                      placement="right"
-                    >
-                      <el-button
-                        class="no-select"
-                        type="text"
-                        style="
-                          font-size: 1.06rem !important;
-                          color: deeppink;
-                          float: left;
-                          margin-left: 0.16rem;
-                          margin-top: 0.2rem;
-                        "
-                        @click="touserpage(temcomment.userid)"
-                        >{{ temcomment.username }}</el-button
-                      >
-                    </el-tooltip>
-                    <el-button
-                      class="no-select"
-                      type="text"
+                    <div
                       style="
-                        font-size: 1rem !important;
-                        color: greenyellow;
-                        float: left;
-                        cursor: auto;
-                        margin-top: 0.16rem;
+                        display: flex;
+                        align-items: flex-start;
+                        margin-bottom: 0.6rem;
                       "
-                      >（评论时间：{{ temcomment.time }}）</el-button
                     >
-                    <div style="clear: both; height: 0.56rem"></div>
+                      <el-avatar
+                        :src="temcomment.userheadimg"
+                        style="height: 3rem; width: 3rem"
+                      >
+                      </el-avatar>
+
+                      <el-tooltip
+                        class="item"
+                        effect="dark"
+                        :content="'用户名：' + temcomment.username"
+                        placement="right"
+                      >
+                        <el-button
+                          class="no-select"
+                          type="text"
+                          style="
+                            font-size: 1.06rem !important;
+                            color: deeppink;
+                            margin-bottom: 0rem;
+                          "
+                          @click="touserpage(temcomment.userid)"
+                          >{{ temcomment.username }}</el-button
+                        >
+                      </el-tooltip>
+                    </div>
                     <div class="markdown-body">
                       <mavon-editor
                         class="md shadow can-select"
@@ -433,19 +433,31 @@
                     </div>
                     <div style="text-align: right" class="no-select">
                       <el-button
+                        class="no-select"
+                        type="text"
+                        style="
+                          font-size: 1rem !important;
+                          color: greenyellow;
+                          cursor: auto;
+                        "
+                      >
+                        {{ temcomment.time }}
+                      </el-button>
+                    </div>
+                    <div style="text-align: right" class="no-select">
+                      <el-button
                         style="
                           font-size: 1.2rem;
                           color: deeppink;
-                          margin-right: 2rem;
+                          margin-right: 1.36rem;
                         "
                         width="auto"
                         type="text"
                         class="el-icon-delete pulse-enter-active"
                         v-show="
-                          $store.state.login &&
-                          (temcomment.userid == myid ||
-                            ($store.state.root &&
-                              $store.state.my_name === $SqsGlobal.root_name))
+                          temcomment.userid == myid ||
+                          ($store.state.root &&
+                            $store.state.my_name === $SqsGlobal.root_name)
                         "
                         @click="deletecomment(temcomment.id)"
                       ></el-button>
@@ -454,7 +466,6 @@
                         width="auto"
                         type="text"
                         class="el-icon-s-comment pulse-enter-active"
-                        v-show="$store.state.login"
                         @click="
                           touserid = temcomment.userid;
                           maincomment_id = temcomment.id;
@@ -469,90 +480,73 @@
                       v-for="temtousercomment in temcomment.touserarray"
                       :key="temtousercomment.index"
                     >
+                      <div style="height: 0.06rem"></div>
                       <div style="margin-left: 3.6rem">
-                        <el-avatar
-                          :src="temtousercomment.userheadimg"
-                          style="height: 3.4rem; width: 3.4rem; float: left"
+                        <div
+                          style="
+                            display: flex;
+                            align-items: center;
+                            margin-bottom: 0.6rem;
+                          "
                         >
-                        </el-avatar>
-                        <el-tooltip
-                          class="item"
-                          effect="dark"
-                          :content="'用户名：' + temtousercomment.username"
-                          placement="right"
-                        >
+                          <el-avatar
+                            :src="temtousercomment.userheadimg"
+                            style="height: 3.4rem; width: 3.4rem"
+                          >
+                          </el-avatar>
+                          <el-tooltip
+                            class="item"
+                            effect="dark"
+                            :content="'用户名：' + temtousercomment.username"
+                            placement="right"
+                          >
+                            <el-button
+                              class="no-select"
+                              type="text"
+                              style="
+                                font-size: 1.06rem !important;
+                                color: deeppink;
+                              "
+                              @click="touserpage(temtousercomment.userid)"
+                            >
+                              {{ temtousercomment.username }}
+                            </el-button>
+                          </el-tooltip>
                           <el-button
                             class="no-select"
                             type="text"
                             style="
-                              font-size: 1.06rem !important;
-                              color: deeppink;
-                              float: left;
-                              margin-left: 0.16rem;
-                              margin-top: 0.4rem;
+                              font-size: 0.9rem !important;
+                              color: deepskyblue;
+                              cursor: auto;
+                              margin-right: 0.78rem;
                             "
-                            @click="touserpage(temtousercomment.userid)"
+                            >回复</el-button
                           >
-                            {{ temtousercomment.username }}
-                          </el-button>
-                        </el-tooltip>
-                        <el-button
-                          class="no-select"
-                          type="text"
-                          style="
-                            font-size: 1rem !important;
-                            color: deepskyblue;
-                            float: left;
-                            margin-left: 1rem;
-                            cursor: auto;
-                            margin-top: 0.46rem;
-                          "
-                          >回复</el-button
-                        >
-                        <el-avatar
-                          :src="temtousercomment.touserheadimg"
-                          style="
-                            height: 3.4rem;
-                            width: 3.4rem;
-                            float: left;
-                            margin-left: 1rem;
-                          "
-                        >
-                        </el-avatar>
-                        <el-tooltip
-                          class="item"
-                          effect="dark"
-                          :content="'用户名：' + temtousercomment.tousername"
-                          placement="right"
-                        >
-                          <el-button
-                            class="no-select"
-                            type="text"
-                            style="
-                              font-size: 1.06rem !important;
-                              color: deeppink;
-                              float: left;
-                              margin-left: 0.16rem;
-                              margin-top: 0.4rem;
-                            "
-                            @click="touserpage(temtousercomment.touserid)"
+                          <el-avatar
+                            :src="temtousercomment.touserheadimg"
+                            style="height: 3.4rem; width: 3.4rem"
                           >
-                            {{ temtousercomment.tousername }}
-                          </el-button>
-                        </el-tooltip>
-                        <el-button
-                          class="no-select"
-                          type="text"
-                          style="
-                            font-size: 1.06rem !important;
-                            color: deepskyblue;
-                            float: left;
-                            cursor: auto;
-                            margin-top: 0.4rem;
-                          "
-                          >（评论时间：{{ temtousercomment.time }}）
-                        </el-button>
-                        <div style="clear: both; height: 0.56rem"></div>
+                          </el-avatar>
+                          <el-tooltip
+                            class="item"
+                            effect="dark"
+                            :content="'用户名：' + temtousercomment.tousername"
+                            placement="right"
+                          >
+                            <el-button
+                              class="no-select"
+                              type="text"
+                              style="
+                                font-size: 1.06rem !important;
+                                color: deeppink;
+                              "
+                              @click="touserpage(temtousercomment.touserid)"
+                            >
+                              {{ temtousercomment.tousername }}
+                            </el-button>
+                          </el-tooltip>
+                        </div>
                         <div class="markdown-body">
                           <mavon-editor
                             class="md shadow can-select"
@@ -584,6 +578,18 @@
                         </div>
                         <div style="text-align: right" class="no-select">
                           <el-button
+                            class="no-select"
+                            type="text"
+                            style="
+                              font-size: 1rem !important;
+                              color: deepskyblue;
+                              cursor: auto;
+                            "
+                            >{{ temtousercomment.time }}
+                          </el-button>
+                        </div>
+                        <div style="text-align: right" class="no-select">
+                          <el-button
                             style="
                               font-size: 1.2rem;
                               color: deeppink;
@@ -593,11 +599,9 @@
                             type="text"
                             class="el-icon-delete pulse-enter-active"
                             v-show="
-                              $store.state.login &&
-                              (temtousercomment.userid == myid ||
-                                ($store.state.root &&
-                                  $store.state.my_name ===
-                                    $SqsGlobal.root_name))
+                              temtousercomment.userid == myid ||
+                              ($store.state.root &&
+                                $store.state.my_name === $SqsGlobal.root_name)
                             "
                             @click="deletecomment(temtousercomment.id)"
                           ></el-button>
@@ -607,7 +611,6 @@
                             width="auto"
                             type="text"
                             class="el-icon-s-comment pulse-enter-active"
-                            v-show="$store.state.login"
                             @click="
                               touserid = temtousercomment.userid;
                               maincomment_id = temtousercomment.maincommentid;
@@ -1133,9 +1136,6 @@ export default {
       this.myid = this.getMyId();
     },
     touserpage(id) {
-      if (!this.$store.state.login) {
-        return;
-      }
       id &&
         id != this.$SqsGlobal.loading_tips &&
         this.$router.push({
@@ -1566,6 +1566,7 @@ export default {
 </script>
 <style lang="less" scoped>
 @import '../../../public/md/markdown/github-markdown.min.css';
+
 /**
 鼠标放上，图片变大
 */

@@ -49,7 +49,9 @@
         >
           <div style="height: 0.36rem"></div>
           <div style="display: flex; flex-direction: column; text-align: right">
-            <div style="display: flex; flex-direction: row">
+            <div
+              style="display: flex; flex-direction: row; align-items: center"
+            >
               <el-avatar
                 style="height: 3.6rem; width: 3.6rem"
                 :src="tem.headimage"
@@ -62,20 +64,13 @@
                   font-size: 1.06rem;
                   font-weight: bold;
                   color: deepskyblue;
-                  margin-top: 1rem;
                   margin-left: 1rem;
+                  margin-right: 1rem;
                 "
               >
                 {{ tem.writer }}
               </p>
-              <p
-                style="
-                  font-size: 1.06rem;
-                  color: rgba(38, 205, 77, 1);
-                  margin-top: 1.02rem;
-                  margin-left: 1.06rem;
-                "
-              >
+              <p style="font-size: 1rem; color: rgba(38, 205, 77, 1)">
                 提问于：{{ tem.time }}
               </p>
             </div>

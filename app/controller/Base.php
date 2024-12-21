@@ -1246,7 +1246,10 @@ class Base
         'getImageSaveType' => true,
         'getFrontUrl' => true,
         'getMusicUid' => true,
-        'getLoveid' => true
+        'getLoveid' => true,
+        // 问答详情页无需登录的接口
+        'loadOneQuestion' => true,
+        'loadAnswer' => true
     ];
 
     /**
@@ -1455,7 +1458,7 @@ class Base
                 !isset($header['key']) || empty($header['key']) ||
                 !isset($header['requestid']) || empty($header['requestid'])
             ) {
-                return json(['code' => 500, 'msg' => '非法访问！', 'data' => []]);
+                return json(['code' => 500, 'msg' => '请登录！', 'data' => []]);
             }
             if ($is_logout) {
                 return json(['code' => 500, 'msg' => '您已下线！请重新登录！', 'data' => []]);

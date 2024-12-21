@@ -4,7 +4,6 @@
     style="margin-left: auto; margin-right: auto"
     class="no-select"
   >
-    <div style="height: 1rem"></div>
     <div
       v-loading.lock="!loadfinish"
       element-loading-text="拼命加载中"
@@ -13,7 +12,7 @@
     >
       <div class="shadow main-center-box-content">
         <div style="height: 1rem"></div>
-        <div style="display: flex; flex-direction: row">
+        <div style="display: flex; flex-direction: row; align-items: center">
           <el-avatar
             style="height: 3.6rem; width: 3.6rem; margin-left: 1rem"
             :src="data['headimage']"
@@ -26,20 +25,13 @@
               font-size: 1.06rem;
               font-weight: bold;
               color: deepskyblue;
-              margin-top: 1rem;
               margin-left: 1rem;
+              margin-right: 1rem;
             "
           >
             {{ data['writer'] }}
           </p>
-          <p
-            style="
-              font-size: 1.06rem;
-              color: rgba(38, 205, 77, 1);
-              margin-top: 0.96rem;
-              margin-left: 1.06rem;
-            "
-          >
+          <p style="font-size: 1rem; color: rgba(38, 205, 77, 1)">
             提问于：{{ data['time'] }}
           </p>
         </div>
@@ -67,10 +59,11 @@
             >
             </mavon-editor>
           </div>
-          <div>
+          <div style="overflow: auto">
             <div style="float: left" class="no-select">
               <p style="margin: 1rem 1rem 0.5rem 1rem">
                 <el-tag
+                  size="small"
                   class="pulse-enter-active"
                   effect="dark"
                   type="danger"
@@ -83,6 +76,7 @@
             <div style="float: left" class="no-select">
               <p style="margin: 1rem 1rem 0.5rem 1rem">
                 <el-tag
+                  size="small"
                   effect="dark"
                   type="success"
                   style="font-size: 1.06rem; font-weight: bold"
@@ -167,98 +161,124 @@
                 </template>
               </mavon-editor>
             </div>
-
-            <div style="height: 8rem"></div>
-            <div slot="footer">
+            <div>
               <el-button
                 type="text"
-                style="
-                  float: left;
-                  margin-left: 0rem;
-                  color: chartreuse;
-                  font-size: 1.06rem;
-                  cursor: auto;
-                "
+                style="color: chartreuse; font-size: 1.06rem; cursor: auto"
                 width="auto"
                 class="el-icon-message-solid"
               >
                 累计回答：{{ data['answer_num'] }}次</el-button
               >
-              <el-button
-                type="text"
-                @click="tohome()"
-                width="auto"
-                style="
-                  float: right;
-                  margin-right: 0rem;
-                  color: red;
-                  font-size: 1.06rem;
-                "
-                class="el-icon-s-unfold pulse-enter-active"
-              >
-                返回</el-button
-              >
-              <el-button
-                type="text"
-                style="
-                  float: right;
-                  margin-right: 2rem;
-                  color: aqua;
-                  font-size: 1.06rem;
-                "
-                @click="btnExport()"
-                width="auto"
-                class="el-icon-s-platform pulse-enter-active"
-              >
-                下载</el-button
-              >
-              <el-button
-                v-show="!islove"
-                type="text"
-                style="
-                  float: right;
-                  margin-right: 2rem;
-                  color: aqua;
-                  font-size: 1.06rem;
-                "
-                @click="collectionClick()"
-                width="auto"
-                class="el-icon-star-off pulse-enter-active"
-              >
-                收藏
-              </el-button>
-
-              <el-button
-                v-show="islove"
-                type="text"
-                style="
-                  float: right;
-                  margin-right: 2rem;
-                  color: deeppink;
-                  font-size: 1.06rem;
-                "
-                @click="delcollectionClick()"
-                width="auto"
-                class="el-icon-star-on pulse-enter-active"
-              >
-                取消收藏
-              </el-button>
-
-              <el-button
-                v-if="is_can_edit"
-                type="text"
-                style="
-                  float: right;
-                  margin-right: 2rem;
-                  color: red;
-                  font-size: 1.06rem;
-                "
-                @click="toupdateonequestion()"
-                width="auto"
-                class="el-icon-s-order pulse-enter-active"
-              >
-                编辑</el-button
-              >
+            </div>
+            <div style="height: 4rem"></div>
+            <div
+              slot="footer"
+              style="
+                display: flex;
+                justify-content: space-between;
+                padding: 0rem 1.06rem;
+                align-items: center;
+              "
+            >
+              <div></div>
+              <div>
+                <el-button
+                  style="
+                    background-color: rgba(
+                      var(--ltpp-main-bk-color),
+                      1
+                    ) !important;
+                    color: rgba(var(--ltpp-light-color), 1) !important;
+                    font-size: 1.06rem;
+                  "
+                  @click="shareQuestion()"
+                  width="auto"
+                  class="el-icon-share pulse-enter-active"
+                >
+                  一键分享</el-button
+                >
+                <el-button
+                  style="
+                    background-color: rgba(
+                      var(--ltpp-main-bk-color),
+                      1
+                    ) !important;
+                    color: rgba(var(--ltpp-light-color), 1) !important;
+                    font-size: 1.06rem;
+                  "
+                  v-show="is_can_edit"
+                  @click="toupdateonequestion()"
+                  width="auto"
+                  class="el-icon-s-order pulse-enter-active"
+                >
+                  编辑</el-button
+                >
+                <el-button
+                  style="
+                    background-color: rgba(
+                      var(--ltpp-main-bk-color),
+                      1
+                    ) !important;
+                    color: rgba(var(--ltpp-light-color), 1) !important;
+                    font-size: 1.06rem;
+                  "
+                  v-show="islove"
+                  @click="delcollectionClick()"
+                  width="auto"
+                  class="el-icon-star-on pulse-enter-active"
+                >
+                  取消收藏
+                </el-button>
+                <el-button
+                  style="
+                    background-color: rgba(
+                      var(--ltpp-main-bk-color),
+                      1
+                    ) !important;
+                    color: rgba(var(--ltpp-light-color), 1) !important;
+                    font-size: 1.06rem;
+                  "
+                  v-show="!islove"
+                  @click="collectionClick()"
+                  width="auto"
+                  class="el-icon-star-off pulse-enter-active"
+                >
+                  收藏
+                </el-button>
+                <el-button
+                  style="
+                    background-color: rgba(
+                      var(--ltpp-main-bk-color),
+                      1
+                    ) !important;
+                    color: rgba(var(--ltpp-light-color), 1) !important;
+                    font-size: 1.06rem;
+                  "
+                  v-show="$store.state.login"
+                  @click="btnExport()"
+                  width="auto"
+                  class="el-icon-s-platform pulse-enter-active"
+                >
+                  下载</el-button
+                >
+                <el-button
+                  style="
+                    background-color: rgba(
+                      var(--ltpp-main-bk-color),
+                      1
+                    ) !important;
+                    color: rgba(var(--ltpp-light-color), 1) !important;
+                    font-size: 1.06rem;
+                  "
+                  v-show="$store.state.login"
+                  @click="tohome()"
+                  width="auto"
+                  class="el-icon-s-unfold pulse-enter-active"
+                >
+                  返回</el-button
+                >
+              </div>
             </div>
           </div>
           <div style="height: 4rem"></div>
@@ -283,44 +303,33 @@
                 <div>
                   <!-- 回答 -->
                   <div>
-                    <el-avatar
-                      :src="temanswer.userheadimg"
-                      style="height: 3rem; width: 3rem; float: left"
-                    >
-                    </el-avatar>
-                    <el-tooltip
-                      class="item"
-                      effect="dark"
-                      :content="'用户名：' + temanswer.username"
-                      placement="right"
-                    >
-                      <el-button
-                        class="no-select"
-                        type="text"
-                        style="
-                          font-size: 1.06rem !important;
-                          color: deeppink;
-                          float: left;
-                          margin-left: 0.16rem;
-                          margin-top: 0.2rem;
-                        "
-                        @click="touserpage(temanswer.userid)"
-                        >{{ temanswer.username }}</el-button
-                      >
-                    </el-tooltip>
-                    <el-button
-                      class="no-select"
-                      type="text"
+                    <div
                       style="
-                        font-size: 1.06rem !important;
-                        color: greenyellow;
-                        float: left;
-                        cursor: auto;
-                        margin-top: 0.16rem;
+                        display: flex;
+                        align-items: flex-start;
+                        margin-bottom: 0.6rem;
                       "
-                      >（回答时间：{{ temanswer.time }}）</el-button
                     >
-                    <div style="clear: both; height: 0.6rem"></div>
+                      <el-avatar
+                        :src="temanswer.userheadimg"
+                        style="height: 3rem; width: 3rem"
+                      >
+                      </el-avatar>
+                      <el-tooltip
+                        class="item"
+                        effect="dark"
+                        :content="'用户名：' + temanswer.username"
+                        placement="right"
+                      >
+                        <el-button
+                          class="no-select"
+                          type="text"
+                          style="font-size: 1.06rem !important; color: deeppink"
+                          @click="touserpage(temanswer.userid)"
+                          >{{ temanswer.username }}</el-button
+                        >
+                      </el-tooltip>
+                    </div>
                     <div class="markdown-body">
                       <mavon-editor
                         class="md shadow can-select"
@@ -349,6 +358,18 @@
                           color: var(--ltpp-main-text-color) !important;
                         "
                       ></mavon-editor>
+                    </div>
+                    <div style="text-align: right" class="no-select">
+                      <el-button
+                        class="no-select"
+                        type="text"
+                        style="
+                          font-size: 1rem !important;
+                          color: greenyellow;
+                          cursor: auto;
+                        "
+                        >{{ temanswer.time }}</el-button
+                      >
                     </div>
                     <div style="text-align: right" class="no-select">
                       <el-button
@@ -387,89 +408,72 @@
                       :key="temtouseranswer.index"
                     >
                       <div style="margin-left: 3.6rem">
-                        <el-avatar
-                          :src="temtouseranswer.userheadimg"
-                          style="height: 3.4rem; width: 3.4rem; float: left"
+                        <div
+                          style="
+                            display: flex;
+                            align-items: center;
+                            margin-bottom: 0.6rem;
+                          "
                         >
-                        </el-avatar>
-                        <el-tooltip
-                          class="item"
-                          effect="dark"
-                          :content="'用户名：' + temtouseranswer.username"
-                          placement="right"
-                        >
+                          <el-avatar
+                            :src="temtouseranswer.userheadimg"
+                            style="height: 3.4rem; width: 3.4rem"
+                          >
+                          </el-avatar>
+                          <el-tooltip
+                            class="item"
+                            effect="dark"
+                            :content="'用户名：' + temtouseranswer.username"
+                            placement="right"
+                          >
+                            <el-button
+                              class="no-select"
+                              type="text"
+                              style="
+                                font-size: 1.06rem !important;
+                                color: deeppink;
+                              "
+                              @click="touserpage(temtouseranswer.userid)"
+                            >
+                              {{ temtouseranswer.username }}
+                            </el-button>
+                          </el-tooltip>
                           <el-button
                             class="no-select"
                             type="text"
                             style="
-                              font-size: 1.06rem !important;
-                              color: deeppink;
-                              float: left;
-                              margin-left: 0.16rem;
-                              margin-top: 0.4rem;
+                              font-size: 0.9rem !important;
+                              color: deepskyblue;
+                              margin-right: 0.78rem;
+                              cursor: auto;
                             "
-                            @click="touserpage(temtouseranswer.userid)"
+                            >回复</el-button
                           >
-                            {{ temtouseranswer.username }}
-                          </el-button>
-                        </el-tooltip>
-                        <el-button
-                          class="no-select"
-                          type="text"
-                          style="
-                            font-size: 1.06rem !important;
-                            color: deepskyblue;
-                            float: left;
-                            margin-left: 1rem;
-                            cursor: auto;
-                            margin-top: 0.46rem;
-                          "
-                          >回复</el-button
-                        >
-                        <el-avatar
-                          :src="temtouseranswer.touserheadimg"
-                          style="
-                            height: 3.4rem;
-                            width: 3.4rem;
-                            float: left;
-                            margin-left: 1rem;
-                          "
-                        >
-                        </el-avatar>
-                        <el-tooltip
-                          class="item"
-                          effect="dark"
-                          :content="'用户名：' + temtouseranswer.tousername"
-                          placement="right"
-                        >
-                          <el-button
-                            class="no-select"
-                            type="text"
-                            style="
-                              font-size: 1.06rem !important;
-                              color: deeppink;
-                              float: left;
-                              margin-left: 0.16rem;
-                              margin-top: 0.4rem;
-                            "
-                            @click="touserpage(temtouseranswer.touserid)"
+                          <el-avatar
+                            :src="temtouseranswer.touserheadimg"
+                            style="height: 3.4rem; width: 3.4rem"
                           >
-                            {{ temtouseranswer.tousername }}
-                          </el-button>
-                        </el-tooltip>
-                        <el-button
-                          class="no-select"
-                          type="text"
-                          style="
-                            font-size: 1.06rem !important;
-                            color: deepskyblue;
-                            float: left;
-                            cursor: auto;
-                            margin-top: 0.4rem;
-                          "
-                          >（回答时间：{{ temtouseranswer.time }}）
-                        </el-button>
-                        <div style="clear: both; height: 0.6rem"></div>
+                          </el-avatar>
+                          <el-tooltip
+                            class="item"
+                            effect="dark"
+                            :content="'用户名：' + temtouseranswer.tousername"
+                            placement="right"
+                          >
+                            <el-button
+                              class="no-select"
+                              type="text"
+                              style="
+                                font-size: 1.06rem !important;
+                                color: deeppink;
+                                float: left;
+                              "
+                              @click="touserpage(temtouseranswer.touserid)"
+                            >
+                              {{ temtouseranswer.tousername }}
+                            </el-button>
+                          </el-tooltip>
+                        </div>
                         <div class="markdown-body">
                           <mavon-editor
                             class="md shadow can-select"
@@ -498,6 +502,18 @@
                               color: var(--ltpp-main-text-color) !important;
                             "
                           ></mavon-editor>
+                        </div>
+                        <div style="text-align: right" class="no-select">
+                          <el-button
+                            class="no-select"
+                            type="text"
+                            style="
+                              font-size: 1rem !important;
+                              color: deepskyblue;
+                              cursor: auto;
+                            "
+                            >{{ temtouseranswer.time }}
+                          </el-button>
                         </div>
                         <div style="text-align: right" class="no-select">
                           <el-button
@@ -808,6 +824,7 @@ export default {
       istouseranswer: false,
       is_can_edit: false,
       data: {},
+      no_more: false,
       total: 0,
       /* context:  */
       toolbars: {
@@ -843,6 +860,13 @@ export default {
     };
   },
   methods: {
+    async shareQuestion() {
+      try {
+        const front_url = await this.getFronturl();
+        let url = front_url + '/onequestion?path=' + this.$route.query.path;
+        this.copy(url);
+      } catch (err) {}
+    },
     async addlist() {
       //加载更多
       let scrollTop =
@@ -1071,7 +1095,7 @@ export default {
       }
     },
     async lookanswer() {
-      if (this.islock) {
+      if (this.islock || this.no_more) {
         return;
       }
       this.islock = true;
@@ -1097,6 +1121,7 @@ export default {
                 this.answer.push(tem);
               });
             } else {
+              this.no_more = true;
               this.$msg({
                 type: 'success',
                 message: '没有更多回答了！',

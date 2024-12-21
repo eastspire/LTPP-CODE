@@ -45,7 +45,7 @@ export default {
   name: 'LTPP',
   data() {
     return {
-      version: '2.12.0',
+      version: '2.13.0',
       get_version_lock: false,
     };
   },
@@ -1579,6 +1579,7 @@ p {
 
 .v-note-wrapper {
   z-index: 1 !important;
+  min-width: auto !important;
 }
 
 .is-active {

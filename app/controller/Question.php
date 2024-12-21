@@ -12,6 +12,7 @@
 
 namespace app\controller;
 
+use Exception;
 use support\Request;
 use support\Db;
 use support\Redis;
@@ -138,8 +139,12 @@ class Question
      */
     public function loadOneQuestion(Request $request)
     {
-        $my_uid = JwtToken::getCurrentId();
-        $my_aid = Base::getIdByUid($my_uid);
+        $my_aid = null;
+        try {
+            $my_uid = JwtToken::getCurrentId();
+            $my_aid = Base::getIdByUid($my_uid);
+        } catch (Exception) {
+        }
         $question_uid = $request->post('question_id');
         $question_id = Base::getIdByUid($question_uid);
         $db = Db::table('question')
@@ -155,18 +160,21 @@ class Question
             $db->writer = $user->name;
             $db->headimage = $user->headimage;
         }
-        $islove = Db::table('lovequestion')
-            ->where('questionid', $question_id)
-            ->where('userid', $my_aid)
-            ->where('isdel', 0)
-            ->exists();
+        $islove = false;
+        if ($my_aid) {
+            $islove = Db::table('lovequestion')
+                ->where('questionid', $question_id)
+                ->where('userid', $my_aid)
+                ->where('isdel', 0)
+                ->exists();
+        }
         if ($islove) {
             $db->islove = true;
         } else {
             $db->islove = false;
         }
         $is_can_edit = false;
-        if ($db->userid == $my_aid || Base::judgeIsRoot($my_aid)) {
+        if ($my_aid && ($db->userid == $my_aid || Base::judgeIsRoot($my_aid))) {
             $is_can_edit = true;
         }
         $db->question = Base::removeImgAlt($db->question);
