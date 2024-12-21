@@ -567,7 +567,7 @@ export default {
         this.$route.query.path != null
       )
     ) {
-      this.$router.go(-1);
+      this.toback();
       return;
     }
     this.userid = urlencode.decode(this.$route.query.path, 'gbk');
@@ -837,15 +837,6 @@ export default {
         });
       });
       this.userdata = res?.data;
-      if (res?.code != 1) {
-        this.$msg({
-          type: 'success',
-          message: '即将返回！',
-          duration: 1600,
-          offset: 80,
-        });
-        this.$router.go(-1);
-      }
     },
     async judgefollow() {
       const { data: res } = await this.$ajax({
