@@ -28,7 +28,7 @@ return [
     'transport' => 'tcp',
     'context' => [],
     'name' => 'LTPP',
-    'count' => (cpu_count() > 6 ? 6 : cpu_count()) * 4,
+    'count' => (cpu_count() > 6 ? 6 : cpu_count()) * 2,
     'user' => '',
     'group' => '',
     'reusePort' => false,

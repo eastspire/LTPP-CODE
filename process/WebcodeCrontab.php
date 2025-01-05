@@ -146,8 +146,8 @@ class WebcodeCrontab
 
     public function onWorkerStart()
     {
-        // 每8秒执行一次
-        new Crontab('*/8 * * * * *', function () {
+        // 每30秒执行一次
+        new Crontab('*/30 * * * * *', function () {
             try {
                 $this->runTask();
             } catch (Exception $e) {

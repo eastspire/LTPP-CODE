@@ -601,7 +601,7 @@
             type="password"
             show-password
             style="font-size: 1.06rem"
-            placeholder="请输入个人邮件服务器地址-协议+IP地址/域名:端口"
+            placeholder="请输入个人邮件服务器地址"
             v-model.lazy="resdata.mysmtpurl"
             @keyup.enter.native="updatesetting()"
           >
