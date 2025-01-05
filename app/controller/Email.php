@@ -34,12 +34,19 @@ class Email extends Image
             $mail->SMTPDebug = 0; //取消debug，防止输出影响结果
             $mail->isSMTP();
             $mail->SMTPAuth = true;
-            $mail->SMTPSecure = 'ssl'; // 使用 ssl 加密方式登录boolean
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS; // 使用 ssl 加密方式登录boolean
             $mail->Port = 465; //smtp 服务器的远程服务器端口号
             $mail->addAddress($to); // 传过来的收件人
             $mail->isHTML(true); // Set email format to HTML
             $mail->Subject = $title; //传过来的标题
             $mail->Body = $content; //传过来的内容
+            $mail->SMTPOptions = [
+                'ssl' => [
+                    'verify_peer'       => false,
+                    'verify_peer_name'  => false,
+                    'allow_self_signed' => true,
+                ],
+            ]; // 跳过 SSL 验证
             $useqqmail = (int) Base::getSettingKeyData('useqqmail');
             if ($useqqmail == 1) {
                 $smtpemail = Base::getSettingKeyData('smtp');
@@ -58,10 +65,10 @@ class Email extends Image
                 if (!$mail_url || !$mail_username) {
                     return;
                 }
-                $mail->Host = $mail_url; //qq邮箱的服务器地址
+                $mail->Host = $mail_url;
                 $mail->Username = $mail_username;
                 $mail->Password = $mail_password;
-                $mail->setFrom($mail_url, $to); //授权的qq邮箱（和上面一样），自己起的昵称
+                $mail->setFrom($mail_username, $to);
             }
             $mail->send();
         } catch (Exception $e) {
