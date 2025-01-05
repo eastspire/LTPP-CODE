@@ -34,6 +34,7 @@ class Email extends Image
             $mail->SMTPDebug = 0; //取消debug，防止输出影响结果
             $mail->isSMTP();
             $mail->SMTPAuth = true;
+            $mail->CharSet = PHPMailer::CHARSET_UTF8; // 编码
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS; // 使用 ssl 加密方式登录boolean
             $mail->Port = 465; //smtp 服务器的远程服务器端口号
             $mail->addAddress($to); // 传过来的收件人
