@@ -25,6 +25,7 @@
                 min-height: 3rem;
                 text-align: left;
                 margin-left: 1.38rem;
+                margin-right: 1.38rem;
                 font-weight: bold;
                 font-size: 1.66rem;
                 overflow: hidden;

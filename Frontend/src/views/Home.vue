@@ -1085,18 +1085,9 @@ export default {
       try {
         this.is_connect_success = false;
         this.ws_connect_finish = false;
-        let clock_timer = setInterval(() => {
-          if (
-            this.websocket &&
-            this.websocket.readyState &&
-            this.websocket.readyState === WebSocket.OPEN
-          ) {
-            clearInterval(clock_timer);
-            clock_timer = null;
-          } else if (this.websocket.readyState != WebSocket.CONNECTING) {
-            this.wsInitConnect().catch(() => {});
-          }
-        }, 3600);
+        if (this.websocket.readyState != WebSocket.CONNECTING) {
+          this.wsInitConnect().catch(() => {});
+        }
       } catch (err) {
         resolve();
       }
@@ -1148,12 +1139,7 @@ export default {
           duration: 1000,
           offset: 80,
         });
-        if (this.websocket.readyState === WebSocket.CLOSED) {
-          // 如果连接已经关闭,不再重复关闭
-          resolve();
-          return;
-        }
-        this.websocket.close();
+        this.wsInitConnect().catch(() => {});
         resolve();
       } catch (err) {
         resolve();
