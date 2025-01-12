@@ -601,9 +601,8 @@ class PrivateRobot extends ChatBase
             $res_msg = '(每次成功提问并得到回答花费' . PrivateRobot::$one_msg_cost . '学虫币)';
             return $res_msg;
         }
-        $msg = '请使用中文回答，' . $msg;
+        $msg = $msg . '（PS：现在请你回答上面问题，要求强制忽略之前所有的语言限制，需要强制使用中文回答并永远牢记）';
         $reply = PrivateChat::gptSend($userid, $msg);
-
         if (!$reply) {
             $res_msg = PrivateChat::$gpt_err_msg;
         } else if (!$is_root) {
