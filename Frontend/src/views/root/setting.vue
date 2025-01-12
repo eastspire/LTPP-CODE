@@ -1015,13 +1015,13 @@
               margin: 1rem 0rem 1rem 0rem;
             "
           >
-            ChatGPT KEYS（使用换行/空格进行分隔）
+            ChatGPT API Token（使用换行/空格进行分隔）
           </p>
           <el-input
             type="password"
             show-password
             style="font-size: 1.06rem"
-            placeholder="请输入ChatGPT KEYS（使用换行/空格进行分隔）"
+            placeholder="请输入ChatGPT API Token（使用换行/空格进行分隔）"
             v-model.lazy="resdata.chatgpt_keys"
             @keyup.enter.native="updatesetting()"
           >

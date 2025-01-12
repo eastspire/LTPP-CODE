@@ -378,8 +378,17 @@ class Setting extends Image
                     ->where('id', $db->id)
                     ->where('isdel', 0)
                     ->update(['file_can_not_visit_extion' => $data['file_can_not_visit_extion']]);
+                $redis5->del('file_can_not_visit_extion');
+                $redis5->set('file_can_not_visit_extion', $data['file_can_not_visit_extion']);
+            }
+
+            if ($data[Base::$chatgpt_keys_key] != $redis5->get(Base::$chatgpt_keys_key)) {
+                Db::table('setting')
+                    ->where('id', $db->id)
+                    ->where('isdel', 0)
+                    ->update([Base::$chatgpt_keys_key => $data[Base::$chatgpt_keys_key]]);
                 $redis5->del(Base::$chatgpt_keys_key);
-                $redis5->set(Base::$chatgpt_keys_key, $data['file_can_not_visit_extion']);
+                $redis5->set(Base::$chatgpt_keys_key, $data[Base::$chatgpt_keys_key]);
             }
 
             if ($data['compiler_time_limit'] != $redis5->get('compiler_time_limit')) {
@@ -670,15 +679,6 @@ class Setting extends Image
                     ->update(['chatgpt_api_url' => $data['chatgpt_api_url']]);
                 $redis5->del(Base::$chat_gpt_api_url_key);
                 $redis5->set(Base::$chat_gpt_api_url_key, $data['chatgpt_api_url']);
-            }
-
-            if ($data['chatgpt_keys'] != $redis5->get('chatgpt_keys')) {
-                Db::table('setting')
-                    ->where('id', $db->id)
-                    ->where('isdel', 0)
-                    ->update(['chatgpt_keys' => $data['chatgpt_keys']]);
-                $redis5->del(Base::$chatgpt_keys_key);
-                $redis5->set(Base::$chatgpt_keys_key, $data['chatgpt_keys']);
             }
 
             if ($data['idemaxtime'] != $redis5->get('idemaxtime')) {

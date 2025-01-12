@@ -668,10 +668,7 @@ class PrivateRobot extends ChatBase
             ];
 
             $data = [
-                'model' => 'gpt-3.5-turbo',
                 'messages' => $msg_list,
-                'temperature' => 0.9,
-                'stream' => false,
             ];
 
             /**
@@ -679,23 +676,26 @@ class PrivateRobot extends ChatBase
              */
             $gpt_api_url = Base::getChatGptUrl();
             $key_list = Base::getChatGptKeyList();
+            $content_length = strlen(json_encode($data));
             foreach ($key_list as &$api_key) {
                 $headers = [
+                    'Host:' . Base::getIp($gpt_api_url),
+                    'Content-Length:' . $content_length,
                     'Content-Type:application/json',
                     'Authorization:Bearer ' . $api_key
                 ];
                 $result = Base::postRequest($gpt_api_url, $headers, $data, true);
-                Robot::sendChatToOneUserMsg(
+                $result_json = json_decode($result, true);
+                Robot::sendChatToOneUserMsgAndEmail(
                     Base::getRobotId(),
                     '<strong>' . $time . ' ' . $user_name
-                        . ' 调用GPT详情</strong><br><strong>用户问题</strong><br>'
+                        . ' 调用GPT详情</strong><br><strong>用户：' . $user_name . '问题</strong><br>'
                         . $msg . '<br><strong>调用GPT回答</strong><br><pre style="white-space:pre-wrap;word-wrap:break-word;">'
-                        . ($result ? json_encode(json_decode($result, true), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) : '调用GPT失败！')
+                        . ($result ? json_encode($result_json, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) : '调用GPT失败！')
                         . '</pre>'
                 );
-                $result = json_decode($result, true);
-                if (isset($result['choices']) && sizeof($result['choices']) > 0 && isset($result['choices'][0]['message']) && isset($result['choices'][0]['message']['content'])) {
-                    return $result['choices'][0]['message']['content'];
+                if (isset($result_json['result']) && isset($result_json['result']['response']) && strlen($result_json['result']['response']) > 0) {
+                    return $result_json['result']['response'];
                 }
             }
         } catch (Exception $e) {
