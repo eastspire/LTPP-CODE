@@ -11,7 +11,7 @@
 <template>
   <div class="bottomIcpLink">
     <p class="footer">
-      <img src="../assets/icp.png" style="width: 1rem; height: 1rem" alt="" />
+      <!-- <img src="../assets/icp.png" style="width: 1rem; height: 1rem" alt="" />
       <a
         target="_blank"
         href="https://beian.miit.gov.cn/#/Integrated"
@@ -25,7 +25,7 @@
         class="link animate"
       >
         皖公网安备34060002040031号
-      </a>
+      </a> -->
       <a
         target="_blank"
         class="link animate"
