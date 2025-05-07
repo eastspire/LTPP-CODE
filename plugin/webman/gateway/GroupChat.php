@@ -27,13 +27,12 @@ use support\Db;
 class GroupChat extends ChatBase
 {
     // 发送群聊
-    static public function groupChat(&$client_id, &$message, &$db_my, &$db_user)
+    static public function groupChat(&$client_id, &$message, &$db_my)
     {
         $get_user_id = $db_my->id;
         $post_user_id = $message->user_id;
         // 即时通讯群聊名称
         $to_group = ChatBase::$group_chat_first_name . $post_user_id;
-
         $now = date('Y-m-d H:i:s', time());
         $msg = $message->msg;
         $db = Base::getGroupData($post_user_id);
@@ -288,12 +287,8 @@ class GroupChat extends ChatBase
     }
 
     // 解散群聊
-    static public function deleteChat(&$client_id, &$message, &$db_my)
-    {
-    }
+    static public function deleteChat(&$client_id, &$message, &$db_my) {}
 
     // 退出群聊
-    static public function exitChat(&$client_id, &$message, &$db_my)
-    {
-    }
+    static public function exitChat(&$client_id, &$message, &$db_my) {}
 }

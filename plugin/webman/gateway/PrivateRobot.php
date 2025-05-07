@@ -685,14 +685,6 @@ class PrivateRobot extends ChatBase
                 ];
                 $result = Base::postRequest($gpt_api_url, $headers, $data, true);
                 $result_json = json_decode($result, true);
-                Robot::sendChatToOneUserMsgAndEmail(
-                    Base::getRobotId(),
-                    '<strong>' . $time . ' ' . $user_name
-                        . ' 调用GPT详情</strong><br><strong>用户：' . $user_name . '问题</strong><br>'
-                        . $msg . '<br><strong>调用GPT回答</strong><br><pre style="white-space:pre-wrap;word-wrap:break-word;">'
-                        . ($result ? json_encode($result_json, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) : '调用GPT失败！')
-                        . '</pre>'
-                );
                 if (isset($result_json['result']) && isset($result_json['result']['response']) && strlen($result_json['result']['response']) > 0) {
                     return $result_json['result']['response'];
                 }

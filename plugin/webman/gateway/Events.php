@@ -24,13 +24,9 @@ use plugin\webman\gateway\PrivateChat;
 class Events extends ChatBase
 {
 
-    static public function onWorkerStart($worker)
-    {
-    }
+    static public function onWorkerStart($worker) {}
 
-    static public function onConnect($client_id)
-    {
-    }
+    static public function onConnect($client_id) {}
 
     /**
      * 获取authorization和onekey
@@ -127,8 +123,7 @@ class Events extends ChatBase
                     GroupChat::groupChat(
                         $client_id,
                         $message,
-                        $db_my,
-                        $db_user
+                        $db_my
                     );
                 } else if (ChatBase::judgeIsNoticeAndCanSendNotice($message, $db_my)) {
                     // 公告
