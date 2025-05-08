@@ -630,9 +630,7 @@ class PrivateRobot extends ChatBase
             if (!$user_data) {
                 return '';
             }
-            $user_name = $user_data->name;
             $robot = Base::getRobotId();
-            $time = date('Y-m-d H:i:s', time());
             $history = Db::table('privatechat')
                 ->orWhere(function ($query) use ($userid, $robot) {
                     $query
