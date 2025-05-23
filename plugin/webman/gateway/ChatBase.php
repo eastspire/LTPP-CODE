@@ -1,13 +1,13 @@
 <?php
 /*
- * @Author: 18855190718 1491579574@qq.com
+ * @Author: root@ltpp.vip
  * @Date: 2023-01-14 18:23:04
- * @LastEditors: SQS 1491579574@qq.com
+ * @LastEditors: SQS root@ltpp.vip
  * @LastEditTime: 2023-05-24 15:48:31
  * @FilePath: \LTPP\plugin\webman\gateway\ChatBase.php
- * @Description: Email:1491579574@qq.com
+ * @Description: Email:root@ltpp.vip
  * QQ:1491579574
- * Copyright (c) 2023 by 18855190718 1491579574@qq.com, All Rights Reserved. 
+ * Copyright (c) 2023 by root@ltpp.vip, All Rights Reserved. 
  */
 
 namespace plugin\webman\gateway;

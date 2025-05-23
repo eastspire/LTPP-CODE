@@ -1,7 +1,7 @@
 /*
- * @Author: ltpp-universe 1491579574@qq.com
+ * @Author: eastspire 1491579574@qq.com
  * @Date: 2023-08-07 18:43:57
- * @LastEditors: ltpp-universe 1491579574@qq.com
+ * @LastEditors: eastspire 1491579574@qq.com
  * @LastEditTime: 2024-01-08 22:06:49
  * @FilePath: \LTPP-CODE\Frontend\src\main.js
  * @Description: Email:1491579574@qq.com

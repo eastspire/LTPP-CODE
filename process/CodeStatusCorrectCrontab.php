@@ -1,13 +1,13 @@
 <?php
 /*
- * @Author: 18855190718 1491579574@qq.com
+ * @Author: root@ltpp.vip
  * @Date: 2023-01-12 12:38:58
- * @LastEditors: ltpp-universe 1491579574@qq.com
+ * @LastEditors: eastspire root@ltpp.vip
  * @LastEditTime: 2023-12-31 12:55:19
  * @FilePath: \LTPP-CODE\process\CodeStatusCorrectCrontab.php
- * @Description: Email:1491579574@qq.com
+ * @Description: Email:root@ltpp.vip
  * QQ:1491579574
- * Copyright (c) 2023 by 18855190718 1491579574@qq.com, All Rights Reserved. 
+ * Copyright (c) 2023 by root@ltpp.vip, All Rights Reserved. 
  */
 
 namespace process;

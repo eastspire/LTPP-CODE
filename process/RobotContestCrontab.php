@@ -1,8 +1,8 @@
 <?php
 /*
- * @Author: 18855190718 1491579574@qq.com
+ * @Author: 1491579574@qq.com
  * @Date: 2023-10-09 00:01:51
- * @LastEditors: ltpp-universe 1491579574@qq.com
+ * @LastEditors: eastspire 1491579574@qq.com
  * @LastEditTime: 2023-11-13 18:36:49
  * @FilePath: \LTPP-CODE\process\RobotContest.php
  * @Description: Email:1491579574@qq.com

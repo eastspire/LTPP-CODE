@@ -1,13 +1,13 @@
 <?php
 /*
- * @Author: 18855190718 1491579574@qq.com
+ * @Author: 1491579574@qq.com
  * @Date: 2023-01-12 12:38:58
- * @LastEditors: 18855190718 1491579574@qq.com
+ * @LastEditors: 1491579574@qq.com
  * @LastEditTime: 2023-03-11 21:41:57
  * @FilePath: \LTPP\app\controller\Dayproblem.php
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
- * Copyright (c) 2023 by 18855190718 1491579574@qq.com, All Rights Reserved. 
+ * Copyright (c) 2023 by 1491579574@qq.com, All Rights Reserved. 
  */
 
 namespace app\controller;
@@ -71,5 +71,4 @@ class Dayproblem extends Oj
         Base::dataToSafe($res);
         return json(['code' => 1, 'msg' => '加载成功', 'data' => $res, 'allnum' => $allnum]);
     }
-}
-;
+};

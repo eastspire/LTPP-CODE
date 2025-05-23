@@ -1,13 +1,13 @@
 <?php
 /*
- * @Author: 18855190718 1491579574@qq.com
+ * @Author: 1491579574@qq.com
  * @Date: 2023-01-26 12:20:24
- * @LastEditors: 18855190718 1491579574@qq.com
+ * @LastEditors: 1491579574@qq.com
  * @LastEditTime: 2023-08-21 14:54:09
  * @FilePath: \LTPP-CODE\app\controller\Chatfile.php
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
- * Copyright (c) 2023 by 18855190718 1491579574@qq.com, All Rights Reserved. 
+ * Copyright (c) 2023 by 1491579574@qq.com, All Rights Reserved. 
  */
 
 namespace app\controller;

@@ -1,8 +1,8 @@
 <?php
 /*
- * @Author: 18855190718 1491579574@qq.com
+ * @Author: 1491579574@qq.com
  * @Date: 2023-02-28 22:41:18
- * @LastEditors: 18855190718 1491579574@qq.com
+ * @LastEditors: 1491579574@qq.com
  * @LastEditTime: 2023-08-17 16:10:24
  * @FilePath: \LTPP-CODE\app\controller\AnswerImage.php
  * @Description: Email:1491579574@qq.com

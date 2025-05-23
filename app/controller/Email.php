@@ -1,13 +1,13 @@
 <?php
 /*
- * @Author: 18855190718 1491579574@qq.com
+ * @Author: 1491579574@qq.com
  * @Date: 2023-01-12 12:38:58
- * @LastEditors: ltpp-universe 1491579574@qq.com
+ * @LastEditors: eastspire 1491579574@qq.com
  * @LastEditTime: 2023-11-12 01:01:51
  * @FilePath: \LTPP-CODE\app\controller\Email.php
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
- * Copyright (c) 2023 by 18855190718 1491579574@qq.com, All Rights Reserved. 
+ * Copyright (c) 2023 by 1491579574@qq.com, All Rights Reserved. 
  */
 
 namespace app\controller;

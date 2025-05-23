@@ -2,7 +2,7 @@
 /*
  * @Author: SQS 1491579574@qq.com
  * @Date: 2023-06-02 11:58:18
- * @LastEditors: ltpp-universe 1491579574@qq.com
+ * @LastEditors: eastspire 1491579574@qq.com
  * @LastEditTime: 2023-12-30 11:20:54
  * @FilePath: \LTPP-CODE\app\queue\redis\ContestRank.php
  * @Description: Email:1491579574@qq.com

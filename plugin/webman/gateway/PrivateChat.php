@@ -1,13 +1,13 @@
 <?php
 /*
- * @Author: 18855190718 1491579574@qq.com
+ * @Author: 1491579574@qq.com
  * @Date: 2023-01-14 18:26:54
- * @LastEditors: 18855190718 1491579574@qq.com
+ * @LastEditors: 1491579574@qq.com
  * @LastEditTime: 2023-09-16 12:04:00
  * @FilePath: \LTPP-CODE\plugin\webman\gateway\PrivateChat.php
  * @Description: Email:1491579574@qq.com
  * QQ:1491579574
- * Copyright (c) 2023 by 18855190718 1491579574@qq.com, All Rights Reserved. 
+ * Copyright (c) 2023 by 1491579574@qq.com, All Rights Reserved. 
  */
 
 namespace plugin\webman\gateway;

@@ -1,11 +1,11 @@
 <?php
 /*
- * @Author: 18855190718 1491579574@qq.com
+ * @Author: root@ltpp.vip
  * @Date: 2023-10-09 00:01:51
- * @LastEditors: ltpp-universe 1491579574@qq.com
+ * @LastEditors: eastspire root@ltpp.vip
  * @LastEditTime: 2023-11-13 18:36:49
  * @FilePath: \LTPP-CODE\process\RobotContest.php
- * @Description: Email:1491579574@qq.com
+ * @Description: Email:root@ltpp.vip
  * QQ:1491579574
  * Copyright (c) 2023 by SQS, All Rights Reserved. 
  */

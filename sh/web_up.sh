@@ -1,11 +1,11 @@
 #!/bin/bash
 ###
- # @Author: 18855190718 1491579574@qq.com
+ # @Author: root@ltpp.vip
  # @Date: 2023-08-24 13:39:59
- # @LastEditors: 18855190718 1491579574@qq.com
+ # @LastEditors: root@ltpp.vip
  # @LastEditTime: 2023-10-08 07:55:39
  # @FilePath: \LTPP-CODE\web_up.sh
- # @Description: Email:1491579574@qq.com
+ # @Description: Email:root@ltpp.vip
  # QQ:1491579574
  # Copyright (c) 2023 by SQS, All Rights Reserved. 
 ###

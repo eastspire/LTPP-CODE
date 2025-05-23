@@ -1,11 +1,11 @@
 <?php
 /*
- * @Author: 18855190718 1491579574@qq.com
+ * @Author: root@ltpp.vip
  * @Date: 2023-02-28 22:41:18
- * @LastEditors: ltpp-universe 1491579574@qq.com
+ * @LastEditors: eastspire root@ltpp.vip
  * @LastEditTime: 2023-12-31 08:26:46
  * @FilePath: \LTPP-CODE\process\CreatContest.php
- * @Description: Email:1491579574@qq.com
+ * @Description: Email:root@ltpp.vip
  * QQ:1491579574
  * Copyright (c) 2023 by ${git_name_email}, All Rights Reserved. 
  */

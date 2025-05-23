@@ -1,7 +1,7 @@
 <!--
- * @Author: 18855190718 1491579574@qq.com
+ * @Author: 1491579574@qq.com
  * @Date: 2023-06-03 14:03:20
- * @LastEditors: 18855190718 1491579574@qq.com
+ * @LastEditors: 1491579574@qq.com
  * @LastEditTime: 2023-08-26 12:11:59
  * @FilePath: \LTPP-CODE\Frontend\src\components\myfooter.vue
  * @Description: Email:1491579574@qq.com

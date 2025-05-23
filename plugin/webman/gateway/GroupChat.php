@@ -1,13 +1,13 @@
 <?php
 /*
- * @Author: 18855190718 1491579574@qq.com
+ * @Author: root@ltpp.vip
  * @Date: 2023-01-14 18:26:54
- * @LastEditors: 18855190718 1491579574@qq.com
+ * @LastEditors: root@ltpp.vip
  * @LastEditTime: 2023-07-25 08:06:43
  * @FilePath: \LTPP-CODE\plugin\webman\gateway\GroupChat.php
- * @Description: Email:1491579574@qq.com
+ * @Description: Email:root@ltpp.vip
  * QQ:1491579574
- * Copyright (c) 2023 by 18855190718 1491579574@qq.com, All Rights Reserved. 
+ * Copyright (c) 2023 by root@ltpp.vip, All Rights Reserved. 
  */
 
 namespace plugin\webman\gateway;

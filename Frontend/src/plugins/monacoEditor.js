@@ -1,7 +1,7 @@
 /*
- * @Author: 18855190718 1491579574@qq.com
+ * @Author: 1491579574@qq.com
  * @Date: 2023-08-09 12:30:30
- * @LastEditors: 18855190718 1491579574@qq.com
+ * @LastEditors: 1491579574@qq.com
  * @LastEditTime: 2023-08-10 10:20:06
  * @FilePath: \LTPP-CODE\Frontend\src\plugins\monacoEditor.js
  * @Description: Email:1491579574@qq.com

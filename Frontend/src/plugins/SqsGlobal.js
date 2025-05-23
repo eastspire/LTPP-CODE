@@ -1,7 +1,7 @@
 /*
- * @Author: 18855190718 1491579574@qq.com
+ * @Author: 1491579574@qq.com
  * @Date: 2023-08-07 18:43:57
- * @LastEditors: ltpp-universe 1491579574@qq.com
+ * @LastEditors: eastspire 1491579574@qq.com
  * @LastEditTime: 2024-01-07 23:14:07
  * @FilePath: \LTPP-CODE\Frontend\src\plugins\SqsGlobal.js
  * @Description: Email:1491579574@qq.com

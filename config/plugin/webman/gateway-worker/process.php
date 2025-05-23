@@ -1,8 +1,8 @@
 <?php
 /*
- * @Author: 18855190718 1491579574@qq.com
+ * @Author: 1491579574@qq.com
  * @Date: 2023-01-12 12:38:58
- * @LastEditors: 18855190718 1491579574@qq.com
+ * @LastEditors: 1491579574@qq.com
  * @LastEditTime: 2023-09-24 22:05:13
  * @FilePath: \LTPP-CODE\config\plugin\webman\gateway-worker\process.php
  * @Description: Email:1491579574@qq.com
@@ -26,8 +26,7 @@ return [
                 'pingInterval' => 8,
                 'pingData' => '{"type":"ping"}',
                 'registerAddress' => '127.0.0.1:1236',
-                'onConnect' => function () {
-                },
+                'onConnect' => function () {},
             ]
         ]
     ],
