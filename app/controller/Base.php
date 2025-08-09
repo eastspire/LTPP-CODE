@@ -3129,17 +3129,12 @@ class Base
     static public function creatRobot()
     {
         try {
-            $redis5 = Redis::connection('db5');
-            if ($redis5->exists('robotid')) {
-                return $redis5->get('robotid');
-            }
             $robot_db = Db::table('user')
                 ->where('name', Base::$robot_name)
                 ->where('isdel', 0)
                 ->orderBy('id', 'desc')
                 ->select('id')
                 ->first();
-            $redis5->set('robotid', $robot_db->id);
             if ($robot_db) {
                 return $robot_db->id;
             }
@@ -3149,7 +3144,6 @@ class Base
             if (!$root_db) {
                 return $root_id;
             }
-
             $data = [
                 'name' => '机器人',
                 'password' => Base::passwordEncryption(rand(1, 100000) . time()),
@@ -3168,6 +3162,7 @@ class Base
             ];
             $res_id = Base::insertToDb('user', $data);
             $content = '系统机器人的账号不存在，系统已自动重新生成！机器人账号用户名：' . Base::$robot_name;
+            $redis5 = Redis::connection('db5');
             $redis5->set('robotid', $res_id);
             $offline = (int) Base::getSettingKeyData('offline');
             if ($offline == 0) {
