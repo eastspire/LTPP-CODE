@@ -71,6 +71,8 @@
 <script>
 import APlayer from '../../../updateCompoents/APlayer';
 import '../../../updateCompoents/APlayer/dist/APlayer.min.css';
+import { getPublicIpUrl } from '../../utils/ip';
+
 let ap;
 export default {
   name: 'music',
@@ -252,8 +254,8 @@ export default {
         return;
       });
       if (res1.code == 1) {
-        this.musicbackurl = res1.data;
         window.sessionStorage.setItem('musicbkurl', res1.data);
+        this.musicbackurl = getPublicIpUrl('http', 3000);
       }
     },
     /* 获取uid*/

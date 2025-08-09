@@ -35,7 +35,6 @@ _axios.interceptors.request.use(
       config.baseURL =
         store.state.backend_network_url ||
         store.state.default_backend_network_url;
-      request_url = config?.baseURL + config?.url;
       // Do something before request is sent
       let char_set = [];
       try {
@@ -49,11 +48,9 @@ _axios.interceptors.request.use(
           !config?.isNoInitRequest
         );
       }
-      if (config?.dataType !== 'jsonp') {
-        // 精确到毫秒
-        const now = new Date().getTime();
-        config.headers.Requestid = Vue.prototype.Base64Encode(now, char_set);
-      }
+      // 精确到毫秒
+      const now = new Date().getTime();
+      config.headers.Requestid = Vue.prototype.Base64Encode(now, char_set);
       /* 存在则不进行请求后端音乐地址 */
       if (
         config.portType &&
