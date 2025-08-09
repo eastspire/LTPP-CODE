@@ -13,13 +13,12 @@
 import Vue from 'vue';
 import axios from 'axios';
 import store from '../plugins/vuex.js';
+import { getPublicIpUrl } from '../utils/ip.js';
 
 // Full config:  https://github.com/axios/axios#request-config
 // axios.defaults.baseURL = process.env.baseURL || process.env.apiUrl || '';
 // axios.defaults.headers.common['Authorization'] = AUTH_TOKEN;
 // axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
-const skip_key_list = ['timerstamp='];
-const skip_key_list_len = skip_key_list?.length;
 
 let config = {
   baseURL: store.state.backend_network_url, //process.env.baseURL || process.env.apiUrl || ""
@@ -29,7 +28,6 @@ let config = {
 
 const _axios = axios.create(config);
 let musicbkurl = '';
-let request_url = '';
 
 _axios.interceptors.request.use(
   async function (config) {
@@ -69,7 +67,7 @@ _axios.interceptors.request.use(
       } else {
         // config.baseURL += ":48787";
         if (config.dataType == 'jsonp') {
-          musicbkurl = window.sessionStorage.getItem('musicbkurl');
+          musicbkurl = getPublicIpUrl('http', 3000);
           if (!musicbkurl) {
             const { data: res } = await axios({
               method: 'post',
@@ -109,41 +107,9 @@ _axios.interceptors.response.use(
       Vue.prototype.logoutRemove(true);
       return response;
     }
-
-    let skip = false;
-    const key = response?.request?.responseURL;
-    if (!key) {
-      return response;
-    }
-    for (let i = 0; i < skip_key_list_len; ++i) {
-      if (key?.indexOf(skip_key_list[i]) != -1) {
-        skip = true;
-        break;
-      }
-    }
-    if (!skip) {
-      try {
-        window.localStorage.setItem(key, JSON.stringify(response?.data));
-      } catch (err) {}
-    }
     return response;
   },
   function (error) {
-    try {
-      // Do something with response error
-      if (request_url) {
-        const cache_data = window.localStorage.getItem(request_url);
-        const cache_res = JSON.parse(cache_data) || {
-          data: [],
-          code: -1,
-          msg: `【请求失败】${error?.message}`,
-        };
-        const res = {
-          data: cache_res,
-        };
-        return res;
-      }
-    } catch (err) {}
     const res = {
       data: {
         code: -1,

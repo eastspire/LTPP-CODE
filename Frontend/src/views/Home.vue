@@ -708,6 +708,7 @@
 
 <script>
 import { resolve } from '../../updateCompoents/monaco-editor/esm/vs/base/common/path';
+import { getPublicIpUrl } from '../utils/ip';
 import music from './home/music.vue';
 import totopbottom from '../components/totopbottom.vue';
 
@@ -1293,7 +1294,7 @@ export default {
       }
     },
     async getsocketurl() {
-      this.socketurl = window.sessionStorage.getItem('socketurl');
+      this.socketurl = getPublicIpUrl('ws', 47272);
       if (this.socketurl) {
         return;
       }

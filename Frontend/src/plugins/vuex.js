@@ -10,8 +10,12 @@
  */
 import Vue from 'vue';
 import Vuex from 'vuex';
+import { getPublicIpUrl } from '../utils/ip';
+
 Vue.use(Vuex);
-const default_backend_network_url = 'https://api.ltpp.vip';
+
+let default_backend_network_url = getPublicIpUrl('http', 48787);
+
 const default_home_to_left_right = 16;
 const default_md_page_to_left_right = 1.6;
 

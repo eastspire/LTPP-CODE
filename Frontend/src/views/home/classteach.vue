@@ -95,6 +95,8 @@
 
 <script>
 import DPlayer from '../../../updateCompoents/dplayer';
+import { getPublicIpUrl } from '../../utils/ip';
+
 export default {
   name: 'classteach',
   data() {
@@ -140,7 +142,7 @@ export default {
         this.timer = null;
       }
     }, 360);
-    this.socketurl = window.sessionStorage.getItem('socketurl');
+    this.socketurl = getPublicIpUrl('ws', 47272);
     await this.getname();
     let authorization = window.localStorage.getItem('authorization');
     let key = window.localStorage.getItem('key');
