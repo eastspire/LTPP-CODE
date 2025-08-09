@@ -9,7 +9,13 @@ export function getPublicIpUrl(protocol, port) {
   const isIpAddress =
     /^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/.test(hostname) || hostname == 'localhost';
   if (isIpAddress) {
-    return `${protocol}://${hostname}:${port}`;
+    const isPrivateIp =
+      /^(10\.|172\.(1[6-9]|2[0-9]|3[0-1])\.|192\.168\.)/.test(hostname) ||
+      hostname === '127.0.0.1' ||
+      hostname == 'localhost';
+    if (!isPrivateIp) {
+      return `${protocol}://${hostname}:${port}`;
+    }
   }
   if (protocol.includes('http')) {
     if (port == 48787) {
