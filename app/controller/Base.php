@@ -1294,11 +1294,18 @@ class Base
     ];
 
     /**
-     * 防盗链设计，允许的referer
+     * 防盗链设计，允许的本地referer
      */
-    static $safe_referer_url = [
+    static $safe_local_referer_url = [
         'http://localhost',
-        'http://127.0.0.1'
+        'http://127.0.0.1',
+    ];
+
+    /**
+     * 防盗链设计，允许的服务器referer
+     */
+    static $safe_linux_list = [
+        'http://120.53.248.2:66'
     ];
 
     /**
@@ -1404,30 +1411,33 @@ class Base
                 if (!$referer) {
                     return Base::notFoundPage();
                 }
-                $linuxurl = Base::getSettingKeyData('GLOBlinuxurl');
+                $safe_linux_list = Base::$safe_linux_list;
+                $safe_linux_list[] = Base::getSettingKeyData('GLOBlinuxurl');
                 $front_url = Base::getSettingKeyData('GLOBfronturl');
-                foreach (Base::$safe_referer_url as &$tem_safe_referer_url) {
+                foreach (Base::$safe_local_referer_url as &$tem_safe_referer_url) {
                     if (strpos($referer, $tem_safe_referer_url) === 0) {
-                        // 来自本地访问，直接通过
+                        // 来自本地白名单，直接通过
                         return $handler($request);
                     }
                 }
-                foreach (Base::$file_can_visit_func as &$tem_file_can_visit_func) {
-                    // 允许来自LTPP后端的URL访问白名单
-                    if (strpos($referer, $linuxurl . $tem_file_can_visit_func) === 0) {
-                        return $handler($request);
-                    }
-                }
-                if (Base::getDomainFromUrl($referer) == Base::getDomainFromUrl($linuxurl)) {
-                    // 来自LTPP后端非白名单URL访问
-                    $file_can_not_visit_extion = Base::getFileCanNotVisitExtionList();
-                    foreach ($file_can_not_visit_extion as &$tem_file_can_not_visit_extion) {
-                        // 不可访问类型，直接拒绝
-                        if ($file_extion === $tem_file_can_not_visit_extion) {
-                            return Base::notFoundPage();
+                foreach ($safe_linux_list as $linuxurl) {
+                    foreach (Base::$file_can_visit_func as &$tem_file_can_visit_func) {
+                        // 允许来自LTPP后端的URL访问白名单
+                        if (strpos($referer, $linuxurl . $tem_file_can_visit_func) === 0) {
+                            return $handler($request);
                         }
                     }
-                    return $handler($request);
+                    if (Base::getDomainFromUrl($referer) == Base::getDomainFromUrl($linuxurl)) {
+                        // 来自LTPP后端非白名单URL访问
+                        $file_can_not_visit_extion = Base::getFileCanNotVisitExtionList();
+                        foreach ($file_can_not_visit_extion as &$tem_file_can_not_visit_extion) {
+                            // 不可访问类型，直接拒绝
+                            if ($file_extion === $tem_file_can_not_visit_extion) {
+                                return Base::notFoundPage();
+                            }
+                        }
+                        return $handler($request);
+                    }
                 }
                 if (Base::isDomainEndsWith($referer, Base::getDomainFromUrl($front_url))) {
                     // 来自LTPP系列，直接通过

@@ -25,7 +25,7 @@
         :style="`width:${scroll_percent}vw;background-color:var(--ltpp-top-scroll-color);height:0.26rem;`"
       ></div>
     </div>
-    <div v-if="$store.state.lookmusic == 1">
+    <div v-if="$store.state.lookmusic === 1">
       <music v-domDrag class="musicdiv"></music>
     </div>
     <div
@@ -354,7 +354,7 @@
             <el-menu-item
               index=""
               @click="
-                $store.state.lookmusic == 1
+                $store.state.lookmusic === 1
                   ? $store.commit('updateObj', {
                       lookmusic: 0,
                     })
