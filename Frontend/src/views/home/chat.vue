@@ -1311,12 +1311,6 @@ export default {
     async getLatestChatData() {
       try {
         if (!this.now_user.id || !this.now_user.type) {
-          this.$msg({
-            type: 'error',
-            message: '用户加载出错',
-            duration: 1600,
-            offset: 80,
-          });
           return;
         }
         const copy_now_user_id = this.now_user.id;
@@ -1395,12 +1389,6 @@ export default {
       this.isSeeLastBtn = false;
       const copy_now_user_id = this.now_user.id;
       if (!copy_now_user_id || !this.now_user.type) {
-        this.$msg({
-          type: 'error',
-          message: '用户加载出错',
-          duration: 1600,
-          offset: 80,
-        });
         return;
       }
 
