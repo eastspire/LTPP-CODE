@@ -1863,7 +1863,7 @@ class Base
             curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
-            curl_setopt($ch, CURLOPT_PROXY, 'http://' . Base::$clash_domain_name . ':' . Base::$clash_port);
+            // curl_setopt($ch, CURLOPT_PROXY, 'http://' . Base::$clash_domain_name . ':' . Base::$clash_port);
             // 禁用 SSL 证书验证
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
             // 禁用主机验证
@@ -1897,7 +1897,7 @@ class Base
             curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-            curl_setopt($ch, CURLOPT_PROXY, 'http://' . Base::$clash_domain_name . ':' . Base::$clash_port);
+            // curl_setopt($ch, CURLOPT_PROXY, 'http://' . Base::$clash_domain_name . ':' . Base::$clash_port);
             // 禁用 SSL 证书验证
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
             // 禁用主机验证
