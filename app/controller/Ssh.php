@@ -33,7 +33,7 @@ class Ssh
      * port起始端口
      * @var int $port_begin
      */
-    static $port_begin = 60000;
+    static $port_begin = 61000;
 
     /**
      * 用户购买锁的key
