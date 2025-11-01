@@ -5231,7 +5231,7 @@ class Base
             }
             return json_encode($trace, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         } catch (Exception $e) {
-            Robot::sendChatToOneUserMsgAndEmail(Base::getRootId(), '<h4>LTPP运行出错</h4><br><strong>Trace信息</strong><br>' . json_encode(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT)) . '<br><strong>报错信息</strong><br>' . $e->getMessage());
+            Robot::sendChatToOneUserMsg(Base::getRootId(), '<h4>LTPP运行出错</h4><br><strong>Trace信息</strong><br>' . json_encode(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT)) . '<br><strong>报错信息</strong><br>' . $e->getMessage());
         }
         return $res;
     }
@@ -5290,7 +5290,7 @@ class Base
             $notice_save_file_param = Base::strToHTMLSTR($notice_save_file_param);
             $msg = $same_start
                 . ($trace_str == Base::$default_trace_msg ? $trace_str : Base::noticeSaveFile($notice_save_file_param)) . $same_end;
-            Robot::sendChatToOneUserMsgAndEmail(
+            Robot::sendChatToOneUserMsg(
                 Base::getRootId(),
                 $msg,
             );

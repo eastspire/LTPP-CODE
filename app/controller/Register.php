@@ -99,6 +99,7 @@ class Register extends Email
             }
             $my_aid = Base::insertToDb('user', $data);
             if ($my_aid) {
+                $content = "";
                 Base::updateUserDataRedis($my_aid);
                 Cloudfile::creatFile($my_aid);
                 $offline = (int) Base::getSettingKeyData('offline');

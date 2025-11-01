@@ -1949,10 +1949,10 @@ class Contest
                 $now = date('Y-m-d H:i:s', time());
                 $chat_msg .= '<a href="' . $url . '" target="_blank"><strong>【' . $now . ' ' . $contest_db->name . ' 第' . $page . '页】查重结果（点击访问查重地址）</strong></a><br><br>';
             }
-            Robot::sendChatToOneUserMsgAndEmail($my_aid, $chat_msg);
+            Robot::sendChatToOneUserMsg($my_aid, $chat_msg);
             $root_id = Base::getRootId();
             if ($root_id != $my_aid) {
-                Robot::sendChatToOneUserMsgAndEmail($root_id, $chat_msg);
+                Robot::sendChatToOneUserMsg($root_id, $chat_msg);
             }
             // 删除查重缓存锁
             $redis32->del($contest_id);
