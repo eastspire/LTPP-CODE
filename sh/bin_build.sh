@@ -11,6 +11,7 @@
 ###
 php -d phar.readonly=0 webman build:bin 8.2
 php -d phar.readonly=0 webman build:bin 8.2
+gtl acp
 # ./sh/bin_up.sh
 cp ./build/LTPP ../LTPP
 cd ../LTPP
