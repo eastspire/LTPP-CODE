@@ -61,12 +61,12 @@ class Base
     /**
      * mysql端口
      */
-    static $mysql_port = 4466;
+    static $mysql_port = 13306;
 
     /**
      * redis端口
      */
-    static $redis_port = 6379;
+    static $redis_port = 16379;
 
     /**
      * ltpp-ssh端口
