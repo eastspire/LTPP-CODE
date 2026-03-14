@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of webman.
  *
@@ -24,7 +25,7 @@ return [
         ],
         'redis' => [
             'host' => '127.0.0.1',
-            'port' => 6379,
+            'port' => 16379,
             'auth' => '',
             'timeout' => 2,
             'database' => '',
@@ -39,21 +40,21 @@ return [
     ],
 
     'session_name' => 'PHPSID',
-    
+
     'auto_update_timestamp' => false,
 
-    'lifetime' => 7*24*60*60,
+    'lifetime' => 7 * 24 * 60 * 60,
 
-    'cookie_lifetime' => 365*24*60*60,
+    'cookie_lifetime' => 365 * 24 * 60 * 60,
 
     'cookie_path' => '/',
 
     'domain' => '',
-    
+
     'http_only' => true,
 
     'secure' => false,
-    
+
     'same_site' => '',
 
     'gc_probability' => [1, 1000],
