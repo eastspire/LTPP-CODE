@@ -9,6 +9,7 @@
  # QQ:1491579574
  # Copyright (c) 2023 by SQS, All Rights Reserved. 
 ###
+set -e
 cd ./Frontend
 yarn run build
 cd ../sh
