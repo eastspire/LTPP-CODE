@@ -2,20 +2,9 @@
 
 > **Learning · Teaching · Practice Platform** — An all-in-one online programming learning & collaboration platform that unifies *learning* and *practice* through articles, an in-browser IDE, an online judge (OJ), cloud Linux servers, short videos, Q&A, instant messaging, cloud disk, and an online shop.
 
-### 🌐 Online
-
-| Service | URL | Description |
-|---|---|---|
-| 🚀 **Main Platform** | **[ltpp.vip](https://ltpp.vip)** | The full LTPP application (registration, OJ, IDE, chat, …) |
-| 💻 **Web IDE** | **[ide.ltpp.vip](https://ide.ltpp.vip)** | Standalone online code editor (Monaco-based) |
-
----
-
 ### 🏷️ Badges
 
-**Live & Stack**
-[![Website](https://img.shields.io/website?url=https%3A%2F%2Fltpp.vip&label=ltpp.vip&logo=google-chrome&logoColor=white)](https://ltpp.vip)
-[![Website](https://img.shields.io/website?url=https%3A%2F%2Fide.ltpp.vip&label=ide.ltpp.vip&logo=google-chrome&logoColor=white)](https://ide.ltpp.vip)
+**Stack**
 [![PHP](https://img.shields.io/badge/PHP-%3E%3D8.2-777BB4?logo=php&logoColor=white)](https://www.php.net)
 [![Webman](https://img.shields.io/badge/Webman-%5E1.5.0-00A0E9)](https://www.workerman.net/doc/webman)
 [![Vue](https://img.shields.io/badge/Vue-2.7.16-42B883?logo=vue.js&logoColor=white)](https://v2.vuejs.org)
@@ -171,7 +160,7 @@ It is designed to run on modest hardware (the default HTTP listener binds to **`
 | Router / Store | `vue-router 3.5.2`, `vuex 3.6.2` |
 | HTTP | `axios 1.7.7` |
 | Build | **Vue CLI 5** + `less`, `monaco-editor-webpack-plugin`, `compression-webpack-plugin` |
-| Code Editor | **Monaco Editor** (12+ language highlighters loaded from `ide.ltpp.vip`) |
+| Code Editor | **Monaco Editor** with syntax-highlighting for 12+ languages |
 | Runtime | Node ≥ **v20.18.1**, Yarn ≥ **1.22.22** |
 
 ---
@@ -427,7 +416,7 @@ Per-environment overrides are recommended via `config/*.php` (database, redis, p
 
 The default `LTPP_public_static_path` is a route that maps any file-style URL to backend-stored content, dispatching by file extension:
 
-- **Code files** (`c`, `cpp`, `java`, `py`, `go`, `php`, `js`, `ts`, `rs`, `cs`, `rb`, `css`, `sh`, …) → syntax-highlighted HTML preview via Monaco language bundles (loaded from `https://ide.ltpp.vip/js/code/*.js`)
+- **Code files** (`c`, `cpp`, `java`, `py`, `go`, `php`, `js`, `ts`, `rs`, `cs`, `rb`, `css`, `sh`, …) → syntax-highlighted HTML preview via Monaco language bundles (server-side language map)
 - **Markdown** (`.md`) → rendered Markdown
 - **Other assets** → served with appropriate `Content-Type`, optional `gzip`, optional `Cache-Control: public,max-age=88888888`
 - **Unknown paths** → fallback 404 page
@@ -484,14 +473,12 @@ The codebase builds on the MIT-licensed [Webman](https://github.com/walkor/webma
 
 ---
 
-## 📬 Contact & Online Resources
+## 📬 Contact
 
-| Channel | Link |
+| Channel | Detail |
 |---|---|
-| 🌐 **Main Platform** | <https://ltpp.vip> |
-| 💻 **Web IDE** | <https://ide.ltpp.vip> |
-| 📦 **GitHub Repo** | <https://github.com/eastspire/LTPP-CODE> |
-| 🐛 **Issue Tracker** | <https://github.com/eastspire/LTPP-CODE/issues> |
+| 📦 **GitHub** | <https://github.com/eastspire/LTPP-CODE> |
+| 🐛 **Issues** | <https://github.com/eastspire/LTPP-CODE/issues> |
 | 💌 **Email** | `root@ltpp.vip` |
 | 💬 **QQ** | `1491579574` |
 | 👤 **Maintainer** | `eastspire` (SQS) |
