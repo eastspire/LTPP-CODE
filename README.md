@@ -480,7 +480,6 @@ The codebase builds on the MIT-licensed [Webman](https://github.com/walkor/webma
 | 📦 **GitHub** | <https://github.com/eastspire/LTPP-CODE> |
 | 🐛 **Issues** | <https://github.com/eastspire/LTPP-CODE/issues> |
 | 💌 **Email** | `root@ltpp.vip` |
-| 💬 **QQ** | `1491579574` |
 | 👤 **Maintainer** | `eastspire` (SQS) |
 
 > "学"与"练"的统一 — *Unifying learning and practice.*
