@@ -2,11 +2,39 @@
 
 > **Learning · Teaching · Practice Platform** — An all-in-one online programming learning & collaboration platform that unifies *learning* and *practice* through articles, an in-browser IDE, an online judge (OJ), cloud Linux servers, short videos, Q&A, instant messaging, cloud disk, and an online shop.
 
+### 🌐 Online
+
+| Service | URL | Description |
+|---|---|---|
+| 🚀 **Main Platform** | **[ltpp.vip](https://ltpp.vip)** | The full LTPP application (registration, OJ, IDE, chat, …) |
+| 💻 **Web IDE** | **[ide.ltpp.vip](https://ide.ltpp.vip)** | Standalone online code editor (Monaco-based) |
+
+---
+
+### 🏷️ Badges
+
+**Live & Stack**
+[![Website](https://img.shields.io/website?url=https%3A%2F%2Fltpp.vip&label=ltpp.vip&logo=google-chrome&logoColor=white)](https://ltpp.vip)
+[![Website](https://img.shields.io/website?url=https%3A%2F%2Fide.ltpp.vip&label=ide.ltpp.vip&logo=google-chrome&logoColor=white)](https://ide.ltpp.vip)
 [![PHP](https://img.shields.io/badge/PHP-%3E%3D8.2-777BB4?logo=php&logoColor=white)](https://www.php.net)
 [![Webman](https://img.shields.io/badge/Webman-%5E1.5.0-00A0E9)](https://www.workerman.net/doc/webman)
 [![Vue](https://img.shields.io/badge/Vue-2.7.16-42B883?logo=vue.js&logoColor=white)](https://v2.vuejs.org)
 [![Workerman](https://img.shields.io/badge/Workerman-powered-brightgreen)](https://www.workerman.net)
+[![Node](https://img.shields.io/badge/Node-%3E%3Dv20.18.1-339933?logo=node.js&logoColor=white)](https://nodejs.org)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
+**Repository**
+[![GitHub stars](https://img.shields.io/github/stars/eastspire/LTPP-CODE?style=social)](https://github.com/eastspire/LTPP-CODE/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/eastspire/LTPP-CODE?style=social)](https://github.com/eastspire/LTPP-CODE/network/members)
+[![GitHub watchers](https://img.shields.io/github/watchers/eastspire/LTPP-CODE?style=social)](https://github.com/eastspire/LTPP-CODE/watchers)
+[![GitHub issues](https://img.shields.io/github/issues/eastspire/LTPP-CODE)](https://github.com/eastspire/LTPP-CODE/issues)
+[![GitHub pull requests](https://img.shields.io/github/issues-pr/eastspire/LTPP-CODE)](https://github.com/eastspire/LTPP-CODE/pulls)
+[![GitHub last commit](https://img.shields.io/github/last-commit/eastspire/LTPP-CODE)](https://github.com/eastspire/LTPP-CODE/commits/master)
+[![GitHub commit activity](https://img.shields.io/github/commit-activity/m/eastspire/LTPP-CODE)](https://github.com/eastspire/LTPP-CODE/commits/master)
+[![GitHub top language](https://img.shields.io/github/languages/top/eastspire/LTPP-CODE)](https://github.com/eastspire/LTPP-CODE)
+[![GitHub language count](https://img.shields.io/github/languages/count/eastspire/LTPP-CODE)](https://github.com/eastspire/LTPP-CODE)
+[![GitHub repo size](https://img.shields.io/github/repo-size/eastspire/LTPP-CODE)](https://github.com/eastspire/LTPP-CODE)
+[![GitHub code size](https://img.shields.io/github/languages/code-size/eastspire/LTPP-CODE)](https://github.com/eastspire/LTPP-CODE)
 
 ---
 
@@ -456,12 +484,16 @@ The codebase builds on the MIT-licensed [Webman](https://github.com/walkor/webma
 
 ---
 
-## 📬 Contact
+## 📬 Contact & Online Resources
 
-- **Maintainer:** SQS (`eastspire`)
-- **Email:** `root@ltpp.vip`
-- **QQ:** `1491579574`
-- **Production site:** <https://ltpp.vip>
-- **IDE service:** <https://ide.ltpp.vip>
+| Channel | Link |
+|---|---|
+| 🌐 **Main Platform** | <https://ltpp.vip> |
+| 💻 **Web IDE** | <https://ide.ltpp.vip> |
+| 📦 **GitHub Repo** | <https://github.com/eastspire/LTPP-CODE> |
+| 🐛 **Issue Tracker** | <https://github.com/eastspire/LTPP-CODE/issues> |
+| 💌 **Email** | `root@ltpp.vip` |
+| 💬 **QQ** | `1491579574` |
+| 👤 **Maintainer** | `eastspire` (SQS) |
 
 > "学"与"练"的统一 — *Unifying learning and practice.*
