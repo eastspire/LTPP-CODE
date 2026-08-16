@@ -1,14 +1,7 @@
 #!/bin/bash
-###
- # @Author: root@ltpp.vip
- # @Date: 2023-08-22 13:31:27
- # @LastEditors: root@ltpp.vip
- # @LastEditTime: 2023-08-24 18:33:06
- # @FilePath: \LTPP-CODE\bin_build.sh
- # @Description: Email:root@ltpp.vip
- # QQ:1491579574
- # Copyright (c) 2023 by SQS, All Rights Reserved. 
-###
+# Build the LTPP single-file binary, then sync it to the local
+# ../LTPP checkout. Requires PHP 8.2 with phar.readonly=0 and
+# the `gtl` helper on PATH (operator-specific).
 php -d phar.readonly=0 webman build:bin 8.2
 php -d phar.readonly=0 webman build:bin 8.2
 gtl acp
