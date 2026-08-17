@@ -25,6 +25,8 @@
 [![GitHub repo size](https://img.shields.io/github/repo-size/eastspire/LTPP-CODE)](https://github.com/eastspire/LTPP-CODE)
 [![GitHub code size](https://img.shields.io/github/languages/code-size/eastspire/LTPP-CODE)](https://github.com/eastspire/LTPP-CODE)
 
+[GitHub Roast 评分](https://ghfind.com/u/eastspire?ref=badge)
+
 ---
 
 ## 📖 Table of Contents
